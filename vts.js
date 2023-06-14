@@ -1,119 +1,4 @@
-'use strict';
-
-/**
- * Global default configuration of vts - Validate Then Submit
- */
-export const vtsDefaults = {
-  /**
-   * jQuery ajax settings
-   */
-  ajax: {
-    /**
-     * ajax beforeSend
-     * @param {object} jqXHR
-     * @param {object} settings
-     */
-    beforeSend: (jqXHR, settings) => {},
-    /**
-     * ajax complete
-     * @param {object} jqXHR
-     * @param {String} textStatus
-     */
-    complete: (jqXHR, textStatus) => {},
-    /**
-     * ajax error
-     * @param {object} jqXHR
-     * @param {String} textStatus
-     * @param {String} errorThrown
-     */
-    error: (jqXHR, textStatus, errorThrown) => {
-      const customError = jqXHR.responseJSON;
-      const hasCustomError =
-        'responseJSON' in jqXHR && 'title' in jqXHR.responseJSON;
-      const html = hasCustomError ? customError.text : errorThrown;
-      let cLog = jqXHR.responseText;
-
-      let title = hasCustomError
-        ? customError.title
-        : textStatus + ': ' + jqXHR.status;
-      if (jqXHR.status === 0) {
-        title = cLog = 'Please check your connection.';
-      }
-      const text = title + '\nClick ok to view more details.' + '\n' + html;
-      if (confirm(text) == true) {
-        const newWindow = window.open();
-        newWindow.document.body.innerHTML = cLog;
-      }
-      console.log(cLog);
-    },
-    /**
-     * ajax success
-     * @param {*} data
-     * @param {String} textStatus
-     * @param {object} jqXHR
-     */
-    success: (data, textStatus, jqXHR) => {
-      alert(data.title + ':\n' + data.text);
-    },
-  },
-  /**
-   * the classes to be applied on the validated field
-   */
-  class: {
-    /**
-     * @type {String}
-     */
-    valid: 'valid',
-    /**
-     * @type {String}
-     */
-    invalid: 'invalid',
-  },
-  /**
-   * Stops the form's submission.
-   * @type {Boolean}
-   */
-  halt: false,
-  /**
-   * A function to be called if the field is invalid.
-   * @param {Element} currentField
-   * @param {String} label
-   */
-  invalid: (currentField, label, title, message) => {
-    const _currentField = $(currentField)[0];
-    const invalidTitle = title;
-    const invalidMsg = message;
-    _currentField.focus();
-    currentField.css('border', '1px solid red');
-    alert(invalidTitle + '\n' + invalidMsg);
-  },
-  log: false,
-  /**
-   * The validation mode.
-   * The "each" mode will stop the validation if the current field is invalid.
-   * The "all" mode will continue the validation until all fields have been checked.
-   * Fields are validated in the same order as their DOM declaration.
-   * @type {String}
-   * @default 'each'
-   */
-  mode: 'each',
-  /**
-   * regular expressions
-   * @type {Object}
-   */
-  rules: {},
-
-  trim: true,
-  /**
-   * A function to be called if the field is invalid.
-   * @param {Element} currentField
-   * @param {String} label
-   */
-  valid: function (currentField) {
-    currentField.css('border', '1px solid green');
-  },
-};
-
+import vtsDefaults from './vts.defaults.js';
 /**
  * @description - validate then submit via ajax
  * @author RED
@@ -122,130 +7,91 @@ export const vtsDefaults = {
 export default class Vts {
   /**
    * Creates an instance of Vts.
-   * @param {HTMLFormElement} form the form element to be validated
+   * @param {String} formId - The ID of the form to be validated
    * @param {object} [config] optional configuration
    * @memberof Vts
    */
-  constructor(form, config = {}) {
-    if (!config.class) config.class = {};
-    if (!config.ajax) config.ajax = {};
+  constructor(formId, config = {}) {
+    /** @type {HTMLFormElement} */
+    const form = document.getElementById(formId);
 
-    this.form = $(form);
-    // this.form = document.getElementById(form);
+    this.form = form;
     this.formData = new FormData();
-    // this.fields = this.form.querySelectorAll('[name]:not([data-vts-ignored])');
-    this.fields = $(form).find('[name]').not('[data-vts-ignored]');
-    this.rules = vtsDefaults.rules;
-    this.trim = config.trim ?? vtsDefaults.trim;
-    this.mode = config.mode || vtsDefaults.mode;
-    this.halt = config.halt ?? vtsDefaults.halt;
-    this.log = config.log ?? vtsDefaults.log;
-    this.fnInvalid = config.invalid || vtsDefaults.invalid;
-    this.fnValid = config.valid || vtsDefaults.valid;
-
-    this.class = {
-      valid: config.class.valid || vtsDefaults.class.valid,
-      invalid: config.class.invalid || vtsDefaults.class.invalid,
-    };
-
-    this.ajax = {
-      action: config.ajax.action || form.action,
-      method: config.ajax.method || form.method,
-      cache: config.ajax.cache ?? false,
-      headers: config.ajax.headers || vtsDefaults.ajax.headers,
-      beforeSend: config.ajax.beforeSend || vtsDefaults.ajax.beforeSend,
-      success: config.ajax.success || vtsDefaults.ajax.success,
-      error: config.ajax.error || vtsDefaults.ajax.error,
-      complete: config.ajax.complete || vtsDefaults.ajax.complete,
-    };
+    this.fields = form.querySelectorAll('[name]:not([data-vts-ignored])');
+    /** @type {Object} */
+    this.config = this.#deepMerge({}, vtsDefaults, config);
 
     this.log && console.group('vts_logs');
     this.log && console.time('vts_exec_time');
     this.#log('log', this);
 
-    if (form.length) this.#validate();
+    if (form) this.#validate();
     else console.error('Invalid form element.');
-
-    if (this.log) {
-      window.lVts = this;
-      this.#log(
-        'info',
-        'To access the Vts instance, use the global variable `lVts`.'
-      );
-      this.#log(
-        'info',
-        'For example, you can call `lVts.isValid()` in the browser console.'
-      );
-      console.timeEnd('vts_exec_time');
-      console.groupEnd();
-    }
   }
+
   /**
    * @description Validate each field
    * @memberof Vts
    */
   #validate() {
-    const $this = this;
-    const formData = this.formData;
+    this.#log('info', 'Validation started');
+    const config = this.config;
+    const fields = this.fields;
 
-    $this.#log('info', 'Validation started');
-
-    $.each(this.fields, function (i, field) {
-      const $field = ($this.currentField = $(field));
-
-      $this.#log('log', 'validating:', field);
+    for (let i = 0; i < fields.length; i++) {
+      const field = (this.currentField = fields[i]);
+      this.#log('log', 'validating:', field);
 
       // trim value
-      if ($this.trim) field.value = field.value.trim();
+      if (config.trim) field.value = field.value.trim();
 
-      const rule = $this.#hasRule();
-      let fnInvalidTitle = 'Invalid ' + $this.#getLabel();
+      const rule = this.#hasRule();
+      let fnInvalidTitle = 'Invalid ' + this.#getLabel();
       let fnInvalidMessage = field.validationMessage;
 
       if (rule) {
-        const newMessage = $this.#applyRule();
+        const newMessage = this.#applyRule();
         fnInvalidTitle = rule.title || fnInvalidTitle;
         fnInvalidMessage = newMessage || fnInvalidMessage;
       }
 
+      const configClass = config.class;
       if (field.checkValidity()) {
-        $field.removeClass($this.class.invalid);
-        $field.addClass($this.class.valid);
+        field.classList.remove(configClass.invalid);
+        field.classList.add(configClass.valid);
 
-        if ($this.mode === 'each') {
-          $this.#log('success', 'calling the "valid" function...');
-          $this.fnValid($field, $this.#getLabel());
+        if (config.mode === 'each') {
+          this.#log('success', 'calling the "valid" function...');
+          config.fnValid(field, this.#getLabel());
         }
 
-        if (this.type === 'file') $this.#appendFile();
-        else formData.append(field.name, field.value);
+        if (this.type === 'file') this.#appendFile();
+        else this.formData.append(field.name, field.value);
       } else {
-        $field.removeClass($this.class.valid);
-        $field.addClass($this.class.invalid);
-
-        if ($this.mode === 'each') {
-          $this.#log('warn', 'calling the "invalid" function...');
-          $this.fnInvalid(
-            $field,
-            $this.#getLabel(),
+        field.classList.remove(configClass.valid);
+        field.classList.add(configClass.invalid);
+        if (config.mode === 'each') {
+          this.#log('warn', 'calling the "invalid" function...');
+          config.fnInvalid(
+            field,
+            this.#getLabel(),
             fnInvalidTitle,
             fnInvalidMessage
           );
-          // Break loop.
-          return false;
+          break;
         }
       }
-    });
-
-    if (this.mode === 'all') {
-      $this.#log('success', 'calling the "valid" function...');
-      $(this.fnValid(this.form.find('.' + this.class.valid)));
-
-      $this.#log('warn', 'calling the "invalid" function...');
-      $(this.fnInvalid(this.form.find('.' + this.class.invalid)));
     }
 
-    $this.#log('info', 'Validation ended');
+    if (config.mode === 'all') {
+      this.#log('success', 'calling the "valid" function...');
+      config.fnValid(this.form.find('.' + this.class.valid));
+
+      this.#log('warn', 'calling the "invalid" function...');
+      config.fnInvalid(this.form.find('.' + this.class.invalid));
+    }
+
+    this.#log('info', 'Validation ended');
 
     // submit if not halted
     if (this.halt && this.isValid()) this.#log('warn', 'Submission halted');
@@ -254,15 +100,16 @@ export default class Vts {
 
   /**
    * @description get the field's label
-   * @param {Element} [field]
+   * @param {HTMLElement} [field]
    * @memberof Vts
    * @returns {string}
    */
   #getLabel(field = this.currentField) {
-    const data_label = field.data('vts-label');
-    const label_elem = $('label[for="' + field.attr('id') + '"]').text();
-    const placeholder = field.attr('placeholder');
-    const label = data_label || label_elem || placeholder || '';
+    const data_label = field.dataset.vtsLabel;
+    const label_node = this.form.querySelector('label[for="' + field.id + '"]');
+    const label_text = label_node ? label_node.textContent : null;
+    const placeholder = field.getAttribute('placeholder');
+    const label = data_label || label_text || placeholder || '';
     return label;
   }
 
@@ -271,17 +118,19 @@ export default class Vts {
    * @memberof Vts
    */
   #appendFile() {
+    /** @type {HTMLInputElement} */
     const field = this.currentField;
     if (field.type === 'file') {
-      this.#log('info', 'processing the file input...');
-      const $this = this;
-      $.each($(field)[0].files, function (x, file) {
+      this.#log('info', 'processing file input...');
+      const files = field.files;
+      for (let i = 0; i < files.length; i++) {
         /** @type {Array} */
-        const file_group = field.data('vts-file-group');
+        const file_group = field.dataset.vtsFileGroup;
+        const file = files[0];
         // Checks the current field if it has the "data-vts-file-group"
-        if (file_group) $this.formData.append(file_group, file);
-        else $this.formData.append(field.attr('name'), file);
-      });
+        if (file_group) this.formData.append(file_group, file);
+        else this.formData.append(field.getAttribute('name'), file);
+      }
       return true;
     } else return false;
   }
@@ -293,7 +142,7 @@ export default class Vts {
    * @memberof Vts
    */
   #log(type, ...message) {
-    if (!this.log) return;
+    if (!this.config.log) return;
 
     const msg = '%c' + message;
     const style = 'color: #FFFFFF; padding: 5px';
@@ -320,7 +169,8 @@ export default class Vts {
    * apply rules
    */
   #applyRule() {
-    const field = this.currentField[0];
+    /** @type {HTMLElement} */
+    const field = this.currentField;
     const rule = this.rules[field.name];
     const value = field.value;
     const match = rule.match;
@@ -334,7 +184,7 @@ export default class Vts {
     if (match) {
       this.#log('log', 'matching to:', match);
       valid = value == this.formData.get(match);
-      const srcMatch = this.form.find('[name="' + match + '"]');
+      const srcMatch = this.form.querySelector('[name="' + match + '"]');
       message =
         message ||
         this.#getLabel() + ' did not match ' + this.#getLabel(srcMatch);
@@ -353,8 +203,44 @@ export default class Vts {
    * @returns {object} rule object
    */
   #hasRule() {
-    const name = this.currentField.attr('name');
+    const name = this.currentField.getAttribute('name');
     return vtsDefaults.rules[name];
+  }
+
+  /**
+   * @description merge defaults and optional configuration objects
+   * @param {Object} target
+   * @param {Array} sources
+   * @returns {Object}
+   * @memberof Vts
+   */
+  #deepMerge(target, ...sources) {
+    if (!sources.length) {
+      return target;
+    }
+
+    const source = sources.shift();
+
+    for (const key in source) {
+      if (
+        typeof source[key] === 'object' &&
+        source[key] !== null &&
+        !Array.isArray(source[key])
+      ) {
+        if (
+          !target[key] ||
+          typeof target[key] !== 'object' ||
+          Array.isArray(target[key])
+        ) {
+          target[key] = {};
+        }
+
+        this.#deepMerge(target[key], source[key]);
+      } else {
+        target[key] = source[key];
+      }
+    }
+    return this.#deepMerge(target, ...sources);
   }
 
   /**
@@ -362,84 +248,56 @@ export default class Vts {
    * @returns {Boolean}
    */
   isValid() {
-    return this.form[0].checkValidity();
+    return this.form.checkValidity();
   }
 
   /**
    * @description submit form via ajax
    * @returns {jQuery<ajax>|Promise<reject>} jQuery ajax
    */
+
   submit() {
     if (this.isValid()) {
       delete this.currentField;
-      const ajax = $.ajax({
-        url: this.ajax.action,
-        type: this.ajax.method,
-        data: this.formData,
-        processData: false,
-        contentType: false,
-        cache: this.ajax.cache,
-        headers: this.ajax.headers,
-        beforeSend: this.ajax.beforeSend,
-        success: this.ajax.success,
-        error: this.ajax.error,
-        complete: this.ajax.complete,
-      });
-      this.#log('success', 'Ajax request sent');
-      return ajax;
+      const ajax = this.config.ajax;
+      const action = ajax.action || this.form.action;
+      const method = ajax.method || this.form.method;
+      const default_request = {
+        method: method,
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+        body: this.formData,
+      };
+
+      const request = this.#deepMerge({}, default_request, ajax.request);
+      return fetch(action, request)
+        .then((response) => {
+          if (!response.ok) {
+            throw new Error(response.statusText);
+          }
+          const contentType = response.headers.get('content-type');
+          if (contentType && contentType.includes('application/json')) {
+            return Promise.all([response.json(), response]);
+          } else {
+            throw new Error('Response is not in JSON format');
+          }
+        })
+        .then(([data, response]) => {
+          ajax.success(data, response);
+        })
+        .catch((error) => {
+          if (error instanceof Response) {
+            error.json().then((errorData) => {
+              ajax.error(errorData, error);
+            });
+          } else {
+            ajax.error(null, error);
+          }
+        });
     } else {
       this.#log('error', 'Submission failed: Invalid form');
       return Promise.reject('invalid form');
     }
   }
 }
-
-// jQuery Plugin
-(function ($) {
-  /**
-   * Creates an instance of Vts.
-   * @param {object} config
-   * @returns {Vts}
-   */
-  $.fn.vts = function (config) {
-    return new Vts(this[0], config);
-  };
-})(jQuery);
-
-// vts class
-// Wait for the DOM content to be loaded
-document.addEventListener('DOMContentLoaded', function () {
-  // Select all elements with the class 'vts'
-  const forms = document.querySelectorAll('.vts');
-
-  // Iterate over each form
-  forms.forEach(function (form) {
-    // Set the 'novalidate' attribute to true to disable HTML5 validation
-    form.setAttribute('novalidate', true);
-
-    // Add a submit event listener to the form
-    form.addEventListener('submit', function (e) {
-      e.preventDefault();
-
-      // Retrieve the data attributes from the form
-      const mode = form.dataset.vtsMode;
-      const invalidCallback = window[form.dataset.vtsInvalid];
-      const validCallback = window[form.dataset.vtsValid];
-      const beforeSendCallback = window[form.dataset.vtsBeforeSend];
-      const successCallback = window[form.dataset.vtsSuccess];
-      const errorCallback = window[form.dataset.vtsError];
-      const completeCallback = window[form.dataset.vtsComplete];
-
-      // Create a new instance of the Vts object with the provided callbacks
-      new Vts(form, {
-        mode: mode,
-        invalid: invalidCallback,
-        valid: validCallback,
-        beforeSend: beforeSendCallback,
-        success: successCallback,
-        error: errorCallback,
-        complete: completeCallback,
-      });
-    });
-  });
-});

@@ -1,17 +1,16 @@
-import Vts, { vtsDefaults } from './vts.js';
-import Swal from 'sweetalert2';
+import Vts from './vts.js';
 
 // VTS GLOBAL CONFIGURATION
-window.testing = vtsDefaults;
-vtsDefaults.log = true;
-vtsDefaults.invalid = invalidSwal;
-vtsDefaults.valid = validFn;
+// window.testing = vtsDefaults;
+// vtsDefaults.log = true;
+// vtsDefaults.fnInvalid = invalidSwal;
+// vtsDefaults.fnValid = validFn;
 
-vtsDefaults.ajax.beforeSend = beforeSwal;
-vtsDefaults.ajax.success = successSwal;
-vtsDefaults.ajax.complete = completeSwal;
-vtsDefaults.ajax.error = errorSwal;
-
+// vtsDefaults.ajax.beforeSend = beforeSwal;
+// vtsDefaults.ajax.success = successSwal;
+// vtsDefaults.ajax.complete = completeSwal;
+// vtsDefaults.ajax.error = errorSwal;
+// vtsDefaults.class.valid = 'test';
 // validation for "each" mode
 function invalidSwal(currentField, label, title, message) {
   console.log(label);
@@ -89,10 +88,12 @@ function completeSwal(jqXHR, textStatus) {
   // can be configured
 }
 
-$(document).ready(function () {
-  $('#myForm').submit(function (e) {
+document.addEventListener('DOMContentLoaded', function () {
+  const myForm = document.getElementById('myForm');
+  myForm.addEventListener('submit', (e) => {
     e.preventDefault();
-    // const v = $(this).vts(
-    const v = new Vts(this);
+    new Vts('myForm', {
+      log: true,
+    });
   });
 });

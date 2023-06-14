@@ -5,7 +5,7 @@
  * @memberof Vts
  * @type {Object}
  */
-export default vtsDefaults = {
+const vtsDefaults = {
   /**
    * Ajax settings
    */
@@ -29,33 +29,34 @@ export default vtsDefaults = {
      * @param {String} textStatus
      * @param {String} errorThrown
      */
-    error: (jqXHR, textStatus, errorThrown) => {
-      const customError = jqXHR.responseJSON;
-      const hasCustomError =
-        'responseJSON' in jqXHR && 'title' in jqXHR.responseJSON;
-      const html = hasCustomError ? customError.text : errorThrown;
-      let cLog = jqXHR.responseText;
+    error: (error, raw) => {
+      console.table(raw);
+      alert(error || raw);
+      // const customError = jqXHR.responseJSON;
+      // const hasCustomError =
+      //   'responseJSON' in jqXHR && 'title' in jqXHR.responseJSON;
+      // const html = hasCustomError ? customError.text : errorThrown;
+      // let cLog = jqXHR.responseText;
 
-      let title = hasCustomError
-        ? customError.title
-        : textStatus + ': ' + jqXHR.status;
-      if (jqXHR.status === 0) {
-        title = cLog = 'Please check your connection.';
-      }
-      const text = title + '\nClick ok to view more details.' + '\n' + html;
-      if (confirm(text) == true) {
-        const newWindow = window.open();
-        newWindow.document.body.innerHTML = cLog;
-      }
-      console.log(cLog);
+      // let title = hasCustomError
+      //   ? customError.title
+      //   : textStatus + ': ' + jqXHR.status;
+      // if (jqXHR.status === 0) {
+      //   title = cLog = 'Please check your connection.';
+      // }
+      // const text = title + '\nClick ok to view more details.' + '\n' + html;
+      // if (confirm(text) == true) {
+      //   const newWindow = window.open();
+      //   newWindow.document.body.innerHTML = cLog;
+      // }
+      // console.log(cLog);
     },
     /**
      * ajax success
-     * @param {*} data
-     * @param {String} textStatus
-     * @param {object} jqXHR
+     * @param {object} data
+     * @param {object} response
      */
-    success: (data, textStatus, jqXHR) => {
+    success: (data, response) => {
       alert(data.title + ':\n' + data.text);
     },
   },
@@ -79,16 +80,13 @@ export default vtsDefaults = {
   halt: false,
   /**
    * A function to be called if the field is invalid.
-   * @param {Element} currentField
+   * @param {HTMLElement} currentField
    * @param {String} label
    */
-  invalid: (currentField, label, title, message) => {
-    const _currentField = $(currentField)[0];
-    const invalidTitle = title;
-    const invalidMsg = message;
-    _currentField.focus();
-    currentField.css('border', '1px solid red');
-    alert(invalidTitle + '\n' + invalidMsg);
+  fnInvalid: (currentField, label, title, message) => {
+    currentField.focus();
+    currentField.style.border = '1px solid red';
+    alert(title + '\n' + message);
   },
   log: false,
   /**
@@ -109,10 +107,12 @@ export default vtsDefaults = {
   trim: true,
   /**
    * A function to be called if the field is invalid.
-   * @param {Element} currentField
+   * @param {HTMLElement} currentField
    * @param {String} label
    */
-  valid: function (currentField) {
-    currentField.css('border', '1px solid green');
+  fnValid: function (currentField) {
+    currentField.style.border = '1px solid green';
   },
 };
+
+export default vtsDefaults;
