@@ -1,6 +1,8 @@
 import vtsDefaults from './vts.defaults.js';
 /**
- * @description - validate then submit via ajax
+ * @description A JavaScript library that provides a simple and flexible way to handle
+ * form validation before submitting. It allows you to customize the validation rules,
+ * error messages, and actions to be performed when a form field is valid or invalid.
  * @author RED
  * @class Vts
  */
@@ -30,20 +32,17 @@ export default class Vts {
   }
 
   /**
-   * @description Validate each field
+   * @description Validates each field in the form.
    * @memberof Vts
    */
   #validate() {
     this.#log('info', 'Validation started');
     const config = this.config;
-    const fields = this.fields;
 
-    for (let i = 0; i < fields.length; i++) {
-      const field = (this.currentField = fields[i]);
+    const configClass = config.class;
+    for (const field of this.fields) {
+      this.currentField = field;
       this.#log('log', 'validating:', field);
-
-      // trim value
-      if (config.trim) field.value = field.value.trim();
 
       const rule = this.#hasRule();
       let fnInvalidTitle = 'Invalid ' + this.#getLabel();
@@ -55,7 +54,6 @@ export default class Vts {
         fnInvalidMessage = newMessage || fnInvalidMessage;
       }
 
-      const configClass = config.class;
       if (field.checkValidity()) {
         field.classList.remove(configClass.invalid);
         field.classList.add(configClass.valid);
@@ -85,10 +83,10 @@ export default class Vts {
 
     if (config.mode === 'all') {
       this.#log('success', 'calling the "valid" function...');
-      config.fnValid(this.form.find('.' + this.class.valid));
+      config.fnValid(this.form.querySelectorAll('.' + configClass.valid));
 
       this.#log('warn', 'calling the "invalid" function...');
-      config.fnInvalid(this.form.find('.' + this.class.invalid));
+      config.fnInvalid(this.form.querySelectorAll('.' + configClass.invalid));
     }
 
     this.#log('info', 'Validation ended');
@@ -99,10 +97,10 @@ export default class Vts {
   }
 
   /**
-   * @description get the field's label
-   * @param {HTMLElement} [field]
+   * @description Retrieves the label for the specified field.
+   * @param {HTMLElement} [field] - The field element.
    * @memberof Vts
-   * @returns {string}
+   * @returns {string} The field's label.
    */
   #getLabel(field = this.currentField) {
     const data_label = field.dataset.vtsLabel;
@@ -114,7 +112,7 @@ export default class Vts {
   }
 
   /**
-   * @description append file to FormData
+   * @description Appends file input to the FormData object.
    * @memberof Vts
    */
   #appendFile() {
@@ -136,9 +134,9 @@ export default class Vts {
   }
 
   /**
-   * @description show logs
-   * @param {string} type log | info | warn | success | warn | error
-   * @param  {...any} message
+   * @description Logs messages to the console.
+   * @param {string} type - The type of log (log, info, warn, success, error).
+   * @param  {...any} message - The log messages.
    * @memberof Vts
    */
   #log(type, ...message) {
@@ -166,7 +164,9 @@ export default class Vts {
   }
 
   /**
-   * apply rules
+   * @description Applies rules to the current field.
+   * @memberof Vts
+   * @returns {string} The custom validation message.
    */
   #applyRule() {
     /** @type {HTMLElement} */
@@ -200,7 +200,8 @@ export default class Vts {
   }
 
   /**
-   * @returns {object} rule object
+   * @description Checks if the current field has a validation rule.
+   * @returns {object} The rule object.
    */
   #hasRule() {
     const name = this.currentField.getAttribute('name');
@@ -208,10 +209,10 @@ export default class Vts {
   }
 
   /**
-   * @description merge defaults and optional configuration objects
-   * @param {Object} target
-   * @param {Array} sources
-   * @returns {Object}
+   * @description Deeply merges multiple objects.
+   * @param {Object} target - The target object to merge into.
+   * @param {Array} sources - The source objects to merge.
+   * @returns {Object} The merged object.
    * @memberof Vts
    */
   #deepMerge(target, ...sources) {
@@ -244,19 +245,19 @@ export default class Vts {
   }
 
   /**
-   * Checks the validity of form
-   * @returns {Boolean}
+   * Checks the validity of the form.
+   * @returns {Boolean} True if the form is valid, false otherwise.
    */
   isValid() {
     return this.form.checkValidity();
   }
 
   /**
-   * @description submit form via ajax
-   * @returns {jQuery<ajax>|Promise<reject>} jQuery ajax
+   * @description Submits the form via fetch API.
+   * @returns {Promise} A promise that resolves on success or rejects on failure.
+   * @async
    */
-
-  submit() {
+  async submit() {
     if (this.isValid()) {
       delete this.currentField;
       const ajax = this.config.ajax;
@@ -271,30 +272,31 @@ export default class Vts {
       };
 
       const request = this.#deepMerge({}, default_request, ajax.request);
-      return fetch(action, request)
-        .then((response) => {
-          if (!response.ok) {
-            throw new Error(response.statusText);
-          }
-          const contentType = response.headers.get('content-type');
-          if (contentType && contentType.includes('application/json')) {
-            return Promise.all([response.json(), response]);
-          } else {
-            throw new Error('Response is not in JSON format');
-          }
-        })
-        .then(([data, response]) => {
+      try {
+        const response = await fetch(action, request);
+        if (!response.ok) {
+          throw new Error(response.statusText);
+        }
+        const contentType = response.headers.get('content-type');
+        if (contentType && contentType.includes('application/json')) {
+          const [data, _] = await Promise.all([response.json(), response]);
           ajax.success(data, response);
-        })
-        .catch((error) => {
-          if (error instanceof Response) {
-            error.json().then((errorData) => {
-              ajax.error(errorData, error);
-            });
-          } else {
+        } else {
+          throw new TypeError('Response is not in JSON format');
+        }
+      } catch (error) {
+        if (error instanceof Response) {
+          try {
+            const errorData = await error.json();
+            ajax.error(errorData, error);
+          } catch (_) {
+            console.log(_);
             ajax.error(null, error);
           }
-        });
+        } else {
+          ajax.error(null, error);
+        }
+      }
     } else {
       this.#log('error', 'Submission failed: Invalid form');
       return Promise.reject('invalid form');

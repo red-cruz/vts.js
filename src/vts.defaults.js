@@ -1,7 +1,7 @@
 'use strict';
 
 /**
- * Global default configuration of vts - Validate Then Submit
+ * Global default configuration for Vts (Validate Then Submit).
  * @memberof Vts
  * @type {Object}
  */
@@ -10,6 +10,9 @@ const vtsDefaults = {
    * Ajax settings
    */
   ajax: {
+    request: {
+      'Content-Type': 'multipart/form-data',
+    },
     /**
      * Ajax beforeSend callback function
      * @param {XMLHttpRequest} xhr - The XMLHttpRequest object
@@ -104,7 +107,6 @@ const vtsDefaults = {
    */
   rules: {},
 
-  trim: true,
   /**
    * A function to be called if the field is invalid.
    * @param {HTMLElement} currentField
