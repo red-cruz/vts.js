@@ -1,3 +1,4 @@
+'use strict';
 import vtsDefaults from './vts.defaults.js';
 /**
  * @description A JavaScript library that provides a simple and flexible way to handle
@@ -83,17 +84,21 @@ export default class Vts {
 
     if (config.mode === 'all') {
       this.#log('success', 'calling the "valid" function...');
-      config.fnValid(this.form.querySelectorAll('.' + configClass.valid));
+      config.fnValid(
+        this.form.querySelectorAll('.' + configClass.valid),
+        this.form
+      );
 
       this.#log('warn', 'calling the "invalid" function...');
-      config.fnInvalid(this.form.querySelectorAll('.' + configClass.invalid));
+      config.fnInvalid(
+        this.form.querySelectorAll('.' + configClass.invalid),
+        this.form
+      );
     }
 
     this.#log('info', 'Validation ended');
 
-    // submit if not halted
-    if (this.halt && this.isValid()) this.#log('warn', 'Submission halted');
-    else this.submit().catch(() => {});
+    if (!config.halt && this.isValid()) this.submit();
   }
 
   /**
@@ -169,24 +174,23 @@ export default class Vts {
    * @returns {string} The custom validation message.
    */
   #applyRule() {
-    /** @type {HTMLElement} */
     const field = this.currentField;
-    const rule = this.rules[field.name];
+    const rule = this.config.rules[field.name];
     const value = field.value;
     const match = rule.match;
     const pattern = new RegExp(rule.pattern, rule.flags);
-    let message = rule.message;
+    let message = '';
     let valid;
 
     // check if field has rule
     if (!rule) return;
-
+    field.setAttribute('pattern', pattern.source);
     if (match) {
       this.#log('log', 'matching to:', match);
       valid = value == this.formData.get(match);
       const srcMatch = this.form.querySelector('[name="' + match + '"]');
       message =
-        message ||
+        rule.message ||
         this.#getLabel() + ' did not match ' + this.#getLabel(srcMatch);
     } else {
       this.#log('log', 'processing pattern:', pattern);
@@ -260,9 +264,10 @@ export default class Vts {
   async submit() {
     if (this.isValid()) {
       delete this.currentField;
+      const form = this.form;
       const ajax = this.config.ajax;
-      const action = ajax.action || this.form.action;
-      const method = ajax.method || this.form.method;
+      const action = ajax.action || form.action;
+      const method = ajax.method || form.method;
       const default_request = {
         method: method,
         headers: {
@@ -270,17 +275,20 @@ export default class Vts {
         },
         body: this.formData,
       };
-
       const request = this.#deepMerge({}, default_request, ajax.request);
       try {
+        ajax.beforeSend();
         const response = await fetch(action, request);
         if (!response.ok) {
           throw new Error(response.statusText);
         }
         const contentType = response.headers.get('content-type');
         if (contentType && contentType.includes('application/json')) {
-          const [data, _] = await Promise.all([response.json(), response]);
-          ajax.success(data, response);
+          const [data, rawResponse] = await Promise.all([
+            response.json(),
+            response,
+          ]);
+          ajax.success(data, rawResponse, form);
         } else {
           throw new TypeError('Response is not in JSON format');
         }
@@ -288,18 +296,18 @@ export default class Vts {
         if (error instanceof Response) {
           try {
             const errorData = await error.json();
-            ajax.error(errorData, error);
-          } catch (_) {
-            console.log(_);
-            ajax.error(null, error);
+            ajax.error(errorData, error, form);
+          } catch (e) {
+            ajax.error(e, error, form);
           }
         } else {
-          ajax.error(null, error);
+          ajax.error(null, error, form);
         }
       }
+      ajax.complete(form);
     } else {
       this.#log('error', 'Submission failed: Invalid form');
-      return Promise.reject('invalid form');
+      Promise.reject('invalid form').catch(() => {});
     }
   }
 }

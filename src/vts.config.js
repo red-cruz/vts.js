@@ -3,16 +3,23 @@ import vtsDefaults from './vts.defaults.js';
 import Swal from 'sweetalert2';
 
 // VTS GLOBAL CONFIGURATION
-window.testing = vtsDefaults;
+vtsDefaults.rules = {
+  first_name: {
+    pattern: '\\d',
+    flags: 'g',
+    fn: () => {
+      console.log('test');
+    },
+  },
+};
 vtsDefaults.log = true;
-vtsDefaults.fnInvalid = invalidSwal;
-vtsDefaults.fnValid = validFn;
-
+const mode = (vtsDefaults.mode = 'each');
+vtsDefaults.fnInvalid = mode === 'each' ? invalidSwal : invalidAll;
+vtsDefaults.fnValid = mode === 'each' ? validFn : validAll;
 vtsDefaults.ajax.beforeSend = beforeSwal;
 vtsDefaults.ajax.success = successSwal;
 vtsDefaults.ajax.complete = completeSwal;
 vtsDefaults.ajax.error = errorSwal;
-vtsDefaults.mode = 'each';
 // validation for "each" mode
 function invalidSwal(currentField, label, title, message) {
   console.log(label);
@@ -34,9 +41,12 @@ function validFn(currentField, label) {
 /**
  * @description
  * @author RED
- * @param {NodeListOf<HTMLElement>} invalidFields
+ * @param {HTMLFormControlsCollection} invalidFields
+ * @param {HTMLFormElement} form
  */
-function invalidAll(invalidFields) {
+function invalidAll(invalidFields, form) {
+  form.classList.add('was-validated');
+  return;
   for (const field of invalidFields) {
     field.style.border = '1px solid red';
   }
@@ -45,15 +55,16 @@ function invalidAll(invalidFields) {
  * @description
  * @author RED
  * @param {NodeListOf<HTMLElement>} validFields
+ * @param {HTMLFormElement} form
  */
-function validAll(validFields) {
-  for (const field of validFields) {
-    field.style.border = '1px solid green';
-  }
+function validAll(validFields, form) {
+  // for (const field of validFields) {
+  //   field.style.border = '1px solid green';
+  // }
 }
 
 // AJAX EVENTS
-function beforeSwal(jqXHR) {
+function beforeSwal(jqXHR, form) {
   Swal.fire({
     title: 'Loading',
     icon: 'info',
@@ -66,15 +77,16 @@ function beforeSwal(jqXHR) {
  * @param {object} data
  * @param {*} response
  */
-function successSwal(data, response) {
-  console.log(typeof data, response instanceof Response);
+function successSwal(data, response, form) {
   Swal.fire({
     title: data.title ?? 'Server connection: ' + response.statusText,
     html: data.text,
     icon: data.icon ?? 'info',
   });
+  form.classList.remove('was-validated');
+  form.reset();
 }
-function errorSwal(errorData, errorResponse) {
+function errorSwal(errorData, errorResponse, form) {
   const data = errorData ? errorData : {};
   console.table(errorResponse);
 
@@ -91,7 +103,9 @@ function errorSwal(errorData, errorResponse) {
     }
   });
 }
-function completeSwal(jqXHR, textStatus) {
+function completeSwal(form) {
+  console.log('triggered final');
+
   // empty function for disabling [vts] default complete function
   // can be configured
 }
@@ -102,6 +116,10 @@ document.addEventListener('DOMContentLoaded', function () {
     e.preventDefault();
     const test = new Vts('myForm', {
       log: true,
+      halt: true,
+    });
+    test.submit().then((response) => {
+      if (response instanceof Response) console.log(response.ok, 'ge');
     });
   });
 });
