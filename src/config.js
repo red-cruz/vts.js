@@ -1,5 +1,5 @@
 import Vts from './vts.js';
-import vtsDefaults from './vts.defaults.js';
+import vtsDefaults from './defaults.js';
 import Swal from 'sweetalert2';
 
 // VTS GLOBAL CONFIGURATION
@@ -12,7 +12,7 @@ vtsDefaults.rules = {
     },
   },
 };
-vtsDefaults.log = true;
+// vtsDefaults.log = true;
 const mode = (vtsDefaults.mode = 'each');
 vtsDefaults.fnInvalid = mode === 'each' ? invalidSwal : invalidAll;
 vtsDefaults.fnValid = mode === 'each' ? validFn : validAll;
@@ -41,15 +41,15 @@ function validFn(currentField, label) {
 /**
  * @description
  * @author RED
- * @param {HTMLFormControlsCollection} invalidFields
+ * @param {NodeListOf<HTMLElement>} invalidFields
  * @param {HTMLFormElement} form
  */
 function invalidAll(invalidFields, form) {
+  console.log(invalidFields);
+  invalidFields.forEach((element) => {
+    console.log(element);
+  });
   form.classList.add('was-validated');
-  return;
-  for (const field of invalidFields) {
-    field.style.border = '1px solid red';
-  }
 }
 /**
  * @description

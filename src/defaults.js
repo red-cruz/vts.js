@@ -64,19 +64,6 @@ const vtsDefaults = {
     },
   },
   /**
-   * the classes to be applied on the validated field
-   */
-  class: {
-    /**
-     * @type {String}
-     */
-    valid: 'valid',
-    /**
-     * @type {String}
-     */
-    invalid: 'invalid',
-  },
-  /**
    * Stops the form's submission.
    * @type {Boolean}
    */

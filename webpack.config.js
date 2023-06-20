@@ -3,8 +3,8 @@ const path = require('path');
 module.exports = {
   entry: {
     vts: './src/vts.js',
-    'vts.defaults': './src/vts.defaults.js',
-    'vts.config': './src/vts.config.js',
+    defaults: './src/defaults.js',
+    config: './src/config.js',
   },
   output: {
     filename: '[name].min.js',
