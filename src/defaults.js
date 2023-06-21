@@ -2,58 +2,38 @@
 
 /**
  * Global default configuration for Vts (Validate Then Submit).
- * @memberof Vts
- * @type {Object}
+ *
  */
 const vtsDefaults = {
+  /**
+   * Stops the form's submission.
+   * @type {Boolean}
+   */
+  halt: false,
+
   /**
    * Ajax settings
    */
   ajax: {
-    request: {
-      'Content-Type': 'multipart/form-data',
-    },
+    request: {},
+
     /**
      * Ajax beforeSend callback function
      * @param {XMLHttpRequest} xhr - The XMLHttpRequest object
      */
-    beforeSend: (xhr) => {},
+    beforeSend: () => {
+      vtsDefaults.ajax.loader();
+    },
 
-    /**
-     * Ajax complete callback function
-     * @param {XMLHttpRequest} xhr - The XMLHttpRequest object
-     * @param {string} textStatus - The status of the request ("success", "error", "timeout", etc.)
-     */
+    loader: (percent) => {},
+
     complete: (xhr, textStatus) => {},
 
-    /**
-     * ajax error
-     * @param {object} jqXHR
-     * @param {String} textStatus
-     * @param {String} errorThrown
-     */
     error: (error, raw) => {
       console.table(raw);
       alert(error || raw);
-      // const customError = jqXHR.responseJSON;
-      // const hasCustomError =
-      //   'responseJSON' in jqXHR && 'title' in jqXHR.responseJSON;
-      // const html = hasCustomError ? customError.text : errorThrown;
-      // let cLog = jqXHR.responseText;
-
-      // let title = hasCustomError
-      //   ? customError.title
-      //   : textStatus + ': ' + jqXHR.status;
-      // if (jqXHR.status === 0) {
-      //   title = cLog = 'Please check your connection.';
-      // }
-      // const text = title + '\nClick ok to view more details.' + '\n' + html;
-      // if (confirm(text) == true) {
-      //   const newWindow = window.open();
-      //   newWindow.document.body.innerHTML = cLog;
-      // }
-      // console.log(cLog);
     },
+
     /**
      * ajax success
      * @param {object} data
@@ -64,11 +44,6 @@ const vtsDefaults = {
     },
   },
   /**
-   * Stops the form's submission.
-   * @type {Boolean}
-   */
-  halt: false,
-  /**
    * A function to be called if the field is invalid.
    * @param {HTMLElement} currentField
    * @param {String} label
@@ -78,16 +53,23 @@ const vtsDefaults = {
     currentField.style.border = '1px solid red';
     alert(title + '\n' + message);
   },
+
+  /**
+   * Whether to log the validation errors.
+   * @type {boolean}
+   */
   log: false,
+
   /**
    * The validation mode.
    * The "each" mode will stop the validation if the current field is invalid.
    * The "all" mode will continue the validation until all fields have been checked.
    * Fields are validated in the same order as their DOM declaration.
-   * @type {String}
-   * @default 'each'
+   * @type {string}
+   * @default 'all'
    */
-  mode: 'each',
+  mode: 'all',
+
   /**
    * regular expressions
    * @type {Object}
@@ -95,12 +77,32 @@ const vtsDefaults = {
   rules: {},
 
   /**
-   * A function to be called if the field is invalid.
+   * A function to be called if the field is valid.
    * @param {HTMLElement} currentField
    * @param {String} label
    */
   fnValid: function (currentField) {
     currentField.style.border = '1px solid green';
+  },
+  generateCaseCombinations: function (str) {
+    const results = [];
+    const n = Math.pow(2, str.length);
+    console.log(n);
+    for (let i = 0; i < n; i++) {
+      let combination = '';
+
+      for (let j = 0; j < str.length; j++) {
+        if (((i >> j) & 1) === 1) {
+          combination += str[j].toLowerCase();
+        } else {
+          combination += str[j].toUpperCase();
+        }
+      }
+
+      results.push(combination);
+    }
+
+    return results.join('|');
   },
 };
 

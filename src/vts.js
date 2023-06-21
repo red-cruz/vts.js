@@ -1,9 +1,8 @@
 'use strict';
 import vtsDefaults from './defaults.js';
-import applyRules from './utils/applyRules.js';
+import rules from './utils/applyRules.js';
 import deepMerge from './utils/deepMerge.js';
-import getLabel from './utils/getLabel.js';
-import * as log from './utils/log.js';
+import log from './utils/log.js';
 
 /**
  * @description A JavaScript library that provides a simple and flexible way to handle
@@ -15,16 +14,13 @@ import * as log from './utils/log.js';
 export default class Vts {
   /**
    * Creates an instance of Vts.
-   * @param {String} formId - The ID of the form to be validated
+   * @param {HTMLFormElement} form
    * @param {object} [config] optional configuration
    * @memberof Vts
    */
-  constructor(formId, config = {}) {
-    /** @type {HTMLFormElement} */
-    const form = document.getElementById(formId);
-
+  constructor(form, config = {}) {
     this.form = form;
-    this.formData = new FormData();
+    this.formData = new FormData(form);
     this.fields = form.querySelectorAll('[name]:not([data-vts-ignored])');
     this.config = deepMerge({}, vtsDefaults, config);
 
@@ -48,22 +44,18 @@ export default class Vts {
       this.currentField = field;
       log.show(mustLog, 'log', 'validating:', field);
 
-      const [invalidTitle, invalidMessage] = applyRules(this);
+      const [label, title, message] = rules.apply(this);
 
       if (field.checkValidity()) {
         if (config.mode === 'each') {
           log.show(mustLog, 'success', 'calling the "valid" function...');
-          config.fnValid(field, getLabel(form, field));
+          config.fnValid(field, label);
         }
       } else {
         if (config.mode === 'each') {
+          console.log(field, 'eto');
           log.show(mustLog, 'warn', 'calling the "invalid" function...');
-          config.fnInvalid(
-            field,
-            getLabel(form, field),
-            invalidTitle,
-            invalidMessage
-          );
+          config.fnInvalid(field, label, title, message);
           break;
         }
       }
@@ -79,7 +71,6 @@ export default class Vts {
 
   #validateAll() {
     const config = this.config;
-    const configClass = config.class;
     const mustLog = config.log;
     if (config.mode !== 'all') return;
 
@@ -113,7 +104,7 @@ export default class Vts {
       const method = ajax.method || form.method;
       const default_request = {
         method: method,
-        headers: {
+        request: {
           'Content-Type': 'multipart/form-data',
         },
         body: this.formData,

@@ -1,12 +1,16 @@
 import Vts from './vts.js';
 import vtsDefaults from './defaults.js';
 import Swal from 'sweetalert2';
+import rulesUtil from './utils/applyRules.js';
 
 // VTS GLOBAL CONFIGURATION
 vtsDefaults.rules = {
   first_name: {
-    pattern: '\\d',
-    flags: 'g',
+    match: 'user_name',
+    // pattern: vtsDefaults.generateCaseCombinations('gged'),
+    flags: 'i',
+    title: 'Invalid yung fname',
+    message: 't',
     fn: () => {
       console.log('test');
     },
@@ -20,13 +24,14 @@ vtsDefaults.ajax.beforeSend = beforeSwal;
 vtsDefaults.ajax.success = successSwal;
 vtsDefaults.ajax.complete = completeSwal;
 vtsDefaults.ajax.error = errorSwal;
+
 // validation for "each" mode
 function invalidSwal(currentField, label, title, message) {
-  console.log(label);
+  console.log(currentField.validationMessage, label);
   currentField.focus();
   Swal.fire({
     title: title,
-    text: message,
+    text: message || currentField.validationMessage,
     icon: 'warning',
   });
 }
@@ -111,15 +116,24 @@ function completeSwal(form) {
 }
 
 document.addEventListener('DOMContentLoaded', function () {
+  /** @type {HTMLFormElement} */
   const myForm = document.getElementById('myForm');
   myForm.addEventListener('submit', (e) => {
     e.preventDefault();
-    const test = new Vts('myForm', {
+    const validatedForm = new Vts(myForm, {
       log: true,
       halt: true,
     });
-    test.submit().then((response) => {
-      if (response instanceof Response) console.log(response.ok, 'ge');
-    });
+
+    validatedForm.isValid() &&
+      validatedForm
+        .submit()
+        .then((response) => {
+          console.log(validatedForm.isValid());
+          if (response instanceof Response) console.log(response.ok, 'ge');
+        })
+        .finally(() => {
+          console.log('tapos lahat');
+        });
   });
 });

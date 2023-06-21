@@ -1,9 +1,8 @@
 const path = require('path');
+const webpack = require('webpack');
 
 module.exports = {
   entry: {
-    vts: './src/vts.js',
-    defaults: './src/defaults.js',
     config: './src/config.js',
   },
   output: {
@@ -12,4 +11,12 @@ module.exports = {
   },
   mode: 'development',
   watch: true,
+  module: {
+    rules: [
+      {
+        test: /\.ts$/,
+        use: ['ts-loader'],
+      },
+    ],
+  },
 };

@@ -1,60 +1,66 @@
 import Vts from '../vts';
-import { show } from './log';
+import log from './log';
 import getLabel from './getLabel';
+import vtsDefaults from '../defaults';
 
-/**
- * @description
- * @author RED
- * @export
- * @param {Vts} Vts
- * @returns {Array}
- */
-export default function applyRules(Vts) {
-  const form = Vts.form;
-  const field = Vts.currentField;
-  const rule = Vts.config.rules[field.name];
-  const value = field.value;
-  let invalidTitle = 'Invalid ' + getLabel(form, field);
-  let invalidMessage = field.validationMessage;
-  let valid;
+export default class rulesUtil {
+  /**
+   * @description
+   * @author RED
+   * @static
+   * @param {Vts} Vts
+   * @returns {Array<invalidTitle, invalidMessage>}
+   * @memberof rulesUtil
+   */
+  static apply(Vts) {
+    const form = Vts.form;
+    const field = Vts.currentField;
+    const rule = Vts.config.rules[field.name];
+    const label = getLabel(form, field);
+    let title = 'Invalid ' + label;
+    let message = null;
 
-  // check if field has rule
-  if (rule) {
-    const match = rule.match;
-    const pattern = new RegExp(rule.pattern, rule.flags);
-    invalidTitle = rule.title;
-    field.setAttribute('pattern', pattern.source);
+    // check if field has rule
+    if (rule) {
+      title = rule.title ?? title;
+      let pattern = rule.pattern;
+      [message = message, pattern = pattern] = rulesUtil.#matchField(Vts, rule);
+      const regExp = new RegExp(pattern, rule.flags);
+      const source = regExp.source;
 
-    if (match) {
-      [invalidMessage, valid] = matcher(Vts, match);
-    } else {
-      show(Vts.config.log, 'log', 'processing pattern:', pattern);
-      valid = value.match(pattern);
+      field.value.match(regExp);
+      field.setAttribute('pattern', source);
+      log.show(Vts.config.log, 'log', 'pattern:', source);
     }
-    // set custom validity
-    if (valid) field.setCustomValidity('');
-    else field.setCustomValidity(invalidMessage);
+    return [label, title, message];
   }
-  return [invalidTitle, invalidMessage];
-}
+  /**
+   * @description
+   * @static
+   * @param {Vts} Vts
+   * @param {String} matchFieldName name of the field to match
+   * @returns {Array<invalidMessage, valid>}
+   * @memberof rulesUtil
+   */
+  static #matchField(Vts, rule) {
+    const matchFieldName = rule.match;
 
-/**
- * @description
- * @author RED
- * @param {Vts} Vts
- * @param {String} match
- * @returns {Array}
- */
-function matcher(Vts, match) {
-  const form = Vts.form;
-  const formData = Vts.formData;
-  const field = Vts.currentField;
-  show(Vts.config.log, 'log', 'matching to:', match);
-  const srcMatch = form.querySelector('[name="' + match + '"]');
-  const defMismatchMsg =
-    getLabel(form, field) + ' did not match ' + getLabel(form, srcMatch);
-  const invalidMessage = rule.message || defMismatchMsg;
-  const valid = value == formData.get(match);
+    if (!matchFieldName) return [];
 
-  return [invalidMessage, valid];
+    const form = Vts.form;
+    const formData = Vts.formData;
+    const field = Vts.currentField;
+    const matchTarget = form.querySelector('[name="' + matchFieldName + '"]');
+    const defMismatchMsg =
+      getLabel(form, field) + ' did not match ' + getLabel(form, matchTarget);
+    /** @type {String} */
+    const invalidMessage = rule.message || defMismatchMsg;
+    const flags = rule.flags;
+    const rawValue = formData.get(matchFieldName);
+    const value = flags.includes('i')
+      ? vtsDefaults.generateCaseCombinations(rawValue, flags)
+      : rawValue;
+
+    return [invalidMessage, value];
+  }
 }
