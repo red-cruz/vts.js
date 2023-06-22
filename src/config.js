@@ -17,7 +17,7 @@ vtsDefaults.rules = {
   },
 };
 // vtsDefaults.log = true;
-const mode = (vtsDefaults.mode = 'each');
+const mode = (vtsDefaults.mode = 'all');
 vtsDefaults.fnInvalid = mode === 'each' ? invalidSwal : invalidAll;
 vtsDefaults.fnValid = mode === 'each' ? validFn : validAll;
 vtsDefaults.ajax.beforeSend = beforeSwal;
@@ -53,6 +53,22 @@ function invalidAll(invalidFields, form) {
   console.log(invalidFields);
   invalidFields.forEach((element) => {
     console.log(element);
+    const parent = element.parentElement;
+    const className = 'invalid-feedback';
+    const sibling = parent.querySelector(`.${className}`);
+
+    // Check if a sibling element exists
+    if (sibling === null) {
+      const div = document.createElement('div');
+      div.classList.add(className);
+      div.append(element.validationMessage);
+      element.parentElement.append(div);
+
+      return true;
+    } else {
+      // Sibling element does not exist
+      // return false;
+    }
   });
   form.classList.add('was-validated');
 }
@@ -63,9 +79,23 @@ function invalidAll(invalidFields, form) {
  * @param {HTMLFormElement} form
  */
 function validAll(validFields, form) {
-  // for (const field of validFields) {
-  //   field.style.border = '1px solid green';
-  // }
+  console.log(validFields);
+  validFields.forEach((element) => {
+    const parent = element.parentElement;
+    const className = 'valid-feedback';
+    const sibling = parent.querySelector(`.${className}`);
+
+    // Check if a sibling element exists
+    if (sibling === null) {
+      const div = document.createElement('div');
+      div.classList.add(className);
+      div.append('oks');
+      element.parentElement.append(div);
+    } else {
+      // Sibling element does not exist
+      // return false;
+    }
+  });
 }
 
 // AJAX EVENTS

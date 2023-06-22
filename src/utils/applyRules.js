@@ -12,19 +12,23 @@ export default class rulesUtil {
    * @returns {Array<invalidTitle, invalidMessage>}
    * @memberof rulesUtil
    */
-  static apply(Vts) {
+  static apply() {
+    /** @type {Vts} */
+    const Vts = this;
     const form = Vts.form;
     const field = Vts.currentField;
     const rule = Vts.config.rules[field.name];
     const label = getLabel(form, field);
     let title = 'Invalid ' + label;
     let message = null;
-
     // check if field has rule
     if (rule) {
       title = rule.title ?? title;
       let pattern = rule.pattern;
-      [message = message, pattern = pattern] = rulesUtil.#matchField(Vts, rule);
+      [message = message, pattern = pattern] = rulesUtil.#matchField.call(
+        Vts,
+        rule
+      );
       const regExp = new RegExp(pattern, rule.flags);
       const source = regExp.source;
 
@@ -42,11 +46,12 @@ export default class rulesUtil {
    * @returns {Array<invalidMessage, valid>}
    * @memberof rulesUtil
    */
-  static #matchField(Vts, rule) {
+  static #matchField(rule) {
     const matchFieldName = rule.match;
 
     if (!matchFieldName) return [];
-
+    /** @type {Vts} */
+    const Vts = this;
     const form = Vts.form;
     const formData = Vts.formData;
     const field = Vts.currentField;

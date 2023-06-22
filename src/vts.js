@@ -44,7 +44,7 @@ export default class Vts {
       this.currentField = field;
       log.show(mustLog, 'log', 'validating:', field);
 
-      const [label, title, message] = rules.apply(this);
+      const [label, title, message] = rules.apply.call(this);
 
       if (field.checkValidity()) {
         if (config.mode === 'each') {
@@ -72,13 +72,15 @@ export default class Vts {
   #validateAll() {
     const config = this.config;
     const mustLog = config.log;
+    const not = ':not([data-vts-ignored], [type="submit"])';
+
     if (config.mode !== 'all') return;
 
     log.show(mustLog, 'success', 'calling the "valid" function...');
-    config.fnValid(this.form.querySelectorAll(':valid'), this.form);
+    config.fnValid(this.form.querySelectorAll(`:valid${not}`), this.form);
 
     log.show(mustLog, 'warn', 'calling the "invalid" function...');
-    config.fnInvalid(this.form.querySelectorAll(':invalid'), this.form);
+    config.fnInvalid(this.form.querySelectorAll(`:invalid${not}`), this.form);
   }
 
   /**
@@ -87,6 +89,14 @@ export default class Vts {
    */
   isValid() {
     return this.form.checkValidity();
+  }
+
+  getCurrentFieldRules() {
+    const field = this.currentField;
+    if (!field) return null;
+    const fieldName = field.name;
+    const rules = this.config.rules[fieldName];
+    return rules;
   }
 
   /**
