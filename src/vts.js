@@ -4,6 +4,8 @@ import rules from './utils/applyRules.js';
 import deepMerge from './utils/deepMerge.js';
 import log from './utils/log.js';
 
+const Instances = [];
+
 /**
  * @description A JavaScript library that provides a simple and flexible way to handle
  * form validation before submitting. It allows you to customize the validation rules,
@@ -26,17 +28,63 @@ export default class Vts {
     this.fields = form.querySelectorAll('[name]:not([data-vts-ignored])');
     this.config = deepMerge({}, vtsDefaults, config);
     this.abortController = new AbortController();
+
+    const existingInstance = Instances.includes(formId);
+    if (existingInstance) {
+      throw new Error('Vts instance already exists for this form element.');
+    }
+
     log.start(this);
+
+    Instances.push(formId);
+
+    this.#addEventListeners();
 
     if (form) this.#validate();
     else console.error('Invalid form element.');
+  }
+
+  #addEventListeners() {
+    const config = this.config;
+    const eventListeners = {
+      input: [
+        'text',
+        'textarea',
+        'range',
+        'date',
+        'number',
+        'email',
+        'url',
+        'password',
+      ],
+      change: ['radio', 'select'],
+    };
+
+    // Form
+    // config.halt &&
+    this.form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      if (config.stopPropagation) e.stopPropagation();
+      this.submit();
+      console.log('triggered');
+    });
+
+    // Fields
+
+    this.fields.forEach((field) => {
+      let eventListener = 'input';
+      if (eventListeners.change.includes(field.type)) eventListener = 'change';
+      field.addEventListener(eventListener, (e) => {
+        this.#validate(false);
+      });
+    });
   }
 
   /**
    * @description Validates each field in the form.
    * @memberof Vts
    */
-  #validate() {
+  #validate(submit = true) {
     const mustLog = this.config.log;
     log.show(mustLog, 'info', 'Validation started');
     const config = this.config;
@@ -46,7 +94,10 @@ export default class Vts {
       this.currentField = field;
       log.show(mustLog, 'log', 'validating:', field);
 
-      const [label, title, message] = rules.apply.call(this);
+      const [valid, label, title, message] = rules.apply.call(this);
+
+      if (valid) field.setCustomValidity('');
+      else field.setCustomValidity(message);
 
       if (field.checkValidity()) {
         if (config.mode === 'each') {
@@ -66,7 +117,7 @@ export default class Vts {
     this.#validateAll();
     log.show(mustLog, 'info', 'Validation ended');
 
-    if (!config.halt && this.isValid()) this.submit();
+    if (submit) if (!config.halt && this.isValid()) this.submit();
 
     log.end(this.config.log, form.id);
   }
@@ -112,6 +163,7 @@ export default class Vts {
   async submit() {
     const config = this.config;
     if (this.isValid()) {
+      console.log('ok');
       delete this.currentField;
       const form = this.form;
       const ajax = config.ajax;

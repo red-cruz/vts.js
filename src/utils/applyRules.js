@@ -20,30 +20,32 @@ export default class rulesUtil {
     const rule = Vts.config.rules[field.name];
     const label = getLabel(form, field);
     let title = 'Invalid ' + label;
-    let message = null;
+    let message = field.validationMessage;
+    let valid = true;
+
     // check if field has rule
-    if (rule) {
+    if (rule && field.checkValidity()) {
       title = rule.title ?? title;
       let pattern = rule.pattern;
-      [message = message, pattern = pattern] = rulesUtil.#matchField.call(
-        Vts,
-        rule
-      );
+
+      [valid = valid, message = message, pattern = pattern] =
+        rulesUtil.#matchField.call(Vts, rule);
+
       const regExp = new RegExp(pattern, rule.flags);
       const source = regExp.source;
 
-      field.value.match(regExp);
-      field.setAttribute('pattern', source);
+      if (regExp.test(field.value)) valid = true;
+
       log.show(Vts.config.log, 'log', 'pattern:', source);
     }
-    return [label, title, message];
+    return [valid, label, title, message];
   }
   /**
    * @description
    * @static
    * @param {Vts} Vts
    * @param {String} matchFieldName name of the field to match
-   * @returns {Array<invalidMessage, valid>}
+   * @returns {[string, boolean]|[]}
    * @memberof rulesUtil
    */
   static #matchField(rule) {
@@ -53,7 +55,7 @@ export default class rulesUtil {
     /** @type {Vts} */
     const Vts = this;
     const form = Vts.form;
-    const formData = Vts.formData;
+    /** @type {HTMLInputElement} */
     const field = Vts.currentField;
     const matchTarget = form.querySelector('[name="' + matchFieldName + '"]');
     const defMismatchMsg =
@@ -61,11 +63,10 @@ export default class rulesUtil {
     /** @type {String} */
     const invalidMessage = rule.message || defMismatchMsg;
     const flags = rule.flags;
-    const rawValue = formData.get(matchFieldName);
+    const rawValue = matchTarget.value;
     const value = flags.includes('i')
       ? vtsDefaults.generateCaseCombinations(rawValue, flags)
       : rawValue;
-
     return [invalidMessage, value];
   }
 }

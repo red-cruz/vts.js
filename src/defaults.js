@@ -69,7 +69,7 @@ const vtsDefaults = {
    * @default 'all'
    */
   mode: 'all',
-
+  stopPropagation: true,
   /**
    * regular expressions
    * @type {Object}
@@ -83,26 +83,6 @@ const vtsDefaults = {
    */
   fnValid: function (currentField) {
     currentField.style.border = '1px solid green';
-  },
-  generateCaseCombinations: function (str) {
-    const results = [];
-    const n = Math.pow(2, str.length);
-    console.log(n);
-    for (let i = 0; i < n; i++) {
-      let combination = '';
-
-      for (let j = 0; j < str.length; j++) {
-        if (((i >> j) & 1) === 1) {
-          combination += str[j].toLowerCase();
-        } else {
-          combination += str[j].toUpperCase();
-        }
-      }
-
-      results.push(combination);
-    }
-
-    return results.join('|');
   },
 };
 

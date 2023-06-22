@@ -1,19 +1,17 @@
 import Vts from './vts.js';
 import vtsDefaults from './defaults.js';
 import Swal from 'sweetalert2';
-import rulesUtil from './utils/applyRules.js';
 
 // VTS GLOBAL CONFIGURATION
 vtsDefaults.rules = {
   first_name: {
     match: 'user_name',
-    // pattern: vtsDefaults.generateCaseCombinations('gged'),
     flags: 'i',
     title: 'Invalid yung fname',
     message: 't',
-    event: 'input',
-    eventFn: () => {
-      console.log('test');
+    eventType: 'input',
+    eventListener: (element) => {
+      console.log(element);
     },
   },
 };
@@ -152,8 +150,8 @@ function completeSwal(form) {
 }
 
 document.addEventListener('DOMContentLoaded', function () {
-  // const validateForm = new Vts('myForm');
-  // return;
+  const validateForm = new Vts('myForm');
+  return;
   /** @type {HTMLFormElement} */
   const myForm = document.getElementById('myForm');
   myForm.addEventListener('submit', (e) => {
