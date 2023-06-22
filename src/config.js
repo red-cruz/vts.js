@@ -11,7 +11,8 @@ vtsDefaults.rules = {
     flags: 'i',
     title: 'Invalid yung fname',
     message: 't',
-    fn: () => {
+    event: 'input',
+    eventFn: () => {
       console.log('test');
     },
   },
@@ -52,7 +53,6 @@ function validFn(currentField, label) {
 function invalidAll(invalidFields, form) {
   console.log(invalidFields);
   invalidFields.forEach((element) => {
-    console.log(element);
     const parent = element.parentElement;
     const className = 'invalid-feedback';
     const sibling = parent.querySelector(`.${className}`);
@@ -63,8 +63,6 @@ function invalidAll(invalidFields, form) {
       div.classList.add(className);
       div.append(element.validationMessage);
       element.parentElement.append(div);
-
-      return true;
     } else {
       // Sibling element does not exist
       // return false;
@@ -99,12 +97,17 @@ function validAll(validFields, form) {
 }
 
 // AJAX EVENTS
-function beforeSwal(jqXHR, form) {
+function beforeSwal(abortController, form) {
   Swal.fire({
     title: 'Loading',
     icon: 'info',
     text: 'Please wait.',
     allowOutsideClick: false,
+    showCancelButton: true,
+  }).then((result) => {
+    if (result.dismiss === 'cancel') {
+      abortController.abort();
+    }
   });
 }
 /**
@@ -124,7 +127,10 @@ function successSwal(data, response, form) {
 function errorSwal(errorData, errorResponse, form) {
   const data = errorData ? errorData : {};
   console.table(errorResponse);
-
+  if (errorResponse instanceof DOMException) {
+    data.title = 'aborted';
+    data.text = errorResponse.message;
+  }
   Swal.fire({
     title: data.title || 'Error!',
     html: data.text || errorResponse.stack,
@@ -146,15 +152,16 @@ function completeSwal(form) {
 }
 
 document.addEventListener('DOMContentLoaded', function () {
+  // const validateForm = new Vts('myForm');
+  // return;
   /** @type {HTMLFormElement} */
   const myForm = document.getElementById('myForm');
   myForm.addEventListener('submit', (e) => {
     e.preventDefault();
-    const validatedForm = new Vts(myForm, {
+    const validatedForm = new Vts('myForm', {
       log: true,
       halt: true,
     });
-
     validatedForm.isValid() &&
       validatedForm
         .submit()

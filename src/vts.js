@@ -14,16 +14,18 @@ import log from './utils/log.js';
 export default class Vts {
   /**
    * Creates an instance of Vts.
-   * @param {HTMLFormElement} form
+   * @param {String} formId
    * @param {object} [config] optional configuration
    * @memberof Vts
    */
-  constructor(form, config = {}) {
+  constructor(formId, config = {}) {
+    /** @type {HTMLFormElement} */
+    const form = document.getElementById(formId);
     this.form = form;
     this.formData = new FormData(form);
     this.fields = form.querySelectorAll('[name]:not([data-vts-ignored])');
     this.config = deepMerge({}, vtsDefaults, config);
-
+    this.abortController = new AbortController();
     log.start(this);
 
     if (form) this.#validate();
@@ -91,6 +93,9 @@ export default class Vts {
     return this.form.checkValidity();
   }
 
+  abort() {
+    this.abortController.abort();
+  }
   getCurrentFieldRules() {
     const field = this.currentField;
     if (!field) return null;
@@ -119,9 +124,11 @@ export default class Vts {
         },
         body: this.formData,
       };
-      const request = deepMerge({}, default_request, ajax.request);
+      const rawRequest = deepMerge({}, default_request, ajax.request);
+      const signal = this.abortController.signal;
+      const request = { ...rawRequest, signal };
       try {
-        ajax.beforeSend();
+        ajax.beforeSend(this.abortController, form);
         const response = await fetch(action, request);
         if (!response.ok) {
           throw new Error(response.statusText);
