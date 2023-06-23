@@ -1,10 +1,9 @@
 'use strict';
 import vtsDefaults from './defaults.js';
-import rules from './utils/applyRules.js';
+import rules from './utils/Rules.js';
+import Check from './utils/Check.js';
 import deepMerge from './utils/deepMerge.js';
-import log from './utils/log.js';
-
-const Instances = [];
+import Log from './utils/Log.js';
 
 /**
  * @description A JavaScript library that provides a simple and flexible way to handle
@@ -21,30 +20,25 @@ export default class Vts {
    * @memberof Vts
    */
   constructor(formId, config = {}) {
+    Check.instance(formId);
+
     /** @type {HTMLFormElement} */
     const form = document.getElementById(formId);
+
+    Check.form(form);
+
+    // assign properties
     this.form = form;
     this.formData = new FormData(form);
     this.fields = form.querySelectorAll('[name]:not([data-vts-ignored])');
     this.config = deepMerge({}, vtsDefaults, config);
     this.abortController = new AbortController();
 
-    const existingInstance = Instances.includes(formId);
-    if (existingInstance) {
-      throw new Error('Vts instance already exists for this form element.');
-    }
-
-    log.start(this);
-
-    Instances.push(formId);
-
     this.#addEventListeners();
-
-    if (form) this.#validate();
-    else console.error('Invalid form element.');
   }
 
   #addEventListeners() {
+    const form = this.form;
     const config = this.config;
     const eventListeners = {
       input: [
@@ -62,11 +56,16 @@ export default class Vts {
 
     // Form
     // config.halt &&
-    this.form.addEventListener('submit', (e) => {
+    form.addEventListener('submit', (e) => {
       e.preventDefault();
       if (config.stopPropagation) e.stopPropagation();
+
+      Log.start(this);
+
+      this.#validate();
+
       this.submit();
-      console.log('triggered');
+      console.log('triggered submit');
     });
 
     // Fields
@@ -86,13 +85,13 @@ export default class Vts {
    */
   #validate(submit = true) {
     const mustLog = this.config.log;
-    log.show(mustLog, 'info', 'Validation started');
+    Log.show(mustLog, 'info', 'Validation started');
     const config = this.config;
     const form = this.form;
 
     for (const field of this.fields) {
       this.currentField = field;
-      log.show(mustLog, 'log', 'validating:', field);
+      Log.show(mustLog, 'log', 'validating:', field);
 
       const [valid, label, title, message] = rules.apply.call(this);
 
@@ -101,13 +100,13 @@ export default class Vts {
 
       if (field.checkValidity()) {
         if (config.mode === 'each') {
-          log.show(mustLog, 'success', 'calling the "valid" function...');
+          Log.show(mustLog, 'success', 'calling the "valid" function...');
           config.fnValid(field, label);
         }
       } else {
         if (config.mode === 'each') {
           console.log(field, 'eto');
-          log.show(mustLog, 'warn', 'calling the "invalid" function...');
+          Log.show(mustLog, 'warn', 'calling the "invalid" function...');
           config.fnInvalid(field, label, title, message);
           break;
         }
@@ -115,11 +114,11 @@ export default class Vts {
     }
 
     this.#validateAll();
-    log.show(mustLog, 'info', 'Validation ended');
+    Log.show(mustLog, 'info', 'Validation ended');
 
     if (submit) if (!config.halt && this.isValid()) this.submit();
 
-    log.end(this.config.log, form.id);
+    Log.end(this.config.log, form.id);
   }
 
   #validateAll() {
@@ -129,10 +128,10 @@ export default class Vts {
 
     if (config.mode !== 'all') return;
 
-    log.show(mustLog, 'success', 'calling the "valid" function...');
+    Log.show(mustLog, 'success', 'calling the "valid" function...');
     config.fnValid(this.form.querySelectorAll(`:valid${not}`), this.form);
 
-    log.show(mustLog, 'warn', 'calling the "invalid" function...');
+    Log.show(mustLog, 'warn', 'calling the "invalid" function...');
     config.fnInvalid(this.form.querySelectorAll(`:invalid${not}`), this.form);
   }
 
@@ -210,7 +209,7 @@ export default class Vts {
 
       ajax.complete(form);
     } else {
-      log.show(config.log, 'error', 'Submission failed: Invalid form');
+      Log.show(config.log, 'error', 'Submission failed: Invalid form');
       Promise.reject('invalid form').catch(() => {});
     }
   }

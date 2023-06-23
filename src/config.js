@@ -150,7 +150,10 @@ function completeSwal(form) {
 }
 
 document.addEventListener('DOMContentLoaded', function () {
-  const validateForm = new Vts('myForm');
+  const validateForm = new Vts('myForm', {
+    log: true,
+    halt: true,
+  });
   return;
   /** @type {HTMLFormElement} */
   const myForm = document.getElementById('myForm');

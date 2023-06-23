@@ -1,16 +1,16 @@
 import Vts from '../vts';
-import log from './log';
+import Log from './Log';
 import getLabel from './getLabel';
 import vtsDefaults from '../defaults';
 
-export default class rulesUtil {
+export default class RulesUtil {
   /**
    * @description
    * @author RED
    * @static
    * @param {Vts} Vts
    * @returns {Array<invalidTitle, invalidMessage>}
-   * @memberof rulesUtil
+   * @memberof RulesUtil
    */
   static apply() {
     /** @type {Vts} */
@@ -29,14 +29,14 @@ export default class rulesUtil {
       let pattern = rule.pattern;
 
       [valid = valid, message = message, pattern = pattern] =
-        rulesUtil.#matchField.call(Vts, rule);
+        RulesUtil.#matchField.call(Vts, rule);
 
       const regExp = new RegExp(pattern, rule.flags);
       const source = regExp.source;
 
       if (regExp.test(field.value)) valid = true;
 
-      log.show(Vts.config.log, 'log', 'pattern:', source);
+      Log.show(Vts.config.log, 'log', 'pattern:', source);
     }
     return [valid, label, title, message];
   }
@@ -46,7 +46,7 @@ export default class rulesUtil {
    * @param {Vts} Vts
    * @param {String} matchFieldName name of the field to match
    * @returns {[string, boolean]|[]}
-   * @memberof rulesUtil
+   * @memberof RulesUtil
    */
   static #matchField(rule) {
     const matchFieldName = rule.match;

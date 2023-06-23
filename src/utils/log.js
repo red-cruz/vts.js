@@ -1,41 +1,42 @@
 import Vts from '../vts';
 
-export default class logUtil {
+export default class LogUtil {
   /**
    * @description
    * @author RED
    * @static
    * @param {Vts} Vts
-   * @memberof logUtil
+   * @memberof LogUtil
    */
   static start(Vts) {
     const mustLog = Vts.config.log;
     mustLog && console.group('vts#' + Vts.form.id);
     mustLog && console.time('vts_time#' + Vts.form.id);
-    logUtil.show(mustLog, 'log', Vts);
+    LogUtil.show(mustLog, 'log', Vts);
   }
 
   static show(mustLog, type, ...message) {
     if (!mustLog) return;
 
-    const msg = '%c' + message;
-    const style = 'color: static FFFFFF; padding: 5px';
+    const msg = '%c' + message.join(' ');
+    const style = 'color: #FFFFFF; padding: 5px';
 
     switch (type) {
       case 'log':
         console.log(...message);
         break;
       case 'info':
-        console.info(msg, 'background: static 5DADE2;' + style);
+        console.info(msg, 'background: #5DADE2;' + style);
         break;
       case 'success':
-        console.info(msg, 'background: static 008000;' + style);
+        console.info(msg, 'background: #008000;' + style);
         break;
       case 'warn':
-        console.info(msg, 'background: static FF8C00;' + style);
+        console.warn(...message);
         break;
       case 'error':
-        console.info(msg, 'background: static FF0000;' + style);
+        console.error(...message);
+        break;
     }
   }
 
