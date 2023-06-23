@@ -150,13 +150,19 @@ function completeSwal(form) {
 }
 
 document.addEventListener('DOMContentLoaded', function () {
-  const validateForm = new Vts('myForm', {
+  const myForm = new Vts('myForm', {
     log: true,
     halt: true,
   });
+  myForm.form.addEventListener('submit', function (e) {
+    e.preventDefault();
+    if (myForm.isValid()) myForm.submit();
+  });
+
   return;
+
   /** @type {HTMLFormElement} */
-  const myForm = document.getElementById('myForm');
+  const myForm1 = document.getElementById('myForm');
   myForm.addEventListener('submit', (e) => {
     e.preventDefault();
     const validatedForm = new Vts('myForm', {

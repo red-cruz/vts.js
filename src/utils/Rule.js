@@ -3,7 +3,7 @@ import Log from './Log';
 import getLabel from './getLabel';
 import vtsDefaults from '../defaults';
 
-export default class RulesUtil {
+export default class RuleUtil {
   /**
    * @description
    * @author RED
@@ -29,7 +29,7 @@ export default class RulesUtil {
       let pattern = rule.pattern;
 
       [valid = valid, message = message, pattern = pattern] =
-        RulesUtil.#matchField.call(Vts, rule);
+        RuleUtil.#matchField.call(Vts, rule);
 
       const regExp = new RegExp(pattern, rule.flags);
       const source = regExp.source;
@@ -40,6 +40,7 @@ export default class RulesUtil {
     }
     return [valid, label, title, message];
   }
+
   /**
    * @description
    * @static
@@ -64,9 +65,6 @@ export default class RulesUtil {
     const invalidMessage = rule.message || defMismatchMsg;
     const flags = rule.flags;
     const rawValue = matchTarget.value;
-    const value = flags.includes('i')
-      ? vtsDefaults.generateCaseCombinations(rawValue, flags)
-      : rawValue;
-    return [invalidMessage, value];
+    return [invalidMessage, rawValue];
   }
 }

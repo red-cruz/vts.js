@@ -1,10 +1,15 @@
 {
   "dependencies": {
-    "sweetalert2": "^11.7.12"
+    "sweetalert2": "^11.7.12",
+    "whatwg-fetch": "^3.6.2"
   },
   "devDependencies": {
     "ts-loader": "^9.4.3",
     "webpack": "^5.87.0",
     "webpack-cli": "^5.1.4"
+  },
+  "scripts": {
+    "start": "webpack --config webpack.config.js --mode development",
+    "build": "webpack --config webpack.config.prod.js --mode production"
   }
 }

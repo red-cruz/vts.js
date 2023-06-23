@@ -1,4 +1,5 @@
 const path = require('path');
+const webpack = require('webpack');
 
 module.exports = {
   entry: {
@@ -8,7 +9,7 @@ module.exports = {
     filename: '[name].min.js',
     path: path.resolve(__dirname, 'dist'),
   },
-  mode: 'development',
+  mode: 'production',
   watch: true,
   module: {
     rules: [
@@ -18,4 +19,9 @@ module.exports = {
       },
     ],
   },
+  plugins: [
+    new webpack.ProvidePlugin({
+      fetch: 'whatwg-fetch',
+    }),
+  ],
 };
