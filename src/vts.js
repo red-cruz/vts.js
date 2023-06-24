@@ -7,9 +7,10 @@ import Log from './utils/Log.js';
 import EventUtil from './utils/Event.js';
 
 /**
- * @description A JavaScript library that provides a simple and flexible way to handle
+ * A JavaScript library that provides a simple and flexible way to handle
  * form validation before submitting. It allows you to customize the validation rules,
  * error messages, and actions to be performed when a form field is valid or invalid.
+ *
  * @author RED
  * @class Vts
  */
@@ -21,20 +22,20 @@ export default class Vts {
    * @memberof Vts
    */
   constructor(formId, config = {}) {
-    Check.instance(formId);
-
     const form = document.getElementById(formId);
-
-    Check.form(form);
-
-    // assign properties
-    /** @type {HTMLFormElement} */
+    this.abortController = new AbortController();
+    this.config = deepMerge({}, vtsDefaults, config);
+    this.fields = form.querySelectorAll('[name]:not([data-vts-ignored])');
     this.form = form;
     this.formData = new FormData(form);
-    this.fields = form.querySelectorAll('[name]:not([data-vts-ignored])');
-    this.config = deepMerge({}, vtsDefaults, config);
-    this.abortController = new AbortController();
+    this.currentField = form;
+    this.#init();
+  }
 
+  #init() {
+    const form = this.form;
+    Check.instance(form.id);
+    Check.form.call(form);
     this.#addEventListeners();
   }
 
@@ -47,7 +48,7 @@ export default class Vts {
       e.preventDefault();
       if (config.stopPropagation) e.stopPropagation();
 
-      Log.start(this);
+      Log.start.call(this);
 
       this.#validate();
 
@@ -58,69 +59,66 @@ export default class Vts {
 
     // Fields
     this.fields.forEach((field) => {
-      const rule = this.getFieldRules(field);
-      const eventType = EventUtil.getType(field.type, rule?.eventType);
+      const rules = this.#getFieldRules(field);
+      const eventType = EventUtil.getType(field.type, rules?.eventType);
 
-      field.addEventListener(eventType, (e) => {
-        this.#validate(false);
+      field.addEventListener(eventType, () => {
+        this.#checkValidity(field);
       });
     });
   }
 
   /**
-   * @description Validates each field in the form.
+   * @description Validates each field. triggered by form submit event
    * @memberof Vts
    */
-  #validate(submit = true) {
-    const mustLog = this.config.log;
-    Log.show(mustLog, 'info', 'Validation started');
-    const config = this.config;
+  #validate() {
     const form = this.form;
+    const config = this.config;
+    const mustLog = config.log;
+    Log.show(mustLog, 'info', 'Validation started');
 
     for (const field of this.fields) {
-      this.currentField = field;
-      Log.show(mustLog, 'log', 'validating:', field);
-
-      const [valid, label, title, message] = RuleUtil.apply.call(this);
-
-      if (valid) field.setCustomValidity('');
-      else field.setCustomValidity(message);
-
-      if (field.checkValidity()) {
-        if (config.mode === 'each') {
-          Log.show(mustLog, 'success', 'calling the "valid" function...');
-          config.fnValid(field, label);
-        }
-      } else {
-        if (config.mode === 'each') {
-          console.log(field, 'eto');
-          Log.show(mustLog, 'warn', 'calling the "invalid" function...');
-          config.fnInvalid(field, label, title, message);
-          break;
-        }
-      }
+      this.#checkValidity(field);
     }
 
-    this.#validateAll();
-    Log.show(mustLog, 'info', 'Validation ended');
+    const not = ':not([data-vts-ignored], [type="submit"])';
+    config.fnValid(form.querySelectorAll(`:valid${not}`), form);
+    config.fnInvalid(form.querySelectorAll(`:invalid${not}`), form);
+    Log.end(mustLog, form.id);
+  }
 
-    if (submit) if (!config.halt && this.isValid()) this.submit();
+  #execValid() {}
+  #execInvalid() {}
 
-    Log.end(this.config.log, form.id);
+  /**
+   * @description
+   * @author RED
+   * @param {HTMLElement} field
+   * @memberof Vts
+   */
+  #checkValidity(field) {
+    this.currentField = field;
+    const config = this.config;
+    const mustLog = config.log;
+    Log.show(mustLog, 'log', 'validating:', field);
+
+    const [valid, label, title, message] = RuleUtil.apply.call(this);
+
+    if (valid) field.setCustomValidity('');
+    else field.setCustomValidity(message);
   }
 
   #validateAll() {
     const config = this.config;
     const mustLog = config.log;
     const not = ':not([data-vts-ignored], [type="submit"])';
-
-    if (config.mode !== 'all') return;
+    config.fnValid(this.form.querySelectorAll(`:valid${not}`), this.form);
+    config.fnInvalid(this.form.querySelectorAll(`:invalid${not}`), this.form);
 
     Log.show(mustLog, 'success', 'calling the "valid" function...');
-    config.fnValid(this.form.querySelectorAll(`:valid${not}`), this.form);
 
     Log.show(mustLog, 'warn', 'calling the "invalid" function...');
-    config.fnInvalid(this.form.querySelectorAll(`:invalid${not}`), this.form);
   }
 
   /**
@@ -135,7 +133,7 @@ export default class Vts {
     this.abortController.abort();
   }
 
-  getFieldRules(field = this.currentField) {
+  #getFieldRules(field = this.currentField) {
     if (!field) return null;
     const fieldName = field.name;
     const rules = this.config.rules[fieldName];
@@ -148,10 +146,9 @@ export default class Vts {
    * @async
    */
   async submit() {
-    const config = this.config;
     delete this.currentField;
     const form = this.form;
-    const ajax = config.ajax;
+    const ajax = this.config.ajax;
     const action = ajax.action || form.action;
     const method = ajax.method || form.method;
     const default_request = {

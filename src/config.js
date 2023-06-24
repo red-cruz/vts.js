@@ -5,43 +5,30 @@ import Swal from 'sweetalert2';
 // VTS GLOBAL CONFIGURATION
 vtsDefaults.rules = {
   first_name: {
-    match: 'user_name',
-    flags: 'i',
-    title: 'Invalid yung fname',
-    message: 't',
     eventType: 'input',
-    eventListener: (element) => {
-      console.log(element);
+    pattern: '\\d',
+    flags: 'i',
+    valid: {
+      title: 'Tama na',
+      message: 'Oks yung ${value}',
+      fn: (Vts) => {},
+    },
+    invalid: {
+      title: 'Invalid yung ${value}',
+      message: 'Ehhhh',
+      fn: (Vts) => {},
     },
   },
 };
-// vtsDefaults.log = true;
-const mode = (vtsDefaults.mode = 'all');
-vtsDefaults.fnInvalid = mode === 'each' ? invalidSwal : invalidAll;
-vtsDefaults.fnValid = mode === 'each' ? validFn : validAll;
+vtsDefaults.log = true;
+vtsDefaults.fnInvalid = invalidAll;
+vtsDefaults.fnValid = validAll;
 vtsDefaults.ajax.beforeSend = beforeSwal;
 vtsDefaults.ajax.success = successSwal;
 vtsDefaults.ajax.complete = completeSwal;
 vtsDefaults.ajax.error = errorSwal;
 
-// validation for "each" mode
-function invalidSwal(currentField, label, title, message) {
-  console.log(currentField.validationMessage, label);
-  currentField.focus();
-  Swal.fire({
-    title: title,
-    text: message || currentField.validationMessage,
-    icon: 'warning',
-  });
-}
-function validFn(currentField, label) {
-  console.log(label, currentField.value);
-  // this empty function prevents the default "valid" method of vts from executing
-  // if this is removed, a green border will be applied to the valid inputs
-}
-
-// OPTIONAL SETTINGS
-// validation for "all" mode
+// validation SETTINGS
 /**
  * @description
  * @author RED
@@ -49,7 +36,6 @@ function validFn(currentField, label) {
  * @param {HTMLFormElement} form
  */
 function invalidAll(invalidFields, form) {
-  console.log(invalidFields);
   invalidFields.forEach((element) => {
     const parent = element.parentElement;
     const className = 'invalid-feedback';
@@ -75,7 +61,6 @@ function invalidAll(invalidFields, form) {
  * @param {HTMLFormElement} form
  */
 function validAll(validFields, form) {
-  console.log(validFields);
   validFields.forEach((element) => {
     const parent = element.parentElement;
     const className = 'valid-feedback';
@@ -95,6 +80,11 @@ function validAll(validFields, form) {
 }
 
 // AJAX EVENTS
+/**
+ * @description
+ * @param {AbortController} abortController
+ * @param {HTMLFormElement} form
+ */
 function beforeSwal(abortController, form) {
   Swal.fire({
     title: 'Loading',
@@ -150,16 +140,16 @@ function completeSwal(form) {
 }
 
 document.addEventListener('DOMContentLoaded', function () {
+  const form = document.getElementById('myForm');
   const myForm = new Vts('myForm', {
     log: true,
-    halt: true,
+    // halt: true,
   });
-  myForm.form.addEventListener('submit', function (e) {
-    e.preventDefault();
+  return;
+  form.addEventListener('submit', function (e) {
+    // e.preventDefault();
     if (myForm.isValid()) myForm.submit();
   });
-
-  return;
 
   /** @type {HTMLFormElement} */
   const myForm1 = document.getElementById('myForm');

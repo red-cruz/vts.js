@@ -1,5 +1,4 @@
 export default class EventUtil {
-  add() {}
   /**
    * Determines the event type.
    *
@@ -10,7 +9,14 @@ export default class EventUtil {
    * @memberof EventUtil
    */
   static getType(fieldType, ruleEventType) {
-    const changeEvents = ['radio', 'select', 'checkbox', 'file', 'range'];
+    const changeEvents = [
+      'radio',
+      'select-one',
+      'select-multiple',
+      'checkbox',
+      'file',
+      'range',
+    ];
 
     // Update event to 'change' based on the field type
     let eventType = changeEvents.includes(fieldType) ? 'change' : 'input';

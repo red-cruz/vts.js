@@ -60,15 +60,6 @@ const vtsDefaults = {
    */
   log: false,
 
-  /**
-   * The validation mode.
-   * The "each" mode will stop the validation if the current field is invalid.
-   * The "all" mode will continue the validation until all fields have been checked.
-   * Fields are validated in the same order as their DOM declaration.
-   * @type {string}
-   * @default 'all'
-   */
-  mode: 'all',
   stopPropagation: true,
   /**
    * regular expressions

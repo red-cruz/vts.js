@@ -1,44 +1,40 @@
 import Vts from '../vts';
 import Log from './Log';
-import getLabel from './getLabel';
-import vtsDefaults from '../defaults';
+import getFieldLabel from './getFieldLabel';
 
 export default class RuleUtil {
   /**
    * @description
    * @author RED
    * @static
-   * @param {Vts} Vts
+   * @this {Vts} Vts
    * @returns {Array<invalidTitle, invalidMessage>}
    * @memberof RulesUtil
    */
   static apply() {
-    /** @type {Vts} */
-    const Vts = this;
-    const form = Vts.form;
-    const field = Vts.currentField;
-    const rule = Vts.config.rules[field.name];
-    const label = getLabel(form, field);
-    let title = 'Invalid ' + label;
-    let message = field.validationMessage;
-    let valid = true;
+    const form = this.form;
+    const field = this.currentField;
+    const rule = this.config.rules[field.name];
+    const label = getFieldLabel(field, form);
+    let invalidTitle = 'Invalid ' + label;
+    let invalidMessage = field.validationMessage;
+    let valid = field.checkValidity();
 
     // check if field has rule
-    if (rule && field.checkValidity()) {
-      title = rule.title ?? title;
+    if (rule) {
+      invalidMessage = rule.invalid?.title || invalidTitle;
       let pattern = rule.pattern;
 
-      [valid = valid, message = message, pattern = pattern] =
-        RuleUtil.#matchField.call(Vts, rule);
+      [valid = valid, invalidMessage = invalidMessage, pattern = pattern] =
+        RuleUtil.#matchField.call(this, rule);
 
       const regExp = new RegExp(pattern, rule.flags);
       const source = regExp.source;
 
       if (regExp.test(field.value)) valid = true;
-
-      Log.show(Vts.config.log, 'log', 'pattern:', source);
+      Log.show(this.config.log, 'log', 'pattern:', source);
     }
-    return [valid, label, title, message];
+    return [valid, label, invalidTitle, invalidMessage];
   }
 
   /**
@@ -53,17 +49,24 @@ export default class RuleUtil {
     const matchFieldName = rule.match;
 
     if (!matchFieldName) return [];
+
     /** @type {Vts} */
     const Vts = this;
     const form = Vts.form;
-    /** @type {HTMLInputElement} */
     const field = Vts.currentField;
     const matchTarget = form.querySelector('[name="' + matchFieldName + '"]');
     const defMismatchMsg =
-      getLabel(form, field) + ' did not match ' + getLabel(form, matchTarget);
+      getFieldLabel(field, form) +
+      ' did not match ' +
+      getFieldLabel(matchTarget, form);
     /** @type {String} */
-    const invalidMessage = rule.message || defMismatchMsg;
-    const flags = rule.flags;
+    const invalidRuleMessage = rule.invalid?.message.replace(
+      '${value}',
+      field.value
+    );
+
+    /** @type {String} */
+    const invalidMessage = invalidRuleMessage || defMismatchMsg;
     const rawValue = matchTarget.value;
     return [invalidMessage, rawValue];
   }

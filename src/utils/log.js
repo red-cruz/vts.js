@@ -5,14 +5,16 @@ export default class LogUtil {
    * @description
    * @author RED
    * @static
-   * @param {Vts} Vts
+   * @this {Vts}
    * @memberof LogUtil
    */
-  static start(Vts) {
-    const mustLog = Vts.config.log;
-    mustLog && console.group('vts#' + Vts.form.id);
-    mustLog && console.time('vts_time#' + Vts.form.id);
-    LogUtil.show(mustLog, 'log', Vts);
+  static start() {
+    const mustLog = this.config.log;
+    const formId = this.form.id;
+    if (!mustLog) return;
+    console.group('vts#' + formId);
+    console.time('vts_time#' + formId);
+    LogUtil.show(mustLog, 'log', this);
   }
 
   static show(mustLog, type, ...message) {
@@ -41,7 +43,9 @@ export default class LogUtil {
   }
 
   static end(mustLog, formId) {
-    mustLog && console.groupEnd('vts#' + formId);
-    mustLog && console.timeEnd('vts_time#' + formId);
+    if (!mustLog) return;
+    LogUtil.show(mustLog, 'info', 'Validation ended');
+    console.timeEnd('vts_time#' + formId);
+    console.groupEnd('vts#' + formId);
   }
 }

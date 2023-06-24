@@ -24,21 +24,21 @@ export default class CheckUtil {
   /**
    * Checks if the provided form element is valid and throws an error if it is not.
    *
-   * @param {HTMLFormElement} form - The form element to check for validity.
+   * @this {HTMLFormElement} The object representing the context of the function.
    * @throws {TypeError} Throws a TypeError if the form element is not found or is not a valid HTML form element.
    */
-  static form(form) {
-    const formId = form.id;
+  static form() {
+    const formId = this.id;
 
     // Check if form element exists
-    if (!form) {
+    if (!this) {
       throw new TypeError(
         `The form element with ID "${formId}" was not found.`
       );
     }
 
     // Check if form element is a valid HTML form element
-    if (!(form instanceof HTMLFormElement)) {
+    if (!(this instanceof HTMLFormElement)) {
       throw new TypeError(
         `The element with ID "${formId}" is not a valid HTML form element.
         Please ensure you are passing the ID of a valid form element.`
