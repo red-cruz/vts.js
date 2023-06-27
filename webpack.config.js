@@ -1,8 +1,9 @@
 const path = require('path');
+const DtsWebpackPlugin = require('dts-webpack-plugin');
 
 module.exports = {
   entry: {
-    config: './src/config.js',
+    config: './test/config.js',
   },
   output: {
     filename: '[name].min.js',
@@ -18,4 +19,5 @@ module.exports = {
       },
     ],
   },
+  plugins: [new DtsWebpackPlugin()],
 };

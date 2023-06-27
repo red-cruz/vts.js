@@ -2,9 +2,12 @@
 import vtsDefaults from './defaults.js';
 import RuleUtil from './utils/Rule.js';
 import Check from './utils/Check.js';
-import deepMerge from './utils/deepMerge.js';
-import Log from './utils/Log.js';
-import EventUtil from './utils/Event.js';
+import deepMerge from './utils/static/deepMerge.js';
+import getValidatedFields, {
+  getEventType,
+  getFieldRules,
+} from './utils/static/getters.js';
+import LogUtil from './utils/Log.js';
 
 /**
  * A JavaScript library that provides a simple and flexible way to handle
@@ -28,42 +31,44 @@ export default class Vts {
     this.fields = form.querySelectorAll('[name]:not([data-vts-ignored])');
     this.form = form;
     this.formData = new FormData(form);
-    this.currentField = form;
     this.#init();
   }
 
+  /**
+   * @description
+   * @type {LogUtil}
+   */
+  #log;
+  #currentField;
   #init() {
     const form = this.form;
     Check.instance(form.id);
     Check.form.call(form);
     this.#addEventListeners();
+    this.#log = new LogUtil(this);
   }
 
   #addEventListeners() {
-    const form = this.form;
-    const config = this.config;
-
     // Form
-    form.addEventListener('submit', (e) => {
+    this.form.addEventListener('submit', (e) => {
       e.preventDefault();
-      if (config.stopPropagation) e.stopPropagation();
+      if (this.config.stopPropagation) e.stopPropagation();
 
-      Log.start.call(this);
+      this.#log.start();
 
       this.#validate();
 
-      if (this.isValid() && !config.halt) {
+      if (this.isValid() && !this.isHalted()) {
         this.submit();
       }
     });
 
     // Fields
     this.fields.forEach((field) => {
-      const rules = this.#getFieldRules(field);
-      const eventType = EventUtil.getType(field.type, rules?.eventType);
-
+      const rules = this.config.rules[field.name];
+      const eventType = getEventType(field.type, rules?.eventType);
       field.addEventListener(eventType, () => {
-        this.#checkValidity(field);
+        this.#checkFieldValidity(field);
       });
     });
   }
@@ -73,23 +78,28 @@ export default class Vts {
    * @memberof Vts
    */
   #validate() {
-    const form = this.form;
-    const config = this.config;
-    const mustLog = config.log;
-    Log.show(mustLog, 'info', 'Validation started');
+    const mustLog = this.config.log;
+    const fields = this.fields;
 
-    for (const field of this.fields) {
-      this.#checkValidity(field);
+    this.#log.show('info', 'Validation started');
+
+    for (const field of fields) {
+      this.#checkFieldValidity(field);
     }
 
-    const not = ':not([data-vts-ignored], [type="submit"])';
-    config.fnValid(form.querySelectorAll(`:valid${not}`), form);
-    config.fnInvalid(form.querySelectorAll(`:invalid${not}`), form);
-    Log.end(mustLog, form.id);
+    this.#executeValidationFunctions();
+
+    Log.end();
   }
 
-  #execValid() {}
-  #execInvalid() {}
+  #executeValidationFunctions() {
+    const form = this.form;
+    const config = this.config;
+    const validFields = getValidatedFields(form, 'valid');
+    const invalidFields = getValidatedFields(form, 'invalid');
+    config.fnValid(validFields, form);
+    config.fnInvalid(invalidFields, form);
+  }
 
   /**
    * @description
@@ -97,28 +107,14 @@ export default class Vts {
    * @param {HTMLElement} field
    * @memberof Vts
    */
-  #checkValidity(field) {
-    this.currentField = field;
-    const config = this.config;
-    const mustLog = config.log;
-    Log.show(mustLog, 'log', 'validating:', field);
+  #checkFieldValidity(field) {
+    this.#currentField = field;
+    this.#log.show('log', 'validating:', field);
 
     const [valid, label, title, message] = RuleUtil.apply.call(this);
 
     if (valid) field.setCustomValidity('');
     else field.setCustomValidity(message);
-  }
-
-  #validateAll() {
-    const config = this.config;
-    const mustLog = config.log;
-    const not = ':not([data-vts-ignored], [type="submit"])';
-    config.fnValid(this.form.querySelectorAll(`:valid${not}`), this.form);
-    config.fnInvalid(this.form.querySelectorAll(`:invalid${not}`), this.form);
-
-    Log.show(mustLog, 'success', 'calling the "valid" function...');
-
-    Log.show(mustLog, 'warn', 'calling the "invalid" function...');
   }
 
   /**
@@ -129,15 +125,12 @@ export default class Vts {
     return this.form.checkValidity();
   }
 
-  abort() {
-    this.abortController.abort();
+  isHalted() {
+    return this.config.halt;
   }
 
-  #getFieldRules(field = this.currentField) {
-    if (!field) return null;
-    const fieldName = field.name;
-    const rules = this.config.rules[fieldName];
-    return rules;
+  abort() {
+    this.abortController.abort();
   }
 
   /**
@@ -146,7 +139,6 @@ export default class Vts {
    * @async
    */
   async submit() {
-    delete this.currentField;
     const form = this.form;
     const ajax = this.config.ajax;
     const action = ajax.action || form.action;

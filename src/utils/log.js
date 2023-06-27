@@ -2,23 +2,28 @@ import Vts from '../vts';
 
 export default class LogUtil {
   /**
-   * @description
+   * Creates an instance of LogUtil.
    * @author RED
-   * @static
-   * @this {Vts}
+   * @param {Vts} Vts
    * @memberof LogUtil
    */
-  static start() {
-    const mustLog = this.config.log;
-    const formId = this.form.id;
+  constructor(Vts) {
+    this.vts = Vts;
+    this.mustLog = Vts.config.log;
+    this.formId = Vts.form.id;
+  }
+
+  start() {
+    const mustLog = this.mustLog;
+    const formId = this.formId;
     if (!mustLog) return;
     console.group('vts#' + formId);
     console.time('vts_time#' + formId);
-    LogUtil.show(mustLog, 'log', this);
+    this.show(mustLog, 'log', this.vts);
   }
 
-  static show(mustLog, type, ...message) {
-    if (!mustLog) return;
+  show(type, ...message) {
+    if (!this.mustLog) return;
 
     const msg = '%c' + message.join(' ');
     const style = 'color: #FFFFFF; padding: 5px';
@@ -42,9 +47,10 @@ export default class LogUtil {
     }
   }
 
-  static end(mustLog, formId) {
-    if (!mustLog) return;
-    LogUtil.show(mustLog, 'info', 'Validation ended');
+  end() {
+    const formId = this.formId;
+    if (!this.mustLog) return;
+    this.show('info', 'Validation ended');
     console.timeEnd('vts_time#' + formId);
     console.groupEnd('vts#' + formId);
   }

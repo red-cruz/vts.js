@@ -1,6 +1,6 @@
 import Vts from '../vts';
 import Log from './Log';
-import getFieldLabel from './getFieldLabel';
+import { getFieldLabel } from './static/getters';
 
 export default class RuleUtil {
   /**
