@@ -89,6 +89,7 @@ export default class ValidateThenSubmit {
     // Fields
     this.fields.forEach((field) => {
       const rules = this.#getFieldRules(field.name);
+      const match = rules?.match;
       const eventType = getEventType(field.type, rules?.eventType);
       field.addEventListener(eventType, () => {
         this.#updateFormData();
@@ -96,6 +97,25 @@ export default class ValidateThenSubmit {
         this.#reportValidity();
       });
     });
+
+    // Match events
+    this.#attachMatchEvents();
+  }
+
+  #attachMatchEvents() {
+    for (const [fieldName, rule] of this.config.rules.entries()) {
+      const match = rule.match;
+      const eventType = rule.eventType;
+      const form = this.form;
+      if (match) {
+        const inputEvent = new Event(eventType);
+        const matchField = form.querySelector(`[name="${match}"]`);
+        const field = form.querySelector(`[name="${fieldName}"]`);
+        matchField.addEventListener(eventType, function () {
+          field.dispatchEvent(inputEvent);
+        });
+      }
+    }
   }
 
   #updateFormData() {
@@ -139,34 +159,64 @@ export default class ValidateThenSubmit {
     this.#log.show('log', 'validating field:', field);
     this.#clearValidity(field);
     const rules = this.#getFieldRules(field.name);
-    const fieldData = {
+    let fieldData = {
       label: getFieldLabel(field, this.form),
       field: field,
     };
 
     let valid = field.checkValidity();
-    let invalidMessage = (fieldData.message = field.validationMessage);
+    fieldData.message = field.validationMessage;
 
     if (rules) {
       // prevent rules from being applied if default html constraints exists
       if (valid) {
-        const regExp = new RegExp(rules.pattern, rules.flags);
-        if (regExp.test(field.value)) {
-          const validRules = rules?.valid || {};
-          valid = true;
-          fieldData.title = validRules?.title;
-          fieldData.message = validRules?.message;
+        let updatedData = [];
+        // if rules should match
+        if (rules.match) {
+          updatedData = this.#applyMatch(rules, field.value, fieldData);
         } else {
-          valid = false;
-          invalidMessage = rules.invalid.message;
-          fieldData.title =
-            rules.invalid?.title || `Invalid ${fieldData.label}`;
-          fieldData.message = invalidMessage;
+          updatedData = this.#applyRules(rules, field.value, fieldData);
         }
+
+        [valid, fieldData] = updatedData;
       }
     }
     fieldData.message = fieldData.message.replaceAll('${value}', field.value);
     this.#setValidity(valid, field, fieldData);
+  }
+
+  #applyMatch(rules, fieldValue, fieldData) {
+    let valid = false;
+    const matchingField = this.form.querySelector(`[name="${rules.match}"]`);
+    const matchValue = matchingField.value;
+    const regExp = new RegExp(`^${matchValue}$`, rules.flags);
+
+    if (regExp.test(fieldValue)) {
+      const validRules = rules?.valid || {};
+      fieldData.title = validRules?.title;
+      fieldData.message = validRules?.message;
+      valid = true;
+    } else {
+      fieldData.title = rules.invalid?.title || `Invalid ${fieldData.label}`;
+      fieldData.message = rules.invalid.message;
+    }
+    fieldData.message = fieldData.message.replaceAll('${match}', matchValue);
+    return [valid, fieldData];
+  }
+
+  #applyRules(rules, fieldValue, fieldData) {
+    let valid = false;
+    const regExp = new RegExp(rules.pattern, rules.flags);
+    if (regExp.test(fieldValue)) {
+      const validRules = rules?.valid || {};
+      fieldData.title = validRules?.title;
+      fieldData.message = validRules?.message;
+      valid = true;
+    } else {
+      fieldData.title = rules.invalid?.title || `Invalid ${fieldData.label}`;
+      fieldData.message = rules.invalid.message;
+    }
+    return [valid, fieldData];
   }
 
   #setValidity(valid, field, data) {
