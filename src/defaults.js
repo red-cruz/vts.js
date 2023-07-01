@@ -3,75 +3,51 @@
 /**
  * Global default configuration for Vts (Validate Then Submit).
  *
+ * @typedef {Object} VtsDefaults
+ * @property {Boolean} halt - Stops the form's submission.
+ * @property {Object} ajax - Ajax settings.
+ * @property {Object} ajax.request - Ajax request settings.
+ * @property {Function} ajax.beforeSend - Ajax beforeSend callback function.
+ * @property {Function} ajax.complete - Ajax complete callback function.
+ * @property {Function} ajax.error - Ajax error callback function.
+ * @property {Function} ajax.success - Ajax success callback function.
+ * @property {Function} fnInvalid - A function to be called if the field is invalid.
+ * @property {Boolean} log - Whether to log the validation errors.
+ * @property {Boolean} stopPropagation - Whether to stop event propagation.
+ * @property {Object} rules - Regular expressions for validation rules.
+ * @property {Function} fnValid - A function to be called if the field is valid.
+ */
+
+/**
+ * Global default configuration for Vts (Validate Then Submit).
+ *
+ * @type {VtsDefaults}
  */
 const vtsDefaults = {
-  /**
-   * Stops the form's submission.
-   * @type {Boolean}
-   */
   halt: false,
-
-  /**
-   * Ajax settings
-   */
+  validatedClass: 'was-validated',
   ajax: {
     request: {},
-
-    /**
-     * Ajax beforeSend callback function
-     * @param {XMLHttpRequest} xhr - The XMLHttpRequest object
-     */
     beforeSend: () => {
       vtsDefaults.ajax.loader();
     },
-
-    loader: (percent) => {},
-
     complete: (xhr, textStatus) => {},
-
     error: (error, raw) => {
       console.table(raw);
       alert(error || raw);
     },
-
-    /**
-     * ajax success
-     * @param {object} data
-     * @param {object} response
-     */
     success: (data, response) => {
       alert(data.title + ':\n' + data.text);
     },
   },
-  /**
-   * A function to be called if the field is invalid.
-   * @param {HTMLElement} currentField
-   * @param {String} label
-   */
   fnInvalid: (currentField, label, title, message) => {
     currentField.focus();
     currentField.style.border = '1px solid red';
     alert(title + '\n' + message);
   },
-
-  /**
-   * Whether to log the validation errors.
-   * @type {boolean}
-   */
   log: false,
-
   stopPropagation: true,
-  /**
-   * regular expressions
-   * @type {Object}
-   */
   rules: {},
-
-  /**
-   * A function to be called if the field is valid.
-   * @param {HTMLElement} currentField
-   * @param {String} label
-   */
   fnValid: function (currentField) {
     currentField.style.border = '1px solid green';
   },

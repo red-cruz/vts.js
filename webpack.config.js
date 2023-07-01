@@ -1,5 +1,4 @@
 const path = require('path');
-const DtsWebpackPlugin = require('dts-webpack-plugin');
 
 module.exports = {
   entry: {
@@ -19,5 +18,4 @@ module.exports = {
       },
     ],
   },
-  plugins: [new DtsWebpackPlugin()],
 };

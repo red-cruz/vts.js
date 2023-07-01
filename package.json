@@ -1,5 +1,6 @@
 {
   "dependencies": {
+    "lodash": "^4.17.21",
     "sweetalert2": "^11.7.12",
     "whatwg-fetch": "^3.6.2"
   },

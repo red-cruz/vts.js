@@ -1,4 +1,4 @@
-import Vts from '../vts';
+import Vts from '../ValidateThenSubmit';
 
 export default class LogUtil {
   /**
@@ -19,7 +19,7 @@ export default class LogUtil {
     if (!mustLog) return;
     console.group('vts#' + formId);
     console.time('vts_time#' + formId);
-    this.show(mustLog, 'log', this.vts);
+    this.show('log', this.vts);
   }
 
   show(type, ...message) {
