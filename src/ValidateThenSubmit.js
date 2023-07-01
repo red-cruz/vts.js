@@ -45,7 +45,7 @@ export default class ValidateThenSubmit {
     const form = this.form;
     Check.instance(form.id);
     Check.form(form);
-    this.#formData();
+    this.#updateFormData();
     this.#convertRulesToMap();
     this.#addEventListeners();
     this.#log = new LogUtil(this);
@@ -79,10 +79,7 @@ export default class ValidateThenSubmit {
 
       this.#log.start();
       this.#validate();
-
-      const validatedClass = this.config.validatedClass;
-      if (!this.form.classList.contains(validatedClass))
-        this.form.classList.add(validatedClass);
+      this.form.classList.add(this.config.validatedClass);
 
       if (this.isFormValid() && !this.isSubmitHalted()) {
         this.submit();
@@ -94,16 +91,14 @@ export default class ValidateThenSubmit {
       const rules = this.#getFieldRules(field.name);
       const eventType = getEventType(field.type, rules?.eventType);
       field.addEventListener(eventType, () => {
-        this.#formData();
+        this.#updateFormData();
         this.#checkFieldValidity(field);
-        const validatedClass = this.config.validatedClass;
-        if (this.form.classList.contains(validatedClass)) console.log('eto');
         this.#reportValidity();
       });
     });
   }
 
-  #formData() {
+  #updateFormData() {
     this.formData = new FormData(this.form);
   }
 
@@ -170,7 +165,7 @@ export default class ValidateThenSubmit {
         }
       }
     }
-    fieldData.message = fieldData.message.replace('${value}', field.value);
+    fieldData.message = fieldData.message.replaceAll('${value}', field.value);
     this.#setValidity(valid, field, fieldData);
   }
 
