@@ -41,7 +41,7 @@ function showFeedback(state, data) {
     const { field, label, message } = data[key];
     /** @type {HTMLElement} */
     const parent = field.parentNode;
-    const className = `${state}-tooltip`;
+    const className = `${state}-feedback`;
     const sibling = parent.querySelector(`.${className}`);
 
     if (!sibling) {
@@ -55,19 +55,6 @@ function showFeedback(state, data) {
       // else sibling.remove();
     }
   });
-}
-
-/**
- * @description
- * @author RED
- * @param {NodeListOf<HTMLElement>} invalidFields
- * @param {HTMLFormElement} form
- */
-function invalidAll(data, form) {}
-function validAll(validFields, form) {
-  // for (const field of validFields) {
-  //   field.style.border = '1px solid green';
-  // }
 }
 
 // AJAX EVENTS
@@ -121,4 +108,5 @@ document.addEventListener('DOMContentLoaded', function () {
   const test = new Vts('myForm', {
     log: true,
   });
+  console.log(test);
 });
