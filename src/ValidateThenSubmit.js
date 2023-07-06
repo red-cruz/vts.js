@@ -1,10 +1,11 @@
 'use strict';
-import vtsDefaults from './defaults.js';
+import { vtsDefaults } from './defaults.js';
 import Check from './utils/Check.js';
-import { merge } from 'lodash';
+import * as _ from 'lodash';
 import { getEventType, getFieldLabel } from './utils/static/getters.js';
 import LogUtil from './utils/Log.js';
 
+export { setVtsDefaults } from './defaults.js';
 /**
  * A JavaScript library that provides a simple and flexible way to handle
  * form validation before submitting. It allows you to customize the validation rules,
@@ -24,7 +25,7 @@ export default class ValidateThenSubmit {
     const form = document.getElementById(formId);
     this.abortController = new AbortController();
     /** @type {vtsDefaults} */
-    this.config = merge({}, vtsDefaults, config);
+    this.config = _.merge({}, vtsDefaults, config);
     /** @type {NodeListOf<HTMLInputElement|HTMLSelectElement|HTMLTextAreaElement>}*/
     this.fields = form.querySelectorAll('[name]:not([data-vts-ignored])');
     this.form = form;
@@ -45,7 +46,6 @@ export default class ValidateThenSubmit {
     const form = this.form;
     Check.instance(form.id);
     Check.form(form);
-    this.#updateFormData();
     this.#convertRulesToMap();
     this.#addEventListeners();
     this.#log = new LogUtil(this);
@@ -81,7 +81,7 @@ export default class ValidateThenSubmit {
       this.#validate();
       this.form.classList.add(this.config.validatedClass);
 
-      if (this.isFormValid() && !this.isSubmitHalted()) {
+      if (this.isFormValid() && !this.config.halt) {
         this.submit();
       }
     });
@@ -92,7 +92,6 @@ export default class ValidateThenSubmit {
       const match = rules?.match;
       const eventType = getEventType(field.type, rules?.eventType);
       field.addEventListener(eventType, () => {
-        this.#updateFormData();
         this.#checkFieldValidity(field);
         this.#reportValidity();
       });
@@ -105,12 +104,14 @@ export default class ValidateThenSubmit {
   #attachMatchEvents() {
     for (const [fieldName, rule] of this.config.rules.entries()) {
       const match = rule.match;
-      const eventType = rule.eventType;
       const form = this.form;
+      const field = form.querySelector(`[name="${fieldName}"]`);
+      const rules = this.#getFieldRules(fieldName);
+      const eventType = getEventType(field.type, rules?.eventType);
       if (match) {
         const inputEvent = new Event(eventType);
         const matchField = form.querySelector(`[name="${match}"]`);
-        const field = form.querySelector(`[name="${fieldName}"]`);
+        console.log(field, matchField, eventType);
         matchField.addEventListener(eventType, function () {
           field.dispatchEvent(inputEvent);
         });
@@ -160,8 +161,9 @@ export default class ValidateThenSubmit {
     this.#clearValidity(field);
     const rules = this.#getFieldRules(field.name);
     let fieldData = {
-      label: getFieldLabel(field, this.form),
       field: field,
+      label: getFieldLabel(field, this.form),
+      message: '',
     };
 
     let valid = field.checkValidity();
@@ -181,7 +183,9 @@ export default class ValidateThenSubmit {
         [valid, fieldData] = updatedData;
       }
     }
-    fieldData.message = fieldData.message.replaceAll('${value}', field.value);
+    fieldData.message = fieldData.message
+      ?.replaceAll('${value}', field.value)
+      .replaceAll('${label}', fieldData.label);
     this.#setValidity(valid, field, fieldData);
   }
 
@@ -192,15 +196,14 @@ export default class ValidateThenSubmit {
     const regExp = new RegExp(`^${matchValue}$`, rules.flags);
 
     if (regExp.test(fieldValue)) {
-      const validRules = rules?.valid || {};
-      fieldData.title = validRules?.title;
-      fieldData.message = validRules?.message;
+      fieldData.message = rules.message?.valid;
       valid = true;
     } else {
-      fieldData.title = rules.invalid?.title || `Invalid ${fieldData.label}`;
-      fieldData.message = rules.invalid.message;
+      fieldData.message = rules.message?.invalid;
     }
-    fieldData.message = fieldData.message.replaceAll('${match}', matchValue);
+    fieldData.message = fieldData.message
+      ?.replaceAll('${targetValue}', matchValue)
+      .replaceAll('${targetLabel}', getFieldLabel(matchingField, this.form));
     return [valid, fieldData];
   }
 
@@ -208,13 +211,10 @@ export default class ValidateThenSubmit {
     let valid = false;
     const regExp = new RegExp(rules.pattern, rules.flags);
     if (regExp.test(fieldValue)) {
-      const validRules = rules?.valid || {};
-      fieldData.title = validRules?.title;
-      fieldData.message = validRules?.message;
+      fieldData.message = rules.message?.valid;
       valid = true;
     } else {
-      fieldData.title = rules.invalid?.title || `Invalid ${fieldData.label}`;
-      fieldData.message = rules.invalid.message;
+      fieldData.message = rules.message?.invalid;
     }
     return [valid, fieldData];
   }
@@ -243,10 +243,6 @@ export default class ValidateThenSubmit {
     return this.form.checkValidity();
   }
 
-  isSubmitHalted() {
-    return this.config.halt;
-  }
-
   abortSubmit() {
     this.abortController.abort();
   }
@@ -266,9 +262,9 @@ export default class ValidateThenSubmit {
       request: {
         'Content-Type': 'multipart/form-data',
       },
-      body: this.formData,
+      body: new FormData(form),
     };
-    const rawRequest = merge({}, default_request, ajax.request);
+    const rawRequest = _.merge({}, default_request, ajax.request);
     const signal = this.abortController.signal;
     const request = { ...rawRequest, signal };
     try {
