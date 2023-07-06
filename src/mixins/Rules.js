@@ -1,4 +1,4 @@
-import getFieldLabel from '../utils/static/getFieldLabel';
+import getFieldLabel from '../utils/getFieldLabel';
 
 const vtsRules = {
   _applyRules(rules, fieldValue, fieldData) {

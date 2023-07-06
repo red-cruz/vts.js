@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import { vtsDefaults } from '../../Defaults';
+import { vtsDefaults } from './Defaults';
 
 export default function setVtsConfig(form, config, abortController) {
   const options = _.merge({}, vtsDefaults, config);

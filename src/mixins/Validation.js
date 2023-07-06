@@ -1,7 +1,7 @@
-import getFieldLabel from '../utils/static/getFieldLabel';
+import getFieldLabel from '../utils/getFieldLabel';
 
 const vtsValidation = {
-  data: {
+  _data: {
     validFields: new Map(),
     invalidFields: new Map(),
   },
@@ -60,7 +60,7 @@ const vtsValidation = {
     this._setValidity(valid, field, fieldData);
   },
   _reportValidity() {
-    const data = this.data;
+    const data = this._data;
     const validData = Object.fromEntries(data.validFields);
     const invalidData = Object.fromEntries(data.invalidFields);
     const form = this.form;
@@ -72,12 +72,12 @@ const vtsValidation = {
   _setValidity(valid, field, data) {
     if (valid) {
       this._clearValidity(field);
-      this.data.invalidFields.delete(field.name);
-      this.data.validFields.set(field.name, data);
+      this._data.invalidFields.delete(field.name);
+      this._data.validFields.set(field.name, data);
     } else {
       field.setCustomValidity(data.message);
-      this.data.validFields.delete(field.name);
-      this.data.invalidFields.set(field.name, data);
+      this._data.validFields.delete(field.name);
+      this._data.invalidFields.set(field.name, data);
     }
   },
   _clearValidity(field) {
