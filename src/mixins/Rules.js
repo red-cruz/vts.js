@@ -1,4 +1,5 @@
 import getFieldLabel from '../utils/getFieldLabel';
+import 'ValidateThenSubmit';
 
 const vtsRules = {
   _applyRules(rules, fieldValue, fieldData) {
@@ -29,6 +30,7 @@ const vtsRules = {
       .replaceAll('${targetLabel}', getFieldLabel(matchingField, this.form));
     return [valid, fieldData];
   },
+  _getPattern() {},
   _getFieldRules(fieldName) {
     return this.config.rules.get(fieldName);
   },
