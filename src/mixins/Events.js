@@ -41,7 +41,6 @@ const vtsEvents = {
       if (match) {
         const inputEvent = new Event(eventType);
         const matchField = form.querySelector(`[name="${match}"]`);
-        console.log(field, matchField, eventType);
         matchField.addEventListener(eventType, function () {
           field.dispatchEvent(inputEvent);
         });

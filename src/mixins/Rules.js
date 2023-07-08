@@ -1,5 +1,4 @@
 import getFieldLabel from '../utils/getFieldLabel';
-import 'ValidateThenSubmit';
 
 const vtsRules = {
   _applyRules(rules, fieldValue, fieldData) {

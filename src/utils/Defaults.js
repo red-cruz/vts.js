@@ -3,25 +3,7 @@
 /**
  * Global default configuration for Vts (Validate Then Submit).
  *
- * @typedef {Object} VtsDefaults
- * @property {Boolean} halt - Stops the form's submission.
- * @property {Object} ajax - Ajax settings.
- * @property {Object} ajax.request - Ajax request settings.
- * @property {Function} ajax.beforeSend - Ajax beforeSend callback function.
- * @property {Function} ajax.complete - Ajax complete callback function.
- * @property {Function} ajax.error - Ajax error callback function.
- * @property {Function} ajax.success - Ajax success callback function.
- * @property {Function} fnInvalid - A function to be called if the field is invalid.
- * @property {Boolean} log - Whether to log the validation errors.
- * @property {Boolean} stopPropagation - Whether to stop event propagation.
- * @property {Object} rules - Regular expressions for validation rules.
- * @property {Function} fnValid - A function to be called if the field is valid.
- */
-
-/**
- * Global default configuration for Vts (Validate Then Submit).
- *
- * @type {VtsDefaults}
+ * @type {import("../types").VtsConfig}
  */
 const vtsDefaults = {
   halt: false,

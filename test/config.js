@@ -1,5 +1,12 @@
+// @ts-check
 import Swal from 'sweetalert2';
-import Vts, { setVtsDefaults } from '../src/ValidateThenSubmit';
+import { setVtsDefaults, default as Vts } from '../src/ValidateThenSubmit';
+document.addEventListener('DOMContentLoaded', function () {
+  const test = new Vts('myForm', {
+    log: true,
+  });
+  console.log(test);
+});
 
 // VTS GLOBAL CONFIGURATION
 const defaultMessage = {
@@ -7,11 +14,48 @@ const defaultMessage = {
   invalid: '${label} must be equal to ${targetLabel}',
 };
 setVtsDefaults({
+  // AJAX EVENTS
   ajax: {
-    beforeSend: beforeSwal,
-    success: successSwal,
+    beforeSend: (abortController, form) => {
+      Swal.fire({
+        title: 'Loading',
+        icon: 'info',
+        text: 'Please wait.',
+        allowOutsideClick: false,
+      });
+    },
+    success: function (data, response, form) {
+      Swal.fire({
+        title: data.title ?? 'Server connection: ' + response.statusText,
+        html: data.text,
+        icon: data.icon ?? 'info',
+      });
+      form.classList.remove('was-validated');
+      form.reset();
+    },
     complete: completeSwal,
-    error: errorSwal,
+    error: function (errorData, errorResponse, form) {
+      const data = errorData ? errorData : {};
+      const stack =
+        'stack' in errorResponse
+          ? errorResponse.stack
+          : 'Unknown error occurred';
+
+      console.table(errorResponse);
+
+      Swal.fire({
+        title: data.title || 'Error!',
+        html: data.text || stack,
+        icon: data.icon || 'error',
+        showCancelButton: true,
+        cancelButtonText: 'View Error',
+      }).then((result) => {
+        if (result.dismiss === Swal.DismissReason.cancel) {
+          var newWindow = window.open();
+          newWindow.document.body.innerHTML = data.text || stack;
+        }
+      });
+    },
   },
   fnValid: (data) => {
     showFeedback('valid', data);
@@ -31,15 +75,22 @@ setVtsDefaults({
     },
     last_name: {
       match: 'first_name',
+      flags: 'g',
       message: defaultMessage,
     },
   },
 });
 
+/**
+ * @description
+ * @author RED
+ * @param {string} state
+ * @param {import('../src/types/config').VtsValidationData<string>} data
+ */
 function showFeedback(state, data) {
+  console.log(state, data);
   Object.keys(data).forEach((key) => {
     const { field, label, message } = data[key];
-    /** @type {HTMLElement} */
     const parent = field.parentNode;
     const className = `${state}-feedback`;
     const sibling = parent.querySelector(`.${className}`);
@@ -57,56 +108,9 @@ function showFeedback(state, data) {
   });
 }
 
-// AJAX EVENTS
-function beforeSwal(jqXHR, form) {
-  Swal.fire({
-    title: 'Loading',
-    icon: 'info',
-    text: 'Please wait.',
-    allowOutsideClick: false,
-  });
-}
-/**
- * @description
- * @param {object} data
- * @param {*} response
- */
-function successSwal(data, response, form) {
-  Swal.fire({
-    title: data.title ?? 'Server connection: ' + response.statusText,
-    html: data.text,
-    icon: data.icon ?? 'info',
-  });
-  form.classList.remove('was-validated');
-  form.reset();
-}
-function errorSwal(errorData, errorResponse, form) {
-  const data = errorData ? errorData : {};
-  console.table(errorResponse);
-
-  Swal.fire({
-    title: data.title || 'Error!',
-    html: data.text || errorResponse.stack,
-    icon: data.icon || 'error',
-    showCancelButton: true,
-    cancelButtonText: 'View Error',
-  }).then((result) => {
-    if (result.dismiss === 'cancel') {
-      var newWindow = window.open();
-      newWindow.document.body.innerHTML = data.text || errorResponse.stack;
-    }
-  });
-}
 function completeSwal(form) {
   console.log('triggered final');
 
   // empty function for disabling [vts] default complete function
   // can be configured
 }
-
-document.addEventListener('DOMContentLoaded', function () {
-  const test = new Vts('myForm', {
-    log: true,
-  });
-  console.log(test);
-});
