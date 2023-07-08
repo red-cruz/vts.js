@@ -12,9 +12,12 @@
     // Types should go into this directory.
     // Removing this would place the .d.ts files
     // next to the .js files
-    "outDir": "src",
     // go to js file when using IDE functions like
     // "Go to Definition" in VSCode
-    "declarationMap": true
-  }
+    "declarationMap": true,
+    "esModuleInterop": true,
+    "outFile": "dist/webpack.config.prod.d.ts"
+  },
+  "include": ["src/**/*.ts"],
+  "exclude": ["node_modules"]
 }

@@ -1,10 +1,12 @@
 // @ts-check
 import Swal from 'sweetalert2';
-import { setVtsDefaults, default as Vts } from '../src/ValidateThenSubmit';
+import Vts from '../src/ValidateThenSubmit';
+
 document.addEventListener('DOMContentLoaded', function () {
   const test = new Vts('myForm', {
     log: true,
   });
+  console.log(test);
 });
 
 // VTS GLOBAL CONFIGURATION
@@ -12,7 +14,7 @@ const defaultMessage = {
   valid: '${value} is a valid ${label}',
   invalid: '${label} must be equal to ${targetLabel}',
 };
-setVtsDefaults({
+Vts.setDefaults({
   // AJAX EVENTS
   ajax: {
     beforeSend: (abortController, form) => {
@@ -51,7 +53,7 @@ setVtsDefaults({
       }).then((result) => {
         if (result.dismiss === Swal.DismissReason.cancel) {
           var newWindow = window.open();
-          newWindow.document.body.innerHTML = data.text || stack;
+          if (newWindow) newWindow.document.body.innerHTML = data.text || stack;
         }
       });
     },
@@ -65,7 +67,7 @@ setVtsDefaults({
 });
 
 // set rules
-setVtsDefaults({
+Vts.setDefaults({
   rules: {
     first_name: {
       match: 'user_name',
@@ -92,14 +94,14 @@ function showFeedback(state, data) {
     const { field, label, message } = data[key];
     const parent = field.parentNode;
     const className = `${state}-feedback`;
-    const sibling = parent.querySelector(`.${className}`);
+    const sibling = parent?.querySelector(`.${className}`);
 
     if (!sibling) {
       if (!message) return;
       const div = document.createElement('div');
       div.classList.add(`${className}`);
       div.textContent = `${message}`;
-      parent.appendChild(div);
+      parent?.appendChild(div);
     } else {
       /* if (message)  */ sibling.textContent = `${message}`;
       // else sibling.remove();

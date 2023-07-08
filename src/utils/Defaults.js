@@ -35,7 +35,4 @@ const vtsDefaults = {
   },
 };
 
-function setVtsDefaults(config) {
-  _.merge(vtsDefaults, config);
-}
-export { vtsDefaults, setVtsDefaults };
+export { vtsDefaults };

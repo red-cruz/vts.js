@@ -6,7 +6,7 @@ import vtsValidation from './mixins/Validation.js';
 import setVtsConfig from './utils/setVtsConfig.js';
 import vtsForm from './mixins/Form.js';
 
-export { setVtsDefaults } from './utils/Defaults.js';
+import { vtsDefaults } from './utils/Defaults.js';
 
 export default class ValidateThenSubmit {
   constructor(formId, config = {}) {
@@ -34,5 +34,8 @@ export default class ValidateThenSubmit {
       vtsValidation
     );
     Object.assign(this, vtsForm);
+  }
+  static setDefaults(config) {
+    _.merge(vtsDefaults, config);
   }
 }
