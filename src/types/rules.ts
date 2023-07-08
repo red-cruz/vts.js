@@ -1,7 +1,7 @@
 /**
  * Represents the validation rules for a set of fields in Vts (Validate Then Submit).
  */
-export type VtsRules<TFieldNames extends string | keyof any> = {
+type VtsRules<TFieldNames extends string | keyof any> = {
   [K in TFieldNames]:
     | {
         /**
@@ -47,3 +47,5 @@ export type VtsRuleMessage = {
    */
   invalid: string;
 };
+
+export default VtsRules;

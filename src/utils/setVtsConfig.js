@@ -2,6 +2,7 @@
 /// <reference path="../ValidateThenSubmit.d.ts" />
 import _ from 'lodash';
 import { vtsDefaults } from './Defaults';
+import CheckUtil from './Check';
 
 /**
  * @description

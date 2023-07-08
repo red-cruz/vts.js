@@ -5,7 +5,6 @@ document.addEventListener('DOMContentLoaded', function () {
   const test = new Vts('myForm', {
     log: true,
   });
-  console.log(test);
 });
 
 // VTS GLOBAL CONFIGURATION

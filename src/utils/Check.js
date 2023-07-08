@@ -1,19 +1,22 @@
 const instances = [];
 
-export default class CheckUtil {
+/**
+ * Utility class for form type validation and instance checking.
+ */
+export default class VtsFormValidator {
   /**
-   * Checks if there is an existing "Vts" instance associated with the provided form ID.
+   * Checks if there is an existing instance associated with the provided form ID.
    * Throws an error if an instance already exists for the form ID.
    * If no instance exists, it adds the form ID to the instances array.
    *
    * @param {string} formId - The ID of the form element to check for an existing instance.
    * @throws {Error} Throws an error if an instance already exists for the specified form ID.
    */
-  static instance(formId) {
+  static checkInstance(formId) {
     // Check if an instance already exists for the form ID
     if (instances.includes(formId)) {
       throw new Error(
-        `A "Vts" instance already exists for the specified form element: ${formId}`
+        `An instance already exists for the specified form element: ${formId}`
       );
     }
 
@@ -22,13 +25,14 @@ export default class CheckUtil {
   }
 
   /**
-   * Checks if the provided form element is valid and throws an error if it is not.
+   * Retrieves the form element with the provided form ID and checks its validity.
    *
-   * @param {HTMLFormElement} form The object representing the context of the function.
+   * @param {string} formId - The ID of the form element to retrieve and check.
+   * @returns {HTMLFormElement} The valid HTML form element.
    * @throws {TypeError} Throws a TypeError if the form element is not found or is not a valid HTML form element.
    */
-  static form(form) {
-    const formId = form.id;
+  static validateForm(formId) {
+    const form = document.getElementById(formId);
 
     // Check if form element exists
     if (!form) {
@@ -44,5 +48,7 @@ export default class CheckUtil {
         Please ensure you are passing the ID of a valid form element.`
       );
     }
+
+    return form;
   }
 }

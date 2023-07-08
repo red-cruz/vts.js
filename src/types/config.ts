@@ -1,4 +1,4 @@
-import type { VtsRules } from './rules';
+import type VtsRules from './rules';
 
 /**
  * Represents the configuration options for Vts (Validate Then Submit).

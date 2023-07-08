@@ -8,8 +8,13 @@ import type { VtsConfig } from './types/config';
  * @author RED
  */
 declare class ValidateThenSubmit {
-  constructor(formId: string, config: VtsConfig);
+  /**
+   * Creates an instance of ValidateThenSubmit.
+   * new Vts('myForm', {})
+   */
+  constructor(formId: string, config?: VtsConfig);
 }
+export as namespace vts; // for TypeScript users who don't use modules
 export default ValidateThenSubmit;
 export { VtsConfig, setVtsDefaults } from './types/config';
 export type { VtsRuleMessage } from './types/rules';
