@@ -1,6 +1,6 @@
 // @ts-check
 import Swal from 'sweetalert2';
-import Vts from '../src/ValidateThenSubmit';
+import Vts, { VtsRulesMixin } from '../src/ValidateThenSubmit';
 // import Vts from '../dist/ValidateThenSubmit';
 
 document.addEventListener('DOMContentLoaded', function () {
@@ -8,6 +8,7 @@ document.addEventListener('DOMContentLoaded', function () {
     log: true,
     validatedClass: 'was',
   });
+
   console.log(test);
 });
 
@@ -76,7 +77,7 @@ Vts.setDefaults({
       message: {
         invalid: 'MALI',
         validityState: {
-          patternMismatch: 'must contain only letters and spaces.',
+          valueMissing: 'Required po',
         },
       },
     },

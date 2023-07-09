@@ -1,5 +1,5 @@
-import type { VtsConfig } from './types/config';
-import VtsRules from './types/rules';
+import type { VtsConfig, VtsValidationData } from './types/config';
+import VtsRules, { VtsRuleMessage, VtsRulesMixin } from './types/rules';
 
 /**
  * A JavaScript library that provides a simple and flexible way to handle
@@ -18,6 +18,11 @@ declare class ValidateThenSubmit {
   fields: NodeListOf<
     HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
   >;
+
+  /**
+   * Sets the default configuration for Vts (Validate Then Submit).
+   * @param config The configuration options.
+   */
   static setDefaults(config: Partial<VtsConfig>): void;
 }
 
@@ -27,10 +32,6 @@ declare class VtsEventsMixin {
   _getEventType(fieldType: string, ruleEventType?: string): string;
 }
 
-declare class VtsRulesMixin {
-  private _getFieldRules(fieldName: string): VtsRules<any> | undefined;
-  private _convertRulesToMap(): void;
-}
 declare class VtsValidation {
   private _checkFieldValidity(
     field: HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
@@ -59,5 +60,5 @@ interface ValidateThenSubmit extends VtsEventsMixin, VtsRulesMixin, VtsForm {
 }
 export default ValidateThenSubmit;
 export type { VtsEventsMixin, VtsRulesMixin, VtsForm, ValidateThenSubmit };
-export { VtsConfig, setVtsDefaults } from './types/config';
+export { VtsConfig } from './types/config';
 export type { VtsRuleMessage } from './types/rules';

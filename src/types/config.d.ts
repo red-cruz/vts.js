@@ -1,9 +1,9 @@
-import type VtsRules from './rules';
+import type { VtsRules } from './rules';
 
 /**
  * Represents the configuration options for Vts (Validate Then Submit).
  */
-export interface VtsConfig {
+interface VtsConfig {
   /**
    * The Ajax settings for form submission.
    */
@@ -33,7 +33,7 @@ export interface VtsConfig {
   /**
    * The validation rules for the form fields.
    */
-  rules: Partial<VtsRules<string>>;
+  rules: Partial<VtsRules<string>> | Map<string, VtsRules<string>[string]>;
   /**
    * Determines whether to stop event propagation on form submission.
    * @default true
@@ -49,7 +49,7 @@ export interface VtsConfig {
 /**
  * Represents the validation data for form fields in Vts (Validate Then Submit).
  */
-export type VtsValidationData<TFieldNames extends string> = {
+type VtsValidationData<TFieldNames extends string> = {
   [K in TFieldNames]: {
     /**
      * The validated form field.
@@ -58,11 +58,11 @@ export type VtsValidationData<TFieldNames extends string> = {
     /**
      * The corresponding label for the validated field.
      */
-    label?: string;
+    label: string;
     /**
      * The validation message.
      */
-    message: string;
+    message: string | undefined;
   };
 };
 
@@ -123,4 +123,4 @@ interface VtsAjaxSettings {
  */
 declare function setVtsDefaults(config: Partial<VtsConfig>): void;
 
-export { setVtsDefaults };
+export type { VtsValidationData, VtsConfig };

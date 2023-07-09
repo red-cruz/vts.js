@@ -1,7 +1,43 @@
+// @ts-check
+
+import type ValidateThenSubmit from '../ValidateThenSubmit';
+import type { VtsValidationData } from './config';
+
+declare class VtsRulesMixin {
+  _applyRules(
+    this: ValidateThenSubmit,
+    rules: VtsRules<string>[string] & {
+      pattern: string;
+      flags: string;
+      message: VtsRuleMessage;
+    },
+    fieldValue: string,
+    fieldData: VtsValidationData<string>[string]
+  ): [boolean, VtsValidationData<string>[string]];
+
+  _applyMatch(
+    this: ValidateThenSubmit,
+    rules: VtsRules<string>[string] & {
+      match: string;
+      flags: string;
+      message: VtsRuleMessage;
+    },
+    fieldValue: string,
+    fieldData: VtsValidationData<string>[string]
+  ): [boolean, VtsValidationData<string>[string]];
+
+  _getFieldRules(
+    this: ValidateThenSubmit,
+    fieldName: string
+  ): VtsRules<string>[string] | undefined;
+
+  _convertRulesToMap(this: ValidateThenSubmit): void;
+}
+
 /**
  * Represents the validation rules for a set of fields in Vts (Validate Then Submit).
  */
-type VtsRules<TFieldNames extends string | keyof any> = {
+type VtsRules<TFieldNames extends string> = {
   [K in TFieldNames]:
     | {
         /**
@@ -42,13 +78,12 @@ type ValidityStateFlags =
   | 'rangeUnderflow'
   | 'rangeOverflow'
   | 'stepMismatch'
-  | 'badInput'
-  | 'customError';
+  | 'badInput';
 
 /**
  * Represents the configuration for the validation rule messages in Vts (Validate Then Submit).
  */
-export type VtsRuleMessage = {
+type VtsRuleMessage = {
   /**
    * The message to display when the field is valid.
    */
@@ -64,4 +99,4 @@ export type VtsRuleMessage = {
   };
 };
 
-export default VtsRules;
+export { VtsRulesMixin, VtsRules, VtsRuleMessage };
