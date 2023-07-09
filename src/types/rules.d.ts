@@ -11,7 +11,7 @@ type VtsRules<TFieldNames extends string | keyof any> = {
         /**
          * The flags that will be used when creating the RegExp object.
          */
-        flags?: string;
+        flags: string;
         /**
          * The message configuration for the validation rule.
          */
@@ -25,13 +25,25 @@ type VtsRules<TFieldNames extends string | keyof any> = {
         /**
          * The flags that will be used when creating the RegExp object for matching.
          */
-        flags?: string;
+        flags: string;
         /**
          * The message configuration for the validation rule.
          */
         message: VtsRuleMessage;
       };
 };
+
+type ValidityStateFlags =
+  | 'valueMissing'
+  | 'typeMismatch'
+  | 'patternMismatch'
+  | 'tooLong'
+  | 'tooShort'
+  | 'rangeUnderflow'
+  | 'rangeOverflow'
+  | 'stepMismatch'
+  | 'badInput'
+  | 'customError';
 
 /**
  * Represents the configuration for the validation rule messages in Vts (Validate Then Submit).
@@ -46,6 +58,10 @@ export type VtsRuleMessage = {
    * This message is also used as the custom validation message.
    */
   invalid: string;
+
+  validityState?: {
+    [K in ValidityStateFlags]?: string;
+  };
 };
 
 export default VtsRules;

@@ -1,38 +1,83 @@
+// @ts-check
 'use strict';
 
 /**
  * Global default configuration for Vts (Validate Then Submit).
  *
- * @type {import("../types").VtsConfig}
+ * @type {import('../ValidateThenSubmit').VtsConfig}
  */
 const vtsDefaults = {
-  halt: false,
-  validatedClass: 'was-validated',
   ajax: {
     request: {},
-    beforeSend: () => {
-      vtsDefaults.ajax.loader();
+    beforeSend: (abortController, form) => {},
+    complete: (form) => {},
+    error: (errorData, response, form) => {
+      console.table(response);
+      alert(errorData || response);
     },
-    complete: (xhr, textStatus) => {},
-    error: (error, raw) => {
-      console.table(raw);
-      alert(error || raw);
-    },
-    success: (data, response) => {
+    success: (data, response, form) => {
       alert(data.title + ':\n' + data.text);
+      form.reset();
     },
   },
-  fnInvalid: (currentField, label, title, message) => {
-    currentField.focus();
-    currentField.style.border = '1px solid red';
-    alert(title + '\n' + message);
+  fnValid: (data, form) => {
+    showFeedback('valid', data);
   },
+  fnInvalid: (data, form) => {
+    showFeedback('invalid', data);
+  },
+  halt: false,
   log: false,
-  stopPropagation: true,
   rules: {},
-  fnValid: function (currentField) {
-    currentField.style.border = '1px solid green';
-  },
+  stopPropagation: true,
+  validatedClass: 'was-validated',
 };
+
+/**
+ * @param {string} state
+ * @param {import('../types/config').VtsValidationData<string>} data
+ */
+function showFeedback(state, data) {
+  Object.keys(data).forEach((key) => {
+    const { field, label, message = ' ' } = data[key];
+    const parent = field.parentNode;
+    const className = `${state}-feedbacks`;
+    const sibling = parent?.querySelector(`.${className}`);
+
+    field.style.border =
+      state === 'valid' ? '1px solid #146c43' : '1px solid #b02a37';
+    if (sibling) {
+      sibling.textContent = `${message}`;
+    } else {
+      const div = document.createElement('div');
+      div.classList.add(`${className}`);
+      div.textContent = `${message}`;
+      div.style.color = state === 'valid' ? '#146c43' : '#b02a37';
+      field.insertAdjacentElement('afterend', div);
+    }
+
+    const validSib = parent?.querySelector(`.valid-feedbacks`);
+    const invalidSib = parent?.querySelector(`.invalid-feedbacks`);
+
+    if (state === 'valid') {
+      toggleElementDisplay(validSib, invalidSib);
+    } else {
+      toggleElementDisplay(invalidSib, validSib);
+    }
+
+    /**
+     * @param {Element | null | undefined} show the element to show
+     * @param {Element | null | undefined} hide the element to hide
+     */
+    function toggleElementDisplay(show, hide) {
+      if (show instanceof HTMLElement) {
+        show.style.display = '';
+      }
+      if (hide instanceof HTMLElement) {
+        hide.style.display = 'none';
+      }
+    }
+  });
+}
 
 export { vtsDefaults };

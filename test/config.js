@@ -1,11 +1,12 @@
 // @ts-check
 import Swal from 'sweetalert2';
-// import Vts from '../src/ValidateThenSubmit';
-import Vts from '../dist/ValidateThenSubmit';
+import Vts from '../src/ValidateThenSubmit';
+// import Vts from '../dist/ValidateThenSubmit';
 
 document.addEventListener('DOMContentLoaded', function () {
   const test = new Vts('myForm', {
     log: true,
+    validatedClass: 'was',
   });
   console.log(test);
 });
@@ -59,12 +60,6 @@ Vts.setDefaults({
       });
     },
   },
-  fnValid: (data) => {
-    showFeedback('valid', data);
-  },
-  fnInvalid: (data) => {
-    showFeedback('invalid', data);
-  },
 });
 
 // set rules
@@ -78,37 +73,15 @@ Vts.setDefaults({
     last_name: {
       match: 'first_name',
       flags: 'g',
-      message: defaultMessage,
+      message: {
+        invalid: 'MALI',
+        validityState: {
+          patternMismatch: 'must contain only letters and spaces.',
+        },
+      },
     },
   },
 });
-
-/**
- * @description
- * @author RED
- * @param {string} state
- * @param {import('../src/types/config').VtsValidationData<string>} data
- */
-function showFeedback(state, data) {
-  console.log(state, data);
-  Object.keys(data).forEach((key) => {
-    const { field, label, message } = data[key];
-    const parent = field.parentNode;
-    const className = `${state}-feedback`;
-    const sibling = parent?.querySelector(`.${className}`);
-
-    if (!sibling) {
-      if (!message) return;
-      const div = document.createElement('div');
-      div.classList.add(`${className}`);
-      div.textContent = `${message}`;
-      parent?.appendChild(div);
-    } else {
-      /* if (message)  */ sibling.textContent = `${message}`;
-      // else sibling.remove();
-    }
-  });
-}
 
 function completeSwal(form) {
   console.log('triggered final');

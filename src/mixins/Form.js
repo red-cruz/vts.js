@@ -1,17 +1,9 @@
+/** @type {import('../ValidateThenSubmit').VtsForm} */
 const vtsForm = {
-  /**
-   * Checks the validity of the form.
-   * @returns {Boolean} True if the form is valid, false otherwise.
-   */
   isFormValid() {
     return this.form.checkValidity();
   },
 
-  /**
-   * @description Submits the form via fetch API.
-   * @returns {Promise} A promise that resolves on success or rejects on failure.
-   * @async
-   */
   async submit() {
     const form = this.form;
     const ajax = this.config.ajax;

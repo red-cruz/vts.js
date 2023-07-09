@@ -1,3 +1,6 @@
+/**
+ * @type {import('../ValidateThenSubmit').VtsEventsMixin}
+ * */
 const vtsEvents = {
   _addEventListeners() {
     const form = this.form;

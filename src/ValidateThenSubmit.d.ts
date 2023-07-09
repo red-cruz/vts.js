@@ -1,14 +1,5 @@
 import type { VtsConfig } from './types/config';
-
-interface VtsEventsMixin {
-  _addEventListeners(): void;
-  _attachMatchEvents(): void;
-  _getEventType(fieldType: string, ruleEventType?: string): string;
-}
-
-declare module 'ValidateThenSubmit' {
-  interface ValidateThenSubmit extends VtsEventsMixin {}
-}
+import VtsRules from './types/rules';
 
 /**
  * A JavaScript library that provides a simple and flexible way to handle
@@ -20,12 +11,53 @@ declare module 'ValidateThenSubmit' {
 declare class ValidateThenSubmit {
   /**
    * Creates an instance of ValidateThenSubmit.
-   * new Vts('myForm', {})
    */
-  constructor(formId: string, config?: VtsConfig);
-  static setDefaults(config: VtsConfig): void;
+  constructor(formId: string, config?: Partial<VtsConfig>);
+  config: VtsConfig;
+  form: HTMLFormElement;
+  fields: NodeListOf<
+    HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
+  >;
+  static setDefaults(config: Partial<VtsConfig>): void;
 }
 
+declare class VtsEventsMixin {
+  private _addEventListeners(this: ValidateThenSubmit): void;
+  _attachMatchEvents(this: ValidateThenSubmit): void;
+  _getEventType(fieldType: string, ruleEventType?: string): string;
+}
+
+declare class VtsRulesMixin {
+  private _getFieldRules(fieldName: string): VtsRules<any> | undefined;
+  private _convertRulesToMap(): void;
+}
+declare class VtsValidation {
+  private _checkFieldValidity(
+    field: HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
+  ): void;
+  private _reportValidity(): void;
+}
+declare class VtsForm {
+  /**
+   * Checks the validity of the form.
+   * @returns {Boolean} True if the form is valid, false otherwise.
+   */
+  isFormValid(): boolean;
+
+  /**
+   * @description Submits the form via fetch API.
+   * @returns {Promise} A promise that resolves on success or rejects on failure.
+   * @async
+   */
+  submit(): Promise<void>;
+}
+
+// Add more mixin declarations as needed
+
+interface ValidateThenSubmit extends VtsEventsMixin, VtsRulesMixin, VtsForm {
+  // Additional methods and properties
+}
 export default ValidateThenSubmit;
+export type { VtsEventsMixin, VtsRulesMixin, VtsForm, ValidateThenSubmit };
 export { VtsConfig, setVtsDefaults } from './types/config';
 export type { VtsRuleMessage } from './types/rules';

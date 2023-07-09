@@ -9,27 +9,12 @@ import CheckUtil from './Check';
  * @author RED
  * @export
  * @param {*} form
- * @param {import('../ValidateThenSubmit').VtsConfig} config
- * @param {*} abortController
+ * @param {Partial<import('../ValidateThenSubmit').VtsConfig>} config
+ * @param {AbortController} abortController
  * @returns {*}
  */
 export default function setVtsConfig(form, config, abortController) {
   const options = _.merge({}, vtsDefaults, config);
-  config.rules = {
-    first_name: {
-      pattern: 'test',
-      message: {
-        invalid: 'Test',
-      },
-    },
-    last_name: {
-      match: 'first_name',
-      pattern: 'last',
-      message: {
-        invalid: 'message',
-      },
-    },
-  };
   const ajax = options.ajax;
   options.ajax.action = ajax.action || form.action;
   options.ajax.method = ajax.method || form.method;
