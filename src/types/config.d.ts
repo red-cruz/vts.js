@@ -1,4 +1,4 @@
-import type { VtsRules } from './rules';
+import type { VtsRuleMessage, VtsRules } from './rules';
 
 /**
  * Represents the configuration options for Vts (Validate Then Submit).
@@ -34,6 +34,8 @@ interface VtsConfig {
    * The validation rules for the form fields.
    */
   rules: VtsRules | Map<string, VtsRules[string]>;
+
+  ruleMessage: VtsRuleMessage;
   /**
    * Determines whether to stop event propagation on form submission.
    * @default true

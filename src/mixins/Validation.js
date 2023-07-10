@@ -63,6 +63,7 @@ const vtsValidation = {
 
     for (const key in field.validity) {
       if (field.validity[key]) {
+        console.log(key);
         message = validityStateMsg[key] || message;
       }
     }

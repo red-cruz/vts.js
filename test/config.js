@@ -6,7 +6,7 @@ import Vts, { VtsRulesMixin } from '../src/ValidateThenSubmit';
 document.addEventListener('DOMContentLoaded', function () {
   const test = new Vts('myForm', {
     log: true,
-    validatedClass: 'was',
+    // validatedClass: 'was',
   });
 
   console.log(test);
@@ -14,8 +14,8 @@ document.addEventListener('DOMContentLoaded', function () {
 
 // VTS GLOBAL CONFIGURATION
 const defaultMessage = {
-  valid: '${value} is a valid ${label} ${label}',
-  invalid: '${label} must be equal to ${targetLabel} ${target}',
+  valid: '${value} is a valid ${label} ${targetLabel} ${targetValue}',
+  invalid: '${label} ${value} must be equal to ${targetLabel} ${targetValue}',
 };
 Vts.setDefaults({
   // AJAX EVENTS
@@ -65,6 +65,11 @@ Vts.setDefaults({
 
 // set rules
 Vts.setDefaults({
+  ruleMessage: {
+    // valueMissing: 'required to!',
+    valid: 'ayos',
+    invalid: 'nah',
+  },
   rules: {
     first_name: {
       match: 'user_name',
@@ -73,8 +78,6 @@ Vts.setDefaults({
     last_name: {
       match: 'first_name',
       message: {
-        invalid: 'MALI',
-        valueMissing: 'Required po',
         valid: 'oks na',
       },
     },

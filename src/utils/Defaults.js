@@ -29,6 +29,7 @@ const vtsDefaults = {
   halt: false,
   log: false,
   rules: {},
+  ruleMessage: {},
   stopPropagation: true,
   validatedClass: 'was-validated',
 };
@@ -41,7 +42,7 @@ function showFeedback(state, data) {
   Object.keys(data).forEach((key) => {
     const { field, label, message = ' ' } = data[key];
     const parent = field.parentNode;
-    const className = `${state}-feedbacks`;
+    const className = `${state}-feedback`;
     const sibling = parent?.querySelector(`.${className}`);
 
     field.style.border =
@@ -53,11 +54,11 @@ function showFeedback(state, data) {
       div.classList.add(`${className}`);
       div.textContent = `${message}`;
       div.style.color = state === 'valid' ? '#146c43' : '#b02a37';
-      field.insertAdjacentElement('afterend', div);
+      parent?.append(div);
     }
 
-    const validSib = parent?.querySelector(`.valid-feedbacks`);
-    const invalidSib = parent?.querySelector(`.invalid-feedbacks`);
+    const validSib = parent?.querySelector(`.valid-feedback`);
+    const invalidSib = parent?.querySelector(`.invalid-feedback`);
 
     if (state === 'valid') {
       toggleElementDisplay(validSib, invalidSib);

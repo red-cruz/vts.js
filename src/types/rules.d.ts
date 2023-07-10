@@ -60,7 +60,6 @@ type VtsRules = {
 
 type VtsValidityState =
   | 'badInput'
-  /** ewan */
   | 'invalid' // customError equivalent
   | 'patternMismatch'
   | 'rangeOverflow'
