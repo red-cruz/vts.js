@@ -27,6 +27,7 @@ const vtsValidation = {
   _checkFieldValidity(field) {
     // this.#log.show('log', 'validating field:', field);
     this._clearValidity(field);
+    /** @type {import('../types/rules').VtsRules[string]} */
     const rules = this._getFieldRules(field.name);
     let fieldData = {
       field: field,
@@ -35,7 +36,11 @@ const vtsValidation = {
     };
 
     let valid = field.checkValidity();
-    fieldData.message = field.validationMessage;
+
+    fieldData.message = this._getValidityStateMessage(
+      field,
+      rules?.message?.validityState
+    );
 
     // prevent rules from being applied if default html constraints exists
     if (rules && valid) {
@@ -47,6 +52,25 @@ const vtsValidation = {
       .replace(/\${label}/g, fieldData.label);
 
     this._setValidity(valid, field, fieldData);
+  },
+
+  /**
+   * @description
+   * @author RED
+   * @param {HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement} field
+   * @param {import('../types/rules').VtsValidityStateMessage}  [validityStateMsg={}]
+   * @returns {*}
+   */
+  _getValidityStateMessage(field, validityStateMsg = {}) {
+    let message = field.validationMessage;
+
+    for (const key in field.validity) {
+      if (field.validity[key]) {
+        message = validityStateMsg[key] || message;
+      }
+    }
+    console.log(message);
+    return message;
   },
   _reportValidity() {
     const data = this._data;

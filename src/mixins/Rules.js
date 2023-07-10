@@ -14,7 +14,9 @@ const vtsRules = {
     if (isMatch) {
       matchingField = VtsFormValidator.validateField(this.form, rules.match);
       matchValue = matchingField.value;
-      pattern = rules.flags?.includes('g') ? matchValue : `^${matchValue}$`;
+      pattern = rules.flags?.includes('g')
+        ? matchValue + '\\b'
+        : `^${matchValue}$`;
     }
 
     const regExp = new RegExp(pattern, rules.flags);

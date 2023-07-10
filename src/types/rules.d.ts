@@ -83,9 +83,11 @@ type VtsRuleMessage = {
    */
   invalid: string;
 
-  validityState?: {
-    [K in ValidityStateFlags]?: string;
-  };
+  validityState?: VtsValidityStateMessage;
 };
 
-export { VtsRulesMixin, VtsRules, VtsRuleMessage };
+type VtsValidityStateMessage = {
+  [K in ValidityStateFlags]?: string;
+};
+
+export { VtsRulesMixin, VtsRules, VtsRuleMessage, VtsValidityStateMessage };
