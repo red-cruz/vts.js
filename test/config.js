@@ -14,8 +14,8 @@ document.addEventListener('DOMContentLoaded', function () {
 
 // VTS GLOBAL CONFIGURATION
 const defaultMessage = {
-  valid: '${value} is a valid ${label}',
-  invalid: '${label} must be equal to ${targetLabel}',
+  valid: '${value} is a valid ${label} ${label}',
+  invalid: '${label} must be equal to ${targetLabel} ${target}',
 };
 Vts.setDefaults({
   // AJAX EVENTS
@@ -68,12 +68,11 @@ Vts.setDefaults({
   rules: {
     first_name: {
       match: 'user_name',
-      flags: 'g',
       message: defaultMessage,
     },
     last_name: {
-      match: 'test',
-      // pattern: 'test',
+      match: 'first_name',
+      pattern: 'test',
       message: {
         invalid: 'MALI',
         validityState: {

@@ -4,9 +4,6 @@ import getFieldLabel from '../utils/getFieldLabel';
 
 /** @type {import('../ValidateThenSubmit').VtsRulesMixin} */
 const vtsRules = {
-  /**
-   * @private
-   */
   _applyRules(rules, fieldValue, fieldData) {
     let valid = false;
     let matchValue = '';
@@ -33,6 +30,13 @@ const vtsRules = {
       fieldData.message = fieldData.message
         ?.replace(/\${targetValue}/g, matchValue)
         .replace(/\${targetLabel}/g, getFieldLabel(matchingField, this.form));
+    }
+
+    if ('pattern' in rules && 'match' in rules) {
+      console.warn(
+        `Both "pattern" and "match" properties exist in the field rule for ${fieldData.label}. ` +
+          'Ignoring the "match" property.'
+      );
     }
 
     return [valid, fieldData];
