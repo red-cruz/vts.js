@@ -1,4 +1,4 @@
-import VtsFormValidator from './utils/Check.js';
+import VtsFormValidator from './utils/VtsFormValidator.js';
 import vtsEvents from './mixins/Events.js';
 import vtsRules from './mixins/Rules.js';
 import vtsValidation from './mixins/Validation.js';

@@ -1,7 +1,7 @@
 /**
  * Retrieves the label for the specified field within the given form.
  *
- * @param {HTMLElement} field - The field element for which to retrieve the label.
+ * @param {HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement} field - The field element for which to retrieve the label.
  * @param {HTMLFormElement} form - The form element containing the field.
  * @returns {string} - The label text.
  */

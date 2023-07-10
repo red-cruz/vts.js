@@ -1,3 +1,4 @@
+// @ts-check
 import getFieldLabel from '../utils/getFieldLabel';
 
 const vtsValidation = {
@@ -10,15 +11,11 @@ const vtsValidation = {
    * @memberof Vts
    */
   _validate() {
-    // this.#log.show('info', 'Validation started');
-
     for (const field of this.fields) {
       this._checkFieldValidity(field);
     }
 
     this._reportValidity();
-
-    // this.#log.end();
   },
 
   /**
@@ -40,23 +37,15 @@ const vtsValidation = {
     let valid = field.checkValidity();
     fieldData.message = field.validationMessage;
 
-    if (rules) {
-      // prevent rules from being applied if default html constraints exists
-      if (valid) {
-        let updatedData = [];
-        // if rules should match
-        if (rules.match) {
-          updatedData = this._applyMatch(rules, field.value, fieldData);
-        } else {
-          updatedData = this._applyRules(rules, field.value, fieldData);
-        }
-
-        [valid, fieldData] = updatedData;
-      }
+    // prevent rules from being applied if default html constraints exists
+    if (rules && valid) {
+      [valid, fieldData] = this._applyRules(rules, field.value, fieldData);
     }
+
     fieldData.message = fieldData.message
-      ?.replaceAll('${value}', field.value)
-      .replaceAll('${label}', fieldData.label);
+      ?.replace(/\${value}/g, field.value)
+      .replace(/\${label}/g, fieldData.label);
+
     this._setValidity(valid, field, fieldData);
   },
   _reportValidity() {

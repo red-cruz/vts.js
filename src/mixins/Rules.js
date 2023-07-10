@@ -1,5 +1,5 @@
 // @ts-check
-import VtsFormValidator from '../utils/Check';
+import VtsFormValidator from '../utils/VtsFormValidator';
 import getFieldLabel from '../utils/getFieldLabel';
 
 /** @type {import('../ValidateThenSubmit').VtsRulesMixin} */
@@ -9,27 +9,18 @@ const vtsRules = {
    */
   _applyRules(rules, fieldValue, fieldData) {
     let valid = false;
-    const regExp = new RegExp(rules.pattern, rules.flags);
-
-    if (regExp.test(fieldValue)) {
-      fieldData.message = rules.message?.valid;
-      valid = true;
-    } else {
-      fieldData.message = rules.message?.invalid;
+    let matchValue = '';
+    let pattern = rules.pattern;
+    /** @type {*} */
+    let matchingField;
+    const isMatch = 'match' in rules && !pattern;
+    if (isMatch) {
+      matchingField = VtsFormValidator.validateField(this.form, rules.match);
+      matchValue = matchingField.value;
+      pattern = rules.flags?.includes('g') ? matchValue : `^${matchValue}$`;
     }
-    return [valid, fieldData];
-  },
-  _applyMatch(rules, fieldValue, fieldData) {
-    let valid = false;
-    const matchingField = VtsFormValidator.validateField(
-      this.form,
-      rules.match,
-      fieldData.label
-    );
-    this.form.querySelector(`[name="${rules.match}"]`);
 
-    const matchValue = matchingField.value;
-    const regExp = new RegExp(`^${matchValue}$`, rules.flags);
+    const regExp = new RegExp(pattern, rules.flags);
 
     if (regExp.test(fieldValue)) {
       fieldData.message = rules.message?.valid;
@@ -38,11 +29,15 @@ const vtsRules = {
       fieldData.message = rules.message?.invalid;
     }
 
-    fieldData.message = fieldData.message
-      ?.replace(/\${targetValue}/g, matchValue)
-      .replace(/\${targetLabel}/g, getFieldLabel(matchingField, this.form));
+    if (isMatch) {
+      fieldData.message = fieldData.message
+        ?.replace(/\${targetValue}/g, matchValue)
+        .replace(/\${targetLabel}/g, getFieldLabel(matchingField, this.form));
+    }
+
     return [valid, fieldData];
   },
+
   _getFieldRules(fieldName) {
     const rules = this.config.rules;
 

@@ -1,3 +1,6 @@
+// @t
+import VtsFormValidator from '../utils/VtsFormValidator';
+
 /** @type {import('../ValidateThenSubmit').VtsEventsMixin} */
 const vtsEvents = {
   _addEventListeners() {
@@ -21,7 +24,6 @@ const vtsEvents = {
     // Fields
     this.fields.forEach((field) => {
       const rules = this._getFieldRules(field.name);
-      const match = rules?.match;
       const eventType = this._getEventType(field.type, rules?.eventType);
       field.addEventListener(eventType, () => {
         this._checkFieldValidity(field);
@@ -41,7 +43,8 @@ const vtsEvents = {
       const eventType = this._getEventType(field.type, rules?.eventType);
       if (match) {
         const inputEvent = new Event(eventType);
-        const matchField = form.querySelector(`[name="${match}"]`);
+        const matchField = VtsFormValidator.validateField(form, match);
+        form.querySelector(`[name="${match}"]`);
         matchField.addEventListener(eventType, function () {
           field.dispatchEvent(inputEvent);
         });

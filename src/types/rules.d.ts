@@ -3,22 +3,11 @@
 import type ValidateThenSubmit from '../ValidateThenSubmit';
 import type { VtsValidationData } from './config';
 
-declare class VtsRulesMixin {
+declare abstract class VtsRulesMixin {
   _applyRules(
     this: ValidateThenSubmit,
-    rules: VtsRules<string>[string] & {
+    rules: VtsRules[string] & {
       pattern: string;
-      flags: string;
-      message: VtsRuleMessage;
-    },
-    fieldValue: string,
-    fieldData: VtsValidationData<string>[string]
-  ): [boolean, VtsValidationData<string>[string]];
-
-  _applyMatch(
-    this: ValidateThenSubmit,
-    rules: VtsRules<string>[string] & {
-      match: string;
       flags: string;
       message: VtsRuleMessage;
     },
@@ -29,7 +18,7 @@ declare class VtsRulesMixin {
   _getFieldRules(
     this: ValidateThenSubmit,
     fieldName: string
-  ): VtsRules<string>[string] | undefined;
+  ): VtsRules[string] | undefined;
 
   _convertRulesToMap(this: ValidateThenSubmit): void;
 }
@@ -37,17 +26,17 @@ declare class VtsRulesMixin {
 /**
  * Represents the validation rules for a set of fields in Vts (Validate Then Submit).
  */
-type VtsRules<TFieldNames extends string> = {
-  [K in TFieldNames]:
+type VtsRules = {
+  [key: string]:
     | {
         /**
          * The pattern that will be used to create a RegExp object for validation.
          */
-        pattern: string;
+        pattern: string | RegExp;
         /**
          * The flags that will be used when creating the RegExp object.
          */
-        flags: string;
+        flags?: string;
         /**
          * The message configuration for the validation rule.
          */
@@ -57,11 +46,11 @@ type VtsRules<TFieldNames extends string> = {
         /**
          * The name of the field to match the value against.
          */
-        match: string;
+        match: Extract<keyof VtsRules, string>;
         /**
          * The flags that will be used when creating the RegExp object for matching.
          */
-        flags: string;
+        flags?: string;
         /**
          * The message configuration for the validation rule.
          */

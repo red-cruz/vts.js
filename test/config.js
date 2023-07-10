@@ -72,8 +72,8 @@ Vts.setDefaults({
       message: defaultMessage,
     },
     last_name: {
-      match: 'first_name',
-      flags: 'g',
+      match: 'test',
+      // pattern: 'test',
       message: {
         invalid: 'MALI',
         validityState: {

@@ -33,7 +33,7 @@ interface VtsConfig {
   /**
    * The validation rules for the form fields.
    */
-  rules: Partial<VtsRules<string>> | Map<string, VtsRules<string>[string]>;
+  rules: VtsRules | Map<string, VtsRules[string]>;
   /**
    * Determines whether to stop event propagation on form submission.
    * @default true
