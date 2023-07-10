@@ -1,3 +1,5 @@
+import { deepMerge } from '../utils/deepMerge';
+
 /** @type {import('../ValidateThenSubmit').VtsForm} */
 const vtsForm = {
   isFormValid() {
@@ -7,7 +9,7 @@ const vtsForm = {
   async submit() {
     const form = this.form;
     const ajax = this.config.ajax;
-    const request = _.merge({ body: new FormData(form) }, ajax.request);
+    const request = deepMerge({ body: new FormData(form) }, ajax.request);
     try {
       ajax.beforeSend(this.abortController, form);
       const response = await fetch(ajax.action, request);

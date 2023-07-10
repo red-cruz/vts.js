@@ -74,9 +74,8 @@ Vts.setDefaults({
       match: 'first_name',
       message: {
         invalid: 'MALI',
-        validityState: {
-          valueMissing: 'Required po',
-        },
+        valueMissing: 'Required po',
+        valid: 'oks na',
       },
     },
   },

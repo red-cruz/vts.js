@@ -58,36 +58,25 @@ type VtsRules = {
       };
 };
 
-type ValidityStateFlags =
-  | 'valueMissing'
-  | 'typeMismatch'
+type VtsValidityState =
+  | 'badInput'
+  /** ewan */
+  | 'invalid' // customError equivalent
   | 'patternMismatch'
+  | 'rangeOverflow'
+  | 'rangeUnderflow'
+  | 'stepMismatch'
   | 'tooLong'
   | 'tooShort'
-  | 'rangeUnderflow'
-  | 'rangeOverflow'
-  | 'stepMismatch'
-  | 'badInput';
+  | 'typeMismatch'
+  | 'valueMissing'
+  | 'valid';
 
 /**
  * Represents the configuration for the validation rule messages in Vts (Validate Then Submit).
  */
 type VtsRuleMessage = {
-  /**
-   * The message to display when the field is valid.
-   */
-  valid?: string;
-  /**
-   * The message to display when the field is invalid.
-   * This message is also used as the custom validation message.
-   */
-  invalid: string;
-
-  validityState?: VtsValidityStateMessage;
+  [Key in VtsValidityState]?: string;
 };
 
-type VtsValidityStateMessage = {
-  [K in ValidityStateFlags]?: string;
-};
-
-export { VtsRulesMixin, VtsRules, VtsRuleMessage, VtsValidityStateMessage };
+export { VtsRulesMixin, VtsRules, VtsRuleMessage };
