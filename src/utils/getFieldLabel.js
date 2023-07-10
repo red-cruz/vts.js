@@ -1,5 +1,3 @@
-import Vts from '../ValidateThenSubmit';
-
 /**
  * Retrieves the label for the specified field within the given form.
  *

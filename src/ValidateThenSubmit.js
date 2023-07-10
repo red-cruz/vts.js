@@ -1,12 +1,11 @@
 import VtsFormValidator from './utils/Check.js';
-import _ from 'lodash';
 import vtsEvents from './mixins/Events.js';
 import vtsRules from './mixins/Rules.js';
 import vtsValidation from './mixins/Validation.js';
 import setVtsConfig from './utils/setVtsConfig.js';
 import vtsForm from './mixins/Form.js';
-
 import { vtsDefaults } from './utils/Defaults.js';
+import { deepMerge } from './utils/deepMerge.js';
 
 export default class ValidateThenSubmit {
   constructor(formId, config = {}) {
@@ -36,6 +35,6 @@ export default class ValidateThenSubmit {
     Object.assign(this, vtsForm);
   }
   static setDefaults(config) {
-    _.merge(vtsDefaults, config);
+    deepMerge(vtsDefaults, config);
   }
 }

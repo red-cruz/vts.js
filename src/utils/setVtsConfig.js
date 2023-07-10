@@ -1,24 +1,22 @@
 // @ts-check
-/// <reference path="../ValidateThenSubmit.d.ts" />
-import _ from 'lodash';
 import { vtsDefaults } from './Defaults';
-import CheckUtil from './Check';
+import { deepMerge } from './deepMerge';
 
 /**
  * @description
  * @author RED
  * @export
- * @param {*} form
+ * @param {HTMLFormElement} form
  * @param {Partial<import('../ValidateThenSubmit').VtsConfig>} config
  * @param {AbortController} abortController
- * @returns {*}
+ * @returns {import('../ValidateThenSubmit').VtsConfig}
  */
 export default function setVtsConfig(form, config, abortController) {
-  const options = _.merge({}, vtsDefaults, config);
+  const options = deepMerge({}, vtsDefaults, config);
   const ajax = options.ajax;
   options.ajax.action = ajax.action || form.action;
   options.ajax.method = ajax.method || form.method;
-  const rawRequest = _.merge(
+  const rawRequest = deepMerge(
     {
       request: {
         'Content-Type': 'multipart/form-data',
