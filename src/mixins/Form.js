@@ -1,4 +1,4 @@
-import { deepMerge } from '../utils/deepMerge';
+import deepMerge from '../utils/deepMerge';
 
 /** @type {import('../ValidateThenSubmit').VtsForm} */
 const vtsForm = {

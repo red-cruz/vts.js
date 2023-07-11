@@ -1,4 +1,4 @@
-export function deepMerge(target, ...sources) {
+export default function deepMerge(target, ...sources) {
   if (!sources.length) {
     return target;
   }

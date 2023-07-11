@@ -4,10 +4,7 @@ import Vts, { VtsRulesMixin } from '../src/ValidateThenSubmit';
 // import Vts from '../dist/ValidateThenSubmit';
 
 document.addEventListener('DOMContentLoaded', function () {
-  const test = new Vts('myForm', {
-    log: true,
-    // validatedClass: 'was',
-  });
+  const test = new Vts('myForm');
 
   console.log(test);
 });

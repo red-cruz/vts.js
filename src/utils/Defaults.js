@@ -28,7 +28,6 @@ const vtsDefaults = {
   },
   halt: false,
   listen: false,
-  log: false,
   rules: {},
   message: {},
   stopPropagation: true,
@@ -40,7 +39,7 @@ const vtsDefaults = {
  * @param {import('../types/config').VtsValidationData<string>} data
  */
 function showFeedback(state, data) {
-  Object.keys(data).forEach((key) => {
+  for (const key in data) {
     const { field, label, message = ' ' } = data[key];
     const parent = field.parentNode;
     const className = `${state}-feedback`;
@@ -79,7 +78,7 @@ function showFeedback(state, data) {
         hide.style.display = 'none';
       }
     }
-  });
+  }
 }
 
-export { vtsDefaults };
+export default vtsDefaults;

@@ -10,13 +10,13 @@ interface VtsConfig {
   ajax: Partial<VtsAjaxSettings>;
   /**
    * The function to call for all valid fields.
-   * @param data
+   * @param data The validation data for all valid fields.
    * @param form The HTML form element.
    */
   fnValid: (data: VtsValidationData<string>, form: HTMLFormElement) => void;
   /**
    * The function to call for invalid fields.
-   * @param data
+   * @param data The validation data for all invalid fields.
    * @param form The HTML form element.
    */
   fnInvalid: (data: VtsValidationData<string>, form: HTMLFormElement) => void;
@@ -25,17 +25,20 @@ interface VtsConfig {
    * @default false
    */
   halt: boolean;
-  listen: boolean;
   /**
-   * Determines whether to log the validation process.
+   * Determines whether to add event listeners for fields on submit event.
    * @default false
    */
-  log: boolean;
+  listen: boolean;
   /**
    * The validation rules for the form fields.
+   * @default {}
    */
   rules: VtsRules | Map<string, VtsRules[string]>;
-
+  /**
+   * The custom validation message configuration.
+   * @default {}
+   */
   message: VtsRuleMessage;
   /**
    * Determines whether to stop event propagation on form submission.
@@ -75,14 +78,21 @@ type VtsValidationData<TFieldNames extends string> = {
 interface VtsAjaxSettings {
   /**
    * The URL action for the form submission.
+   *
+   * default -  The value of the form attribute `action`
    */
   action: string;
   /**
    * The HTTP method for the form submission.
+   * default - The value of the form attribute `method`
    */
   method: string;
   /**
    * The request options for the Ajax call.
+   * @default
+   *   {
+   *    'Content-Type': 'multipart/form-data',
+   *   }
    */
   request: RequestInit;
   /**
@@ -119,11 +129,5 @@ interface VtsAjaxSettings {
     form: HTMLFormElement
   ) => void;
 }
-
-/**
- * Sets the default configuration for Vts (Validate Then Submit).
- * @param config The configuration options.
- */
-declare function setVtsDefaults(config: Partial<VtsConfig>): void;
 
 export type { VtsConfig, VtsValidationData };

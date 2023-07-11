@@ -12,7 +12,7 @@ declare abstract class VtsRulesMixin {
       message: VtsRuleMessage;
     },
     fieldValue: string,
-    fieldData: VtsValidationData<string>
+    fieldData: VtsValidationData<string>[string]
   ): [boolean, VtsValidationData<string>];
 
   _getFieldRules(
