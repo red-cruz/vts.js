@@ -25,6 +25,7 @@ interface VtsConfig {
    * @default false
    */
   halt: boolean;
+  listen: boolean;
   /**
    * Determines whether to log the validation process.
    * @default false
@@ -34,7 +35,7 @@ interface VtsConfig {
    * The validation rules for the form fields.
    */
   rules: VtsRules | Map<string, VtsRules[string]>;
-
+  
   ruleMessage: VtsRuleMessage;
   /**
    * Determines whether to stop event propagation on form submission.

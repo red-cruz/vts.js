@@ -29,6 +29,7 @@ declare class ValidateThenSubmit {
 declare class VtsEventsMixin {
   private _addEventListeners(this: ValidateThenSubmit): void;
   _attachMatchEvents(this: ValidateThenSubmit): void;
+  _addFieldListener(this: ValidateThenSubmit): void;
   _getEventType(fieldType: string, ruleEventType?: string): string;
 }
 

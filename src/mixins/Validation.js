@@ -1,5 +1,6 @@
 // @ts-check
 import getFieldLabel from '../utils/getFieldLabel';
+import { vtsDefaults } from '../utils/Defaults';
 
 const vtsValidation = {
   _data: {
@@ -52,19 +53,19 @@ const vtsValidation = {
   },
 
   /**
-   * @description
-   * @author RED
    * @param {HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement} field
    * @param {import('../types/rules').VtsRuleMessage}  [validityStateMsg={}]
    * @returns {string}
    */
   _getValidityStateMessage(field, validityStateMsg = {}) {
     let message = field.validationMessage;
-
-    for (const key in field.validity) {
-      if (field.validity[key]) {
-        console.log(key);
-        message = validityStateMsg[key] || message;
+    const validity = field.validity;
+    const invalid = !validity.valid;
+    for (const key in validity) {
+      if (validity[key]) {
+        message =
+          validityStateMsg[key] || vtsDefaults.ruleMessage[key] || message;
+        console.log(key, message);
       }
     }
 

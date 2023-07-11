@@ -27,6 +27,7 @@ const vtsDefaults = {
     showFeedback('invalid', data);
   },
   halt: false,
+  listen: false,
   log: false,
   rules: {},
   ruleMessage: {},

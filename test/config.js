@@ -13,10 +13,7 @@ document.addEventListener('DOMContentLoaded', function () {
 });
 
 // VTS GLOBAL CONFIGURATION
-const defaultMessage = {
-  valid: '${value} is a valid ${label} ${targetLabel} ${targetValue}',
-  invalid: '${label} ${value} must be equal to ${targetLabel} ${targetValue}',
-};
+const defaultMessage = {};
 Vts.setDefaults({
   // AJAX EVENTS
   ajax: {
@@ -66,9 +63,11 @@ Vts.setDefaults({
 // set rules
 Vts.setDefaults({
   ruleMessage: {
-    // valueMissing: 'required to!',
-    valid: 'ayos',
-    invalid: 'nah',
+    valid: 'validd',
+    invalid: 'invalidd',
+    // valid: '${value} is a valid ${label} ${targetLabel} ${targetValue}',
+    // invalid: '${label} ${value} must be equal to ${targetLabel} ${targetValue}',
+    valueMissing: 'required po ito',
   },
   rules: {
     first_name: {

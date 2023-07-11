@@ -4,12 +4,18 @@ import VtsFormValidator from '../utils/VtsFormValidator';
 /** @type {import('../ValidateThenSubmit').VtsEventsMixin} */
 const vtsEvents = {
   _addEventListeners() {
-    const form = this.form;
     // Form
+    const form = this.form;
     form.addEventListener('submit', (e) => {
       e.preventDefault();
       if (this.config.stopPropagation) {
         e.stopPropagation();
+      }
+
+      const shouldListen = this.config.listen;
+      const wasValidated = form.classList.contains(this.config.validatedClass);
+      if (!shouldListen && !wasValidated) {
+        this._addFieldListener();
       }
 
       // this.#log.start();
@@ -22,6 +28,13 @@ const vtsEvents = {
     });
 
     // Fields
+    const shouldListen = this.config.listen;
+    shouldListen && _addFieldListener();
+
+    // Match events
+    this._attachMatchEvents();
+  },
+  _addFieldListener() {
     this.fields.forEach((field) => {
       const rules = this._getFieldRules(field.name);
       const eventType = this._getEventType(field.type, rules?.eventType);
@@ -30,9 +43,6 @@ const vtsEvents = {
         this._reportValidity();
       });
     });
-
-    // Match events
-    this._attachMatchEvents();
   },
   _attachMatchEvents() {
     for (const [fieldName, rule] of this.config.rules.entries()) {
