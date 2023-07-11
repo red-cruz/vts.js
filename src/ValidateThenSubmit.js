@@ -12,30 +12,29 @@ import deepMerge from './utils/deepMerge.js';
 export default class ValidateThenSubmit {
   constructor(formId, config = {}) {
     const form = VtsFormValidator.validateForm(formId);
-    const abortController = (this.abortController = new AbortController());
-    this.config = setVtsConfig(form, config, abortController);
     this.fields = form.querySelectorAll('[name]:not([data-vts-ignored])');
     this.form = form;
-    this.#init();
+    this.#init(config);
   }
 
-  #init() {
-    this.#mixin();
+  #init(config) {
     const form = this.form;
-    VtsFormValidator.checkInstance(form.id);
-    this._convertRulesToMap();
-    this._addEventListeners();
-  }
-
-  #mixin() {
-    Object.assign(this, vtsForm);
+    // mixin
+    Object.assign(this, vtsForm, setVtsConfig(form, config));
     Object.assign(
       ValidateThenSubmit.prototype,
       vtsEvents,
       vtsRules,
       vtsValidation
     );
+
+    // check instance
+    VtsFormValidator.checkInstance(form.id);
+
+    this._convertRulesToMap();
+    this._addEventListeners();
   }
+
   static setDefaults(config) {
     deepMerge(vtsDefaults, config);
   }

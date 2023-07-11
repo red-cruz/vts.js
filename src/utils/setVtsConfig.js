@@ -11,10 +11,9 @@ import deepMerge from './deepMerge';
  * @export
  * @param {HTMLFormElement} form - The HTML form element.
  * @param {Partial<import('../ValidateThenSubmit').VtsConfig>} config - The partial configuration options.
- * @param {AbortController} abortController - The AbortController instance for handling abort signals.
  * @returns {import('../ValidateThenSubmit').VtsConfig} - The merged configuration options.
  */
-export default function setVtsConfig(form, config, abortController) {
+export default function setVtsConfig(form, config) {
   // Merge the default configuration with the provided configuration
   const options = deepMerge({}, vtsDefaults, config);
 
@@ -22,7 +21,7 @@ export default function setVtsConfig(form, config, abortController) {
   const ajax = options.ajax;
   options.ajax.action = ajax.action || form.action;
   options.ajax.method = ajax.method || form.method;
-
+  const abortController = new AbortController();
   // Merge the raw request options with the Ajax request options
   options.ajax.request = deepMerge(
     {

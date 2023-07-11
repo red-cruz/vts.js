@@ -5,7 +5,6 @@ import Vts, { VtsRulesMixin } from '../src/ValidateThenSubmit';
 
 document.addEventListener('DOMContentLoaded', function () {
   const test = new Vts('myForm');
-
   console.log(test);
 });
 

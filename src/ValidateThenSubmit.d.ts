@@ -15,7 +15,6 @@ declare class ValidateThenSubmit {
    * Creates an instance of ValidateThenSubmit.
    */
   constructor(formId: string, config?: Partial<VtsConfig>);
-  config: VtsConfig;
   form: HTMLFormElement;
   fields: NodeListOf<
     HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
@@ -52,7 +51,8 @@ declare class VtsForm {
 
 // mixin
 interface ValidateThenSubmit
-  extends VtsEventsMixin,
+  extends VtsConfig,
+    VtsEventsMixin,
     VtsRulesMixin,
     VtsForm,
     VtsValidation {}

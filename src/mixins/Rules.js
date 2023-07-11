@@ -45,7 +45,7 @@ const vtsRules = {
   },
 
   _getFieldRules(fieldName) {
-    const rules = this.config.rules;
+    const rules = this.rules;
 
     if (rules && rules instanceof Map) {
       return rules.get(fieldName);
@@ -54,7 +54,7 @@ const vtsRules = {
     return undefined;
   },
   _convertRulesToMap() {
-    const rules = this.config.rules;
+    const rules = this.rules;
     const rulesMap = new Map();
 
     for (const fieldName in rules) {
@@ -63,7 +63,7 @@ const vtsRules = {
       }
     }
 
-    this.config.rules = rulesMap;
+    this.rules = rulesMap;
   },
 };
 

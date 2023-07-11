@@ -8,26 +8,26 @@ const vtsEvents = {
     const form = this.form;
     form.addEventListener('submit', (e) => {
       e.preventDefault();
-      if (this.config.stopPropagation) {
+      if (this.stopPropagation) {
         e.stopPropagation();
       }
 
-      const shouldListen = this.config.listen;
-      const wasValidated = form.classList.contains(this.config.validatedClass);
+      const shouldListen = this.listen;
+      const wasValidated = form.classList.contains(this.validatedClass);
       if (!shouldListen && !wasValidated) {
         this._addFieldListener();
       }
 
       this._validate();
-      this.form.classList.add(this.config.validatedClass);
+      this.form.classList.add(this.validatedClass);
 
-      if (this.isFormValid() && !this.config.halt) {
+      if (this.isFormValid() && !this.halt) {
         this.submit();
       }
     });
 
     // Fields
-    const shouldListen = this.config.listen;
+    const shouldListen = this.listen;
     shouldListen && _addFieldListener();
 
     // Match events
@@ -44,7 +44,7 @@ const vtsEvents = {
     });
   },
   _attachMatchEvents() {
-    for (const [fieldName, rule] of this.config.rules.entries()) {
+    for (const [fieldName, rule] of this.rules.entries()) {
       const match = rule.match;
       const form = this.form;
       const field = form.querySelector(`[name="${fieldName}"]`);

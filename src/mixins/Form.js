@@ -8,7 +8,7 @@ const vtsForm = {
 
   async submit() {
     const form = this.form;
-    const ajax = this.config.ajax;
+    const ajax = this.ajax;
     const request = deepMerge({ body: new FormData(form) }, ajax.request);
     try {
       ajax.beforeSend(this.abortController, form);

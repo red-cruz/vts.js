@@ -39,7 +39,7 @@ const vtsValidation = {
   },
   _getValidityStateMessage(field, validityStateMsg = {}) {
     let message = field.validationMessage;
-    const messageConfig = this.config.message;
+    const messageConfig = this.message;
     const validity = field.validity;
     // const invalid = !validity.valid;
     for (const key in validity) {
@@ -55,8 +55,8 @@ const vtsValidation = {
     const validData = Object.fromEntries(data.validFields);
     const invalidData = Object.fromEntries(data.invalidFields);
     const form = this.form;
-    const fnValid = this.config.fnValid;
-    const fnInvalid = this.config.fnInvalid;
+    const fnValid = this.fnValid;
+    const fnInvalid = this.fnInvalid;
     fnValid(validData, form);
     fnInvalid(invalidData, form);
   },
