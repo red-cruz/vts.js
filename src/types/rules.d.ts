@@ -12,8 +12,8 @@ declare abstract class VtsRulesMixin {
       message: VtsRuleMessage;
     },
     fieldValue: string,
-    fieldData: VtsValidationData<string>[string]
-  ): [boolean, VtsValidationData<string>[string]];
+    fieldData: VtsValidationData<string>
+  ): [boolean, VtsValidationData<string>];
 
   _getFieldRules(
     this: ValidateThenSubmit,
@@ -55,7 +55,8 @@ type VtsRules = {
          * The message configuration for the validation rule.
          */
         message: VtsRuleMessage;
-      };
+      }
+    | undefined;
 };
 
 type VtsValidityState =

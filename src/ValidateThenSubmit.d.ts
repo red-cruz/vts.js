@@ -1,5 +1,7 @@
-import type { VtsConfig, VtsValidationData } from './types/config';
-import VtsRules, { VtsRuleMessage, VtsRulesMixin } from './types/rules';
+// @ts-check
+import type { VtsConfig } from './types/config';
+import type { VtsRulesMixin } from './types/rules';
+import type { VtsValidation } from './types/validation';
 
 /**
  * A JavaScript library that provides a simple and flexible way to handle
@@ -33,12 +35,6 @@ declare class VtsEventsMixin {
   _getEventType(fieldType: string, ruleEventType?: string): string;
 }
 
-declare class VtsValidation {
-  private _checkFieldValidity(
-    field: HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
-  ): void;
-  private _reportValidity(): void;
-}
 declare class VtsForm {
   /**
    * Checks the validity of the form.
@@ -54,12 +50,15 @@ declare class VtsForm {
   submit(): Promise<void>;
 }
 
-// Add more mixin declarations as needed
+// mixin
+interface ValidateThenSubmit
+  extends VtsEventsMixin,
+    VtsRulesMixin,
+    VtsForm,
+    VtsValidation {}
 
-interface ValidateThenSubmit extends VtsEventsMixin, VtsRulesMixin, VtsForm {
-  // Additional methods and properties
-}
+// exports
 export default ValidateThenSubmit;
-export type { VtsEventsMixin, VtsRulesMixin, VtsForm, ValidateThenSubmit };
+export type { VtsEventsMixin, VtsRulesMixin, VtsForm, VtsValidation };
 export { VtsConfig } from './types/config';
 export type { VtsRuleMessage } from './types/rules';

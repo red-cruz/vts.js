@@ -10,13 +10,13 @@ interface VtsConfig {
   ajax: Partial<VtsAjaxSettings>;
   /**
    * The function to call for all valid fields.
-   * @param currentField The current valid field element.
+   * @param data
    * @param form The HTML form element.
    */
   fnValid: (data: VtsValidationData<string>, form: HTMLFormElement) => void;
   /**
    * The function to call for invalid fields.
-   * @param currentField The current invalid field element.
+   * @param data
    * @param form The HTML form element.
    */
   fnInvalid: (data: VtsValidationData<string>, form: HTMLFormElement) => void;
@@ -35,8 +35,8 @@ interface VtsConfig {
    * The validation rules for the form fields.
    */
   rules: VtsRules | Map<string, VtsRules[string]>;
-  
-  ruleMessage: VtsRuleMessage;
+
+  message: VtsRuleMessage;
   /**
    * Determines whether to stop event propagation on form submission.
    * @default true
@@ -126,4 +126,4 @@ interface VtsAjaxSettings {
  */
 declare function setVtsDefaults(config: Partial<VtsConfig>): void;
 
-export type { VtsValidationData, VtsConfig };
+export type { VtsConfig, VtsValidationData };

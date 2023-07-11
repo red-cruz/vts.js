@@ -18,7 +18,6 @@ const vtsEvents = {
         this._addFieldListener();
       }
 
-      // this.#log.start();
       this._validate();
       this.form.classList.add(this.config.validatedClass);
 

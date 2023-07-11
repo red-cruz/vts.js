@@ -1,39 +1,25 @@
 // @ts-check
 import getFieldLabel from '../utils/getFieldLabel';
-import { vtsDefaults } from '../utils/Defaults';
 
+/** @type {import('../types/validation').VtsValidation} */
 const vtsValidation = {
   _data: {
     validFields: new Map(),
     invalidFields: new Map(),
   },
-  /**
-   * @description Validates each field. triggered by form submit event
-   * @memberof Vts
-   */
   _validate() {
     for (const field of this.fields) {
       this._checkFieldValidity(field);
     }
-
     this._reportValidity();
   },
-
-  /**
-   * @description
-   * @author RED
-   * @param {HTMLInputElement|HTMLSelectElement|HTMLTextAreaElement} field
-   * @memberof Vts
-   */
   _checkFieldValidity(field) {
-    // this.#log.show('log', 'validating field:', field);
     this._clearValidity(field);
-    /** @type {import('../types/rules').VtsRules[string]} */
     const rules = this._getFieldRules(field.name);
     let fieldData = {
       field: field,
       label: getFieldLabel(field, this.form),
-      message: '',
+      message: ' ',
     };
 
     let valid = field.checkValidity();
@@ -51,24 +37,17 @@ const vtsValidation = {
 
     this._setValidity(valid, field, fieldData);
   },
-
-  /**
-   * @param {HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement} field
-   * @param {import('../types/rules').VtsRuleMessage}  [validityStateMsg={}]
-   * @returns {string}
-   */
   _getValidityStateMessage(field, validityStateMsg = {}) {
     let message = field.validationMessage;
+    const messageConfig = this.config.message;
     const validity = field.validity;
-    const invalid = !validity.valid;
+    // const invalid = !validity.valid;
     for (const key in validity) {
       if (validity[key]) {
-        message =
-          validityStateMsg[key] || vtsDefaults.ruleMessage[key] || message;
+        message = validityStateMsg[key] || messageConfig[key] || message;
         console.log(key, message);
       }
     }
-
     return message;
   },
   _reportValidity() {

@@ -30,7 +30,7 @@ const vtsDefaults = {
   listen: false,
   log: false,
   rules: {},
-  ruleMessage: {},
+  message: {},
   stopPropagation: true,
   validatedClass: 'was-validated',
 };

@@ -22,10 +22,10 @@ const vtsRules = {
     const regExp = new RegExp(pattern, rules.flags);
 
     if (regExp.test(fieldValue)) {
-      fieldData.message = rules.message?.valid;
+      fieldData.message = rules.message?.valid || '';
       valid = true;
     } else {
-      fieldData.message = rules.message?.invalid;
+      fieldData.message = rules.message?.invalid || '';
     }
 
     if (isMatch) {

@@ -62,7 +62,7 @@ Vts.setDefaults({
 
 // set rules
 Vts.setDefaults({
-  ruleMessage: {
+  message: {
     valid: 'validd',
     invalid: 'invalidd',
     // valid: '${value} is a valid ${label} ${targetLabel} ${targetValue}',
