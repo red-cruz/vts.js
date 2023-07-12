@@ -14,17 +14,14 @@ import deepMerge from './deepMerge';
  * @returns {import('../ValidateThenSubmit').VtsConfig} - The merged configuration options.
  */
 export default function setVtsConfig(form, config) {
-  // Merge the default configuration with the provided configuration
-
   /** @type {import('../types/config').VtsConfig} */
   const options = deepMerge({}, vtsDefaults, config);
-
-  // Set the form action and method in the Ajax settings
 
   /** @type {Partial<import('../types/config').VtsAjaxSettings>} */
   const ajax = options.ajax;
   options.ajax.action = ajax.action || form.action;
   options.ajax.abortController = new AbortController();
+
   const req = ajax.request;
   /** @type {RequestInit} */
   const request = {
@@ -33,11 +30,11 @@ export default function setVtsConfig(form, config) {
       'Content-Type': 'multipart/form-data',
     },
   };
+
   /** @type {RequestInit} */
   const merge = deepMerge(req, request);
   options.ajax.request = merge;
-
   options.ajax.request.signal = options.ajax.abortController.signal;
-  // Return the merged configuration options
+
   return options;
 }

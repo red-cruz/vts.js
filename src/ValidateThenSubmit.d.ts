@@ -39,14 +39,14 @@ declare class VtsForm {
    * Checks the validity of the form.
    * @returns {Boolean} True if the form is valid, false otherwise.
    */
-  isFormValid(): boolean;
+  isFormValid(this: ValidateThenSubmit): boolean;
 
   /**
    * @description Submits the form via fetch API.
    * @returns {Promise} A promise that resolves on success or rejects on failure.
    * @async
    */
-  submit(): Promise<void>;
+  submit(this: ValidateThenSubmit): Promise<void>;
 }
 
 // mixin

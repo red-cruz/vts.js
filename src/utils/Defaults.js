@@ -8,6 +8,7 @@
  */
 const vtsDefaults = {
   ajax: {
+    action: '',
     request: {},
     beforeSend: (abortController, form) => {},
     complete: (form) => {},

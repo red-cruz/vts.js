@@ -1,3 +1,4 @@
+// @ts-chec
 import deepMerge from '../utils/deepMerge';
 
 /** @type {import('../ValidateThenSubmit').VtsForm} */
@@ -10,21 +11,22 @@ const vtsForm = {
     const ajax = this.ajax;
     const form = this.form;
     try {
-      const formData = new FormData(form);
-      const get = new RegExp('get', 'i');
       let url = ajax.action;
 
       // beforeSend
-      ajax.request = this.ajax.request =
-        ajax.beforeSend(ajax.request, form) || ajax.request;
+      // ajax.request = this.ajax.request =
+      //   ajax.beforeSend(ajax.request, form) || ajax.request;
 
-      const isGetMethod = get.test(ajax.request.method);
-      if (isGetMethod) {
-        const query = new URLSearchParams(formData).toString();
-        url = this.ajax.action = `${url}/?${query}`;
-      } else {
-        ajax.request.body = formData;
-      }
+      [url, ajax.request] = vtsFormBeforeSend.call(this, url, ajax.request);
+
+      // const get = new RegExp('get', 'i');
+      // const isGetMethod = get.test(ajax.request.method);
+      // if (isGetMethod) {
+      //   const query = new URLSearchParams(formData).toString();
+      //   url = this.ajax.action = `${url}/?${query}`;
+      // } else {
+      //   ajax.request.body = formData;
+      // }
 
       const response = await fetch(new Request(url, ajax.request));
       if (!response.ok) {
@@ -55,4 +57,30 @@ const vtsForm = {
     ajax.complete(form);
   },
 };
+
+/**
+ * @description
+ * @author RED
+ * @param {string} url
+ * @param {RequestInit} request
+ * @returns {[url, request]}
+ * @this {import('../ValidateThenSubmit').default}
+ */
+function vtsFormBeforeSend(url, request) {
+  const formData = new FormData(this.form);
+
+  request = this.ajax.request =
+    this.ajax.beforeSend(this.ajax.request, this.form) || request;
+
+  const get = new RegExp('get', 'i');
+  const isGetMethod = get.test(request.method);
+  if (isGetMethod) {
+    const query = new URLSearchParams(formData.toString());
+    url = this.ajax.action = `${url}/?${query}`;
+  } else {
+    request.body = formData;
+  }
+  return [url, request];
+}
+
 export default vtsForm;

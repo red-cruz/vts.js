@@ -60,8 +60,8 @@ Vts.setDefaults({
 // set rules
 Vts.setDefaults({
   message: {
-    valid: 'validd',
-    invalid: 'invalidd',
+    // valid: 'validd',
+    // invalid: 'invalidd',
     // valid: '${value} is a valid ${label} ${targetLabel} ${targetValue}',
     // invalid: '${label} ${value} must be equal to ${targetLabel} ${targetValue}',
     valueMissing: 'required po ito',
