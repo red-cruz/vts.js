@@ -29,14 +29,17 @@ const vtsDefaults = {
   halt: false,
   listen: false,
   rules: {},
-  message: {},
+  message: {
+    invalid: 'Invalid ${label}',
+    valid: '',
+  },
   stopPropagation: true,
   validatedClass: 'was-validated',
 };
 
 /**
  * @param {string} state
- * @param {import('../types/config').VtsValidationData<string>} data
+ * @param {any} data
  */
 function showFeedback(state, data) {
   for (const key in data) {

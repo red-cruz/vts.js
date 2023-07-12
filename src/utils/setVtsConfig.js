@@ -15,26 +15,29 @@ import deepMerge from './deepMerge';
  */
 export default function setVtsConfig(form, config) {
   // Merge the default configuration with the provided configuration
+
+  /** @type {import('../types/config').VtsConfig} */
   const options = deepMerge({}, vtsDefaults, config);
 
   // Set the form action and method in the Ajax settings
+
+  /** @type {Partial<import('../types/config').VtsAjaxSettings>} */
   const ajax = options.ajax;
   options.ajax.action = ajax.action || form.action;
-  options.ajax.method = ajax.method || form.method;
-  const abortController = new AbortController();
-  // Merge the raw request options with the Ajax request options
-  options.ajax.request = deepMerge(
-    {
-      headers: {
-        'Content-Type': 'multipart/form-data',
-      },
-      signal: abortController.signal,
+  options.ajax.abortController = new AbortController();
+  const req = ajax.request;
+  /** @type {RequestInit} */
+  const request = {
+    method: req?.method || form.method || 'get',
+    headers: {
+      'Content-Type': 'multipart/form-data',
     },
-    ajax.request
-  );
-  // const signal = abortController.signal;
-  // options.ajax.request = { ...rawRequest, signal };
+  };
+  /** @type {RequestInit} */
+  const merge = deepMerge(req, request);
+  options.ajax.request = merge;
 
+  options.ajax.request.signal = options.ajax.abortController.signal;
   // Return the merged configuration options
   return options;
 }

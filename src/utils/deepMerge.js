@@ -1,3 +1,10 @@
+/**
+ * Deeply merges multiple objects into a single object.
+ *
+ * @param {object} target - The target object to merge the sources into.
+ * @param {...object} sources - The source objects to merge into the target.
+ * @returns {object} - The merged object.
+ */
 export default function deepMerge(target, ...sources) {
   if (!sources.length) {
     return target;

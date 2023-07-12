@@ -13,13 +13,19 @@ interface VtsConfig {
    * @param data The validation data for all valid fields.
    * @param form The HTML form element.
    */
-  fnValid: (data: VtsValidationData<string>, form: HTMLFormElement) => void;
+  fnValid: (
+    data: { [fieldName: string]: VtsValidationData<string> },
+    form: HTMLFormElement
+  ) => void;
   /**
    * The function to call for invalid fields.
    * @param data The validation data for all invalid fields.
    * @param form The HTML form element.
    */
-  fnInvalid: (data: VtsValidationData<string>, form: HTMLFormElement) => void;
+  fnInvalid: (
+    data: { [fieldName: string]: VtsValidationData<string> },
+    form: HTMLFormElement
+  ) => void;
   /**
    * Determines whether to halt the form submission if there are invalid fields.
    * @default false
@@ -76,17 +82,13 @@ type VtsValidationData<TFieldNames extends string> = {
  * Represents the Ajax settings for form submission in Vts (Validate Then Submit).
  */
 interface VtsAjaxSettings {
+  abortController: AbortController;
   /**
    * The URL action for the form submission.
    *
    * default -  The value of the form attribute `action`
    */
   action: string;
-  /**
-   * The HTTP method for the form submission.
-   * default - The value of the form attribute `method`
-   */
-  method: string;
   /**
    * The request options for the Ajax call.
    * @default
@@ -97,10 +99,13 @@ interface VtsAjaxSettings {
   request: RequestInit;
   /**
    * A function to be called before the Ajax request is sent.
-   * @param abortController The `AbortController` associated with the request.
+   * @param request The `AbortController` associated with the request.
    * @param form The HTML form element being submitted.
    */
-  beforeSend: (abortController: AbortController, form: HTMLFormElement) => void;
+  beforeSend: (
+    requestInit: RequestInit,
+    form: HTMLFormElement
+  ) => void | RequestInit;
   /**
    * A function to be called when the Ajax request is complete.
    * @param form The HTML form element that was submitted.
@@ -119,15 +124,11 @@ interface VtsAjaxSettings {
   ) => void;
   /**
    * A function to be called when the Ajax request is successful.
-   * @param data The response data.
-   * @param response The raw response.
+   * @param data The response data, parsed into a JavaScript object from the JSON input.
+   * @param response The raw response object.
    * @param form The HTML form element that was submitted.
    */
-  success: (
-    data: any | null,
-    response: Response,
-    form: HTMLFormElement
-  ) => void;
+  success: (data: any, response: Response, form: HTMLFormElement) => void;
 }
 
-export type { VtsConfig, VtsValidationData };
+export type { VtsConfig, VtsValidationData, VtsAjaxSettings };

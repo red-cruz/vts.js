@@ -7,12 +7,26 @@ const vtsForm = {
   },
 
   async submit() {
-    const form = this.form;
     const ajax = this.ajax;
-    const request = deepMerge({ body: new FormData(form) }, ajax.request);
+    const form = this.form;
     try {
-      ajax.beforeSend(this.abortController, form);
-      const response = await fetch(ajax.action, request);
+      const formData = new FormData(form);
+      const get = new RegExp('get', 'i');
+      let url = ajax.action;
+
+      // beforeSend
+      ajax.request = this.ajax.request =
+        ajax.beforeSend(ajax.request, form) || ajax.request;
+
+      const isGetMethod = get.test(ajax.request.method);
+      if (isGetMethod) {
+        const query = new URLSearchParams(formData).toString();
+        url = this.ajax.action = `${url}/?${query}`;
+      } else {
+        ajax.request.body = formData;
+      }
+
+      const response = await fetch(new Request(url, ajax.request));
       if (!response.ok) {
         throw new Error(response.statusText);
       }
@@ -38,7 +52,6 @@ const vtsForm = {
         ajax.error(null, error, form);
       }
     }
-
     ajax.complete(form);
   },
 };

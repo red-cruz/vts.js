@@ -9,17 +9,18 @@ document.addEventListener('DOMContentLoaded', function () {
 });
 
 // VTS GLOBAL CONFIGURATION
-const defaultMessage = {};
 Vts.setDefaults({
   // AJAX EVENTS
   ajax: {
-    beforeSend: (abortController, form) => {
+    beforeSend: (request, form) => {
       Swal.fire({
         title: 'Loading',
         icon: 'info',
         text: 'Please wait.',
         allowOutsideClick: false,
       });
+      request.method = 'post';
+      return request;
     },
     success: function (data, response, form) {
       Swal.fire({
@@ -30,7 +31,7 @@ Vts.setDefaults({
       form.classList.remove('was-validated');
       form.reset();
     },
-    complete: completeSwal,
+    complete: (form) => {},
     error: function (errorData, errorResponse, form) {
       const data = errorData ? errorData : {};
       const stack =
@@ -68,7 +69,6 @@ Vts.setDefaults({
   rules: {
     first_name: {
       match: 'user_name',
-      message: defaultMessage,
     },
     last_name: {
       match: 'first_name',
@@ -78,10 +78,3 @@ Vts.setDefaults({
     },
   },
 });
-
-function completeSwal(form) {
-  console.log('triggered final');
-
-  // empty function for disabling [vts] default complete function
-  // can be configured
-}

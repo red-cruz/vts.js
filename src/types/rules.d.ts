@@ -40,7 +40,7 @@ type VtsRules = {
         /**
          * The message configuration for the validation rule.
          */
-        message: VtsRuleMessage;
+        message?: VtsRuleMessage;
       }
     | {
         /**
@@ -54,7 +54,7 @@ type VtsRules = {
         /**
          * The message configuration for the validation rule.
          */
-        message: VtsRuleMessage;
+        message?: VtsRuleMessage;
       }
     | undefined;
 };
