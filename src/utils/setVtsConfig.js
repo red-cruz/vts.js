@@ -25,9 +25,6 @@ export default function setVtsConfig(form, config) {
   /** @type {RequestInit} */
   const request = {
     method: req?.method || form.method || 'get',
-    headers: {
-      'Content-Type': 'multipart/form-data',
-    },
   };
 
   /** @type {RequestInit} */

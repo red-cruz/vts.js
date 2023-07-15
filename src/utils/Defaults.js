@@ -9,7 +9,11 @@
 const vtsDefaults = {
   ajax: {
     action: '',
-    request: {},
+    request: {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    },
     beforeSend: (requestInit, abortController, form) => {},
     complete: (form) => {},
     error: (errorData, errorResponse, form) => {
