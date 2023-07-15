@@ -12,12 +12,19 @@ document.addEventListener('DOMContentLoaded', function () {
 Vts.setDefaults({
   // AJAX EVENTS
   ajax: {
-    beforeSend: (request, form) => {
+    beforeSend: (request, abortController, form) => {
       Swal.fire({
         title: 'Loading',
         icon: 'info',
         text: 'Please wait.',
         allowOutsideClick: false,
+        showCancelButton: true,
+        cancelButtonText: 'Cancel',
+      }).then((result) => {
+        if (result.isDismissed) {
+          // Cancel button is clicked
+          abortController.abort();
+        }
       });
       request.method = 'post';
       return request;
@@ -34,10 +41,15 @@ Vts.setDefaults({
     complete: (form) => {},
     error: function (errorData, errorResponse, form) {
       const data = errorData ? errorData : {};
-      const stack =
+      let stack =
         'stack' in errorResponse
           ? errorResponse.stack
           : 'Unknown error occurred';
+
+      if ('name' in errorResponse && errorResponse.name === 'AbortError') {
+        Swal.close();
+        return;
+      }
 
       console.table(errorResponse);
 
@@ -69,6 +81,7 @@ Vts.setDefaults({
       match: 'user_name',
       message: {
         valid: '${value} is a valid ${label}',
+        invalid: '${targetValue}, ${targetLabel}',
       },
     },
     last_name: {

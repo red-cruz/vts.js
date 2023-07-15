@@ -56,7 +56,8 @@ type VtsRules = {
 
 type VtsValidityState =
   | 'badInput'
-  | 'invalid' // customError equivalent
+  | 'customError' // customvalidity that has been set outside of Vts
+  | 'invalid' // error message for Vts
   | 'patternMismatch'
   | 'rangeOverflow'
   | 'rangeUnderflow'

@@ -99,11 +99,13 @@ interface VtsAjaxSettings {
   request: RequestInit;
   /**
    * A function to be called before the Ajax request is sent.
-   * @param request The `AbortController` associated with the request.
+   * @param requestInit
+   * @param abortController The `AbortController` associated with the request.
    * @param form The HTML form element being submitted.
    */
   beforeSend: (
     requestInit: RequestInit,
+    abortController: AbortController,
     form: HTMLFormElement
   ) => void | RequestInit;
   /**

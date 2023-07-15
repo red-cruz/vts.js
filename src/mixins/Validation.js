@@ -45,24 +45,24 @@ const vtsValidation = {
     let message = field.validationMessage;
     const rules = this._getFieldRules(field.name);
     const validity = field.validity;
+    console.log(message, field.checkValidity());
 
+    if (validity.customError) throw 'test';
     for (const key in validity) {
-      // validation message every validity state except customError
       // default rule message object
       const messageConfig = this.message;
       // field specific rule message
       const ruleMsg = rules?.message ? rules.message[key] : null;
-      //
 
-      // overwrite message if all html constraints is valid
-      if (validity.valid) {
-        // set custom error if rule config exists
-        if (rules) message = this._applyRules(rules, field, label);
-        // else the field is valid
-        else message = ruleMsg ?? messageConfig.valid;
-        break;
-      } else if (validity[key]) {
-        message = ruleMsg ?? messageConfig[key] ?? message;
+      if (validity[key]) {
+        if (validity.valid) {
+          // set custom error if rule config exists
+          if (rules) message = this._applyRules(rules, field, label);
+          // else the field is valid
+          else message = ruleMsg ?? messageConfig[key];
+        }
+        // invalid
+        else message = ruleMsg ?? messageConfig[key] ?? message;
         break;
       }
     }

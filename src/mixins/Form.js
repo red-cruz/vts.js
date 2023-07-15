@@ -1,4 +1,4 @@
-// @ts-chec
+// @ts-check
 import deepMerge from '../utils/deepMerge';
 
 /** @type {import('../ValidateThenSubmit').VtsForm} */
@@ -13,20 +13,7 @@ const vtsForm = {
     try {
       let url = ajax.action;
 
-      // beforeSend
-      // ajax.request = this.ajax.request =
-      //   ajax.beforeSend(ajax.request, form) || ajax.request;
-
       [url, ajax.request] = vtsFormBeforeSend.call(this, url, ajax.request);
-
-      // const get = new RegExp('get', 'i');
-      // const isGetMethod = get.test(ajax.request.method);
-      // if (isGetMethod) {
-      //   const query = new URLSearchParams(formData).toString();
-      //   url = this.ajax.action = `${url}/?${query}`;
-      // } else {
-      //   ajax.request.body = formData;
-      // }
 
       const response = await fetch(new Request(url, ajax.request));
       if (!response.ok) {
@@ -70,7 +57,11 @@ function vtsFormBeforeSend(url, request) {
   const formData = new FormData(this.form);
 
   request = this.ajax.request =
-    this.ajax.beforeSend(this.ajax.request, this.form) || request;
+    this.ajax.beforeSend(
+      this.ajax.request,
+      this.ajax.abortController,
+      this.form
+    ) || request;
 
   const get = new RegExp('get', 'i');
   const isGetMethod = get.test(request.method);
