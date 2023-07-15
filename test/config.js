@@ -8,6 +8,7 @@ document.addEventListener('DOMContentLoaded', function () {
 });
 
 // VTS GLOBAL CONFIGURATION
+
 Vts.setDefaults({
   // AJAX EVENTS
   ajax: {
@@ -74,11 +75,10 @@ Vts.setDefaults({
   //   // valueMissing: 'This field is required',
   // },
   rules: {
-    first_name: {
-      match: 'user_name',
+    password_confirmation: {
+      match: 'password',
       message: {
-        valid: '${value} is a valid ${label}',
-        invalid: '${targetValue}, ${targetLabel}',
+        invalid: '${label} must match ${targetLabel}',
       },
     },
     // last_name: {
