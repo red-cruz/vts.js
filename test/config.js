@@ -1,7 +1,6 @@
 // @ts-check
 import Swal from 'sweetalert2';
 import Vts from '../src/ValidateThenSubmit';
-// import Vts from '../dist/ValidateThenSubmit';
 
 document.addEventListener('DOMContentLoaded', function () {
   const test = new Vts('myForm');

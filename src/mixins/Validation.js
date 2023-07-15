@@ -1,4 +1,3 @@
-// @ts-check
 import getFieldLabel from '../utils/getFieldLabel';
 
 /** @type {import('../types/validation').VtsValidation} */
@@ -8,17 +7,14 @@ const vtsValidation = {
     invalidFields: new Map(),
   },
   _checkFieldValidity(field) {
-    console.log(field);
     field.setCustomValidity('');
     const label = getFieldLabel(field, this.form);
     let fieldData = {
       field: field,
       label: label,
-      message: '',
+      message: this._validate(field, label),
     };
-    fieldData.message = this._validate(field, label);
 
-    console.table(fieldData, ['label', 'message']);
     this._setValidityData(field, fieldData);
   },
   _reportValidity() {
@@ -71,10 +67,6 @@ const vtsValidation = {
       ?.replace(/\${value}/g, field.value)
       .replace(/\${label}/g, label);
 
-    console.log(`
-    label: ${label}
-    msg: ${message}
-    `);
     return message;
   },
 };

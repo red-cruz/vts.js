@@ -1,6 +1,3 @@
-// @ts-check
-import deepMerge from '../utils/deepMerge';
-
 /** @type {import('../ValidateThenSubmit').VtsForm} */
 const vtsForm = {
   isFormValid() {
