@@ -21,11 +21,10 @@ Vts.setDefaults({
         cancelButtonText: 'Cancel',
       }).then((result) => {
         if (result.isDismissed) {
-          // Cancel button is clicked
           abortController.abort();
         }
       });
-      request.method = 'post';
+      // request.method = 'post';
       return request;
     },
     success: function (data, response, form) {
@@ -40,7 +39,9 @@ Vts.setDefaults({
     complete: (form) => {},
     error: function (errorData, errorResponse, form) {
       const data = errorData ? errorData : {};
-      let stack =
+      const title =
+        'message' in errorResponse ? errorResponse.message : 'Error!';
+      const html =
         'stack' in errorResponse
           ? errorResponse.stack
           : 'Unknown error occurred';
@@ -53,15 +54,15 @@ Vts.setDefaults({
       console.table(errorResponse);
 
       Swal.fire({
-        title: data.title || 'Error!',
-        html: data.text || stack,
+        title: data.title || title,
+        html: data.text ?? html,
         icon: data.icon || 'error',
         showCancelButton: true,
         cancelButtonText: 'View Error',
       }).then((result) => {
         if (result.dismiss === Swal.DismissReason.cancel) {
           var newWindow = window.open();
-          if (newWindow) newWindow.document.body.innerHTML = data.text || stack;
+          if (newWindow) newWindow.document.body.innerHTML = data.text || html;
         }
       });
     },
@@ -70,11 +71,9 @@ Vts.setDefaults({
 
 // set rules
 Vts.setDefaults({
-  message: {
-    // valid: '${value} is a valid ${label}',
-    // invalid: '${label} ${value} must be equal to ${targetLabel} ${targetValue}',
-    valueMissing: 'required po ito',
-  },
+  // message: {
+  //   // valueMissing: 'This field is required',
+  // },
   rules: {
     first_name: {
       match: 'user_name',
@@ -83,13 +82,13 @@ Vts.setDefaults({
         invalid: '${targetValue}, ${targetLabel}',
       },
     },
-    last_name: {
-      match: 'first_name',
-      message: {
-        valid: 'oks na',
-        invalid: '${targetValue} != ${value}',
-        valueMissing: 'required po lname',
-      },
-    },
+    // last_name: {
+    //   match: 'first_name',
+    //   message: {
+    //     valid: 'oks na',
+    //     invalid: '${targetValue} != ${value}',
+    //     valueMissing: 'required po lname',
+    //   },
+    // },
   },
 });

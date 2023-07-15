@@ -10,7 +10,7 @@ const vtsDefaults = {
   ajax: {
     action: '',
     request: {},
-    beforeSend: (abortController, form) => {},
+    beforeSend: (requestInit, abortController, form) => {},
     complete: (form) => {},
     error: (errorData, response, form) => {
       console.table(response);
