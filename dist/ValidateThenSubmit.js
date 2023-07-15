@@ -1,2 +1,758 @@
-/*! For license information please see ValidateThenSubmit.js.LICENSE.txt */
-!function(t,e){"object"==typeof exports&&"object"==typeof module?module.exports=e():"function"==typeof define&&define.amd?define([],e):"object"==typeof exports?exports.ValidateThenSubmit=e():t.ValidateThenSubmit=e()}(self,(()=>(()=>{"use strict";var t={d:(e,n)=>{for(var r in n)t.o(n,r)&&!t.o(e,r)&&Object.defineProperty(e,r,{enumerable:!0,get:n[r]})},o:(t,e)=>Object.prototype.hasOwnProperty.call(t,e)},e={};function n(t){return n="function"==typeof Symbol&&"symbol"==typeof Symbol.iterator?function(t){return typeof t}:function(t){return t&&"function"==typeof Symbol&&t.constructor===Symbol&&t!==Symbol.prototype?"symbol":typeof t},n(t)}function r(t,e){for(var r=0;r<e.length;r++){var o=e[r];o.enumerable=o.enumerable||!1,o.configurable=!0,"value"in o&&(o.writable=!0),Object.defineProperty(t,(void 0,i=function(t,e){if("object"!==n(t)||null===t)return t;var r=t[Symbol.toPrimitive];if(void 0!==r){var o=r.call(t,"string");if("object"!==n(o))return o;throw new TypeError("@@toPrimitive must return a primitive value.")}return String(t)}(o.key),"symbol"===n(i)?i:String(i)),o)}var i}t.d(e,{default:()=>T});var o=[],i=function(){function t(){!function(t,e){if(!(t instanceof e))throw new TypeError("Cannot call a class as a function")}(this,t)}var e,n;return e=t,n=[{key:"checkInstance",value:function(t){if(o.includes(t))throw new Error("An instance already exists for the specified form element: ".concat(t));o.push(t)}},{key:"validateForm",value:function(t){var e=document.getElementById(t);if(!e)throw new TypeError('The form element with ID "'.concat(t,'" was not found.'));if(!(e instanceof HTMLFormElement))throw new TypeError('The element with ID "'.concat(t,'" is not a valid HTML form element.\n        Please ensure you are passing the ID of a valid form element.'));return e}},{key:"validateField",value:function(t,e){var n=t.querySelector('[name="'.concat(e,'"]'));if(!n)throw new TypeError('The field element with the name "'.concat(e,'" was not found in the form.'));if(!(n instanceof HTMLInputElement||n instanceof HTMLSelectElement||n instanceof HTMLTextAreaElement))throw new TypeError('The element with name "'.concat(e,'" is not a valid field element. \n      Please ensure you are passing the name of a valid field in the form.'));return n}}],null&&r(e.prototype,null),n&&r(e,n),Object.defineProperty(e,"prototype",{writable:!1}),t}();function a(t,e){var n="undefined"!=typeof Symbol&&t[Symbol.iterator]||t["@@iterator"];if(!n){if(Array.isArray(t)||(n=l(t))||e&&t&&"number"==typeof t.length){n&&(t=n);var r=0,o=function(){};return{s:o,n:function(){return r>=t.length?{done:!0}:{done:!1,value:t[r++]}},e:function(t){throw t},f:o}}throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.")}var i,a=!0,c=!1;return{s:function(){n=n.call(t)},n:function(){var t=n.next();return a=t.done,t},e:function(t){c=!0,i=t},f:function(){try{a||null==n.return||n.return()}finally{if(c)throw i}}}}function l(t,e){if(t){if("string"==typeof t)return c(t,e);var n=Object.prototype.toString.call(t).slice(8,-1);return"Object"===n&&t.constructor&&(n=t.constructor.name),"Map"===n||"Set"===n?Array.from(t):"Arguments"===n||/^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)?c(t,e):void 0}}function c(t,e){(null==e||e>t.length)&&(e=t.length);for(var n=0,r=new Array(e);n<e;n++)r[n]=t[n];return r}const u={_addEventListeners:function(){var t=this,e=this.form;e.addEventListener("submit",(function(n){n.preventDefault(),t.stopPropagation&&n.stopPropagation();var r=t.listen,o=e.classList.contains(t.validatedClass);r||o||t._addFieldListener();var i,l=a(t.fields);try{for(l.s();!(i=l.n()).done;){var c=i.value;t._checkFieldValidity(c)}}catch(t){l.e(t)}finally{l.f()}t._reportValidity(),t.form.classList.add(t.validatedClass),t.isFormValid()&&!t.halt&&t.submit()})),this.listen&&_addFieldListener(),this._attachMatchEvents()},_addFieldListener:function(){var t=this;this.fields.forEach((function(e){var n=t._getFieldRules(e.name),r=t._getEventType(e.type,null==n?void 0:n.eventType);e.addEventListener(r,(function(){t._checkFieldValidity(e),t._reportValidity()}))}))},_attachMatchEvents:function(){var t,e=this,n=a(this.rules.entries());try{var r=function(){var n,r,o=(n=t.value,r=2,function(t){if(Array.isArray(t))return t}(n)||function(t,e){var n=null==t?null:"undefined"!=typeof Symbol&&t[Symbol.iterator]||t["@@iterator"];if(null!=n){var r,o,i,a,l=[],c=!0,u=!1;try{if(i=(n=n.call(t)).next,0===e){if(Object(n)!==n)return;c=!1}else for(;!(c=(r=i.call(n)).done)&&(l.push(r.value),l.length!==e);c=!0);}catch(t){u=!0,o=t}finally{try{if(!c&&null!=n.return&&(a=n.return(),Object(a)!==a))return}finally{if(u)throw o}}return l}}(n,r)||l(n,r)||function(){throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.")}()),a=o[0],c=o[1].match,u=e.form,s=u.querySelector('[name="'.concat(a,'"]')),f=e._getFieldRules(a),d=e._getEventType(s.type,null==f?void 0:f.eventType);if(c){var h=new Event(d),v=i.validateField(u,c);u.querySelector('[name="'.concat(c,'"]')),v.addEventListener(d,(function(){s.dispatchEvent(h)}))}};for(n.s();!(t=n.n()).done;)r()}catch(t){n.e(t)}finally{n.f()}},_getEventType:function(t,e){var n=["radio","select-one","select-multiple","checkbox","file","range"].includes(t)?"change":"input";return e||n}};function s(t,e){var n=t.dataset.vtsLabel,r=e.querySelector('label[for="'.concat(t.id,'"]')),o=null==r?void 0:r.textContent,i=t.getAttribute("placeholder");return n||o||i||""}const f={_applyRules:function(t,e,n){var r,o,a,l,c,u,f,d,h=this.message.invalid||"Invalid field",v="pattern"in t?t.pattern:"",y="";return"match"in t&&!v&&(y=(r=i.validateField(this.form,t.match)).value,v=null!==(o=t.flags)&&void 0!==o&&o.includes("g")?y+"\\b":"^".concat(y,"$")),new RegExp(v,t.flags).test(e.value)?(h=null!==(a=null!==(l=null===(c=t.message)||void 0===c?void 0:c.valid)&&void 0!==l?l:this.message.valid)&&void 0!==a?a:"",e.setCustomValidity("")):(h=null!==(u=null===(f=t.message)||void 0===f?void 0:f.invalid)&&void 0!==u?u:h,e.setCustomValidity(h)),"match"in t&&(h=null===(d=h)||void 0===d?void 0:d.replace(/\${targetValue}/g,y).replace(/\${targetLabel}/g,s(r,this.form))),function(t,e){"pattern"in t&&"match"in t&&console.warn('Both "pattern" and "match" properties exist in the field rule for '.concat(e,". ")+'Ignoring the "match" property.')}(t,n),h},_getFieldRules:function(t){var e=this.rules;if(e&&e instanceof Map)return e.get(t)},_convertRulesToMap:function(){var t=this.rules,e=new Map;for(var n in t)Object.prototype.hasOwnProperty.call(t,n)&&e.set(n,t[n]);this.rules=e}},d={_data:{validFields:new Map,invalidFields:new Map},_checkFieldValidity:function(t){t.setCustomValidity("");var e=s(t,this.form),n={field:t,label:e,message:this._validate(t,e)};this._setValidityData(t,n)},_reportValidity:function(){var t=this._data,e=Object.fromEntries(t.validFields),n=Object.fromEntries(t.invalidFields),r=this.form,o=this.fnValid,i=this.fnInvalid;o(e,r),i(n,r)},_setValidityData:function(t,e){t.validity.valid?(this._data.invalidFields.delete(t.name),this._data.validFields.set(t.name,e)):(this._data.validFields.delete(t.name),this._data.invalidFields.set(t.name,e))},_validate:function(t,e){var n,r=t.validationMessage,o=this._getFieldRules(t.name),i=t.validity;for(var a in i){var l=this.message,c=null!=o&&o.message?o.message[a]:null,u=null!=c?c:l[a];if(i[a]){r=i.valid?o?this._applyRules(o,t,e):u:null!=u?u:r;break}}return null===(n=r)||void 0===n?void 0:n.replace(/\${value}/g,t.value).replace(/\${label}/g,e)}};function h(t,e){var n=function(){var n=e[r],o=n.field,i=(n.label,n.message),a=void 0===i?" ":i,l=o.parentNode,c="".concat(t,"-feedback"),u=null==l?void 0:l.querySelector(".".concat(c));if(o.style.border="valid"===t?"1px solid #146c43":"1px solid #b02a37",u)u.textContent="".concat(a);else{var s=document.createElement("div");s.classList.add("".concat(c)),s.textContent="".concat(a),s.style.color="valid"===t?"#146c43":"#b02a37",null==l||l.append(s)}var f=null==l?void 0:l.querySelector(".valid-feedback"),d=null==l?void 0:l.querySelector(".invalid-feedback");function h(t,e){t instanceof HTMLElement&&(t.style.display=""),e instanceof HTMLElement&&(e.style.display="none")}"valid"===t?h(f,d):h(d,f)};for(var r in e)n()}const v={ajax:{action:"",request:{},beforeSend:function(t,e,n){},complete:function(t){},error:function(t,e,n){console.table(e),alert(t||e)},success:function(t,e,n){alert(t.title+":\n"+t.text),n.reset()}},fnValid:function(t,e){h("valid",t)},fnInvalid:function(t,e){h("invalid",t)},halt:!1,listen:!1,rules:{},message:{invalid:"Invalid ${label}",valid:""},stopPropagation:!0,validatedClass:"was-validated"};function y(t){return y="function"==typeof Symbol&&"symbol"==typeof Symbol.iterator?function(t){return typeof t}:function(t){return t&&"function"==typeof Symbol&&t.constructor===Symbol&&t!==Symbol.prototype?"symbol":typeof t},y(t)}function p(t){for(var e=arguments.length,n=new Array(e>1?e-1:0),r=1;r<e;r++)n[r-1]=arguments[r];if(!n.length)return t;var o=n.shift();for(var i in o)"object"!==y(o[i])||null===o[i]||Array.isArray(o[i])?t[i]=o[i]:(t[i]&&"object"===y(t[i])&&!Array.isArray(t[i])||(t[i]={}),p(t[i],o[i]));return p.apply(void 0,[t].concat(n))}function m(t){return m="function"==typeof Symbol&&"symbol"==typeof Symbol.iterator?function(t){return typeof t}:function(t){return t&&"function"==typeof Symbol&&t.constructor===Symbol&&t!==Symbol.prototype?"symbol":typeof t},m(t)}function b(){b=function(){return t};var t={},e=Object.prototype,n=e.hasOwnProperty,r=Object.defineProperty||function(t,e,n){t[e]=n.value},o="function"==typeof Symbol?Symbol:{},i=o.iterator||"@@iterator",a=o.asyncIterator||"@@asyncIterator",l=o.toStringTag||"@@toStringTag";function c(t,e,n){return Object.defineProperty(t,e,{value:n,enumerable:!0,configurable:!0,writable:!0}),t[e]}try{c({},"")}catch(t){c=function(t,e,n){return t[e]=n}}function u(t,e,n,o){var i=e&&e.prototype instanceof d?e:d,a=Object.create(i.prototype),l=new T(o||[]);return r(a,"_invoke",{value:E(t,n,l)}),a}function s(t,e,n){try{return{type:"normal",arg:t.call(e,n)}}catch(t){return{type:"throw",arg:t}}}t.wrap=u;var f={};function d(){}function h(){}function v(){}var y={};c(y,i,(function(){return this}));var p=Object.getPrototypeOf,g=p&&p(p(O([])));g&&g!==e&&n.call(g,i)&&(y=g);var w=v.prototype=d.prototype=Object.create(y);function x(t){["next","throw","return"].forEach((function(e){c(t,e,(function(t){return this._invoke(e,t)}))}))}function j(t,e){function o(r,i,a,l){var c=s(t[r],t,i);if("throw"!==c.type){var u=c.arg,f=u.value;return f&&"object"==m(f)&&n.call(f,"__await")?e.resolve(f.__await).then((function(t){o("next",t,a,l)}),(function(t){o("throw",t,a,l)})):e.resolve(f).then((function(t){u.value=t,a(u)}),(function(t){return o("throw",t,a,l)}))}l(c.arg)}var i;r(this,"_invoke",{value:function(t,n){function r(){return new e((function(e,r){o(t,n,e,r)}))}return i=i?i.then(r,r):r()}})}function E(t,e,n){var r="suspendedStart";return function(o,i){if("executing"===r)throw new Error("Generator is already running");if("completed"===r){if("throw"===o)throw i;return{value:void 0,done:!0}}for(n.method=o,n.arg=i;;){var a=n.delegate;if(a){var l=S(a,n);if(l){if(l===f)continue;return l}}if("next"===n.method)n.sent=n._sent=n.arg;else if("throw"===n.method){if("suspendedStart"===r)throw r="completed",n.arg;n.dispatchException(n.arg)}else"return"===n.method&&n.abrupt("return",n.arg);r="executing";var c=s(t,e,n);if("normal"===c.type){if(r=n.done?"completed":"suspendedYield",c.arg===f)continue;return{value:c.arg,done:n.done}}"throw"===c.type&&(r="completed",n.method="throw",n.arg=c.arg)}}}function S(t,e){var n=e.method,r=t.iterator[n];if(void 0===r)return e.delegate=null,"throw"===n&&t.iterator.return&&(e.method="return",e.arg=void 0,S(t,e),"throw"===e.method)||"return"!==n&&(e.method="throw",e.arg=new TypeError("The iterator does not provide a '"+n+"' method")),f;var o=s(r,t.iterator,e.arg);if("throw"===o.type)return e.method="throw",e.arg=o.arg,e.delegate=null,f;var i=o.arg;return i?i.done?(e[t.resultName]=i.value,e.next=t.nextLoc,"return"!==e.method&&(e.method="next",e.arg=void 0),e.delegate=null,f):i:(e.method="throw",e.arg=new TypeError("iterator result is not an object"),e.delegate=null,f)}function L(t){var e={tryLoc:t[0]};1 in t&&(e.catchLoc=t[1]),2 in t&&(e.finallyLoc=t[2],e.afterLoc=t[3]),this.tryEntries.push(e)}function _(t){var e=t.completion||{};e.type="normal",delete e.arg,t.completion=e}function T(t){this.tryEntries=[{tryLoc:"root"}],t.forEach(L,this),this.reset(!0)}function O(t){if(t){var e=t[i];if(e)return e.call(t);if("function"==typeof t.next)return t;if(!isNaN(t.length)){var r=-1,o=function e(){for(;++r<t.length;)if(n.call(t,r))return e.value=t[r],e.done=!1,e;return e.value=void 0,e.done=!0,e};return o.next=o}}return{next:k}}function k(){return{value:void 0,done:!0}}return h.prototype=v,r(w,"constructor",{value:v,configurable:!0}),r(v,"constructor",{value:h,configurable:!0}),h.displayName=c(v,l,"GeneratorFunction"),t.isGeneratorFunction=function(t){var e="function"==typeof t&&t.constructor;return!!e&&(e===h||"GeneratorFunction"===(e.displayName||e.name))},t.mark=function(t){return Object.setPrototypeOf?Object.setPrototypeOf(t,v):(t.__proto__=v,c(t,l,"GeneratorFunction")),t.prototype=Object.create(w),t},t.awrap=function(t){return{__await:t}},x(j.prototype),c(j.prototype,a,(function(){return this})),t.AsyncIterator=j,t.async=function(e,n,r,o,i){void 0===i&&(i=Promise);var a=new j(u(e,n,r,o),i);return t.isGeneratorFunction(n)?a:a.next().then((function(t){return t.done?t.value:a.next()}))},x(w),c(w,l,"Generator"),c(w,i,(function(){return this})),c(w,"toString",(function(){return"[object Generator]"})),t.keys=function(t){var e=Object(t),n=[];for(var r in e)n.push(r);return n.reverse(),function t(){for(;n.length;){var r=n.pop();if(r in e)return t.value=r,t.done=!1,t}return t.done=!0,t}},t.values=O,T.prototype={constructor:T,reset:function(t){if(this.prev=0,this.next=0,this.sent=this._sent=void 0,this.done=!1,this.delegate=null,this.method="next",this.arg=void 0,this.tryEntries.forEach(_),!t)for(var e in this)"t"===e.charAt(0)&&n.call(this,e)&&!isNaN(+e.slice(1))&&(this[e]=void 0)},stop:function(){this.done=!0;var t=this.tryEntries[0].completion;if("throw"===t.type)throw t.arg;return this.rval},dispatchException:function(t){if(this.done)throw t;var e=this;function r(n,r){return a.type="throw",a.arg=t,e.next=n,r&&(e.method="next",e.arg=void 0),!!r}for(var o=this.tryEntries.length-1;o>=0;--o){var i=this.tryEntries[o],a=i.completion;if("root"===i.tryLoc)return r("end");if(i.tryLoc<=this.prev){var l=n.call(i,"catchLoc"),c=n.call(i,"finallyLoc");if(l&&c){if(this.prev<i.catchLoc)return r(i.catchLoc,!0);if(this.prev<i.finallyLoc)return r(i.finallyLoc)}else if(l){if(this.prev<i.catchLoc)return r(i.catchLoc,!0)}else{if(!c)throw new Error("try statement without catch or finally");if(this.prev<i.finallyLoc)return r(i.finallyLoc)}}}},abrupt:function(t,e){for(var r=this.tryEntries.length-1;r>=0;--r){var o=this.tryEntries[r];if(o.tryLoc<=this.prev&&n.call(o,"finallyLoc")&&this.prev<o.finallyLoc){var i=o;break}}i&&("break"===t||"continue"===t)&&i.tryLoc<=e&&e<=i.finallyLoc&&(i=null);var a=i?i.completion:{};return a.type=t,a.arg=e,i?(this.method="next",this.next=i.finallyLoc,f):this.complete(a)},complete:function(t,e){if("throw"===t.type)throw t.arg;return"break"===t.type||"continue"===t.type?this.next=t.arg:"return"===t.type?(this.rval=this.arg=t.arg,this.method="return",this.next="end"):"normal"===t.type&&e&&(this.next=e),f},finish:function(t){for(var e=this.tryEntries.length-1;e>=0;--e){var n=this.tryEntries[e];if(n.finallyLoc===t)return this.complete(n.completion,n.afterLoc),_(n),f}},catch:function(t){for(var e=this.tryEntries.length-1;e>=0;--e){var n=this.tryEntries[e];if(n.tryLoc===t){var r=n.completion;if("throw"===r.type){var o=r.arg;_(n)}return o}}throw new Error("illegal catch attempt")},delegateYield:function(t,e,n){return this.delegate={iterator:O(t),resultName:e,nextLoc:n},"next"===this.method&&(this.arg=void 0),f}},t}function g(t,e){return function(t){if(Array.isArray(t))return t}(t)||function(t,e){var n=null==t?null:"undefined"!=typeof Symbol&&t[Symbol.iterator]||t["@@iterator"];if(null!=n){var r,o,i,a,l=[],c=!0,u=!1;try{if(i=(n=n.call(t)).next,0===e){if(Object(n)!==n)return;c=!1}else for(;!(c=(r=i.call(n)).done)&&(l.push(r.value),l.length!==e);c=!0);}catch(t){u=!0,o=t}finally{try{if(!c&&null!=n.return&&(a=n.return(),Object(a)!==a))return}finally{if(u)throw o}}return l}}(t,e)||function(t,e){if(t){if("string"==typeof t)return w(t,e);var n=Object.prototype.toString.call(t).slice(8,-1);return"Object"===n&&t.constructor&&(n=t.constructor.name),"Map"===n||"Set"===n?Array.from(t):"Arguments"===n||/^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)?w(t,e):void 0}}(t,e)||function(){throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.")}()}function w(t,e){(null==e||e>t.length)&&(e=t.length);for(var n=0,r=new Array(e);n<e;n++)r[n]=t[n];return r}function x(t,e,n,r,o,i,a){try{var l=t[i](a),c=l.value}catch(t){return void n(t)}l.done?e(c):Promise.resolve(c).then(r,o)}function j(t,e){var n=new FormData(this.form);if(this.ajax.abortController=new AbortController,this.ajax.request.signal=this.ajax.abortController.signal,e=this.ajax.request=this.ajax.beforeSend(this.ajax.request,this.ajax.abortController,this.form)||e,new RegExp("get","i").test(e.method)){var r=new URLSearchParams(n.toString());t=this.ajax.action="".concat(t,"/?").concat(r)}else e.body=n;return[t,e]}const E={isFormValid:function(){return this.form.checkValidity()},submit:function(){var t,e=this;return(t=b().mark((function t(){var n,r,o,i,a,l,c,u,s,f,d,h,v;return b().wrap((function(t){for(;;)switch(t.prev=t.next){case 0:return n=e.ajax,r=e.form,t.prev=2,o=n.action,i=j.call(e,o,n.request),a=g(i,2),o=a[0],n.request=a[1],t.next=10,fetch(new Request(o,n.request));case 10:if((l=t.sent).ok){t.next=13;break}throw new Error(l.statusText);case 13:if(!(c=l.headers.get("content-type"))||!c.includes("application/json")){t.next=24;break}return t.next=17,Promise.all([l.json(),l]);case 17:u=t.sent,s=g(u,2),f=s[0],d=s[1],n.success(f,d,r),t.next=25;break;case 24:throw new TypeError("Response is not in JSON format");case 25:t.next=44;break;case 27:if(t.prev=27,t.t0=t.catch(2),!(t.t0 instanceof Response)){t.next=41;break}return t.prev=30,t.next=33,t.t0.json();case 33:v=t.sent,t.next=39;break;case 36:t.prev=36,t.t1=t.catch(30),v=t.t1;case 39:t.next=42;break;case 41:v=null;case 42:n.error(v,t.t0,r),null!==(h=e.ajax.request)&&void 0!==h&&null!==(h=h.signal)&&void 0!==h&&h.aborted&&(e.ajax.abortController=new AbortController);case 44:n.complete(r);case 45:case"end":return t.stop()}}),t,null,[[2,27],[30,36]])})),function(){var e=this,n=arguments;return new Promise((function(r,o){var i=t.apply(e,n);function a(t){x(i,r,o,a,l,"next",t)}function l(t){x(i,r,o,a,l,"throw",t)}a(void 0)}))})()}};function S(t){return S="function"==typeof Symbol&&"symbol"==typeof Symbol.iterator?function(t){return typeof t}:function(t){return t&&"function"==typeof Symbol&&t.constructor===Symbol&&t!==Symbol.prototype?"symbol":typeof t},S(t)}function L(t,e){for(var n=0;n<e.length;n++){var r=e[n];r.enumerable=r.enumerable||!1,r.configurable=!0,"value"in r&&(r.writable=!0),Object.defineProperty(t,(void 0,o=function(t,e){if("object"!==S(t)||null===t)return t;var n=t[Symbol.toPrimitive];if(void 0!==n){var r=n.call(t,"string");if("object"!==S(r))return r;throw new TypeError("@@toPrimitive must return a primitive value.")}return String(t)}(r.key),"symbol"===S(o)?o:String(o)),r)}var o}var _=new WeakSet,T=function(){function t(e){var n,r,o=arguments.length>1&&void 0!==arguments[1]?arguments[1]:{};!function(t,e){if(!(t instanceof e))throw new TypeError("Cannot call a class as a function")}(this,t),function(t,e){if(e.has(t))throw new TypeError("Cannot initialize the same private elements twice on an object")}(n=this,r=_),r.add(n);var a=i.validateForm(e);this.fields=a.querySelectorAll("[name]:not([data-vts-ignored])"),this.form=a,function(t,e,n){if(!e.has(t))throw new TypeError("attempted to get private field on non-instance");return n}(this,_,O).call(this,o)}var e,n;return e=t,n=[{key:"setDefaults",value:function(t){p(v,t)}}],null&&L(e.prototype,null),n&&L(e,n),Object.defineProperty(e,"prototype",{writable:!1}),t}();function O(t){var e=this.form;Object.assign(this,E,function(t,e){var n=p({},v,e),r=n.ajax;n.ajax.action=r.action||t.action;var o=r.request,i=p(o,{method:(null==o?void 0:o.method)||t.method||"get",headers:{"Content-Type":"multipart/form-data"}});return n.ajax.request=i,n}(e,t)),Object.assign(T.prototype,u,f,d),i.checkInstance(e.id),this._convertRulesToMap(),this._addEventListeners()}return e.default})()));
+(function webpackUniversalModuleDefinition(root, factory) {
+	if(typeof exports === 'object' && typeof module === 'object')
+		module.exports = factory();
+	else if(typeof define === 'function' && define.amd)
+		define([], factory);
+	else if(typeof exports === 'object')
+		exports["ValidateThenSubmit"] = factory();
+	else
+		root["ValidateThenSubmit"] = factory();
+})(self, () => {
+return /******/ (() => { // webpackBootstrap
+/******/ 	"use strict";
+/******/ 	// The require scope
+/******/ 	var __webpack_require__ = {};
+/******/ 	
+/************************************************************************/
+/******/ 	/* webpack/runtime/define property getters */
+/******/ 	(() => {
+/******/ 		// define getter functions for harmony exports
+/******/ 		__webpack_require__.d = (exports, definition) => {
+/******/ 			for(var key in definition) {
+/******/ 				if(__webpack_require__.o(definition, key) && !__webpack_require__.o(exports, key)) {
+/******/ 					Object.defineProperty(exports, key, { enumerable: true, get: definition[key] });
+/******/ 				}
+/******/ 			}
+/******/ 		};
+/******/ 	})();
+/******/ 	
+/******/ 	/* webpack/runtime/hasOwnProperty shorthand */
+/******/ 	(() => {
+/******/ 		__webpack_require__.o = (obj, prop) => (Object.prototype.hasOwnProperty.call(obj, prop))
+/******/ 	})();
+/******/ 	
+/************************************************************************/
+var __webpack_exports__ = {};
+
+// EXPORTS
+__webpack_require__.d(__webpack_exports__, {
+  "default": () => (/* binding */ ValidateThenSubmit)
+});
+
+;// CONCATENATED MODULE: ./src/utils/VtsFormValidator.js
+function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, _toPropertyKey(descriptor.key), descriptor); } }
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); Object.defineProperty(Constructor, "prototype", { writable: false }); return Constructor; }
+function _toPropertyKey(arg) { var key = _toPrimitive(arg, "string"); return _typeof(key) === "symbol" ? key : String(key); }
+function _toPrimitive(input, hint) { if (_typeof(input) !== "object" || input === null) return input; var prim = input[Symbol.toPrimitive]; if (prim !== undefined) { var res = prim.call(input, hint || "default"); if (_typeof(res) !== "object") return res; throw new TypeError("@@toPrimitive must return a primitive value."); } return (hint === "string" ? String : Number)(input); }
+// @ts-check
+/** @type {string[]} - form Ids */
+var vtsInstances = [];
+
+/**
+ * Utility class for form type validation and instance checking.
+ * @abstract
+ */
+var VtsFormValidator = /*#__PURE__*/function () {
+  function VtsFormValidator() {
+    _classCallCheck(this, VtsFormValidator);
+  }
+  _createClass(VtsFormValidator, null, [{
+    key: "checkInstance",
+    value:
+    /**
+     * Checks if there is an existing instance associated with the provided form ID.
+     * Throws an error if an instance already exists for the form ID.
+     * If no instance exists, it adds the form ID to the instances array.
+     *
+     * @param {string} formId - The ID of the form element to check for an existing instance.
+     * @throws {Error} Throws an error if an instance already exists for the specified form ID.
+     */
+    function checkInstance(formId) {
+      // Check if an instance already exists for the form ID
+      if (vtsInstances.includes(formId)) {
+        throw new Error("An instance already exists for the specified form element: ".concat(formId));
+      }
+
+      // Add the form ID to the instances array
+      vtsInstances.push(formId);
+    }
+
+    /**
+     * Retrieves the form element with the provided form ID and checks its validity.
+     *
+     * @param {string} formId - The ID of the form element to retrieve and check.
+     * @returns {HTMLFormElement} The valid HTML form element.
+     * @throws {TypeError} Throws a TypeError if the form element is not found or is not a valid HTML form element.
+     */
+  }, {
+    key: "validateForm",
+    value: function validateForm(formId) {
+      var form = document.getElementById(formId);
+
+      // Check if form element exists
+      if (!form) {
+        throw new TypeError("The form element with ID \"".concat(formId, "\" was not found."));
+      }
+
+      // Check if form element is a valid HTML form element
+      if (!(form instanceof HTMLFormElement)) {
+        throw new TypeError("The element with ID \"".concat(formId, "\" is not a valid HTML form element.\n        Please ensure you are passing the ID of a valid form element."));
+      }
+      return form;
+    }
+
+    /**
+     * Checks the field element in the form and validates its type.
+     * Throws an error if the field element is not found or is not a valid field element.
+     *
+     * @param {HTMLFormElement} form - The HTML form element.
+     * @param {string} fieldName - The name of the field element.
+     * @returns {HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement} - The validated field element.
+     * @throws {TypeError} Throws a TypeError if the field element is not found or is not a valid field element.
+     */
+  }, {
+    key: "validateField",
+    value: function validateField(form, fieldName) {
+      var field = form.querySelector("[name=\"".concat(fieldName, "\"]"));
+
+      // Check if field element exists
+      if (!field) {
+        throw new TypeError("The field element with the name \"".concat(fieldName, "\" was not found in the form."));
+      }
+
+      // Check if field element is a valid field element
+      if (!(field instanceof HTMLInputElement || field instanceof HTMLSelectElement || field instanceof HTMLTextAreaElement)) {
+        throw new TypeError("The element with name \"".concat(fieldName, "\" is not a valid field element. \n      Please ensure you are passing the name of a valid field in the form."));
+      }
+      return field;
+    }
+  }]);
+  return VtsFormValidator;
+}();
+
+;// CONCATENATED MODULE: ./src/mixins/Events.js
+function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
+function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+function _iterableToArrayLimit(arr, i) { var _i = null == arr ? null : "undefined" != typeof Symbol && arr[Symbol.iterator] || arr["@@iterator"]; if (null != _i) { var _s, _e, _x, _r, _arr = [], _n = !0, _d = !1; try { if (_x = (_i = _i.call(arr)).next, 0 === i) { if (Object(_i) !== _i) return; _n = !1; } else for (; !(_n = (_s = _x.call(_i)).done) && (_arr.push(_s.value), _arr.length !== i); _n = !0); } catch (err) { _d = !0, _e = err; } finally { try { if (!_n && null != _i["return"] && (_r = _i["return"](), Object(_r) !== _r)) return; } finally { if (_d) throw _e; } } return _arr; } }
+function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
+function _createForOfIteratorHelper(o, allowArrayLike) { var it = typeof Symbol !== "undefined" && o[Symbol.iterator] || o["@@iterator"]; if (!it) { if (Array.isArray(o) || (it = _unsupportedIterableToArray(o)) || allowArrayLike && o && typeof o.length === "number") { if (it) o = it; var i = 0; var F = function F() {}; return { s: F, n: function n() { if (i >= o.length) return { done: true }; return { done: false, value: o[i++] }; }, e: function e(_e2) { throw _e2; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var normalCompletion = true, didErr = false, err; return { s: function s() { it = it.call(o); }, n: function n() { var step = it.next(); normalCompletion = step.done; return step; }, e: function e(_e3) { didErr = true; err = _e3; }, f: function f() { try { if (!normalCompletion && it["return"] != null) it["return"](); } finally { if (didErr) throw err; } } }; }
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) arr2[i] = arr[i]; return arr2; }
+// @t
+
+
+/** @type {import('../ValidateThenSubmit').VtsEventsMixin} */
+var vtsEvents = {
+  _addEventListeners: function _addEventListeners() {
+    var _this = this;
+    // Form
+    var form = this.form;
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+      if (_this.stopPropagation) {
+        e.stopPropagation();
+      }
+      var shouldListen = _this.listen;
+      var wasValidated = form.classList.contains(_this.validatedClass);
+      if (!shouldListen && !wasValidated) {
+        _this._addFieldListener();
+      }
+
+      // validate each field
+      var _iterator = _createForOfIteratorHelper(_this.fields),
+        _step;
+      try {
+        for (_iterator.s(); !(_step = _iterator.n()).done;) {
+          var field = _step.value;
+          _this._checkFieldValidity(field);
+        }
+      } catch (err) {
+        _iterator.e(err);
+      } finally {
+        _iterator.f();
+      }
+      _this._reportValidity();
+      _this.form.classList.add(_this.validatedClass);
+      if (_this.isFormValid() && !_this.halt) {
+        _this.submit();
+      }
+    });
+
+    // Fields
+    var shouldListen = this.listen;
+    shouldListen && _addFieldListener();
+
+    // Match events
+    this._attachMatchEvents();
+  },
+  _addFieldListener: function _addFieldListener() {
+    var _this2 = this;
+    this.fields.forEach(function (field) {
+      var rules = _this2._getFieldRules(field.name);
+      var eventType = _this2._getEventType(field.type, rules === null || rules === void 0 ? void 0 : rules.eventType);
+      field.addEventListener(eventType, function () {
+        _this2._checkFieldValidity(field);
+        _this2._reportValidity();
+      });
+    });
+  },
+  _attachMatchEvents: function _attachMatchEvents() {
+    var _this3 = this;
+    var _iterator2 = _createForOfIteratorHelper(this.rules.entries()),
+      _step2;
+    try {
+      var _loop = function _loop() {
+        var _step2$value = _slicedToArray(_step2.value, 2),
+          fieldName = _step2$value[0],
+          rule = _step2$value[1];
+        var match = rule.match;
+        var form = _this3.form;
+        var field = form.querySelector("[name=\"".concat(fieldName, "\"]"));
+        var rules = _this3._getFieldRules(fieldName);
+        var eventType = _this3._getEventType(field.type, rules === null || rules === void 0 ? void 0 : rules.eventType);
+        if (match) {
+          var inputEvent = new Event(eventType);
+          var matchField = VtsFormValidator.validateField(form, match);
+          form.querySelector("[name=\"".concat(match, "\"]"));
+          matchField.addEventListener(eventType, function () {
+            field.dispatchEvent(inputEvent);
+          });
+        }
+      };
+      for (_iterator2.s(); !(_step2 = _iterator2.n()).done;) {
+        _loop();
+      }
+    } catch (err) {
+      _iterator2.e(err);
+    } finally {
+      _iterator2.f();
+    }
+  },
+  _getEventType: function _getEventType(fieldType, ruleEventType) {
+    var changeEvents = ['radio', 'select-one', 'select-multiple', 'checkbox', 'file', 'range'];
+
+    // Update event to 'change' based on the field type
+    var eventType = changeEvents.includes(fieldType) ? 'change' : 'input';
+
+    // Update event based on the specified rule
+    eventType = ruleEventType || eventType;
+    return eventType;
+  }
+};
+/* harmony default export */ const Events = (vtsEvents);
+;// CONCATENATED MODULE: ./src/utils/getFieldLabel.js
+/**
+ * Retrieves the label for the specified field within the given form.
+ *
+ * @param {HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement} field - The field element for which to retrieve the label.
+ * @param {HTMLFormElement} form - The form element containing the field.
+ * @returns {string} - The label text.
+ */
+function getFieldLabel(field, form) {
+  var dataLabel = field.dataset.vtsLabel;
+  var labelElement = form.querySelector("label[for=\"".concat(field.id, "\"]"));
+  var labelText = labelElement === null || labelElement === void 0 ? void 0 : labelElement.textContent;
+  var placeholder = field.getAttribute('placeholder');
+  var label = dataLabel || labelText || placeholder || '';
+  return label;
+}
+;// CONCATENATED MODULE: ./src/mixins/Rules.js
+// @ts-check
+
+
+
+/** @type {import('../ValidateThenSubmit').VtsRulesMixin} */
+var vtsRules = {
+  _applyRules: function _applyRules(rules, field, label) {
+    var message = this.message.invalid || 'Invalid field';
+    var pattern = 'pattern' in rules ? rules.pattern : '';
+    var isMatch = 'match' in rules && !pattern;
+    /** @type {*} */
+    var matchingField;
+    var matchValue = '';
+    if (isMatch) {
+      var _rules$flags;
+      // get matching field target
+      matchingField = VtsFormValidator.validateField(this.form, rules.match);
+      // get value of target field
+      matchValue = matchingField.value;
+      // overwrite pattern
+      pattern = (_rules$flags = rules.flags) !== null && _rules$flags !== void 0 && _rules$flags.includes('g') ? matchValue + '\\b' : "^".concat(matchValue, "$");
+    }
+
+    // set validity
+    var regExp = new RegExp(pattern, rules.flags);
+    if (regExp.test(field.value)) {
+      var _ref, _rules$message$valid, _rules$message;
+      message = (_ref = (_rules$message$valid = (_rules$message = rules.message) === null || _rules$message === void 0 ? void 0 : _rules$message.valid) !== null && _rules$message$valid !== void 0 ? _rules$message$valid : this.message.valid) !== null && _ref !== void 0 ? _ref : '';
+      field.setCustomValidity('');
+    } else {
+      var _rules$message$invali, _rules$message2;
+      message = (_rules$message$invali = (_rules$message2 = rules.message) === null || _rules$message2 === void 0 ? void 0 : _rules$message2.invalid) !== null && _rules$message$invali !== void 0 ? _rules$message$invali : message;
+      field.setCustomValidity(message);
+    }
+
+    // replace message placeholders for 'match'
+    if ('match' in rules) {
+      var _message;
+      message = (_message = message) === null || _message === void 0 ? void 0 : _message.replace(/\${targetValue}/g, matchValue).replace(/\${targetLabel}/g, getFieldLabel(matchingField, this.form));
+    }
+    warnMultiRule(rules, label);
+    return message;
+  },
+  _getFieldRules: function _getFieldRules(fieldName) {
+    var rules = this.rules;
+    if (rules && rules instanceof Map) {
+      return rules.get(fieldName);
+    }
+    return undefined;
+  },
+  _convertRulesToMap: function _convertRulesToMap() {
+    var rules = this.rules;
+    var rulesMap = new Map();
+    for (var fieldName in rules) {
+      if (Object.prototype.hasOwnProperty.call(rules, fieldName)) {
+        rulesMap.set(fieldName, rules[fieldName]);
+      }
+    }
+    this.rules = rulesMap;
+  }
+};
+/* harmony default export */ const Rules = (vtsRules);
+/**
+ * Displays a warning message if both "pattern" and "match" properties exist in the field rule.
+ *
+ * @private
+ * @param {import('../types/rules').VtsRules[string]} rules - The validation rules for the field.
+ * @param {string} label - The label of the field.
+ */
+function warnMultiRule(rules, label) {
+  if ('pattern' in rules && 'match' in rules) {
+    console.warn("Both \"pattern\" and \"match\" properties exist in the field rule for ".concat(label, ". ") + 'Ignoring the "match" property.');
+  }
+}
+;// CONCATENATED MODULE: ./src/mixins/Validation.js
+
+
+/** @type {import('../types/validation').VtsValidation} */
+var vtsValidation = {
+  _data: {
+    validFields: new Map(),
+    invalidFields: new Map()
+  },
+  _checkFieldValidity: function _checkFieldValidity(field) {
+    field.setCustomValidity('');
+    var label = getFieldLabel(field, this.form);
+    var fieldData = {
+      field: field,
+      label: label,
+      message: this._validate(field, label)
+    };
+    this._setValidityData(field, fieldData);
+  },
+  _reportValidity: function _reportValidity() {
+    var data = this._data;
+    var validData = Object.fromEntries(data.validFields);
+    var invalidData = Object.fromEntries(data.invalidFields);
+    var form = this.form;
+    var fnValid = this.fnValid;
+    var fnInvalid = this.fnInvalid;
+    fnValid(validData, form);
+    fnInvalid(invalidData, form);
+  },
+  _setValidityData: function _setValidityData(field, data) {
+    if (field.validity.valid) {
+      this._data.invalidFields["delete"](field.name);
+      this._data.validFields.set(field.name, data);
+    } else {
+      this._data.validFields["delete"](field.name);
+      this._data.invalidFields.set(field.name, data);
+    }
+  },
+  _validate: function _validate(field, label) {
+    var _message;
+    var message = field.validationMessage;
+    var rules = this._getFieldRules(field.name);
+    var validity = field.validity;
+    for (var key in validity) {
+      // default rule message object
+      var messageConfig = this.message;
+      // field specific rule message
+      var ruleMsg = rules !== null && rules !== void 0 && rules.message ? rules.message[key] : null;
+      var custMsg = ruleMsg !== null && ruleMsg !== void 0 ? ruleMsg : messageConfig[key];
+      if (validity[key]) {
+        if (validity.valid) {
+          // set custom error if rule config exists
+          if (rules) message = this._applyRules(rules, field, label);
+          // else the field is valid
+          else message = custMsg;
+        }
+        // invalid
+        else message = custMsg !== null && custMsg !== void 0 ? custMsg : message;
+        break;
+      }
+    }
+    // replace placeholders
+    message = (_message = message) === null || _message === void 0 ? void 0 : _message.replace(/\${value}/g, field.value).replace(/\${label}/g, label);
+    return message;
+  }
+};
+/* harmony default export */ const Validation = (vtsValidation);
+;// CONCATENATED MODULE: ./src/utils/defaults.js
+// @ts-check
+
+
+/**
+ * Global default configuration for Vts (Validate Then Submit).
+ *
+ * @type {import('../ValidateThenSubmit').VtsConfig}
+ */
+var vtsDefaults = {
+  ajax: {
+    action: '',
+    request: {},
+    beforeSend: function beforeSend(requestInit, abortController, form) {},
+    complete: function complete(form) {},
+    error: function error(errorData, errorResponse, form) {
+      var data = errorData ? errorData : {};
+      var title = 'message' in errorResponse ? errorResponse.message : 'Error!';
+      var html = 'stack' in errorResponse ? errorResponse.stack : 'Unknown error occurred';
+      console.table(errorResponse);
+      var text = data.title || title;
+      var ok = confirm(text + ':\n' + 'Click "ok" to view more details.');
+      if (ok) {
+        var _data$html;
+        var newWindow = window.open();
+        if (newWindow) newWindow.document.body.innerHTML = (_data$html = data.html) !== null && _data$html !== void 0 ? _data$html : html;
+      }
+    },
+    success: function success(data, response, form) {
+      alert(data.title + ':\n' + data.text);
+      form.reset();
+
+      /** @type {NodeListOf<HTMLElement>} */
+      var fields = form.querySelectorAll('[name]:not([data-vts-ignored])');
+      fields.forEach(function (field) {
+        field.style.border = '';
+        field.remove;
+      });
+      form.classList.remove('was-validated');
+    }
+  },
+  fnValid: function fnValid(data, form) {
+    showFeedback('valid', data);
+  },
+  fnInvalid: function fnInvalid(data, form) {
+    showFeedback('invalid', data);
+  },
+  halt: false,
+  listen: false,
+  rules: {},
+  message: {
+    invalid: 'Invalid ${label}',
+    valid: ''
+  },
+  stopPropagation: true,
+  validatedClass: 'was-validated'
+};
+
+/**
+ * @param {string} state
+ * @param {any} data
+ */
+function showFeedback(state, data) {
+  var _loop = function _loop() {
+    var _data$key = data[key],
+      field = _data$key.field,
+      label = _data$key.label,
+      _data$key$message = _data$key.message,
+      message = _data$key$message === void 0 ? ' ' : _data$key$message;
+    var parent = field.parentNode;
+    var className = "".concat(state, "-feedback");
+    var sibling = parent === null || parent === void 0 ? void 0 : parent.querySelector(".".concat(className));
+
+    // field.style.border =
+    //   state === 'valid' ? '1px solid #146c43' : '1px solid #b02a37';
+    if (sibling) {
+      sibling.textContent = "".concat(message);
+    } else {
+      var div = document.createElement('div');
+      div.classList.add("".concat(className));
+      div.textContent = "".concat(message);
+      // div.style.color = state === 'valid' ? '#146c43' : '#b02a37';
+      parent === null || parent === void 0 ? void 0 : parent.append(div);
+    }
+    var validSib = parent === null || parent === void 0 ? void 0 : parent.querySelector(".valid-feedback");
+    var invalidSib = parent === null || parent === void 0 ? void 0 : parent.querySelector(".invalid-feedback");
+
+    // if (state === 'valid') {
+    //   toggleElementDisplay(validSib, invalidSib);
+    // } else {
+    //   toggleElementDisplay(invalidSib, validSib);
+    // }
+
+    /**
+     * @param {Element | null | undefined} show the element to show
+     * @param {Element | null | undefined} hide the element to hide
+     */
+    function toggleElementDisplay(show, hide) {
+      if (show instanceof HTMLElement) {
+        show.style.display = '';
+      }
+      if (hide instanceof HTMLElement) {
+        hide.style.display = 'none';
+      }
+    }
+  };
+  for (var key in data) {
+    _loop();
+  }
+}
+/* harmony default export */ const defaults = (vtsDefaults);
+;// CONCATENATED MODULE: ./src/utils/deepMerge.js
+function deepMerge_typeof(obj) { "@babel/helpers - typeof"; return deepMerge_typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, deepMerge_typeof(obj); }
+/**
+ * Deeply merges multiple objects into a single object.
+ *
+ * @param {object} target - The target object to merge the sources into.
+ * @param {...object} sources - The source objects to merge into the target.
+ * @returns {object} - The merged object.
+ */
+function deepMerge(target) {
+  for (var _len = arguments.length, sources = new Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
+    sources[_key - 1] = arguments[_key];
+  }
+  if (!sources.length) {
+    return target;
+  }
+  var source = sources.shift();
+  for (var key in source) {
+    if (deepMerge_typeof(source[key]) === 'object' && source[key] !== null && !Array.isArray(source[key])) {
+      if (!target[key] || deepMerge_typeof(target[key]) !== 'object' || Array.isArray(target[key])) {
+        target[key] = {};
+      }
+      deepMerge(target[key], source[key]);
+    } else {
+      target[key] = source[key];
+    }
+  }
+  return deepMerge.apply(void 0, [target].concat(sources));
+}
+;// CONCATENATED MODULE: ./src/utils/setVtsConfig.js
+// @ts-check
+
+
+
+/**
+ * Sets the configuration options for Vts (Validate Then Submit).
+ *
+ * @description This function merges the provided configuration options with the default configuration
+ * and returns the resulting configuration object.
+ *
+ * @export
+ * @param {HTMLFormElement} form - The HTML form element.
+ * @param {Partial<import('../ValidateThenSubmit').VtsConfig>} config - The partial configuration options.
+ * @returns {import('../ValidateThenSubmit').VtsConfig} - The merged configuration options.
+ */
+function setVtsConfig(form, config) {
+  /** @type {import('../types/config').VtsConfig} */
+  var options = deepMerge({}, defaults, config);
+
+  /** @type {Partial<import('../types/config').VtsAjaxSettings>} */
+  var ajax = options.ajax;
+  options.ajax.action = ajax.action || form.action;
+  var req = ajax.request;
+  /** @type {RequestInit} */
+  var request = {
+    method: (req === null || req === void 0 ? void 0 : req.method) || form.method || 'get',
+    headers: {
+      'Content-Type': 'multipart/form-data'
+    }
+  };
+
+  /** @type {RequestInit} */
+  var merge = deepMerge(req, request);
+  options.ajax.request = merge;
+  return options;
+}
+;// CONCATENATED MODULE: ./src/mixins/Form.js
+function Form_typeof(obj) { "@babel/helpers - typeof"; return Form_typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, Form_typeof(obj); }
+function _regeneratorRuntime() { "use strict"; /*! regenerator-runtime -- Copyright (c) 2014-present, Facebook, Inc. -- license (MIT): https://github.com/facebook/regenerator/blob/main/LICENSE */ _regeneratorRuntime = function _regeneratorRuntime() { return exports; }; var exports = {}, Op = Object.prototype, hasOwn = Op.hasOwnProperty, defineProperty = Object.defineProperty || function (obj, key, desc) { obj[key] = desc.value; }, $Symbol = "function" == typeof Symbol ? Symbol : {}, iteratorSymbol = $Symbol.iterator || "@@iterator", asyncIteratorSymbol = $Symbol.asyncIterator || "@@asyncIterator", toStringTagSymbol = $Symbol.toStringTag || "@@toStringTag"; function define(obj, key, value) { return Object.defineProperty(obj, key, { value: value, enumerable: !0, configurable: !0, writable: !0 }), obj[key]; } try { define({}, ""); } catch (err) { define = function define(obj, key, value) { return obj[key] = value; }; } function wrap(innerFn, outerFn, self, tryLocsList) { var protoGenerator = outerFn && outerFn.prototype instanceof Generator ? outerFn : Generator, generator = Object.create(protoGenerator.prototype), context = new Context(tryLocsList || []); return defineProperty(generator, "_invoke", { value: makeInvokeMethod(innerFn, self, context) }), generator; } function tryCatch(fn, obj, arg) { try { return { type: "normal", arg: fn.call(obj, arg) }; } catch (err) { return { type: "throw", arg: err }; } } exports.wrap = wrap; var ContinueSentinel = {}; function Generator() {} function GeneratorFunction() {} function GeneratorFunctionPrototype() {} var IteratorPrototype = {}; define(IteratorPrototype, iteratorSymbol, function () { return this; }); var getProto = Object.getPrototypeOf, NativeIteratorPrototype = getProto && getProto(getProto(values([]))); NativeIteratorPrototype && NativeIteratorPrototype !== Op && hasOwn.call(NativeIteratorPrototype, iteratorSymbol) && (IteratorPrototype = NativeIteratorPrototype); var Gp = GeneratorFunctionPrototype.prototype = Generator.prototype = Object.create(IteratorPrototype); function defineIteratorMethods(prototype) { ["next", "throw", "return"].forEach(function (method) { define(prototype, method, function (arg) { return this._invoke(method, arg); }); }); } function AsyncIterator(generator, PromiseImpl) { function invoke(method, arg, resolve, reject) { var record = tryCatch(generator[method], generator, arg); if ("throw" !== record.type) { var result = record.arg, value = result.value; return value && "object" == Form_typeof(value) && hasOwn.call(value, "__await") ? PromiseImpl.resolve(value.__await).then(function (value) { invoke("next", value, resolve, reject); }, function (err) { invoke("throw", err, resolve, reject); }) : PromiseImpl.resolve(value).then(function (unwrapped) { result.value = unwrapped, resolve(result); }, function (error) { return invoke("throw", error, resolve, reject); }); } reject(record.arg); } var previousPromise; defineProperty(this, "_invoke", { value: function value(method, arg) { function callInvokeWithMethodAndArg() { return new PromiseImpl(function (resolve, reject) { invoke(method, arg, resolve, reject); }); } return previousPromise = previousPromise ? previousPromise.then(callInvokeWithMethodAndArg, callInvokeWithMethodAndArg) : callInvokeWithMethodAndArg(); } }); } function makeInvokeMethod(innerFn, self, context) { var state = "suspendedStart"; return function (method, arg) { if ("executing" === state) throw new Error("Generator is already running"); if ("completed" === state) { if ("throw" === method) throw arg; return doneResult(); } for (context.method = method, context.arg = arg;;) { var delegate = context.delegate; if (delegate) { var delegateResult = maybeInvokeDelegate(delegate, context); if (delegateResult) { if (delegateResult === ContinueSentinel) continue; return delegateResult; } } if ("next" === context.method) context.sent = context._sent = context.arg;else if ("throw" === context.method) { if ("suspendedStart" === state) throw state = "completed", context.arg; context.dispatchException(context.arg); } else "return" === context.method && context.abrupt("return", context.arg); state = "executing"; var record = tryCatch(innerFn, self, context); if ("normal" === record.type) { if (state = context.done ? "completed" : "suspendedYield", record.arg === ContinueSentinel) continue; return { value: record.arg, done: context.done }; } "throw" === record.type && (state = "completed", context.method = "throw", context.arg = record.arg); } }; } function maybeInvokeDelegate(delegate, context) { var methodName = context.method, method = delegate.iterator[methodName]; if (undefined === method) return context.delegate = null, "throw" === methodName && delegate.iterator["return"] && (context.method = "return", context.arg = undefined, maybeInvokeDelegate(delegate, context), "throw" === context.method) || "return" !== methodName && (context.method = "throw", context.arg = new TypeError("The iterator does not provide a '" + methodName + "' method")), ContinueSentinel; var record = tryCatch(method, delegate.iterator, context.arg); if ("throw" === record.type) return context.method = "throw", context.arg = record.arg, context.delegate = null, ContinueSentinel; var info = record.arg; return info ? info.done ? (context[delegate.resultName] = info.value, context.next = delegate.nextLoc, "return" !== context.method && (context.method = "next", context.arg = undefined), context.delegate = null, ContinueSentinel) : info : (context.method = "throw", context.arg = new TypeError("iterator result is not an object"), context.delegate = null, ContinueSentinel); } function pushTryEntry(locs) { var entry = { tryLoc: locs[0] }; 1 in locs && (entry.catchLoc = locs[1]), 2 in locs && (entry.finallyLoc = locs[2], entry.afterLoc = locs[3]), this.tryEntries.push(entry); } function resetTryEntry(entry) { var record = entry.completion || {}; record.type = "normal", delete record.arg, entry.completion = record; } function Context(tryLocsList) { this.tryEntries = [{ tryLoc: "root" }], tryLocsList.forEach(pushTryEntry, this), this.reset(!0); } function values(iterable) { if (iterable) { var iteratorMethod = iterable[iteratorSymbol]; if (iteratorMethod) return iteratorMethod.call(iterable); if ("function" == typeof iterable.next) return iterable; if (!isNaN(iterable.length)) { var i = -1, next = function next() { for (; ++i < iterable.length;) if (hasOwn.call(iterable, i)) return next.value = iterable[i], next.done = !1, next; return next.value = undefined, next.done = !0, next; }; return next.next = next; } } return { next: doneResult }; } function doneResult() { return { value: undefined, done: !0 }; } return GeneratorFunction.prototype = GeneratorFunctionPrototype, defineProperty(Gp, "constructor", { value: GeneratorFunctionPrototype, configurable: !0 }), defineProperty(GeneratorFunctionPrototype, "constructor", { value: GeneratorFunction, configurable: !0 }), GeneratorFunction.displayName = define(GeneratorFunctionPrototype, toStringTagSymbol, "GeneratorFunction"), exports.isGeneratorFunction = function (genFun) { var ctor = "function" == typeof genFun && genFun.constructor; return !!ctor && (ctor === GeneratorFunction || "GeneratorFunction" === (ctor.displayName || ctor.name)); }, exports.mark = function (genFun) { return Object.setPrototypeOf ? Object.setPrototypeOf(genFun, GeneratorFunctionPrototype) : (genFun.__proto__ = GeneratorFunctionPrototype, define(genFun, toStringTagSymbol, "GeneratorFunction")), genFun.prototype = Object.create(Gp), genFun; }, exports.awrap = function (arg) { return { __await: arg }; }, defineIteratorMethods(AsyncIterator.prototype), define(AsyncIterator.prototype, asyncIteratorSymbol, function () { return this; }), exports.AsyncIterator = AsyncIterator, exports.async = function (innerFn, outerFn, self, tryLocsList, PromiseImpl) { void 0 === PromiseImpl && (PromiseImpl = Promise); var iter = new AsyncIterator(wrap(innerFn, outerFn, self, tryLocsList), PromiseImpl); return exports.isGeneratorFunction(outerFn) ? iter : iter.next().then(function (result) { return result.done ? result.value : iter.next(); }); }, defineIteratorMethods(Gp), define(Gp, toStringTagSymbol, "Generator"), define(Gp, iteratorSymbol, function () { return this; }), define(Gp, "toString", function () { return "[object Generator]"; }), exports.keys = function (val) { var object = Object(val), keys = []; for (var key in object) keys.push(key); return keys.reverse(), function next() { for (; keys.length;) { var key = keys.pop(); if (key in object) return next.value = key, next.done = !1, next; } return next.done = !0, next; }; }, exports.values = values, Context.prototype = { constructor: Context, reset: function reset(skipTempReset) { if (this.prev = 0, this.next = 0, this.sent = this._sent = undefined, this.done = !1, this.delegate = null, this.method = "next", this.arg = undefined, this.tryEntries.forEach(resetTryEntry), !skipTempReset) for (var name in this) "t" === name.charAt(0) && hasOwn.call(this, name) && !isNaN(+name.slice(1)) && (this[name] = undefined); }, stop: function stop() { this.done = !0; var rootRecord = this.tryEntries[0].completion; if ("throw" === rootRecord.type) throw rootRecord.arg; return this.rval; }, dispatchException: function dispatchException(exception) { if (this.done) throw exception; var context = this; function handle(loc, caught) { return record.type = "throw", record.arg = exception, context.next = loc, caught && (context.method = "next", context.arg = undefined), !!caught; } for (var i = this.tryEntries.length - 1; i >= 0; --i) { var entry = this.tryEntries[i], record = entry.completion; if ("root" === entry.tryLoc) return handle("end"); if (entry.tryLoc <= this.prev) { var hasCatch = hasOwn.call(entry, "catchLoc"), hasFinally = hasOwn.call(entry, "finallyLoc"); if (hasCatch && hasFinally) { if (this.prev < entry.catchLoc) return handle(entry.catchLoc, !0); if (this.prev < entry.finallyLoc) return handle(entry.finallyLoc); } else if (hasCatch) { if (this.prev < entry.catchLoc) return handle(entry.catchLoc, !0); } else { if (!hasFinally) throw new Error("try statement without catch or finally"); if (this.prev < entry.finallyLoc) return handle(entry.finallyLoc); } } } }, abrupt: function abrupt(type, arg) { for (var i = this.tryEntries.length - 1; i >= 0; --i) { var entry = this.tryEntries[i]; if (entry.tryLoc <= this.prev && hasOwn.call(entry, "finallyLoc") && this.prev < entry.finallyLoc) { var finallyEntry = entry; break; } } finallyEntry && ("break" === type || "continue" === type) && finallyEntry.tryLoc <= arg && arg <= finallyEntry.finallyLoc && (finallyEntry = null); var record = finallyEntry ? finallyEntry.completion : {}; return record.type = type, record.arg = arg, finallyEntry ? (this.method = "next", this.next = finallyEntry.finallyLoc, ContinueSentinel) : this.complete(record); }, complete: function complete(record, afterLoc) { if ("throw" === record.type) throw record.arg; return "break" === record.type || "continue" === record.type ? this.next = record.arg : "return" === record.type ? (this.rval = this.arg = record.arg, this.method = "return", this.next = "end") : "normal" === record.type && afterLoc && (this.next = afterLoc), ContinueSentinel; }, finish: function finish(finallyLoc) { for (var i = this.tryEntries.length - 1; i >= 0; --i) { var entry = this.tryEntries[i]; if (entry.finallyLoc === finallyLoc) return this.complete(entry.completion, entry.afterLoc), resetTryEntry(entry), ContinueSentinel; } }, "catch": function _catch(tryLoc) { for (var i = this.tryEntries.length - 1; i >= 0; --i) { var entry = this.tryEntries[i]; if (entry.tryLoc === tryLoc) { var record = entry.completion; if ("throw" === record.type) { var thrown = record.arg; resetTryEntry(entry); } return thrown; } } throw new Error("illegal catch attempt"); }, delegateYield: function delegateYield(iterable, resultName, nextLoc) { return this.delegate = { iterator: values(iterable), resultName: resultName, nextLoc: nextLoc }, "next" === this.method && (this.arg = undefined), ContinueSentinel; } }, exports; }
+function Form_slicedToArray(arr, i) { return Form_arrayWithHoles(arr) || Form_iterableToArrayLimit(arr, i) || Form_unsupportedIterableToArray(arr, i) || Form_nonIterableRest(); }
+function Form_nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+function Form_unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return Form_arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return Form_arrayLikeToArray(o, minLen); }
+function Form_arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) arr2[i] = arr[i]; return arr2; }
+function Form_iterableToArrayLimit(arr, i) { var _i = null == arr ? null : "undefined" != typeof Symbol && arr[Symbol.iterator] || arr["@@iterator"]; if (null != _i) { var _s, _e, _x, _r, _arr = [], _n = !0, _d = !1; try { if (_x = (_i = _i.call(arr)).next, 0 === i) { if (Object(_i) !== _i) return; _n = !1; } else for (; !(_n = (_s = _x.call(_i)).done) && (_arr.push(_s.value), _arr.length !== i); _n = !0); } catch (err) { _d = !0, _e = err; } finally { try { if (!_n && null != _i["return"] && (_r = _i["return"](), Object(_r) !== _r)) return; } finally { if (_d) throw _e; } } return _arr; } }
+function Form_arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
+function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
+function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
+/** @type {import('../ValidateThenSubmit').VtsForm} */
+var vtsForm = {
+  isFormValid: function isFormValid() {
+    return this.form.checkValidity();
+  },
+  submit: function submit() {
+    var _this = this;
+    return _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee() {
+      var ajax, form, url, _vtsFormBeforeSend$ca, _vtsFormBeforeSend$ca2, response, contentType, _yield$Promise$all, _yield$Promise$all2, data, rawResponse, _this$ajax$request, errorData;
+      return _regeneratorRuntime().wrap(function _callee$(_context) {
+        while (1) switch (_context.prev = _context.next) {
+          case 0:
+            ajax = _this.ajax;
+            form = _this.form;
+            _context.prev = 2;
+            url = ajax.action;
+            _vtsFormBeforeSend$ca = vtsFormBeforeSend.call(_this, url, ajax.request);
+            _vtsFormBeforeSend$ca2 = Form_slicedToArray(_vtsFormBeforeSend$ca, 2);
+            url = _vtsFormBeforeSend$ca2[0];
+            ajax.request = _vtsFormBeforeSend$ca2[1];
+            _context.next = 10;
+            return fetch(new Request(url, ajax.request));
+          case 10:
+            response = _context.sent;
+            if (response.ok) {
+              _context.next = 13;
+              break;
+            }
+            throw new Error(response.statusText);
+          case 13:
+            contentType = response.headers.get('content-type');
+            if (!(contentType && contentType.includes('application/json'))) {
+              _context.next = 24;
+              break;
+            }
+            _context.next = 17;
+            return Promise.all([response.json(), response]);
+          case 17:
+            _yield$Promise$all = _context.sent;
+            _yield$Promise$all2 = Form_slicedToArray(_yield$Promise$all, 2);
+            data = _yield$Promise$all2[0];
+            rawResponse = _yield$Promise$all2[1];
+            ajax.success(data, rawResponse, form);
+            _context.next = 25;
+            break;
+          case 24:
+            throw new TypeError('Response is not in JSON format');
+          case 25:
+            _context.next = 44;
+            break;
+          case 27:
+            _context.prev = 27;
+            _context.t0 = _context["catch"](2);
+            if (!(_context.t0 instanceof Response)) {
+              _context.next = 41;
+              break;
+            }
+            _context.prev = 30;
+            _context.next = 33;
+            return _context.t0.json();
+          case 33:
+            errorData = _context.sent;
+            _context.next = 39;
+            break;
+          case 36:
+            _context.prev = 36;
+            _context.t1 = _context["catch"](30);
+            errorData = _context.t1;
+          case 39:
+            _context.next = 42;
+            break;
+          case 41:
+            errorData = null;
+          case 42:
+            ajax.error(errorData, _context.t0, form);
+            if ((_this$ajax$request = _this.ajax.request) !== null && _this$ajax$request !== void 0 && (_this$ajax$request = _this$ajax$request.signal) !== null && _this$ajax$request !== void 0 && _this$ajax$request.aborted) _this.ajax.abortController = new AbortController();
+          case 44:
+            ajax.complete(form);
+          case 45:
+          case "end":
+            return _context.stop();
+        }
+      }, _callee, null, [[2, 27], [30, 36]]);
+    }))();
+  }
+};
+
+/**
+ * @description
+ * @author RED
+ * @param {string} url
+ * @param {RequestInit} request
+ * @returns {[url, request]}
+ * @this {import('../ValidateThenSubmit').default}
+ */
+function vtsFormBeforeSend(url, request) {
+  var formData = new FormData(this.form);
+  this.ajax.abortController = new AbortController();
+  this.ajax.request.signal = this.ajax.abortController.signal;
+  request = this.ajax.request = this.ajax.beforeSend(this.ajax.request, this.ajax.abortController, this.form) || request;
+  var get = new RegExp('get', 'i');
+  var isGetMethod = get.test(request.method);
+  if (isGetMethod) {
+    var query = new URLSearchParams(formData.toString());
+    url = this.ajax.action = "".concat(url, "/?").concat(query);
+  } else {
+    request.body = formData;
+  }
+  return [url, request];
+}
+/* harmony default export */ const Form = (vtsForm);
+;// CONCATENATED MODULE: ./src/ValidateThenSubmit.js
+function ValidateThenSubmit_typeof(obj) { "@babel/helpers - typeof"; return ValidateThenSubmit_typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, ValidateThenSubmit_typeof(obj); }
+function ValidateThenSubmit_classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+function ValidateThenSubmit_defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, ValidateThenSubmit_toPropertyKey(descriptor.key), descriptor); } }
+function ValidateThenSubmit_createClass(Constructor, protoProps, staticProps) { if (protoProps) ValidateThenSubmit_defineProperties(Constructor.prototype, protoProps); if (staticProps) ValidateThenSubmit_defineProperties(Constructor, staticProps); Object.defineProperty(Constructor, "prototype", { writable: false }); return Constructor; }
+function ValidateThenSubmit_toPropertyKey(arg) { var key = ValidateThenSubmit_toPrimitive(arg, "string"); return ValidateThenSubmit_typeof(key) === "symbol" ? key : String(key); }
+function ValidateThenSubmit_toPrimitive(input, hint) { if (ValidateThenSubmit_typeof(input) !== "object" || input === null) return input; var prim = input[Symbol.toPrimitive]; if (prim !== undefined) { var res = prim.call(input, hint || "default"); if (ValidateThenSubmit_typeof(res) !== "object") return res; throw new TypeError("@@toPrimitive must return a primitive value."); } return (hint === "string" ? String : Number)(input); }
+function _classPrivateMethodInitSpec(obj, privateSet) { _checkPrivateRedeclaration(obj, privateSet); privateSet.add(obj); }
+function _checkPrivateRedeclaration(obj, privateCollection) { if (privateCollection.has(obj)) { throw new TypeError("Cannot initialize the same private elements twice on an object"); } }
+function _classPrivateMethodGet(receiver, privateSet, fn) { if (!privateSet.has(receiver)) { throw new TypeError("attempted to get private field on non-instance"); } return fn; }
+// @ts-check
+
+
+
+
+
+
+
+
+
+/// <reference path="./ValidateThenSubmit.d.ts" />
+var _init = /*#__PURE__*/new WeakSet();
+var ValidateThenSubmit = /*#__PURE__*/function () {
+  function ValidateThenSubmit(formId) {
+    var _config = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+    ValidateThenSubmit_classCallCheck(this, ValidateThenSubmit);
+    _classPrivateMethodInitSpec(this, _init);
+    var _form = VtsFormValidator.validateForm(formId);
+    this.fields = _form.querySelectorAll('[name]:not([data-vts-ignored])');
+    this.form = _form;
+    _classPrivateMethodGet(this, _init, _init2).call(this, _config);
+  }
+  ValidateThenSubmit_createClass(ValidateThenSubmit, null, [{
+    key: "setDefaults",
+    value: function setDefaults(config) {
+      deepMerge(defaults, config);
+    }
+  }]);
+  return ValidateThenSubmit;
+}();
+function _init2(config) {
+  var form = this.form;
+  // mixin
+  Object.assign(this, Form, setVtsConfig(form, config));
+  Object.assign(ValidateThenSubmit.prototype, Events, Rules, Validation);
+
+  // check instance
+  VtsFormValidator.checkInstance(form.id);
+  this._convertRulesToMap();
+  this._addEventListeners();
+}
+
+__webpack_exports__ = __webpack_exports__["default"];
+/******/ 	return __webpack_exports__;
+/******/ })()
+;
+});

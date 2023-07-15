@@ -1,7 +1,6 @@
 {
   "types": "./src/ValidateThenSubmit.d.ts",
   "dependencies": {
-    "sweetalert2": "^11.7.12",
     "whatwg-fetch": "^3.6.2"
   },
   "devDependencies": {
@@ -17,5 +16,40 @@
   "scripts": {
     "start": "webpack --config webpack.config.js --mode development",
     "build": "webpack --config webpack.config.prod.js --mode production"
-  }
+  },
+  "name": "vts-form",
+  "description": "Welcome to the documentation for Vts - Validate Then Submit. This documentation provides an overview of the Vts library, its features, and how to use it in your web projects.",
+  "version": "3.0.0",
+  "main": "./src/ValidateThenSubmit.js",
+  "directories": {
+    "test": "test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/red-cruz/vts.git"
+  },
+  "keywords": [
+    "form",
+    "validation",
+    "JavaScript",
+    "front-end",
+    "input",
+    "library",
+    "client-side",
+    "browser",
+    "HTML",
+    "plugin",
+    "vts",
+    "validate-then-submit",
+    "validate then submit",
+    "validator",
+    "fetch",
+    "ajax"
+  ],
+  "author": "Raymark E. Dela Cruz",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/red-cruz/vts/issues"
+  },
+  "homepage": "https://github.com/red-cruz/vts#readme"
 }
