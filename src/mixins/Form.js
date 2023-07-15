@@ -30,16 +30,20 @@ const vtsForm = {
         throw new TypeError('Response is not in JSON format');
       }
     } catch (error) {
+      let errorData;
       if (error instanceof Response) {
         try {
-          const errorData = await error.json();
-          ajax.error(errorData, error, form);
+          errorData = await error.json();
         } catch (e) {
-          ajax.error(e, error, form);
+          errorData = e;
         }
       } else {
-        ajax.error(null, error, form);
+        errorData = null;
       }
+      ajax.error(errorData, error, form);
+
+      if (this.ajax.request?.signal?.aborted)
+        this.ajax.abortController = new AbortController();
     }
     ajax.complete(form);
   },
@@ -55,6 +59,9 @@ const vtsForm = {
  */
 function vtsFormBeforeSend(url, request) {
   const formData = new FormData(this.form);
+
+  this.ajax.abortController = new AbortController();
+  this.ajax.request.signal = this.ajax.abortController.signal;
 
   request = this.ajax.request =
     this.ajax.beforeSend(

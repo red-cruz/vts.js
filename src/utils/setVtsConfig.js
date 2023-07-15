@@ -20,7 +20,6 @@ export default function setVtsConfig(form, config) {
   /** @type {Partial<import('../types/config').VtsAjaxSettings>} */
   const ajax = options.ajax;
   options.ajax.action = ajax.action || form.action;
-  options.ajax.abortController = new AbortController();
 
   const req = ajax.request;
   /** @type {RequestInit} */
@@ -34,7 +33,6 @@ export default function setVtsConfig(form, config) {
   /** @type {RequestInit} */
   const merge = deepMerge(req, request);
   options.ajax.request = merge;
-  options.ajax.request.signal = options.ajax.abortController.signal;
 
   return options;
 }
