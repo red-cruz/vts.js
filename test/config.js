@@ -1,7 +1,7 @@
 // @ts-checks
 import Swal from 'sweetalert2';
-import Vts from '../src/ValidateThenSubmit';
-
+import ValidateThenSubmit from '../src/ValidateThenSubmit';
+const Vts = ValidateThenSubmit;
 document.addEventListener('DOMContentLoaded', function () {
   const test = new Vts('myForm');
   console.log(test);
@@ -24,7 +24,6 @@ Vts.setDefaults({
           abortController.abort();
         }
       });
-      // request.method = 'post';
       return request;
     },
     success: function (data, response, form) {

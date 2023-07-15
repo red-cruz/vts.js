@@ -6,14 +6,14 @@ module.exports = {
     library: 'ValidateThenSubmit',
     libraryExport: 'default',
     libraryTarget: 'umd',
-    filename: 'ValidateThenSubmit.min.js',
+    filename: 'ValidateThenSubmit.js',
     path: path.resolve(__dirname, 'dist'),
   },
   mode: 'production',
   optimization: {
     usedExports: true,
     sideEffects: true,
-    // minimize: false,
+    minimize: false,
   },
   module: {
     rules: [

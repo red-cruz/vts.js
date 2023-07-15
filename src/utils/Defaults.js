@@ -12,13 +12,35 @@ const vtsDefaults = {
     request: {},
     beforeSend: (requestInit, abortController, form) => {},
     complete: (form) => {},
-    error: (errorData, response, form) => {
-      console.table(response);
-      alert(errorData || response);
+    error: (errorData, errorResponse, form) => {
+      const data = errorData ? errorData : {};
+      const title =
+        'message' in errorResponse ? errorResponse.message : 'Error!';
+      const html =
+        'stack' in errorResponse
+          ? errorResponse.stack
+          : 'Unknown error occurred';
+
+      console.table(errorResponse);
+      const text = data.title || title;
+      const ok = confirm(text + ':\n' + 'Click "ok" to view more details.');
+      if (ok) {
+        const newWindow = window.open();
+        if (newWindow) newWindow.document.body.innerHTML = data.html ?? html;
+      }
     },
     success: (data, response, form) => {
       alert(data.title + ':\n' + data.text);
       form.reset();
+
+      /** @type {NodeListOf<HTMLElement>} */
+      const fields = form.querySelectorAll('[name]:not([data-vts-ignored])');
+
+      fields.forEach((field) => {
+        field.style.border = '';
+        field.remove;
+      });
+      form.classList.remove('was-validated');
     },
   },
   fnValid: (data, form) => {
@@ -49,26 +71,26 @@ function showFeedback(state, data) {
     const className = `${state}-feedback`;
     const sibling = parent?.querySelector(`.${className}`);
 
-    field.style.border =
-      state === 'valid' ? '1px solid #146c43' : '1px solid #b02a37';
+    // field.style.border =
+    //   state === 'valid' ? '1px solid #146c43' : '1px solid #b02a37';
     if (sibling) {
       sibling.textContent = `${message}`;
     } else {
       const div = document.createElement('div');
       div.classList.add(`${className}`);
       div.textContent = `${message}`;
-      div.style.color = state === 'valid' ? '#146c43' : '#b02a37';
+      // div.style.color = state === 'valid' ? '#146c43' : '#b02a37';
       parent?.append(div);
     }
 
     const validSib = parent?.querySelector(`.valid-feedback`);
     const invalidSib = parent?.querySelector(`.invalid-feedback`);
 
-    if (state === 'valid') {
-      toggleElementDisplay(validSib, invalidSib);
-    } else {
-      toggleElementDisplay(invalidSib, validSib);
-    }
+    // if (state === 'valid') {
+    //   toggleElementDisplay(validSib, invalidSib);
+    // } else {
+    //   toggleElementDisplay(invalidSib, validSib);
+    // }
 
     /**
      * @param {Element | null | undefined} show the element to show
