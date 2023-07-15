@@ -35,30 +35,28 @@ const vtsValidation = {
       this._data.validFields.delete(field.name);
       this._data.invalidFields.set(field.name, data);
     }
-    console.error('naset na');
   },
   _validate(field, label) {
     let message = field.validationMessage;
     const rules = this._getFieldRules(field.name);
     const validity = field.validity;
-    console.log(message, field.checkValidity());
 
-    if (validity.customError) throw 'test';
     for (const key in validity) {
       // default rule message object
       const messageConfig = this.message;
       // field specific rule message
       const ruleMsg = rules?.message ? rules.message[key] : null;
+      const custMsg = ruleMsg ?? messageConfig[key];
 
       if (validity[key]) {
         if (validity.valid) {
           // set custom error if rule config exists
           if (rules) message = this._applyRules(rules, field, label);
           // else the field is valid
-          else message = ruleMsg ?? messageConfig[key];
+          else message = custMsg;
         }
         // invalid
-        else message = ruleMsg ?? messageConfig[key] ?? message;
+        else message = custMsg ?? message;
         break;
       }
     }
@@ -70,17 +68,5 @@ const vtsValidation = {
     return message;
   },
 };
-
-/**
- * @description Clears the validity state of a field.
- * @param {HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement} field The field to clear the validity state for.
- */
-function clearValidity(field) {
-  field.setCustomValidity('');
-}
-
-function replacePlaceholders(field, fieldData) {
-  return fieldData;
-}
 
 export default vtsValidation;

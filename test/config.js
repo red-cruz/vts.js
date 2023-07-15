@@ -1,4 +1,4 @@
-// @ts-check
+// @ts-checks
 import Swal from 'sweetalert2';
 import Vts from '../src/ValidateThenSubmit';
 
@@ -87,7 +87,7 @@ Vts.setDefaults({
       match: 'first_name',
       message: {
         valid: 'oks na',
-        invalid: 'dapat match sa first name',
+        invalid: '${targetValue} != ${value}',
         valueMissing: 'required po lname',
       },
     },
