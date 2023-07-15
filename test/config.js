@@ -1,6 +1,6 @@
 // @ts-check
 import Swal from 'sweetalert2';
-import Vts, { VtsRulesMixin } from '../src/ValidateThenSubmit';
+import Vts from '../src/ValidateThenSubmit';
 // import Vts from '../dist/ValidateThenSubmit';
 
 document.addEventListener('DOMContentLoaded', function () {
@@ -60,20 +60,23 @@ Vts.setDefaults({
 // set rules
 Vts.setDefaults({
   message: {
-    // valid: 'validd',
-    // invalid: 'invalidd',
-    // valid: '${value} is a valid ${label} ${targetLabel} ${targetValue}',
+    // valid: '${value} is a valid ${label}',
     // invalid: '${label} ${value} must be equal to ${targetLabel} ${targetValue}',
     valueMissing: 'required po ito',
   },
   rules: {
     first_name: {
       match: 'user_name',
+      message: {
+        valid: '${value} is a valid ${label}',
+      },
     },
     last_name: {
       match: 'first_name',
       message: {
         valid: 'oks na',
+        invalid: 'dapat match sa first name',
+        valueMissing: 'required po lname',
       },
     },
   },

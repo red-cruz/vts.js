@@ -18,7 +18,11 @@ const vtsEvents = {
         this._addFieldListener();
       }
 
-      this._validate();
+      // validate each field
+      for (const field of this.fields) this._checkFieldValidity(field);
+
+      this._reportValidity();
+
       this.form.classList.add(this.validatedClass);
 
       if (this.isFormValid() && !this.halt) {

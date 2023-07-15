@@ -7,48 +7,19 @@ const vtsValidation = {
     validFields: new Map(),
     invalidFields: new Map(),
   },
-  _validate() {
-    for (const field of this.fields) {
-      this._checkFieldValidity(field);
-    }
-    this._reportValidity();
-  },
   _checkFieldValidity(field) {
-    this._clearValidity(field);
-    const rules = this._getFieldRules(field.name);
+    console.log(field);
+    field.setCustomValidity('');
+    const label = getFieldLabel(field, this.form);
     let fieldData = {
       field: field,
-      label: getFieldLabel(field, this.form),
-      message: ' ',
+      label: label,
+      message: '',
     };
+    fieldData.message = this._validate(field, label);
 
-    let valid = field.checkValidity();
-
-    fieldData.message = this._getValidityStateMessage(field, rules?.message);
-
-    // prevent rules from being applied if default html constraints exists
-    if (rules && valid) {
-      [valid, fieldData] = this._applyRules(rules, field.value, fieldData);
-    }
-
-    fieldData.message = fieldData.message
-      ?.replace(/\${value}/g, field.value)
-      .replace(/\${label}/g, fieldData.label);
-
-    this._setValidity(valid, field, fieldData);
-  },
-  _getValidityStateMessage(field, validityStateMsg = {}) {
-    let message = field.validationMessage;
-    const messageConfig = this.message;
-    const validity = field.validity;
-    // const invalid = !validity.valid;
-    for (const key in validity) {
-      if (validity[key]) {
-        message = validityStateMsg[key] || messageConfig[key] || message;
-        console.log(key, message);
-      }
-    }
-    return message;
+    console.table(fieldData, ['label', 'message']);
+    this._setValidityData(field, fieldData);
   },
   _reportValidity() {
     const data = this._data;
@@ -60,20 +31,64 @@ const vtsValidation = {
     fnValid(validData, form);
     fnInvalid(invalidData, form);
   },
-  _setValidity(valid, field, data) {
-    if (valid) {
-      this._clearValidity(field);
+  _setValidityData(field, data) {
+    if (field.validity.valid) {
       this._data.invalidFields.delete(field.name);
       this._data.validFields.set(field.name, data);
     } else {
-      field.setCustomValidity(data.message);
       this._data.validFields.delete(field.name);
       this._data.invalidFields.set(field.name, data);
     }
+    console.error('naset na');
   },
-  _clearValidity(field) {
-    field.setCustomValidity('');
+  _validate(field, label) {
+    let message = field.validationMessage;
+    const rules = this._getFieldRules(field.name);
+    const validity = field.validity;
+
+    for (const key in validity) {
+      // validation message every validity state except customError
+      // default rule message object
+      const messageConfig = this.message;
+      // field specific rule message
+      const ruleMsg = rules?.message ? rules.message[key] : null;
+      //
+
+      // overwrite message if all html constraints is valid
+      if (validity.valid) {
+        // set custom error if rule config exists
+        if (rules) message = this._applyRules(rules, field, label);
+        // else the field is valid
+        else message = ruleMsg ?? messageConfig.valid;
+        break;
+      } else if (validity[key]) {
+        message = ruleMsg ?? messageConfig[key] ?? message;
+        break;
+      }
+    }
+    // replace placeholders
+    message = message
+      ?.replace(/\${value}/g, field.value)
+      .replace(/\${label}/g, label);
+
+    console.log(`
+    label: ${label}
+    msg: ${message}
+    `);
+    return message;
   },
 };
+
+/**
+ * @description Clears the validity state of a field.
+ * @param {HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement} field The field to clear the validity state for.
+ */
+function clearValidity(field) {
+  field.setCustomValidity('');
+}
+
+function replacePlaceholders(field, fieldData) {
+  return fieldData;
+}
 
 export default vtsValidation;

@@ -45,7 +45,7 @@ interface VtsConfig {
    * The custom validation message configuration.
    * @default {}
    */
-  message: VtsRuleMessage;
+  message: Partial<VtsRuleMessage>;
   /**
    * Determines whether to stop event propagation on form submission.
    * @default true

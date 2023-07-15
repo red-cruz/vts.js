@@ -10,8 +10,8 @@ declare class VtsValidation {
    * The data object containing information about valid and invalid fields.
    */
   _data: {
-    validFields: Map<string, VtsValidationData<string>>;
-    invalidFields: Map<string, VtsValidationData<string>>;
+    validFields: Map<string, VtsValidationData<string>[string]>;
+    invalidFields: Map<string, VtsValidationData<string>[string]>;
   };
 
   /**
@@ -25,27 +25,13 @@ declare class VtsValidation {
 
   /**
    * Validates each field triggered by the form submit event.
-   */
-  _validate(this: ValidateThenSubmit): void;
-
-  /**
-   * Clears the validity state of a field.
-   * @param field The field to clear the validity state for.
-   */
-  _clearValidity(
-    field: HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
-  ): void;
-
-  /**
-   * Gets the custom validity message based on the field's validity state.
    * @param field The field to get the validity state message for.
-   * @param validityStateMsg Optional custom validity state messages.
    * @returns The validity state message.
    */
-  _getValidityStateMessage(
+  _validate(
     this: ValidateThenSubmit,
     field: HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement,
-    validityStateMsg?: VtsRuleMessage
+    label: string
   ): string;
 
   /**
@@ -54,11 +40,10 @@ declare class VtsValidation {
    * @param field The field to set the validity state for.
    * @param data The validation data for the field.
    */
-  _setValidity(
+  _setValidityData(
     this: ValidateThenSubmit,
-    valid: boolean,
     field: HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement,
-    data: VtsValidationData<string>
+    data: VtsValidationData<string>[string]
   ): void;
 
   /**

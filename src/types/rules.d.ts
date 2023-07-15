@@ -6,14 +6,10 @@ import type { VtsValidationData } from './config';
 declare abstract class VtsRulesMixin {
   _applyRules(
     this: ValidateThenSubmit,
-    rules: VtsRules[string] & {
-      pattern: string;
-      flags: string;
-      message: VtsRuleMessage;
-    },
-    fieldValue: string,
-    fieldData: VtsValidationData<string>[string]
-  ): [boolean, VtsValidationData<string>];
+    rules: VtsRules[string],
+    field: HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement,
+    label: string
+  ): string;
 
   _getFieldRules(
     this: ValidateThenSubmit,
@@ -40,7 +36,7 @@ type VtsRules = {
         /**
          * The message configuration for the validation rule.
          */
-        message?: VtsRuleMessage;
+        message?: Partial<VtsRuleMessage>;
       }
     | {
         /**
@@ -54,9 +50,8 @@ type VtsRules = {
         /**
          * The message configuration for the validation rule.
          */
-        message?: VtsRuleMessage;
-      }
-    | undefined;
+        message?: Partial<VtsRuleMessage>;
+      };
 };
 
 type VtsValidityState =
@@ -76,7 +71,7 @@ type VtsValidityState =
  * Represents the configuration for the validation rule messages in Vts (Validate Then Submit).
  */
 type VtsRuleMessage = {
-  [Key in VtsValidityState]?: string;
+  [Key in VtsValidityState]: string;
 };
 
 export { VtsRulesMixin, VtsRules, VtsRuleMessage };

@@ -4,44 +4,47 @@ import getFieldLabel from '../utils/getFieldLabel';
 
 /** @type {import('../ValidateThenSubmit').VtsRulesMixin} */
 const vtsRules = {
-  _applyRules(rules, fieldValue, fieldData) {
-    let valid = false;
-    let matchValue = '';
-    let pattern = rules.pattern;
-    /** @type {*} */
-    let matchingField;
+  _applyRules(rules, field, label) {
+    let message = this.message.invalid || '';
+    let pattern = 'pattern' in rules ? rules.pattern : '';
     const isMatch = 'match' in rules && !pattern;
+
     if (isMatch) {
-      matchingField = VtsFormValidator.validateField(this.form, rules.match);
-      matchValue = matchingField.value;
+      // get matching field
+      const matchingField = VtsFormValidator.validateField(
+        this.form,
+        rules.match
+      );
+      // get value
+      const matchValue = matchingField.value;
+      // overwrite pattern
       pattern = rules.flags?.includes('g')
         ? matchValue + '\\b'
         : `^${matchValue}$`;
-    }
-
-    const regExp = new RegExp(pattern, rules.flags);
-
-    if (regExp.test(fieldValue)) {
-      fieldData.message = rules.message?.valid || '';
-      valid = true;
-    } else {
-      fieldData.message = rules.message?.invalid || '';
-    }
-
-    if (isMatch) {
-      fieldData.message = fieldData.message
+      // replace message placeholders
+      message
         ?.replace(/\${targetValue}/g, matchValue)
         .replace(/\${targetLabel}/g, getFieldLabel(matchingField, this.form));
     }
 
+    const regExp = new RegExp(pattern, rules.flags);
+
+    if (regExp.test(field.value)) {
+      message = rules.message?.valid || this.message.valid || '';
+      field.setCustomValidity('');
+    } else {
+      message = rules.message?.invalid || message;
+      field.setCustomValidity(message);
+    }
+
     if ('pattern' in rules && 'match' in rules) {
       console.warn(
-        `Both "pattern" and "match" properties exist in the field rule for ${fieldData.label}. ` +
+        `Both "pattern" and "match" properties exist in the field rule for ${label}. ` +
           'Ignoring the "match" property.'
       );
     }
-
-    return [valid, fieldData];
+    console.warn(label + ': ' + message);
+    return message;
   },
 
   _getFieldRules(fieldName) {
