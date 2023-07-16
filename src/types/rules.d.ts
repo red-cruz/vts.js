@@ -22,6 +22,7 @@ declare abstract class VtsRulesMixin {
 type VtsRules = {
   [key: string]:
     | {
+        eventType: string;
         /**
          * The pattern that will be used to create a RegExp object for validation.
          */
@@ -36,6 +37,7 @@ type VtsRules = {
         message?: Partial<VtsRuleMessage>;
       }
     | {
+        eventType: string;
         /**
          * The name of the field to match the value against.
          */
