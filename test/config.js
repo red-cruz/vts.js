@@ -1,6 +1,6 @@
 // @ts-checks
-import Swal from 'sweetalert2';
-import ValidateThenSubmit from 'vts-form';
+// import Swal from 'sweetalert2';
+import ValidateThenSubmit from '../src/ValidateThenSubmit';
 const Vts = ValidateThenSubmit;
 document.addEventListener('DOMContentLoaded', function () {
   const test = new Vts('myForm');

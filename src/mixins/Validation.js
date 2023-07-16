@@ -22,10 +22,9 @@ const vtsValidation = {
     const validData = Object.fromEntries(data.validFields);
     const invalidData = Object.fromEntries(data.invalidFields);
     const form = this.form;
-    const fnValid = this.fnValid;
-    const fnInvalid = this.fnInvalid;
-    fnValid(validData, form);
-    fnInvalid(invalidData, form);
+    const handlers = this.handlers;
+    handlers.valid(validData, form);
+    handlers.invalid(invalidData, form);
   },
   _setValidityData(field, data) {
     if (field.validity.valid) {

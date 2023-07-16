@@ -19,7 +19,7 @@
   },
   "name": "vts-form",
   "description": "Welcome to the documentation for Vts - Validate Then Submit. This documentation provides an overview of the Vts library, its features, and how to use it in your web projects.",
-  "version": "3.0.0",
+  "version": "3.0.0-beta.1",
   "main": "./src/ValidateThenSubmit.js",
   "directories": {
     "test": "test"

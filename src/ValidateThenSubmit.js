@@ -5,7 +5,7 @@ import vtsRules from './mixins/Rules.js';
 import vtsValidation from './mixins/Validation.js';
 import setVtsConfig from './utils/setVtsConfig.js';
 import vtsForm from './mixins/Form.js';
-import vtsDefaults from './utils/defaults.js';
+import vtsDefaults from './defaults/index.js';
 import deepMerge from './utils/deepMerge.js';
 
 /// <reference path="./ValidateThenSubmit.d.ts" />

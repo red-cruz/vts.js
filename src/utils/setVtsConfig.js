@@ -1,5 +1,5 @@
 // @ts-check
-import vtsDefaults from './defaults';
+import vtsDefaults from '../defaults';
 import deepMerge from './deepMerge';
 
 /**

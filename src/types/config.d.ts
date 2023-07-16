@@ -8,31 +8,38 @@ interface VtsConfig {
    * The Ajax settings for form submission.
    */
   ajax: Partial<VtsAjaxSettings>;
+
   /**
-   * The function to call for all valid fields.
-   * @param data The validation data for all valid fields.
-   * @param form The HTML form element.
+   * Contains functions for handling field validation.
    */
-  fnValid: (
-    data: { [fieldName: string]: VtsValidationData<string> },
-    form: HTMLFormElement
-  ) => void;
-  /**
-   * The function to call for invalid fields.
-   * @param data The validation data for all invalid fields.
-   * @param form The HTML form element.
-   */
-  fnInvalid: (
-    data: { [fieldName: string]: VtsValidationData<string> },
-    form: HTMLFormElement
-  ) => void;
+  handlers: {
+    /**
+     * The function to call for all valid fields.
+     * @param data The validation data for all valid fields.
+     * @param form The HTML form element.
+     */
+    valid: (
+      data: { [fieldName: string]: VtsValidationData<string> },
+      form: HTMLFormElement
+    ) => void;
+    /**
+     * The function to call for invalid fields.
+     * @param data The validation data for all invalid fields.
+     * @param form The HTML form element.
+     */
+    invalid: (
+      data: { [fieldName: string]: VtsValidationData<string> },
+      form: HTMLFormElement
+    ) => void;
+  };
+
   /**
    * Determines whether to halt the form submission if there are invalid fields.
    * @default false
    */
   halt: boolean;
   /**
-   * Determines whether to add event listeners for fields on submit event.
+   * Determines whether to add event listeners immediately on Vts instantiation.
    * @default false
    */
   listen: boolean;
@@ -43,7 +50,11 @@ interface VtsConfig {
   rules: VtsRules | Map<string, VtsRules[string]>;
   /**
    * The custom validation message configuration.
-   * @default {}
+   * @default
+   * {
+   *  invalid: 'Invalid ${label}',
+   *  valid: '',
+   * }
    */
   message: Partial<VtsRuleMessage>;
   /**
@@ -52,10 +63,27 @@ interface VtsConfig {
    */
   stopPropagation: boolean;
   /**
-   * The CSS class to apply to the form when it has been validated.
-   * @default 'was-validated'
+   * The CSS classes to be applied.
    */
-  validatedClass: string;
+  class: {
+    /**
+     * The CSS class to apply to the form when it has been validated.
+     * @default 'was-validated'
+     */
+    form: string;
+    /**
+     * The CSS class to apply to the created div sibling of invalid field.
+     * Disregard if default handlers will be overwritten.
+     * @default 'invalid-feedback'
+     */
+    invalid?: string;
+    /**
+     * The CSS class to apply to the created div sibling of valid field.
+     * Disregard if default handlers will be overwritten.
+     * @default 'valid-feedback'
+     */
+    valid?: string;
+  };
 }
 
 /**

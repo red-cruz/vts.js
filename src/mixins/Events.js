@@ -12,8 +12,9 @@ const vtsEvents = {
         e.stopPropagation();
       }
 
+      const formClass = this.class.form;
+      const wasValidated = form.classList.contains(formClass);
       const shouldListen = this.listen;
-      const wasValidated = form.classList.contains(this.validatedClass);
       if (!shouldListen && !wasValidated) {
         this._addFieldListener();
       }
@@ -23,7 +24,7 @@ const vtsEvents = {
 
       this._reportValidity();
 
-      this.form.classList.add(this.validatedClass);
+      this.form.classList.add(formClass);
 
       if (this.isFormValid() && !this.halt) {
         this.submit();
