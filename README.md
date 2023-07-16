@@ -47,9 +47,7 @@ Import the library into your JavaScript file:
 import Vts from 'vts-form';
 ```
 
-> **Important:** Make sure you have a build step in place to bundle the imported modules into your final JavaScript file.
-
-### Getting Started
+## Getting Started
 
 To use Vts, you need to include the library in your project, initialize it, and ensure that the form has a `novalidate` attribute. Here's an example of how to get started:
 
@@ -74,7 +72,7 @@ To use Vts, you need to include the library in your project, initialize it, and 
     ```javascript
     Vts.setDefaults({
       ajax: {
-        action: '/submit-url',
+        action: '/default-submit-url',
         request: {
           method: 'POST',
           headers: {
@@ -118,45 +116,86 @@ To use Vts, you need to include the library in your project, initialize it, and 
 
 By following these steps, you will be able to perform form validation and asynchronous form submission easily. Adjust the configuration options according to your specific requirements.
 
-### Configuration Options
+## Configuration Options
+
+Each instance of Vts can be configured by passing the configuration object as the second argument.
+
+> The defined properties will overwrite the respective properties in the [defaults](#Defaults).
+
+```javascript
+new Vts('myForm', {
+  rules: {
+    password_confirmation: {
+      match: 'password',
+      message: {
+        invalid: '${label} must match ${targetLabel}',
+      },
+    },
+  },
+});
+```
 
 Vts provides several configuration options to customize its behavior. Here are the available options:
 
 ### `ajax`: Object - represents the Ajax settings for form submission.
 
 - `action`: String - The URL action for the form submission.
-  Default: The Form's action attribure.
-- `request`: RequestInit - The request options for the Ajax call. It is an object with various options for configuring the request, such as headers, body, etc. By default, it is set to:
-  ```javascript
-  request: {
-    headers: {
-      'Content-Type': 'multipart/form-data',
-    },
-  }
-  ```
+
+  - Default: The Form's action attribure.
+
 - `beforeSend`: Function - Called before the Ajax request is sent. It receives the **_ajax.request_** object, the **_AbortController_** associated with the request, and the HTML **_form_** element being submitted. It can modify the request object or perform additional actions before the request is sent.
-  ```javascript
-  beforeSend: (request, abortController, form) => {
-    request.method = 'post';
-    // request must be returned for the modifications to take effect
-    return request;
-  };
-  ```
+
+  - Example:
+    ```javascript
+    beforeSend: (request, abortController, form) => {
+      request.method = 'post';
+      // request must be returned for the modifications to take effect
+      return request;
+    };
+    ```
+
 - `complete`: Function - called when the Ajax request is complete. It receives the HTML **_form_** element that was submitted. This function can be used to perform any cleanup or finalization tasks after the request is completed.
+
 - `error`: Function - called when an error occurs during the Ajax request. It receives the response, parsed into a JavaScript **_object_**; the raw error **response** object; and the HTML **_form_** element that was submitted. This function can handle error cases and provide appropriate feedback to the user.
+
+- `request`: RequestInit - The request options for the Ajax call. It is an object with various options for configuring the request, such as headers, body, etc.
+
+  - Default:
+    ```javascript
+    request: {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    }
+    ```
+
 - `success`: Function - called when the Ajax request is successful. It receives the response, parsed into a JavaScript **_object_**; the raw **response** object; and the HTML **_form_** element that was submitted. This function can process the response data and perform any necessary actions based on the success of the request.
 
-### `class`: Object - The classes to be applied on the validated field.
+### `class`: Object - The CSS classes to be applied.
+
+- `form`: String - The CSS class to apply to the form when it has been validated.
+  - Default: 'was-validated'
+- `invalid`: String - The CSS class to apply to the created `div` sibling of an invalid field.
+  - Default: 'invalid-feedback'
+    > This property is disregarded if the default handlers are overwritten.
+- `valid`: String - The CSS class to apply to the created `div` sibling of a valid field.
+  - Default: 'valid-feedback'
+    > This property is disregarded if the default handlers are overwritten.
 
 `halt`: Boolean - Stops the form's submission.
-`invalid`: Function - A function to be called if the field is invalid.
 `rules`: Object - Regular expressions for custom validation rules.
-`trim`: Boolean - Trims the input values before validation.
-`valid`: Function - A function to be called if the field is valid.
 
 Refer to the [API Reference](api-reference.md) for detailed information on each configuration option and its usage.
 
-### Sample Usage
+## Defaults
+
+The defaults can be modified using the static [`Vts.setDefaults()`](#setDefaults).
+
+### setDefaults
+
+This static method accepts one argument, the configurations object. This mutates the defaults object.
+
+## Sample Usage
 
 Here's an example that demonstrates the usage of Vts with custom configuration options:
 
