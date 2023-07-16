@@ -8,8 +8,8 @@ import vtsForm from './mixins/Form.js';
 import vtsDefaults from './defaults/index.js';
 import deepMerge from './utils/deepMerge.js';
 
-/// <reference path="./ValidateThenSubmit.d.ts" />
-export default class ValidateThenSubmit {
+/// <reference path="./Vts.d.ts" />
+export default class Vts {
   constructor(formId, config = {}) {
     const form = VtsFormValidator.validateForm(formId);
     this.fields = form.querySelectorAll('[name]:not([data-vts-ignored])');
@@ -21,12 +21,7 @@ export default class ValidateThenSubmit {
     const form = this.form;
     // mixin
     Object.assign(this, vtsForm, setVtsConfig(form, config));
-    Object.assign(
-      ValidateThenSubmit.prototype,
-      vtsEvents,
-      vtsRules,
-      vtsValidation
-    );
+    Object.assign(Vts.prototype, vtsEvents, vtsRules, vtsValidation);
 
     // check instance
     VtsFormValidator.checkInstance(form.id);

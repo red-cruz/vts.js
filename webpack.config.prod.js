@@ -1,12 +1,12 @@
 const path = require('path');
 
 module.exports = {
-  entry: './src/ValidateThenSubmit.js',
+  entry: './src/Vts.js',
   output: {
-    library: 'ValidateThenSubmit',
+    library: 'Vts',
     libraryExport: 'default',
     libraryTarget: 'umd',
-    filename: 'ValidateThenSubmit.js',
+    filename: 'Vts.js',
     path: path.resolve(__dirname, 'dist'),
   },
   mode: 'production',

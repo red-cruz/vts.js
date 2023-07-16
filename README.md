@@ -116,21 +116,43 @@ To use Vts, you need to include the library in your project, initialize it, and 
     });
     ```
 
-By following these steps, you will be able to perform form validation and asynchronous form submission using Ajax. Adjust the configuration options and Ajax settings according to your specific requirements.
+By following these steps, you will be able to perform form validation and asynchronous form submission easily. Adjust the configuration options according to your specific requirements.
 
 ### Configuration Options
 
 Vts provides several configuration options to customize its behavior. Here are the available options:
 
-- `ajax`: Object - jQuery Ajax settings for handling form submission via Ajax.
-- `class`: Object - The classes to be applied on the validated field.
-- `halt`: Boolean - Stops the form's submission.
-- `invalid`: Function - A function to be called if the field is invalid.
-- `log`: Boolean - Enables logging of validation messages.
-- `mode`: String - The validation mode: "each" or "all".
-- `rules`: Object - Regular expressions for custom validation rules.
-- `trim`: Boolean - Trims the input values before validation.
-- `valid`: Function - A function to be called if the field is valid.
+### `ajax`: Object - represents the Ajax settings for form submission.
+
+- `action`: String - The URL action for the form submission.
+  Default: The Form's action attribure.
+- `request`: RequestInit - The request options for the Ajax call. It is an object with various options for configuring the request, such as headers, body, etc. By default, it is set to:
+  ```javascript
+  request: {
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+  }
+  ```
+- `beforeSend`: Function - Called before the Ajax request is sent. It receives the **_ajax.request_** object, the **_AbortController_** associated with the request, and the HTML **_form_** element being submitted. It can modify the request object or perform additional actions before the request is sent.
+  ```javascript
+  beforeSend: (request, abortController, form) => {
+    request.method = 'post';
+    // request must be returned for the modifications to take effect
+    return request;
+  };
+  ```
+- `complete`: Function - called when the Ajax request is complete. It receives the HTML **_form_** element that was submitted. This function can be used to perform any cleanup or finalization tasks after the request is completed.
+- `error`: Function - called when an error occurs during the Ajax request. It receives the response, parsed into a JavaScript **_object_**; the raw error **response** object; and the HTML **_form_** element that was submitted. This function can handle error cases and provide appropriate feedback to the user.
+- `success`: Function - called when the Ajax request is successful. It receives the response, parsed into a JavaScript **_object_**; the raw **response** object; and the HTML **_form_** element that was submitted. This function can process the response data and perform any necessary actions based on the success of the request.
+
+### `class`: Object - The classes to be applied on the validated field.
+
+`halt`: Boolean - Stops the form's submission.
+`invalid`: Function - A function to be called if the field is invalid.
+`rules`: Object - Regular expressions for custom validation rules.
+`trim`: Boolean - Trims the input values before validation.
+`valid`: Function - A function to be called if the field is valid.
 
 Refer to the [API Reference](api-reference.md) for detailed information on each configuration option and its usage.
 

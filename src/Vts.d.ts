@@ -10,9 +10,9 @@ import type { VtsValidation } from './types/validation';
  *
  * @author RED
  */
-declare class ValidateThenSubmit {
+declare class Vts {
   /**
-   * Creates an instance of ValidateThenSubmit.
+   * Creates an instance of Vts.
    */
   constructor(formId: string, config?: Partial<VtsConfig>);
   form: HTMLFormElement;
@@ -28,9 +28,9 @@ declare class ValidateThenSubmit {
 }
 
 declare class VtsEventsMixin {
-  private _addEventListeners(this: ValidateThenSubmit): void;
-  _attachMatchEvents(this: ValidateThenSubmit): void;
-  _addFieldListener(this: ValidateThenSubmit): void;
+  private _addEventListeners(this: Vts): void;
+  _attachMatchEvents(this: Vts): void;
+  _addFieldListener(this: Vts): void;
   _getEventType(fieldType: string, ruleEventType?: string): string;
 }
 
@@ -39,18 +39,18 @@ declare class VtsForm {
    * Checks the validity of the form.
    * @returns {Boolean} True if the form is valid, false otherwise.
    */
-  isFormValid(this: ValidateThenSubmit): boolean;
+  isFormValid(this: Vts): boolean;
 
   /**
    * @description Submits the form via fetch API.
    * @returns {Promise} A promise that resolves on success or rejects on failure.
    * @async
    */
-  submit(this: ValidateThenSubmit): Promise<void>;
+  submit(this: Vts): Promise<void>;
 }
 
 // mixin
-interface ValidateThenSubmit
+interface Vts
   extends VtsConfig,
     VtsEventsMixin,
     VtsRulesMixin,
@@ -58,7 +58,7 @@ interface ValidateThenSubmit
     VtsValidation {}
 
 // exports
-export default ValidateThenSubmit;
+export default Vts;
 export type { VtsEventsMixin, VtsRulesMixin, VtsForm, VtsValidation };
 export { VtsConfig } from './types/config';
 export type { VtsRuleMessage } from './types/rules';

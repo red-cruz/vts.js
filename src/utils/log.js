@@ -1,4 +1,4 @@
-import Vts from '../ValidateThenSubmit';
+import Vts from '../Vts';
 
 export default class LogUtil {
   /**

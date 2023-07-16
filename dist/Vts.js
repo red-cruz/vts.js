@@ -4,9 +4,9 @@
 	else if(typeof define === 'function' && define.amd)
 		define([], factory);
 	else if(typeof exports === 'object')
-		exports["ValidateThenSubmit"] = factory();
+		exports["Vts"] = factory();
 	else
-		root["ValidateThenSubmit"] = factory();
+		root["Vts"] = factory();
 })(self, () => {
 return /******/ (() => { // webpackBootstrap
 /******/ 	"use strict";
@@ -36,7 +36,7 @@ var __webpack_exports__ = {};
 
 // EXPORTS
 __webpack_require__.d(__webpack_exports__, {
-  "default": () => (/* binding */ ValidateThenSubmit)
+  "default": () => (/* binding */ Vts)
 });
 
 ;// CONCATENATED MODULE: ./src/utils/VtsFormValidator.js
@@ -143,7 +143,7 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
 // @t
 
 
-/** @type {import('../ValidateThenSubmit').VtsEventsMixin} */
+/** @type {import('../Vts').VtsEventsMixin} */
 var vtsEvents = {
   _addEventListeners: function _addEventListeners() {
     var _this = this;
@@ -154,8 +154,9 @@ var vtsEvents = {
       if (_this.stopPropagation) {
         e.stopPropagation();
       }
+      var formClass = _this["class"].form;
+      var wasValidated = form.classList.contains(formClass);
       var shouldListen = _this.listen;
-      var wasValidated = form.classList.contains(_this.validatedClass);
       if (!shouldListen && !wasValidated) {
         _this._addFieldListener();
       }
@@ -174,7 +175,7 @@ var vtsEvents = {
         _iterator.f();
       }
       _this._reportValidity();
-      _this.form.classList.add(_this.validatedClass);
+      _this.form.classList.add(formClass);
       if (_this.isFormValid() && !_this.halt) {
         _this.submit();
       }
@@ -263,7 +264,7 @@ function getFieldLabel(field, form) {
 
 
 
-/** @type {import('../ValidateThenSubmit').VtsRulesMixin} */
+/** @type {import('../Vts').VtsRulesMixin} */
 var vtsRules = {
   _applyRules: function _applyRules(rules, field, label) {
     var message = this.message.invalid || 'Invalid field';
@@ -357,10 +358,9 @@ var vtsValidation = {
     var validData = Object.fromEntries(data.validFields);
     var invalidData = Object.fromEntries(data.invalidFields);
     var form = this.form;
-    var fnValid = this.fnValid;
-    var fnInvalid = this.fnInvalid;
-    fnValid(validData, form);
-    fnInvalid(invalidData, form);
+    var handlers = this.handlers;
+    handlers.valid(validData, form);
+    handlers.invalid(invalidData, form);
   },
   _setValidityData: function _setValidityData(field, data) {
     if (field.validity.valid) {
@@ -400,62 +400,54 @@ var vtsValidation = {
   }
 };
 /* harmony default export */ const Validation = (vtsValidation);
-;// CONCATENATED MODULE: ./src/utils/defaults.js
-// @ts-check
-
-
-/**
- * Global default configuration for Vts (Validate Then Submit).
- *
- * @type {import('../ValidateThenSubmit').VtsConfig}
- */
-var vtsDefaults = {
-  ajax: {
-    action: '',
-    request: {},
-    beforeSend: function beforeSend(requestInit, abortController, form) {},
-    complete: function complete(form) {},
-    error: function error(errorData, errorResponse, form) {
-      var data = errorData ? errorData : {};
-      var title = 'message' in errorResponse ? errorResponse.message : 'Error!';
-      var html = 'stack' in errorResponse ? errorResponse.stack : 'Unknown error occurred';
-      console.table(errorResponse);
-      var text = data.title || title;
-      var ok = confirm(text + ':\n' + 'Click "ok" to view more details.');
-      if (ok) {
-        var _data$html;
-        var newWindow = window.open();
-        if (newWindow) newWindow.document.body.innerHTML = (_data$html = data.html) !== null && _data$html !== void 0 ? _data$html : html;
-      }
-    },
-    success: function success(data, response, form) {
-      alert(data.title + ':\n' + data.text);
-      form.reset();
-
-      /** @type {NodeListOf<HTMLElement>} */
-      var fields = form.querySelectorAll('[name]:not([data-vts-ignored])');
-      fields.forEach(function (field) {
-        field.style.border = '';
-        field.remove;
-      });
-      form.classList.remove('was-validated');
+;// CONCATENATED MODULE: ./src/defaults/ajax.js
+/** @type {import("../types/config").VtsAjaxSettings} */
+var ajaxHandler = {
+  action: '',
+  request: {
+    headers: {
+      'Content-Type': 'multipart/form-data'
     }
   },
-  fnValid: function fnValid(data, form) {
-    showFeedback('valid', data);
+  beforeSend: function beforeSend(requestInit, abortController, form) {},
+  complete: function complete(form) {},
+  error: function error(errorData, errorResponse, form) {
+    var data = errorData ? errorData : {};
+    var title = 'message' in errorResponse ? errorResponse.message : 'Error!';
+    var html = 'stack' in errorResponse ? errorResponse.stack : 'Unknown error occurred';
+    console.table(errorResponse);
+    var text = data.title || title;
+    var ok = confirm(text + ':\n' + 'Click "ok" to view more details.');
+    if (ok) {
+      var _data$html;
+      var newWindow = window.open();
+      if (newWindow) newWindow.document.body.innerHTML = (_data$html = data.html) !== null && _data$html !== void 0 ? _data$html : html;
+    }
   },
-  fnInvalid: function fnInvalid(data, form) {
+  success: function success(data, response, form) {
+    alert(data.title + ':\n' + data.text);
+    form.reset();
+
+    /** @type {NodeListOf<HTMLElement>} */
+    var fields = form.querySelectorAll('[name]:not([data-vts-ignored])');
+    fields.forEach(function (field) {
+      field.style.border = '';
+      field.remove;
+    });
+    form.classList.remove('was-validated');
+  }
+};
+/* harmony default export */ const ajax = (ajaxHandler);
+;// CONCATENATED MODULE: ./src/defaults/handler.js
+// @ts-check
+/** @type {*} */
+var vtsHandlers = {
+  invalid: function invalid(data, form) {
     showFeedback('invalid', data);
   },
-  halt: false,
-  listen: false,
-  rules: {},
-  message: {
-    invalid: 'Invalid ${label}',
-    valid: ''
-  },
-  stopPropagation: true,
-  validatedClass: 'was-validated'
+  valid: function valid(data, form) {
+    showFeedback('valid', data);
+  }
 };
 
 /**
@@ -510,6 +502,35 @@ function showFeedback(state, data) {
     _loop();
   }
 }
+/* harmony default export */ const handler = (vtsHandlers);
+;// CONCATENATED MODULE: ./src/defaults/index.js
+// @ts-check
+
+
+
+
+/**
+ * Global default configuration for Vts (Validate Then Submit).
+ *
+ * @type {import('../Vts').VtsConfig}
+ */
+var vtsDefaults = {
+  ajax: ajax,
+  "class": {
+    form: 'was-validated',
+    invalid: 'invalid-feedback',
+    valid: 'valid-feedback'
+  },
+  halt: false,
+  handlers: handler,
+  listen: false,
+  message: {
+    invalid: 'Invalid ${label}',
+    valid: ''
+  },
+  rules: {},
+  stopPropagation: true
+};
 /* harmony default export */ const defaults = (vtsDefaults);
 ;// CONCATENATED MODULE: ./src/utils/deepMerge.js
 function deepMerge_typeof(obj) { "@babel/helpers - typeof"; return deepMerge_typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, deepMerge_typeof(obj); }
@@ -553,8 +574,8 @@ function deepMerge(target) {
  *
  * @export
  * @param {HTMLFormElement} form - The HTML form element.
- * @param {Partial<import('../ValidateThenSubmit').VtsConfig>} config - The partial configuration options.
- * @returns {import('../ValidateThenSubmit').VtsConfig} - The merged configuration options.
+ * @param {Partial<import('../Vts').VtsConfig>} config - The partial configuration options.
+ * @returns {import('../Vts').VtsConfig} - The merged configuration options.
  */
 function setVtsConfig(form, config) {
   /** @type {import('../types/config').VtsConfig} */
@@ -566,10 +587,7 @@ function setVtsConfig(form, config) {
   var req = ajax.request;
   /** @type {RequestInit} */
   var request = {
-    method: (req === null || req === void 0 ? void 0 : req.method) || form.method || 'get',
-    headers: {
-      'Content-Type': 'multipart/form-data'
-    }
+    method: (req === null || req === void 0 ? void 0 : req.method) || form.method || 'get'
   };
 
   /** @type {RequestInit} */
@@ -588,7 +606,7 @@ function Form_iterableToArrayLimit(arr, i) { var _i = null == arr ? null : "unde
 function Form_arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
 function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
-/** @type {import('../ValidateThenSubmit').VtsForm} */
+/** @type {import('../Vts').VtsForm} */
 var vtsForm = {
   isFormValid: function isFormValid() {
     return this.form.checkValidity();
@@ -681,7 +699,7 @@ var vtsForm = {
  * @param {string} url
  * @param {RequestInit} request
  * @returns {[url, request]}
- * @this {import('../ValidateThenSubmit').default}
+ * @this {import('../Vts').default}
  */
 function vtsFormBeforeSend(url, request) {
   var formData = new FormData(this.form);
@@ -699,13 +717,13 @@ function vtsFormBeforeSend(url, request) {
   return [url, request];
 }
 /* harmony default export */ const Form = (vtsForm);
-;// CONCATENATED MODULE: ./src/ValidateThenSubmit.js
-function ValidateThenSubmit_typeof(obj) { "@babel/helpers - typeof"; return ValidateThenSubmit_typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, ValidateThenSubmit_typeof(obj); }
-function ValidateThenSubmit_classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-function ValidateThenSubmit_defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, ValidateThenSubmit_toPropertyKey(descriptor.key), descriptor); } }
-function ValidateThenSubmit_createClass(Constructor, protoProps, staticProps) { if (protoProps) ValidateThenSubmit_defineProperties(Constructor.prototype, protoProps); if (staticProps) ValidateThenSubmit_defineProperties(Constructor, staticProps); Object.defineProperty(Constructor, "prototype", { writable: false }); return Constructor; }
-function ValidateThenSubmit_toPropertyKey(arg) { var key = ValidateThenSubmit_toPrimitive(arg, "string"); return ValidateThenSubmit_typeof(key) === "symbol" ? key : String(key); }
-function ValidateThenSubmit_toPrimitive(input, hint) { if (ValidateThenSubmit_typeof(input) !== "object" || input === null) return input; var prim = input[Symbol.toPrimitive]; if (prim !== undefined) { var res = prim.call(input, hint || "default"); if (ValidateThenSubmit_typeof(res) !== "object") return res; throw new TypeError("@@toPrimitive must return a primitive value."); } return (hint === "string" ? String : Number)(input); }
+;// CONCATENATED MODULE: ./src/Vts.js
+function Vts_typeof(obj) { "@babel/helpers - typeof"; return Vts_typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, Vts_typeof(obj); }
+function Vts_classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+function Vts_defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, Vts_toPropertyKey(descriptor.key), descriptor); } }
+function Vts_createClass(Constructor, protoProps, staticProps) { if (protoProps) Vts_defineProperties(Constructor.prototype, protoProps); if (staticProps) Vts_defineProperties(Constructor, staticProps); Object.defineProperty(Constructor, "prototype", { writable: false }); return Constructor; }
+function Vts_toPropertyKey(arg) { var key = Vts_toPrimitive(arg, "string"); return Vts_typeof(key) === "symbol" ? key : String(key); }
+function Vts_toPrimitive(input, hint) { if (Vts_typeof(input) !== "object" || input === null) return input; var prim = input[Symbol.toPrimitive]; if (prim !== undefined) { var res = prim.call(input, hint || "default"); if (Vts_typeof(res) !== "object") return res; throw new TypeError("@@toPrimitive must return a primitive value."); } return (hint === "string" ? String : Number)(input); }
 function _classPrivateMethodInitSpec(obj, privateSet) { _checkPrivateRedeclaration(obj, privateSet); privateSet.add(obj); }
 function _checkPrivateRedeclaration(obj, privateCollection) { if (privateCollection.has(obj)) { throw new TypeError("Cannot initialize the same private elements twice on an object"); } }
 function _classPrivateMethodGet(receiver, privateSet, fn) { if (!privateSet.has(receiver)) { throw new TypeError("attempted to get private field on non-instance"); } return fn; }
@@ -719,31 +737,31 @@ function _classPrivateMethodGet(receiver, privateSet, fn) { if (!privateSet.has(
 
 
 
-/// <reference path="./ValidateThenSubmit.d.ts" />
+/// <reference path="./Vts.d.ts" />
 var _init = /*#__PURE__*/new WeakSet();
-var ValidateThenSubmit = /*#__PURE__*/function () {
-  function ValidateThenSubmit(formId) {
+var Vts = /*#__PURE__*/function () {
+  function Vts(formId) {
     var _config = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
-    ValidateThenSubmit_classCallCheck(this, ValidateThenSubmit);
+    Vts_classCallCheck(this, Vts);
     _classPrivateMethodInitSpec(this, _init);
     var _form = VtsFormValidator.validateForm(formId);
     this.fields = _form.querySelectorAll('[name]:not([data-vts-ignored])');
     this.form = _form;
     _classPrivateMethodGet(this, _init, _init2).call(this, _config);
   }
-  ValidateThenSubmit_createClass(ValidateThenSubmit, null, [{
+  Vts_createClass(Vts, null, [{
     key: "setDefaults",
     value: function setDefaults(config) {
       deepMerge(defaults, config);
     }
   }]);
-  return ValidateThenSubmit;
+  return Vts;
 }();
 function _init2(config) {
   var form = this.form;
   // mixin
   Object.assign(this, Form, setVtsConfig(form, config));
-  Object.assign(ValidateThenSubmit.prototype, Events, Rules, Validation);
+  Object.assign(Vts.prototype, Events, Rules, Validation);
 
   // check instance
   VtsFormValidator.checkInstance(form.id);

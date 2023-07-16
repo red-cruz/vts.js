@@ -1,10 +1,9 @@
 // @ts-checks
-// import Swal from 'sweetalert2';
-import ValidateThenSubmit from '../src/ValidateThenSubmit';
-const Vts = ValidateThenSubmit;
+import Swal from 'sweetalert2';
+import Vts from '../src/Vts';
+// import Vts from '../dist/Vts';
 document.addEventListener('DOMContentLoaded', function () {
   const test = new Vts('myForm');
-  console.log(test);
 });
 
 // VTS GLOBAL CONFIGURATION

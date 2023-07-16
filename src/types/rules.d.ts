@@ -1,22 +1,19 @@
 // @ts-check
 
-import type ValidateThenSubmit from '../ValidateThenSubmit';
+import type Vts from '../Vts';
 import type { VtsValidationData } from './config';
 
 declare abstract class VtsRulesMixin {
   _applyRules(
-    this: ValidateThenSubmit,
+    this: Vts,
     rules: VtsRules[string],
     field: HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement,
     label: string
   ): string;
 
-  _getFieldRules(
-    this: ValidateThenSubmit,
-    fieldName: string
-  ): VtsRules[string] | undefined;
+  _getFieldRules(this: Vts, fieldName: string): VtsRules[string] | undefined;
 
-  _convertRulesToMap(this: ValidateThenSubmit): void;
+  _convertRulesToMap(this: Vts): void;
 }
 
 /**

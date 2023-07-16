@@ -1,4 +1,4 @@
-import type ValidateThenSubmit from '../ValidateThenSubmit';
+import type Vts from '../Vts';
 import { VtsValidationData } from './config';
 import type { VtsRuleMessage, VtsRules } from './rules';
 
@@ -19,7 +19,7 @@ declare class VtsValidation {
    * @param field The field to check.
    */
   _checkFieldValidity(
-    this: ValidateThenSubmit,
+    this: Vts,
     field: HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
   ): void;
 
@@ -29,7 +29,7 @@ declare class VtsValidation {
    * @returns The validity state message.
    */
   _validate(
-    this: ValidateThenSubmit,
+    this: Vts,
     field: HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement,
     label: string
   ): string;
@@ -41,7 +41,7 @@ declare class VtsValidation {
    * @param data The validation data for the field.
    */
   _setValidityData(
-    this: ValidateThenSubmit,
+    this: Vts,
     field: HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement,
     data: VtsValidationData<string>[string]
   ): void;
@@ -49,7 +49,7 @@ declare class VtsValidation {
   /**
    * Reports the validity of all fields to the form.
    */
-  _reportValidity(this: ValidateThenSubmit): void;
+  _reportValidity(this: Vts): void;
 }
 
 export { VtsValidation };

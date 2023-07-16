@@ -5,7 +5,7 @@ import vtsHandlers from './handler';
 /**
  * Global default configuration for Vts (Validate Then Submit).
  *
- * @type {import('../ValidateThenSubmit').VtsConfig}
+ * @type {import('../Vts').VtsConfig}
  */
 const vtsDefaults = {
   ajax: ajaxHandler,

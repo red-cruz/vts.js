@@ -1,7 +1,7 @@
 // @t
 import VtsFormValidator from '../utils/VtsFormValidator';
 
-/** @type {import('../ValidateThenSubmit').VtsEventsMixin} */
+/** @type {import('../Vts').VtsEventsMixin} */
 const vtsEvents = {
   _addEventListeners() {
     // Form
