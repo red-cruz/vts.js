@@ -120,7 +120,7 @@ By following these steps, you will be able to perform form validation and asynch
 
 Each instance of Vts can be configured by passing the configuration object as the second argument.
 
-> The defined properties will overwrite the respective properties in the [defaults](#Defaults).
+> The defined properties will overwrite the respective properties.
 
 ```javascript
 new Vts('myForm', {
@@ -398,9 +398,64 @@ Each key-value pair in the `rules` object represents a validation rule for a fie
 
 - Default: `true`
 
-### setDefaults
+### Setting Default Configuration
 
-This static method accepts one argument, the configurations object. This mutates the defaults object.
+The `setDefaults` method allows you to set the default configuration for Vts. It takes a `config` parameter that is an object containing partial configuration options of type `VtsConfig`.
+
+To set the default configuration, use the following syntax:
+
+```javascript
+Vts.setDefaults(config);
+```
+
+The config object should include the desired configuration options that you want to set as defaults. Any properties that are not specified in the config object will retain their default values.
+
+> Note: The `setDefaults` method is a static method of the `Vts` class, so you can directly call it on the `Vts` class itself.
+
+Example usage:
+
+```javascript
+Vts.setDefaults({
+  ajax: {
+    action: '/submit-url',
+    request: {
+      method: 'POST',
+      headers: {
+        'X-CSRF-TOKEN': document
+          .querySelector('meta[name="csrf-token"]')
+          .getAttribute('content'),
+      },
+    },
+    beforeSend: (requestInit, abortController, form) => {
+      // Perform any necessary actions before sending the request
+      // Return the updated request object
+      return requestInit;
+    },
+    success: (data, response, form) => {
+      // Handle the successful response
+    },
+    complete: (form) => {
+      // Handle the completion of the request
+    },
+    error: (data, response, form) => {
+      // Handle the error response
+    },
+  },
+  listen: false,
+  rules: {
+    // Define your validation rules here
+  },
+  message: {
+    // Customize your validation error messages here
+  },
+  stopPropagation: false,
+  class: {
+    form: 'validated-form',
+    invalid: 'invalid-field',
+    valid: 'valid-field',
+  },
+});
+```
 
 ### API Reference
 
