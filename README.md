@@ -336,55 +336,63 @@ When the `listen` property is set to `true`, event listeners will be added to ea
 
 If the `listen` property is set to `false`, event listeners will be added to each field on the form's **submit event**. This means that the form will be validated and the respective handlers will be executed when the user submits the form. It provides a way to defer the validation until the form is submitted, rather than validating each field as the user interacts with them.
 
-`rules`: Object - Regular expressions for custom validation rules.
+### message
 
-Refer to the [API Reference](api-reference.md) for detailed information on each configuration option and its usage.
+The `message` property enables you to customize the default messages displayed for different validity states of the form fields. You can provide your own messages for each validity state. If a specific validity state's message is undefined, the browser's default custom validation message for that state will be used.
 
-The defaults can be modified using the static [`Vts.setDefaults()`](#setDefaults).
+- default:
+
+  ```javascript
+  message: {
+    invalid: 'Invalid ${label}',
+    valid: '',
+  }
+  ```
+
+Properties:
+
+- `badInput`: The error message for an invalid input. For more information, see the [badInput](https://html.spec.whatwg.org/multipage/form-control-infrastructure.html#suffering-from-bad-input) validity state in the WHATWG HTML specification.
+
+- `invalid`: The error message used when a rule is defined on a field.
+
+- `patternMismatch`: The error message for a pattern mismatch. For more information, see the [patternMismatch](https://html.spec.whatwg.org/multipage/form-control-infrastructure.html#suffering-from-a-pattern-mismatch) validity state in the WHATWG HTML specification.
+
+- `rangeOverflow`: The error message when the value exceeds the maximum range. For more information, see the [rangeOverflow](https://html.spec.whatwg.org/multipage/form-control-infrastructure.html#suffering-from-an-overflow) validity state in the WHATWG HTML specification.
+
+- `rangeUnderflow`: The error message when the value is below the minimum range. For more information, see the [rangeUnderflow](https://html.spec.whatwg.org/multipage/form-control-infrastructure.html#suffering-from-an-underflow) validity state in the WHATWG HTML specification.
+
+- `stepMismatch`: The error message for an invalid step. For more information, see the [stepMismatch](https://html.spec.whatwg.org/multipage/form-control-infrastructure.html#suffering-from-a-step-mismatch) validity state in the WHATWG HTML specification.
+
+- `tooLong`: The error message when the value is too long. For more information, see the [tooLong](https://html.spec.whatwg.org/multipage/form-control-infrastructure.html#suffering-from-being-too-long) validity state in the WHATWG HTML specification.
+
+- `tooShort`: The error message when the value is too short. For more information, see the [tooShort](https://html.spec.whatwg.org/multipage/form-control-infrastructure.html#suffering-from-being-too-short) validity state in the WHATWG HTML specification.
+
+- `typeMismatch`: The error message for a type mismatch. For more information, see the [typeMismatch](https://html.spec.whatwg.org/multipage/form-control-infrastructure.html#suffering-from-a-type-mismatch) validity state in the WHATWG HTML specification.
+
+- `valueMissing`: The error message when a value is required but not provided. For more information, see the [valueMissing](https://html.spec.whatwg.org/multipage/form-control-infrastructure.html#suffering-from-being-missing) validity state in the WHATWG HTML specification.
+
+When customizing error messages, you can use the following `placeholders` to incorporate dynamic values:
+
+- `'${label}'`: Represents the `label` of the field being validated.
+- `'${value}'`: Represents the `value` of the field being validated.
+- `'${targetLabel}'`: Represents the `label` of the target field when the `match` rule is applied.
+- `'${targetValue}'`: Represents the `value` of the target field when the `match` rule is applied.
+
+You can include these placeholders within your custom error messages to provide more specific and informative feedback to the users.
+
+> Note that the placeholders should be treated as `string` literals.
+
+### `rules`: Object - The validation rules for the form fields.
+
+Converted to `Map` containing the field names as keys and the rule definitions as values upon Vts instantiation
+
+### `stopPropagation`: Boolean - Determines whether to stop event propagation on form submission.
+
+- Default: `true`
 
 ### setDefaults
 
 This static method accepts one argument, the configurations object. This mutates the defaults object.
-
-## Sample Usage
-
-Here's an example that demonstrates the usage of Vts with custom configuration options:
-
-```
-
-const form = document.getElementById('myForm');
-const vtsConfig = {
-class: {
-valid: 'custom-valid-class',
-invalid: 'custom-invalid-class'
-},
-halt: true,
-invalid: (currentField, label, title, message) => {
-currentField.classList.add('error');
-console.error(`Invalid field: ${label}. Error: ${message}`);
-},
-log: true,
-mode: 'all',
-rules: {
-customRule: /^[A-Z]{3}$/
-},
-trim: false,
-valid: (currentField) => {
-currentField.classList.remove('error');
-console.log('Field is valid');
-}
-};
-
-form.addEventListener('submit', (e) => {
-e.preventDefault();
-new Vts(form, vtsConfig);
-});
-
-```
-
-In the above example, we customize the class names for valid and invalid fields, enable halting the form submission on invalid fields, define a custom invalid handler function, enable logging, set the validation mode to "all", define a custom validation rule, disable trimming of input values, and define a custom valid handler function.
-
-Adjust the configuration options according to your specific requirements.
 
 ### API Reference
 
@@ -393,11 +401,3 @@ The API reference section provides detailed information about the available clas
 ### Examples
 
 The Examples section showcases various use cases and provides code snippets to help you understand how to use Vts in different scenarios. It covers common validation scenarios, custom rule definitions, and handling form submission events. Please refer to the [Examples](examples.md) for more information.
-
-### FAQ
-
-The FAQ section answers frequently asked questions about Vts. It provides solutions to common issues and addresses potential concerns you may have when using the library. Please refer to the [FAQ](faq.md) for more information.
-
-```
-
-```
