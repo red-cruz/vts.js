@@ -258,15 +258,26 @@ When the `halt` property is set to `true`, the form's submission will be halted,
 
   The invalid method receives two parameters:
 
-  1. `data`: An object containing validation data for all `invalid fields`. Each field's validation data contains the following properties:
+  1. `data`: An object containing validation data for all `invalid fields`. The `keys` for each validation data object are the value of the `name` attribute of the validated field. Each field's validation data contains the following properties:
 
      - `field`: HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement - The invalid form field.
-     - `label`: The corresponding label for the invalid field. It is derived from the following sources, in order of priority:
+     - `label`: string - The corresponding label for the invalid field. It is derived from the following sources, in order of priority:
        - The value of the `vts-label` attribute, if defined on the field.
        - The text content of the `<label>` element associated with the field's `id`.
        - The value of the field's `placeholder` attribute.
-       - `An empty string` if none of the above are defined.
+       - An `empty string` if none of the above are defined.
      - `message`: string - The validation message for the field. By default, it is set to the field's `validationMessage` property. If a custom validation rule is defined for the field, the default message will be `'Invalid ${label}'`.
+
+     ```typescript
+     {
+       'field_name': {
+         field: HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement,
+         label: string,
+         message: string
+       },
+       // other validation data...
+     }
+     ```
 
   2. `form`: The HTML `form` element that was submitted.
 
@@ -282,10 +293,10 @@ When the `halt` property is set to `true`, the form's submission will be halted,
 
   The valid method receives two parameters:
 
-  1. `data`: An object containing validation data for all `valid fields`. Each field's validation data contains the following properties:
+  1. `data`: An object containing validation data for all `valid fields`. The `keys` for each validation data object are the value of the `name` attribute of the validated field. Each field's validation data contains the following properties:
 
      - `field`: HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement - The valid form field.
-     - `label`: The corresponding label for the valid field. It is derived from the following sources, in order of priority:
+     - `label`: string - The corresponding label for the valid field. It is derived from the following sources, in order of priority:
        - The value of the `vts-label` attribute, if defined on the field.
        - The text content of the `<label>` element associated with the field's `id`.
        - The value of the field's `placeholder` attribute.
@@ -293,6 +304,8 @@ When the `halt` property is set to `true`, the form's submission will be halted,
      - `message`: string - The validation message for the field. By default, it is an `empty string`.
 
   2. `form`: The HTML `form` element that was submitted.
+
+  The `showFeedback()` function iterates over the validation data object and updates the DOM to display the validation messages for each field. It checks if there is already an element with the appropriate feedback class and updates its text content. If no such element exists, it creates a new \<div> element and appends it to the parent element.
 
   ```javascript
   function showFeedback(state, data) {
@@ -313,41 +326,7 @@ When the `halt` property is set to `true`, the form's submission will be halted,
   }
   ```
 
-Both `invalid` and `valid` methods receives two parameters:
-
-1. `data`: An object containing validation data for invalid/valid all fields.
-
-   ```javascript
-   {
-     /*
-       for example, if you have an:
-       <input name="first_name" type="text">
-       then the field_name will be 'first_name'.
-     */
-     'field_name': {
-       field: HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement;
-       label: string;
-       message: string;
-     },
-     /// other fields...
-   }
-   ```
-
-   The keys are the `name` of the validated fields.
-
-   Each field's validation data contains the following:
-
-   - `field`: HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
-   - `label`: string - the value is based on:
-     - the value of the `vts-label` attribute is defined, it will be used
-     - the `label` element's `textContent` with the corresponding field `id`
-     - the value of the field's `placeholder` attribute.
-     - if none of the above are `truthy`, an empty string instead
-   - `message`: string - the validation message that is based on the defined `rule message`
-     - for the `valid` fields, the default is an empty string;
-     - for the `invalid` fields, the default is the field's `validationMessage` property. If the field has a `rule`, the default will be `'Invalid ${label}'`
-
-2. form: The HTML `form` element.
+> Note that the `showFeedback()` function mentioned is a default implementation and **cannot be accessed or modified**. However, you can create your own function or use your preferred approach for handling validation feedback within the `invalid` and `valid` handlers.
 
 `rules`: Object - Regular expressions for custom validation rules.
 
