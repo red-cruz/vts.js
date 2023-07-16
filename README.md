@@ -148,15 +148,15 @@ Vts provides several configuration options to customize its behavior. Here are t
   - Default:
 
     ```javascript
-    beforeSend: () => {};
+    beforeSend: (requestInit, abortController, form) => {};
     ```
 
   - Example:
     ```javascript
-    beforeSend: (request, abortController, form) => {
-      request.method = 'post';
-      // request must be returned for the modifications to take effect
-      return request;
+    beforeSend: (requestInit, abortController, form) => {
+      requestInit.method = 'post';
+      // requestInit must be returned for the modifications to take effect
+      return requestInit;
     };
     ```
 
@@ -165,7 +165,7 @@ Vts provides several configuration options to customize its behavior. Here are t
   - Default:
 
     ```javascript
-    complete: () => {};
+    complete: (form) => {};
     ```
 
 - `error`: Function - called when an error occurs during the Ajax request. It receives the response, parsed into a JavaScript **_object_**; the raw error **response** object; and the HTML **_form_** element that was submitted. This function can handle error cases and provide appropriate feedback to the user.
@@ -224,7 +224,131 @@ Vts provides several configuration options to customize its behavior. Here are t
   - Default: `'valid-feedback'`
     > This property is disregarded if the default handlers are overwritten.
 
-`halt`: Boolean - Stops the form's submission.
+### `halt`: Boolean - Determines whether to halt the form's submission.
+
+- Default: `false`
+
+When the `halt` property is set to `true`, the form's submission will be halted, and you need to add an event listener to the form's `submit` event. Inside the event handler, you can perform additional actions or validations before manually calling the `Vts.submit()` method to submit the form.
+
+- Example:
+
+  ```javascript
+  const vtsForm = new Vts('myForm', { halt: true });
+  vtsForm.form.addEventListener('submit', () => {
+    // There is no need to call `Event.preventDefault()` since it has already been called during the instantiation of Vts.
+    if (vtsForm.isFormValid()) {
+      vtsForm.submit(); // Manually submit the form
+    }
+  });
+  ```
+
+  In the example above, the submit event listener is added to the form's submit event. Inside the event handler, the `Vts.isFormValid()` method is called to check if all form fields are valid. If they are, the `submit()` method of the Vts instance is called to manually submit the form.
+
+### `handlers`: Object - Contains functions for handling field validation.
+
+- `invalid`: Function - The function to call for all invalid fields. This function is responsible for handling the validation feedback for invalid fields.
+
+  - default:
+
+    ```javascript
+    invalid: (data, form) => {
+      showFeedback('invalid', data);
+    };
+    ```
+
+  The invalid method receives two parameters:
+
+  1. `data`: An object containing validation data for all `invalid fields`. Each field's validation data contains the following properties:
+
+     - `field`: HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement - The invalid form field.
+     - `label`: The corresponding label for the invalid field. It is derived from the following sources, in order of priority:
+       - The value of the `vts-label` attribute, if defined on the field.
+       - The text content of the `<label>` element associated with the field's `id`.
+       - The value of the field's `placeholder` attribute.
+       - `An empty string` if none of the above are defined.
+     - `message`: string - The validation message for the field. By default, it is set to the field's `validationMessage` property. If a custom validation rule is defined for the field, the default message will be `'Invalid ${label}'`.
+
+  2. `form`: The HTML `form` element that was submitted.
+
+- `valid`: Function - The function to call for all valid fields. This function is responsible for handling the validation feedback for valid fields.
+
+  - default:
+
+    ```javascript
+    valid: (data, form) => {
+      showFeedback('valid', data);
+    };
+    ```
+
+  The valid method receives two parameters:
+
+  1. `data`: An object containing validation data for all `valid fields`. Each field's validation data contains the following properties:
+
+     - `field`: HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement - The valid form field.
+     - `label`: The corresponding label for the valid field. It is derived from the following sources, in order of priority:
+       - The value of the `vts-label` attribute, if defined on the field.
+       - The text content of the `<label>` element associated with the field's `id`.
+       - The value of the field's `placeholder` attribute.
+       - An `empty string` if none of the above are defined.
+     - `message`: string - The validation message for the field. By default, it is an `empty string`.
+
+  2. `form`: The HTML `form` element that was submitted.
+
+  ```javascript
+  function showFeedback(state, data) {
+    for (const key in data) {
+      const { field, label, message = ' ' } = data[key];
+      const parent = field.parentNode;
+      const className = `${state}-feedback`;
+      const sibling = parent?.querySelector(`.${className}`);
+      if (sibling) {
+        sibling.textContent = `${message}`;
+      } else {
+        const div = document.createElement('div');
+        div.classList.add(`${className}`);
+        div.textContent = `${message}`;
+        parent?.append(div);
+      }
+    }
+  }
+  ```
+
+Both `invalid` and `valid` methods receives two parameters:
+
+1. `data`: An object containing validation data for invalid/valid all fields.
+
+   ```javascript
+   {
+     /*
+       for example, if you have an:
+       <input name="first_name" type="text">
+       then the field_name will be 'first_name'.
+     */
+     'field_name': {
+       field: HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement;
+       label: string;
+       message: string;
+     },
+     /// other fields...
+   }
+   ```
+
+   The keys are the `name` of the validated fields.
+
+   Each field's validation data contains the following:
+
+   - `field`: HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
+   - `label`: string - the value is based on:
+     - the value of the `vts-label` attribute is defined, it will be used
+     - the `label` element's `textContent` with the corresponding field `id`
+     - the value of the field's `placeholder` attribute.
+     - if none of the above are `truthy`, an empty string instead
+   - `message`: string - the validation message that is based on the defined `rule message`
+     - for the `valid` fields, the default is an empty string;
+     - for the `invalid` fields, the default is the field's `validationMessage` property. If the field has a `rule`, the default will be `'Invalid ${label}'`
+
+2. form: The HTML `form` element.
+
 `rules`: Object - Regular expressions for custom validation rules.
 
 Refer to the [API Reference](api-reference.md) for detailed information on each configuration option and its usage.
