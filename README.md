@@ -353,7 +353,7 @@ Properties:
 
 - `badInput`: The error message for an invalid input. For more information, see the [badInput](https://html.spec.whatwg.org/multipage/form-control-infrastructure.html#suffering-from-bad-input) validity state in the WHATWG HTML specification.
 
-- `invalid`: The error message used when a rule is defined on a field.
+- `invalid`: The error message used when a `rule` is defined on a field.
 
 - `patternMismatch`: The error message for a pattern mismatch. For more information, see the [patternMismatch](https://html.spec.whatwg.org/multipage/form-control-infrastructure.html#suffering-from-a-pattern-mismatch) validity state in the WHATWG HTML specification.
 
@@ -378,13 +378,21 @@ When customizing error messages, you can use the following `placeholders` to inc
 - `'${targetLabel}'`: Represents the `label` of the target field when the `match` rule is applied.
 - `'${targetValue}'`: Represents the `value` of the target field when the `match` rule is applied.
 
-You can include these placeholders within your custom error messages to provide more specific and informative feedback to the users.
-
 > Note that the placeholders should be treated as `string` literals.
 
 ### `rules`: Object - The validation rules for the form fields.
 
-Converted to `Map` containing the field names as keys and the rule definitions as values upon Vts instantiation
+The `rules` property represents the validation rules for the form fields in Vts. It is an object that is converted to a `Map` upon Vts instantiation, where the field names are used as keys and the rule definitions are used as values.
+
+Each key-value pair in the `rules` object represents a validation rule for a field. The key is the name of the field, and the value is an object containing the following optional properties:
+
+- `eventType` (optional): The type of event that will be used as the field's event type when adding the event listener. If not specified, the default event type is determined based on the field type. For fields with types such as 'radio', 'select-one', 'select-multiple', 'checkbox', 'file', and 'range', the default event type is 'change'. For other field types, the default event type is 'input'.
+- `pattern` (optional): The pattern used for validation. It can be a string or a regular expression. If both the `pattern` and `match` properties are defined, only the `pattern` property will be used.
+- `flags` (optional): The flags used when creating the regular expression object.
+- `match` (optional): Specifies that the field's value should match the value of another field specified by the `match` property. The `match` property can reference any key defined in the `rules` object.
+- `message` (optional): The message configuration for the validation rule. It can override the default message. Please refer to the earlier section for more information on customizing the error messages.
+
+> Note: Upon Vts instantiation, the `rules` object is converted to a `Map` for more efficient rule lookup and management.
 
 ### `stopPropagation`: Boolean - Determines whether to stop event propagation on form submission.
 
