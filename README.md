@@ -141,9 +141,15 @@ Vts provides several configuration options to customize its behavior. Here are t
 
 - `action`: String - The URL action for the form submission.
 
-  - Default: The Form's action attribure.
+  - Default: The value of the form's action attribute.
 
 - `beforeSend`: Function - Called before the Ajax request is sent. It receives the **_ajax.request_** object, the **_AbortController_** associated with the request, and the HTML **_form_** element being submitted. It can modify the request object or perform additional actions before the request is sent.
+
+  - Default:
+
+    ```javascript
+    beforeSend: () => {};
+    ```
 
   - Example:
     ```javascript
@@ -156,7 +162,33 @@ Vts provides several configuration options to customize its behavior. Here are t
 
 - `complete`: Function - called when the Ajax request is complete. It receives the HTML **_form_** element that was submitted. This function can be used to perform any cleanup or finalization tasks after the request is completed.
 
+  - Default:
+
+    ```javascript
+    complete: () => {};
+    ```
+
 - `error`: Function - called when an error occurs during the Ajax request. It receives the response, parsed into a JavaScript **_object_**; the raw error **response** object; and the HTML **_form_** element that was submitted. This function can handle error cases and provide appropriate feedback to the user.
+
+  - Default:
+
+    ```javascript
+    error: (errorData, errorResponse, form) => {
+      const data = errorData ? errorData : {};
+      const title =
+        'message' in errorResponse ? errorResponse.message : 'Error!';
+      const html =
+        'stack' in errorResponse
+          ? errorResponse.stack
+          : 'Unknown error occurred';
+      const text = data.title || title;
+      if (confirm(text + ':\n' + 'Click "ok" to view more details.')) {
+        const newWindow = window.open();
+        if (newWindow) newWindow.document.body.innerHTML = data.html ?? html;
+      }
+      console.table(errorResponse);
+    };
+    ```
 
 - `request`: RequestInit - The request options for the Ajax call. It is an object with various options for configuring the request, such as headers, body, etc.
 
@@ -171,15 +203,25 @@ Vts provides several configuration options to customize its behavior. Here are t
 
 - `success`: Function - called when the Ajax request is successful. It receives the response, parsed into a JavaScript **_object_**; the raw **response** object; and the HTML **_form_** element that was submitted. This function can process the response data and perform any necessary actions based on the success of the request.
 
+  - Default:
+
+    ```javascript
+    success: (data, response, form) => {
+      form.reset();
+      form.classList.remove('was-validated');
+      alert(data.title + ':\n' + data.text);
+    };
+    ```
+
 ### `class`: Object - The CSS classes to be applied.
 
 - `form`: String - The CSS class to apply to the form when it has been validated.
-  - Default: 'was-validated'
+  - Default: `'was-validated'`
 - `invalid`: String - The CSS class to apply to the created `div` sibling of an invalid field.
-  - Default: 'invalid-feedback'
+  - Default: `'invalid-feedback'`
     > This property is disregarded if the default handlers are overwritten.
 - `valid`: String - The CSS class to apply to the created `div` sibling of a valid field.
-  - Default: 'valid-feedback'
+  - Default: `'valid-feedback'`
     > This property is disregarded if the default handlers are overwritten.
 
 `halt`: Boolean - Stops the form's submission.
