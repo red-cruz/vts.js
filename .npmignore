@@ -8,7 +8,7 @@ tsconfig.json
 tsconfig.build.json
 webpack.config.js
 webpack.config.prod.js
-.babelsrc
+.babelrc
 
 # Version control files
 .git/
