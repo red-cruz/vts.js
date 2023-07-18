@@ -1,4 +1,4 @@
-// @ts-checks
+// @ts-check
 import Swal from 'sweetalert2';
 import Vts from '../src/Vts';
 // import Vts from '../dist/Vts';

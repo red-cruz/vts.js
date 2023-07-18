@@ -23,7 +23,7 @@ type VtsRules = {
   [key: string]:
     | {
         /** the type of event that will be applied to the field */
-        eventType: string;
+        eventType?: string;
         /**
          * The pattern that will be used to create a RegExp object for validation.
          */
@@ -38,7 +38,7 @@ type VtsRules = {
         message?: Partial<VtsRuleMessage>;
       }
     | {
-        eventType: string;
+        eventType?: string;
         /**
          * The name of the field to match the value against.
          */

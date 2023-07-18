@@ -281,11 +281,11 @@ When the `halt` property is set to `true`, the form's submission will be halted,
       const sibling = parent?.querySelector(`.${fieldClass}`);
 
       if (sibling) {
-        sibling.textContent = `${message}`;
+        sibling.textContent = message;
       } else {
         const div = document.createElement('div');
-        div.classList.add(`${fieldClass}`);
-        div.textContent = `${message}`;
+        div.classList.add(fieldClass);
+        div.textContent = message;
         parent?.append(div);
       }
     }

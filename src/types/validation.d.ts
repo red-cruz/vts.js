@@ -52,4 +52,4 @@ declare class VtsValidation {
   _reportValidity(this: Vts): void;
 }
 
-export { VtsValidation };
+export { VtsValidation, VtsValidationData };

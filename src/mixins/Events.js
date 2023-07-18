@@ -20,7 +20,9 @@ const vtsEvents = {
       }
 
       // validate each field
-      for (const field of this.fields) this._checkFieldValidity(field);
+      for (const field of this.fields) {
+        this._checkFieldValidity(field);
+      }
 
       this._reportValidity();
 

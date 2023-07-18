@@ -152,7 +152,7 @@ interface VtsHandlers {
    */
   valid: (
     validClass: string,
-    data: { [fieldName: string]: VtsValidationData<string> },
+    data: VtsValidationData<string>,
     form: HTMLFormElement
   ) => void;
   /**
@@ -163,7 +163,7 @@ interface VtsHandlers {
    */
   invalid: (
     invalidClass: string,
-    data: { [fieldName: string]: VtsValidationData<string> },
+    data: VtsValidationData<string>,
     form: HTMLFormElement
   ) => void;
 }

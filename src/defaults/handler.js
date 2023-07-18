@@ -7,7 +7,7 @@ const vtsHandlers = {
 
 /**
  * @param {string} fieldClass
- * @param {any} data
+ * @param  {import("../types/validation").VtsValidationData<string>} data
  * @param {HTMLFormElement} form
  */
 function showFeedback(fieldClass, data, form) {
@@ -19,11 +19,11 @@ function showFeedback(fieldClass, data, form) {
     // field.style.border =
     //   state === 'valid' ? '1px solid #146c43' : '1px solid #b02a37';
     if (sibling) {
-      sibling.textContent = `${message}`;
+      sibling.textContent = message;
     } else {
       const div = document.createElement('div');
-      div.classList.add(`${fieldClass}`);
-      div.textContent = `${message}`;
+      div.classList.add(fieldClass);
+      div.textContent = message;
       // div.style.color = state === 'valid' ? '#146c43' : '#b02a37';
       parent?.append(div);
     }
