@@ -27,7 +27,7 @@ You can install Vts using one of the following methods:
 Include the Vts library in your HTML file using a CDN link:
 
 ```html
-<script src="https://cdn.example.com/vts-form.min.js"></script>
+<script src="https://unpkg.com/vts-form@3.0.0-beta.1/dist/Vts.min.js"></script>
 ```
 
 ### NPM
