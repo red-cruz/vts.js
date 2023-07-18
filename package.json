@@ -19,7 +19,7 @@
   },
   "name": "vts-form",
   "description": "Accelerate form validation and asynchronous submission with ease using Vts. Simplify your code and streamline your development workflow with this powerful JavaScript library. Validate form inputs and handle asynchronous requests effortlessly, all with just a single line of code.",
-  "version": "3.0.0-beta.1",
+  "version": "3.0.0-beta.2",
   "main": "./src/Vts.js",
   "directories": {
     "test": "test"
