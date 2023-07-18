@@ -1,6 +1,6 @@
 // @ts-check
 
-import type Vts from '../Vts';
+import type Vts from '../vts';
 import type { VtsValidationData } from './config';
 
 declare abstract class VtsRulesMixin {

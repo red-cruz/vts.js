@@ -5,7 +5,7 @@ import vtsHandlers from './handler';
 /**
  * Global default configuration for Vts (Validate Then Submit).
  *
- * @type {import('../Vts').VtsConfig}
+ * @type {import('../vts').VtsConfig}
  */
 const vtsDefaults = {
   ajax: ajaxHandler,

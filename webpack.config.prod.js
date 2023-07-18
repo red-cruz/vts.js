@@ -1,12 +1,12 @@
 const path = require('path');
 const webpack = require('webpack');
 module.exports = {
-  entry: './src/Vts.js',
+  entry: ['whatwg-fetch', './src/vts.js'],
   output: {
     library: 'Vts',
     libraryExport: 'default',
     libraryTarget: 'umd',
-    filename: 'Vts.min.js',
+    filename: 'vts.min.js',
     path: path.resolve(__dirname, 'dist'),
   },
   mode: 'production',

@@ -1,6 +1,6 @@
 # Vts Documentation
 
-Welcome to the documentation for Vts - Validate, then submit form. This documentation provides an overview of the Vts library, its features, and how to use it in your web projects.
+Accelerate form validation and asynchronous submission with ease using Vts. Simplify your code and streamline your development workflow with this powerful JavaScript library. Validate form inputs and handle asynchronous requests effortlessly, all with just a single line of code.
 
 ## Table of Contents
 
@@ -16,7 +16,11 @@ Welcome to the documentation for Vts - Validate, then submit form. This document
 
 ## Introduction
 
-Vts is a JavaScript library that provides a simple and flexible way to handle form validation before submitting. It allows you to customize the validation rules, error messages, and actions to be performed when a form field is valid or invalid.
+Vts (Validate, then submit form) simplifies form validation and seamlessly integrates asynchronous form submission. With Vts, you can significantly reduce the amount of code needed to implement robust form validation by leveraging its intuitive API for defining validation rules.
+
+In addition to validation, Vts simplifies the process of handling asynchronous form submission. By providing a straightforward configuration, you can easily specify AJAX settings such as the URL, request headers, and handle various stages of the request. With Vts, manual handling of AJAX calls becomes a thing of the past, allowing you to focus on delivering a responsive and interactive application.
+
+Vts excels in accelerating development by combining form validation and asynchronous requests into a single, concise solution. Its intuitive interface and streamlined approach save you time and effort, enabling you to build feature-rich forms with minimal coding. Experience the simplicity and efficiency of Vts in your web projects and unlock a faster, more productive development workflow.
 
 ## Installation
 
@@ -27,7 +31,7 @@ You can install Vts using one of the following methods:
 Include the Vts library in your HTML file using a CDN link:
 
 ```html
-<script src="https://unpkg.com/vts-form@3.0.0-beta.1/dist/Vts.min.js"></script>
+<script src="https://unpkg.com/vts-form/dist/vts.min.js"></script>
 ```
 
 ### NPM

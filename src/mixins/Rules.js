@@ -2,7 +2,7 @@
 import VtsFValidator from '../utils/VtsFormValidator';
 import getFieldLabel from '../utils/getFieldLabel';
 
-/** @type {import('../Vts').VtsRulesMixin} */
+/** @type {import('../vts').VtsRulesMixin} */
 const vtsRules = {
   _applyRules(rules, field, label) {
     let message = this.message.invalid || 'Invalid field';

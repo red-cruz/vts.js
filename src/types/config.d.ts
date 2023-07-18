@@ -1,4 +1,4 @@
-import Vts from '../Vts';
+import Vts from '../vts';
 import type { VtsRuleMessage, VtsRules } from './rules';
 
 /**

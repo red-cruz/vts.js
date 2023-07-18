@@ -1,4 +1,4 @@
-/** @type {import('../Vts').VtsForm} */
+/** @type {import('../vts').VtsForm} */
 const vtsForm = {
   isFormValid() {
     return this.form.checkValidity();
@@ -52,7 +52,7 @@ const vtsForm = {
  * @param {string} url
  * @param {RequestInit} request
  * @returns {[url, request]}
- * @this {import('../Vts').default}
+ * @this {import('../vts').default}
  */
 function vtsFormBeforeSend(url, request) {
   const formData = new FormData(this.form);
