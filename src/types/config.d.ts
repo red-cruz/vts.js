@@ -1,3 +1,4 @@
+import Vts from '../Vts';
 import type { VtsRuleMessage, VtsRules } from './rules';
 
 /**
@@ -12,26 +13,7 @@ interface VtsConfig {
   /**
    * Contains functions for handling field validation.
    */
-  handlers: {
-    /**
-     * The function to call for all valid fields.
-     * @param data The validation data for all valid fields.
-     * @param form The HTML form element.
-     */
-    valid: (
-      data: { [fieldName: string]: VtsValidationData<string> },
-      form: HTMLFormElement
-    ) => void;
-    /**
-     * The function to call for invalid fields.
-     * @param data The validation data for all invalid fields.
-     * @param form The HTML form element.
-     */
-    invalid: (
-      data: { [fieldName: string]: VtsValidationData<string> },
-      form: HTMLFormElement
-    ) => void;
-  };
+  handlers: VtsHandlers;
 
   /**
    * Determines whether to halt the form submission if there are invalid fields.
@@ -161,4 +143,28 @@ interface VtsAjaxSettings {
   success: (data: any, response: Response, form: HTMLFormElement) => void;
 }
 
-export type { VtsConfig, VtsValidationData, VtsAjaxSettings };
+interface VtsHandlers {
+  /**
+   * The function to call for all valid fields.
+   * @param validClass
+   * @param data The validation data for all valid fields.
+   * @param form The HTML form element.
+   */
+  valid: (
+    validClass: string,
+    data: { [fieldName: string]: VtsValidationData<string> },
+    form: HTMLFormElement
+  ) => void;
+  /**
+   * The function to call for invalid fields.
+   * @param invalidClass
+   * @param data The validation data for all invalid fields.
+   * @param form The HTML form element.
+   */
+  invalid: (
+    invalidClass: string,
+    data: { [fieldName: string]: VtsValidationData<string> },
+    form: HTMLFormElement
+  ) => void;
+}
+export type { VtsConfig, VtsValidationData, VtsAjaxSettings, VtsHandlers };

@@ -8,12 +8,9 @@ Welcome to the documentation for Vts - Validate, then submit form. This document
 2. [Installation](#installation)
 3. [Getting Started](#getting-started)
 4. [Configuration Options](#configuration-options)
-5. [Sample Usage](#sample-usage)
+5. [Setting Default Configuration](#setting-default-configuration)
 6. [API Reference](#api-reference)
 7. [Examples](#examples)
-8. [FAQ](#faq)
-9. [Contributing](#contributing)
-10. [License](#license)
 
 ---
 
@@ -67,10 +64,12 @@ To use Vts, you need to include the library in your project, initialize it, and 
 
     In the above example, we assume that you have a form with the ID `myForm`. Replace it with the ID of your actual form. The `novalidate` attribute on the form disables the browser's default form validation. This allows Vts to handle the validation instead.
 
-3.  Optionally, configure the default Vts settings. You can set the action and request properties of the ajax object to specify the URL and additional request parameters.
+3.  Optionally, configure the Vts options. You can set the action and request properties of the ajax object to specify the URL and additional request parameters.
+
+    > This configuration will not affect other instances of Vts.
 
     ```javascript
-    Vts.setDefaults({
+    new Vts('myForm', {
       ajax: {
         action: '/default-submit-url',
         request: {
@@ -85,42 +84,13 @@ To use Vts, you need to include the library in your project, initialize it, and 
     });
     ```
 
-    You can also define the `beforeSend`, `success`, `complete`, and `error` functions to handle the different stages of the Ajax request.
-
-    ```javascript
-    Vts.setDefaults({
-      ajax: {
-        beforeSend: (request, abortController, form) => {
-          // Perform any necessary actions before sending the request
-          // For example, show a loading spinner or disable form elements
-          // You can access the request object and the form element here
-          // Return the updated request object
-          return request;
-        },
-        success: (data, response, form) => {
-          // Handle the successful response
-          // You can access the returned data, the raw response object, and the form element here
-        },
-        complete: (form) => {
-          // Handle the completion of the request
-          // This function will be called regardless of success or failure
-          // You can perform any cleanup or additional actions here
-        },
-        error: (errorData, errorResponse, form) => {
-          // Handle the error response
-          // You can access the error data from server, the raw error response object, and the form element here
-        },
-      },
-    });
-    ```
-
 By following these steps, you will be able to perform form validation and asynchronous form submission easily. Adjust the configuration options according to your specific requirements.
 
 ## Configuration Options
 
 Each instance of Vts can be configured by passing the configuration object as the second argument.
 
-> The defined properties will overwrite the respective properties.
+> The defined properties will overwrite the respective default properties.
 
 ```javascript
 new Vts('myForm', {
@@ -217,12 +187,10 @@ Vts provides several configuration options to customize its behavior. Here are t
 
 - `form`: String - The CSS class to apply to the form when it has been validated.
   - Default: `'was-validated'`
-- `invalid`: String - The CSS class to apply to the created `div` sibling of an invalid field.
+- `invalid`: String - The CSS class to be passed as the first parameter of the `invalid handler` function.
   - Default: `'invalid-feedback'`
-    > This property is disregarded if the default handlers are overwritten.
-- `valid`: String - The CSS class to apply to the created `div` sibling of a valid field.
+- `valid`: String - The CSS class to be passed as the first parameter of the `valid handler` function.
   - Default: `'valid-feedback'`
-    > This property is disregarded if the default handlers are overwritten.
 
 ### `halt`: Boolean - Determines whether to halt the form's submission.
 
@@ -251,14 +219,13 @@ When the `halt` property is set to `true`, the form's submission will be halted,
   - default:
 
     ```javascript
-    invalid: (data, form) => {
-      showFeedback('invalid', data);
-    };
+    invalid: showFeedback;
     ```
 
-  The invalid method receives two parameters:
+  The invalid method receives three parameters:
 
-  1. `data`: An object containing validation data for all `invalid fields`. The `keys` for each validation data object are the value of the `name` attribute of the validated field. Each field's validation data contains the following properties:
+  1. `invalidClass`: `String` - The value of the `invalid` property of [class](#class-object---the-css-classes-to-be-applied) configuration.
+  2. `data`: An object containing validation data for all `invalid fields`. The `keys` for each validation data object are the value of the `name` attribute of the validated field. Each field's validation data contains the following properties:
 
      - `field`: HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement - The invalid form field.
      - `label`: string - The corresponding label for the invalid field. It is derived from the following sources, in order of priority:
@@ -279,21 +246,20 @@ When the `halt` property is set to `true`, the form's submission will be halted,
      }
      ```
 
-  2. `form`: The HTML `form` element that was submitted.
+  3. `form`: The HTML `form` element that was submitted.
 
 - `valid`: Function - The function to call for all valid fields. This function is responsible for handling the validation feedback for valid fields.
 
   - default:
 
     ```javascript
-    valid: (data, form) => {
-      showFeedback('valid', data);
-    };
+    valid: showFeedback;
     ```
 
-  The valid method receives two parameters:
+  The valid method receives three parameters:
 
-  1. `data`: An object containing validation data for all `valid fields`. The `keys` for each validation data object are the value of the `name` attribute of the validated field. Each field's validation data contains the following properties:
+  1. `validClass`: `String` - The value of the `valid` property of [class](#class-object---the-css-classes-to-be-applied) configuration.
+  2. `data`: An object containing validation data for all `valid fields`. The `keys` for each validation data object are the value of the `name` attribute of the validated field. Each field's validation data contains the following properties:
 
      - `field`: HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement - The valid form field.
      - `label`: string - The corresponding label for the valid field. It is derived from the following sources, in order of priority:
@@ -303,22 +269,22 @@ When the `halt` property is set to `true`, the form's submission will be halted,
        - An `empty string` if none of the above are defined.
      - `message`: string - The validation message for the field. By default, it is an `empty string`.
 
-  2. `form`: The HTML `form` element that was submitted.
+  3. `form`: The HTML `form` element that was submitted.
 
   The `showFeedback()` function iterates over the validation data object and updates the DOM to display the validation messages for each field. It checks if there is already an element with the appropriate feedback class and updates its text content. If no such element exists, it creates a new \<div> element and appends it to the parent element.
 
   ```javascript
-  function showFeedback(state, data) {
+  function showFeedback(fieldClass, data, form) {
     for (const key in data) {
       const { field, label, message = ' ' } = data[key];
       const parent = field.parentNode;
-      const className = `${state}-feedback`;
-      const sibling = parent?.querySelector(`.${className}`);
+      const sibling = parent?.querySelector(`.${fieldClass}`);
+
       if (sibling) {
         sibling.textContent = `${message}`;
       } else {
         const div = document.createElement('div');
-        div.classList.add(`${className}`);
+        div.classList.add(`${fieldClass}`);
         div.textContent = `${message}`;
         parent?.append(div);
       }
@@ -386,11 +352,17 @@ The `rules` property represents the validation rules for the form fields in Vts.
 
 Each key-value pair in the `rules` object represents a validation rule for a field. The key is the name of the field, and the value is an object containing the following optional properties:
 
-- `eventType` (optional): The type of event that will be used as the field's event type when adding the event listener. If not specified, the default event type is determined based on the field type. For fields with types such as 'radio', 'select-one', 'select-multiple', 'checkbox', 'file', and 'range', the default event type is 'change'. For other field types, the default event type is 'input'.
-- `pattern` (optional): The pattern used for validation. It can be a string or a regular expression. If both the `pattern` and `match` properties are defined, only the `pattern` property will be used.
-- `flags` (optional): The flags used when creating the regular expression object.
-- `match` (optional): Specifies that the field's value should match the value of another field specified by the `match` property. The `match` property can reference any key defined in the `rules` object.
-- `message` (optional): The message configuration for the validation rule. It can override the default message. Please refer to the earlier section for more information on customizing the error messages.
+- `eventType` (optional): `String` - The type of event that will be used as the field's event type when adding the event listener. If not specified, the default event type is determined based on the field type. For fields with types such as 'radio', 'select-one', 'select-multiple', 'checkbox', 'file', and 'range', the default event type is 'change'. For other field types, the default event type is 'input'.
+
+- `pattern` (optional): `String` or `RegExp` - The pattern used for validation.
+
+  > If both the `pattern` and `match` properties are defined, only the `pattern` property will be used.
+
+- `flags` (optional): `String` - The flags used when creating the regular expression object.
+
+- `match` (optional): `String` - The name of the other field to match against. Specifies that this field's value should match the value of another field specified by the `match` property. The `match` property can reference any field name defined in the form.
+
+- `message` (optional): The message configuration for the validation rule. It can override the default `message`. Please refer to the earlier section for more information on customizing the error messages.
 
 > Note: Upon Vts instantiation, the `rules` object is converted to a `Map` for more efficient rule lookup and management.
 
@@ -398,9 +370,9 @@ Each key-value pair in the `rules` object represents a validation rule for a fie
 
 - Default: `true`
 
-### Setting Default Configuration
+## Setting Default Configuration
 
-The `setDefaults` method allows you to set the default configuration for Vts. It takes a `config` parameter that is an object containing partial configuration options of type `VtsConfig`.
+The `setDefaults` method allows you to set the default configuration for Vts. It takes an object parameter containing the configuration options.
 
 To set the default configuration, use the following syntax:
 

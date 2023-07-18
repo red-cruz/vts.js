@@ -1,24 +1,20 @@
 // @ts-check
-/** @type {*} */
+/** @type {import("../types/config").VtsHandlers} */
 const vtsHandlers = {
-  invalid: (data, form) => {
-    showFeedback('invalid', data);
-  },
-  valid: (data, form) => {
-    showFeedback('valid', data);
-  },
+  invalid: showFeedback,
+  valid: showFeedback,
 };
 
 /**
- * @param {string} state
+ * @param {string} fieldClass
  * @param {any} data
+ * @param {HTMLFormElement} form
  */
-function showFeedback(state, data) {
+function showFeedback(fieldClass, data, form) {
   for (const key in data) {
     const { field, label, message = ' ' } = data[key];
     const parent = field.parentNode;
-    const className = `${state}-feedback`;
-    const sibling = parent?.querySelector(`.${className}`);
+    const sibling = parent?.querySelector(`.${fieldClass}`);
 
     // field.style.border =
     //   state === 'valid' ? '1px solid #146c43' : '1px solid #b02a37';
@@ -26,7 +22,7 @@ function showFeedback(state, data) {
       sibling.textContent = `${message}`;
     } else {
       const div = document.createElement('div');
-      div.classList.add(`${className}`);
+      div.classList.add(`${fieldClass}`);
       div.textContent = `${message}`;
       // div.style.color = state === 'valid' ? '#146c43' : '#b02a37';
       parent?.append(div);

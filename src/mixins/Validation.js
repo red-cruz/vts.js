@@ -23,8 +23,8 @@ const vtsValidation = {
     const invalidData = Object.fromEntries(data.invalidFields);
     const form = this.form;
     const handlers = this.handlers;
-    handlers.valid(validData, form);
-    handlers.invalid(invalidData, form);
+    handlers.valid(this.class.valid, validData, form);
+    handlers.invalid(this.class.invalid, invalidData, form);
   },
   _setValidityData(field, data) {
     if (field.validity.valid) {
