@@ -359,8 +359,8 @@ var vtsValidation = {
     var invalidData = Object.fromEntries(data.invalidFields);
     var form = this.form;
     var handlers = this.handlers;
-    handlers.valid(validData, form);
-    handlers.invalid(invalidData, form);
+    handlers.valid(this["class"].valid, validData, form);
+    handlers.invalid(this["class"].invalid, invalidData, form);
   },
   _setValidityData: function _setValidityData(field, data) {
     if (field.validity.valid) {
@@ -440,21 +440,18 @@ var ajaxHandler = {
 /* harmony default export */ const ajax = (ajaxHandler);
 ;// CONCATENATED MODULE: ./src/defaults/handler.js
 // @ts-check
-/** @type {*} */
+/** @type {import("../types/config").VtsHandlers} */
 var vtsHandlers = {
-  invalid: function invalid(data, form) {
-    showFeedback('invalid', data);
-  },
-  valid: function valid(data, form) {
-    showFeedback('valid', data);
-  }
+  invalid: showFeedback,
+  valid: showFeedback
 };
 
 /**
- * @param {string} state
- * @param {any} data
+ * @param {string} fieldClass
+ * @param  {import("../types/validation").VtsValidationData<string>} data
+ * @param {HTMLFormElement} form
  */
-function showFeedback(state, data) {
+function showFeedback(fieldClass, data, form) {
   var _loop = function _loop() {
     var _data$key = data[key],
       field = _data$key.field,
@@ -462,17 +459,16 @@ function showFeedback(state, data) {
       _data$key$message = _data$key.message,
       message = _data$key$message === void 0 ? ' ' : _data$key$message;
     var parent = field.parentNode;
-    var className = "".concat(state, "-feedback");
-    var sibling = parent === null || parent === void 0 ? void 0 : parent.querySelector(".".concat(className));
+    var sibling = parent === null || parent === void 0 ? void 0 : parent.querySelector(".".concat(fieldClass));
 
     // field.style.border =
     //   state === 'valid' ? '1px solid #146c43' : '1px solid #b02a37';
     if (sibling) {
-      sibling.textContent = "".concat(message);
+      sibling.textContent = message;
     } else {
       var div = document.createElement('div');
-      div.classList.add("".concat(className));
-      div.textContent = "".concat(message);
+      div.classList.add(fieldClass);
+      div.textContent = message;
       // div.style.color = state === 'valid' ? '#146c43' : '#b02a37';
       parent === null || parent === void 0 ? void 0 : parent.append(div);
     }
