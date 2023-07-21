@@ -1,4 +1,5 @@
 // @ts-check
+import 'whatwg-fetch';
 import VtsFormValidator from './utils/VtsFormValidator.js';
 import vtsEvents from './mixins/Events.js';
 import vtsRules from './mixins/Rules.js';
@@ -7,7 +8,6 @@ import setVtsConfig from './utils/setVtsConfig.js';
 import vtsForm from './mixins/Form.js';
 import vtsDefaults from './defaults/index.js';
 import deepMerge from './utils/deepMerge.js';
-import 'whatwg-fetch';
 
 /// <reference path="./Vts.d.ts" />
 export default class Vts {

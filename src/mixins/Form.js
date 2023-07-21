@@ -9,39 +9,57 @@ const vtsForm = {
     const form = this.form;
     try {
       let url = ajax.action;
-
       [url, ajax.request] = vtsFormBeforeSend.call(this, url, ajax.request);
 
+      // fetch
       const response = await fetch(new Request(url, ajax.request));
       if (!response.ok) {
-        throw new Error(response.statusText);
+        throw response;
       }
-      const contentType = response.headers.get('content-type');
-      if (contentType && contentType.includes('application/json')) {
-        const [data, rawResponse] = await Promise.all([
-          response.json(),
-          response,
-        ]);
-        ajax.success(data, rawResponse, form);
+
+      // get response data
+      const contentType = response.headers.get('Content-Type');
+      if (contentType) {
+        let data;
+        if (contentType.includes('application/json')) {
+          data = await response.json();
+        } else if (
+          contentType.includes('text/html') ||
+          contentType.includes('text/plain')
+        ) {
+          data = await response.text();
+        } else {
+          throw new Error('Unsupported response format');
+        }
+        // success
+        ajax.success(data, response, form);
       } else {
-        throw new TypeError('Response is not in JSON format');
+        throw new Error('Content-Type header not found in the response');
       }
     } catch (error) {
-      let errorData;
-      if (error instanceof Response) {
-        try {
-          errorData = await error.json();
-        } catch (e) {
-          errorData = e;
-        }
-      } else {
-        errorData = null;
-      }
-      ajax.error(errorData, error, form);
-
+      // reinit abort controller if aborted
       if (this.ajax.request?.signal?.aborted)
         this.ajax.abortController = new AbortController();
+
+      let errorData = error;
+      // get error response data
+      if (error instanceof Response) {
+        const contentType = error.headers.get('Content-Type');
+        if (contentType) {
+          if (contentType.includes('application/json')) {
+            errorData = await error.json();
+          } else if (
+            contentType.includes('text/html') ||
+            contentType.includes('text/plain')
+          ) {
+            errorData = await error.text();
+          }
+        }
+      }
+      // error
+      ajax.error(errorData, error, form);
     }
+    // complete
     ajax.complete(form);
   },
 };

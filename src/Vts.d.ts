@@ -30,6 +30,7 @@ declare class Vts {
 declare class VtsEventsMixin {
   private _addEventListeners(this: Vts): void;
   _attachMatchEvents(this: Vts): void;
+  _attachRequireEvents(this: Vts): void;
   _addFieldListener(this: Vts): void;
   _getEventType(fieldType: string, ruleEventType?: string): string;
 }

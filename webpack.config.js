@@ -2,11 +2,11 @@ const path = require('path');
 
 module.exports = {
   entry: {
-    config: './test/config.js',
+    'vts.config': './test/vts.config.js',
   },
   output: {
     filename: '[name].min.js',
-    path: path.resolve(__dirname, 'dist'),
+    path: path.resolve(__dirname, 'build'),
   },
   mode: 'development',
   watch: true,
