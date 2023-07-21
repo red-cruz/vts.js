@@ -29,35 +29,47 @@ const vtsForm = {
         ) {
           data = await response.text();
         } else {
-          throw new Error('Unsupported response format');
+          data = null;
         }
-        // success
+        // call success callback function
         ajax.success(data, response, form);
       } else {
         throw new Error('Content-Type header not found in the response');
       }
     } catch (error) {
-      // reinit abort controller if aborted
-      if (this.ajax.request?.signal?.aborted)
-        this.ajax.abortController = new AbortController();
-
       let errorData = error;
-      // get error response data
+      let errorResponse = null;
+
+      // Reinitialize abort controller if aborted
+      if (this.ajax.request?.signal?.aborted) {
+        this.ajax.abortController = new AbortController();
+      }
+
+      // Check if the error is an instance of Response
       if (error instanceof Response) {
+        errorResponse = error;
         const contentType = error.headers.get('Content-Type');
+
+        // Check the content type of the error response
         if (contentType) {
           if (contentType.includes('application/json')) {
+            // Read the error response body as JSON
             errorData = await error.json();
           } else if (
             contentType.includes('text/html') ||
             contentType.includes('text/plain')
           ) {
+            // Read the error response body as text
             errorData = await error.text();
+          } else {
+            // Content type is not JSON, HTML, or plain text
+            // Set errorData to null for handling other types of response
+            errorData = null;
           }
         }
       }
-      // error
-      ajax.error(errorData, error, form);
+      // Call the error callback function with the appropriate data
+      ajax.error(errorData, errorResponse, form);
     }
     // complete
     ajax.complete(form);

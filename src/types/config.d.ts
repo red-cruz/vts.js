@@ -92,7 +92,7 @@ type VtsValidationData<TFieldNames extends string> = {
  * Represents the Ajax settings for form submission in Vts (Validate Then Submit).
  */
 interface VtsAjaxSettings {
-  abortController: AbortController;
+  abortController?: AbortController;
   /**
    * The URL action for the form submission.
    *
@@ -130,17 +130,22 @@ interface VtsAjaxSettings {
    * @param form The HTML form element that was submitted.
    */
   error: (
-    error: any | null,
-    raw: Response | Error,
-    form: HTMLFormElement
+    error: any,
+    raw: Response | null,
+    form: HTMLFormElement,
+    thrownError: any
   ) => void;
   /**
    * A function to be called when the Ajax request is successful.
-   * @param data The response data, parsed into a JavaScript object from the JSON input.
+   * @param data The response data, parsed into a JavaScript object from the JSON input or parsed into a text.
    * @param response The raw response object.
    * @param form The HTML form element that was submitted.
    */
-  success: (data: any, response: Response, form: HTMLFormElement) => void;
+  success: (
+    data: any | null,
+    response: Response,
+    form: HTMLFormElement
+  ) => void;
 }
 
 interface VtsHandlers {
