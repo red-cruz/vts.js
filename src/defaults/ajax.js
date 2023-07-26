@@ -3,8 +3,27 @@
 const ajaxHandler = {
   action: '',
   request: {},
-  beforeSend: (requestInit, abortController, form) => {},
-  complete: (form) => {},
+  beforeSend: (requestInit, abortController, form) => {
+    /** @type {HTMLButtonElement|HTMLInputElement|null} */
+    const submitBtn = form.querySelector('[type="submit"]');
+    if (submitBtn) {
+      const text = submitBtn.textContent || '';
+      submitBtn.textContent = 'Submitting...';
+      submitBtn.disabled = true;
+      window.sessionStorage.setItem(`__Vts#${form.id}_submitText`, text);
+    }
+  },
+  complete: (form) => {
+    const vtsSessionId = `__Vts#${form.id}_submitText`;
+    /** @type {HTMLButtonElement|HTMLInputElement|null} */
+    const submitBtn = form.querySelector('[type="submit"]');
+    const storedSubmitText = window.sessionStorage.getItem(vtsSessionId);
+    if (storedSubmitText && submitBtn) {
+      submitBtn.textContent = storedSubmitText;
+      submitBtn.disabled = false;
+      window.sessionStorage.removeItem(vtsSessionId);
+    }
+  },
   error: (errorData, errorResponse, form) => {
     let title;
     let message;

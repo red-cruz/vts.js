@@ -125,27 +125,23 @@ interface VtsAjaxSettings {
   complete: (form: HTMLFormElement) => void;
   /**
    * A function to be called when an error occurs during the Ajax request.
-   * @param error The error object or message.
-   * @param raw The raw error response.
+   * @param error The error data received from the server response or a thrown error message.
+   * @param response The Response object representing the error response, if applicable. Can be null if the error did not come from the server.
    * @param form The HTML form element that was submitted.
    */
   error: (
-    error: any,
-    raw: Response | null,
+    errorData: any,
+    response: Response | null,
     form: HTMLFormElement,
     thrownError: any
   ) => void;
   /**
    * A function to be called when the Ajax request is successful.
-   * @param data The response data, parsed into a JavaScript object from the JSON input or parsed into a text.
-   * @param response The raw response object.
+   * @param data The response data received from the server, parsed into a JavaScript object from JSON input or parsed into a text.  Can be null if the content type is neither 'application/json', 'text/html', nor 'text/plain'.
+   * @param response The Response object representing the successful response.
    * @param form The HTML form element that was submitted.
    */
-  success: (
-    data: any | null,
-    response: Response,
-    form: HTMLFormElement
-  ) => void;
+  success: (data: any, response: Response, form: HTMLFormElement) => void;
 }
 
 interface VtsHandlers {
