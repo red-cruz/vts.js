@@ -22,9 +22,23 @@ const vtsRules = {
         : `^${matchValue}$`;
     }
 
+    const dependent = rules.requires;
+    let neededField = null;
+    if (dependent) {
+      neededField = VtsFValidator.validateField(this.form, dependent);
+      if (neededField.value) {
+        field.required = true;
+        field.disabled = false;
+      } else {
+        field.disabled = true;
+        field.required = false;
+      }
+      neededField = neededField.value;
+    }
+
     // set validity
     const regExp = new RegExp(pattern, rules.flags);
-    if (regExp.test(field.value)) {
+    if (!neededField || regExp.test(field.value)) {
       message = rules.message?.valid ?? this.message.valid ?? '';
       field.setCustomValidity('');
     } else {

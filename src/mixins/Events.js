@@ -1,4 +1,4 @@
-// @t
+// @ts-chec
 import VtsFormValidator from '../utils/VtsFormValidator';
 
 /** @type {import('../vts').VtsEventsMixin} */
@@ -35,7 +35,7 @@ const vtsEvents = {
 
     // Fields
     const shouldListen = this.listen;
-    shouldListen && _addFieldListener();
+    shouldListen && this._addFieldListener();
 
     // Match events
     this._attachMatchEvents();
@@ -51,21 +51,38 @@ const vtsEvents = {
     });
   },
   _attachMatchEvents() {
-    for (const [fieldName, rule] of this.rules.entries()) {
-      const match = rule.match;
-      const form = this.form;
-      const field = form.querySelector(`[name="${fieldName}"]`);
-      const rules = this._getFieldRules(fieldName);
-      const eventType = this._getEventType(field.type, rules?.eventType);
-      if (match) {
+    const ruleEntries = this.rules;
+    if (typeof ruleEntries === 'object' && ruleEntries instanceof Map)
+      for (const [fieldName, rule] of ruleEntries.entries()) {
+        const match = rule.match;
+        const dependent = rule.requires;
+        const form = this.form;
+        const field = VtsFormValidator.validateField(form, fieldName);
+        const rules = this._getFieldRules(fieldName);
+        const eventType = this._getEventType(field.type, rules?.eventType);
         const inputEvent = new Event(eventType);
-        const matchField = VtsFormValidator.validateField(form, match);
-        form.querySelector(`[name="${match}"]`);
-        matchField.addEventListener(eventType, function () {
-          field.dispatchEvent(inputEvent);
-        });
+        if (match) {
+          const matchField = VtsFormValidator.validateField(form, match);
+          form.querySelector(`[name="${match}"]`);
+          matchField.addEventListener(eventType, function () {
+            field.dispatchEvent(inputEvent);
+          });
+        }
+        if (dependent) {
+          const neededField = VtsFormValidator.validateField(form, dependent);
+          form.querySelector(`[name="${dependent}"]`);
+          neededField.addEventListener(eventType, function () {
+            if (neededField.value) {
+              field.required = true;
+              field.disabled = false;
+            } else {
+              field.disabled = true;
+              field.required = false;
+            }
+            field.dispatchEvent(inputEvent);
+          });
+        }
       }
-    }
   },
   _getEventType(fieldType, ruleEventType) {
     const changeEvents = [

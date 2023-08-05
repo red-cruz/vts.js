@@ -20,45 +20,30 @@ declare abstract class VtsRulesMixin {
  * Represents the validation rules for a set of fields in Vts (Validate Then Submit).
  */
 type VtsRules = {
-  [key: string]:
-    | {
-        /**
-         * the type of event that will be applied to the field
-         */
-        eventType?: string;
-        /**
-         * The flags that will be used when creating the RegExp object.
-         */
-        flags?: string;
-        /**
-         * The pattern that will be used to create a RegExp object for validation.
-         */
-        pattern: string | RegExp;
-        /**
-         * The message configuration for the validation rule.
-         */
-        message?: Partial<VtsRuleMessage>;
-        requires?: string;
-      }
-    | {
-        /**
-         * the type of event that will be applied to the field \
-         */
-        eventType?: string;
-        /**
-         * The flags that will be used when creating the RegExp object for matching.
-         */
-        flags?: string;
-        /**
-         * The name of the field to match the value against.
-         */
-        match: Extract<keyof VtsRules, string>;
-        /**
-         * The message configuration for the validation rule.
-         */
-        message?: Partial<VtsRuleMessage>;
-        requires?: string;
-      };
+  [key: string]: {
+    /**
+     * the type of event that will be applied to the field
+     */
+    eventType?: string;
+    /**
+     * The flags that will be used when creating the RegExp object.
+     */
+    flags?: string;
+
+    /**
+     * The name of the field to match the value against.
+     */
+    match?: Extract<keyof VtsRules, string>;
+    /**
+     * The message configuration for the validation rule.
+     */
+    message?: Partial<VtsRuleMessage>;
+    /**
+     * The pattern that will be used to create a RegExp object for validation.
+     */
+    pattern?: string | RegExp;
+    requires?: string;
+  };
 };
 
 type VtsValidityState =
