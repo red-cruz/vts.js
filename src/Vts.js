@@ -25,7 +25,7 @@ export default class Vts {
     Object.assign(Vts.prototype, vtsEvents, vtsRules, vtsValidation);
 
     // check instance
-    VtsFormValidator.checkInstance(form.id);
+    // VtsFormValidator.checkInstance(form.id);
 
     this._convertRulesToMap();
     this._addEventListeners();
