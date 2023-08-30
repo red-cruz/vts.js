@@ -17,9 +17,9 @@
     "start": "webpack --config webpack.config.js --mode development",
     "build": "webpack --config webpack.config.prod.js --mode production"
   },
-  "name": "vts-form",
+  "name": "vts.js",
   "description": "Accelerate form validation and asynchronous submission with ease using Vts. Simplify your code and streamline your development workflow with this powerful JavaScript library. Validate form inputs and handle asynchronous requests effortlessly, all with just a single line of code.",
-  "version": "3.0.0-beta.5",
+  "version": "1.0.0-beta.1",
   "main": "./src/Vts.js",
   "directories": {
     "test": "test"
