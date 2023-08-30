@@ -25,6 +25,28 @@ declare class Vts {
    * @param config The configuration options.
    */
   static setDefaults(config: Partial<VtsConfig>): void;
+
+  /**
+   * Gets the instance of Vts for the specified form ID.
+   * @param formId The ID of the form.
+   * @returns The instance of Vts for the specified form ID, or undefined if the instance does not exist.
+   */
+  static getInstance(formId: string): Vts | undefined;
+
+  /**
+   * Gets or creates an instance of Vts (Validate Then Submit) for the specified form ID.
+   * @param formId The ID of the form.
+   * @param config The configuration options.
+   * @returns The instance of Vts for the specified form ID.
+   */
+  static getOrCreateInstance(formId: string, config?: Partial<VtsConfig>): Vts;
+
+  /**
+   * Removes the instance of Vts (Validate Then Submit) for the specified form ID.
+   * @param formId The ID of the form.
+   * @returns True if the instance was removed, false otherwise.
+   */
+  static removeInstance(formId: string): boolean;
 }
 
 declare class VtsEventsMixin {

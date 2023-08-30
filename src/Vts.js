@@ -16,11 +16,21 @@ export default class Vts {
     deepMerge(vtsDefaults, config);
   }
 
-  constructor(formId, config = {}) {
-    // check instance
+  static getInstance(formId) {
+    return Vts.#instances.get(formId);
+  }
+
+  static getOrCreateInstance(formId, config = {}) {
     const hasInstance = Vts.#instances.get(formId);
     if (hasInstance) return hasInstance;
+    else return new Vts(formId, config);
+  }
 
+  static removeInstance(formId) {
+    return Vts.#instances.delete(formId);
+  }
+
+  constructor(formId, config = {}) {
     const form = (this.form = VtsFormValidator.validateForm(formId));
     this.fields = form.querySelectorAll('[name]:not([data-vts-ignored])');
     this.#init(config);
