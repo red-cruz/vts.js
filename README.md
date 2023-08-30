@@ -31,7 +31,7 @@ You can install Vts using one of the following methods:
 Include the Vts library in your HTML file using a CDN link:
 
 ```html
-<script src="https://unpkg.com/vts-form/dist/vts.min.js"></script>
+<script src="https://unpkg.com/vts.js/dist/vts.min.js"></script>
 ```
 
 ### NPM
@@ -39,13 +39,13 @@ Include the Vts library in your HTML file using a CDN link:
 If you are using a module bundler like Webpack or Rollup, you can install Vts from npm:
 
 ```bash
-npm install vts-form
+npm install vts.js
 ```
 
 Import the library into your JavaScript file:
 
 ```javascript
-import Vts from 'vts-form';
+import Vts from 'vts.js';
 ```
 
 ## Getting Started
