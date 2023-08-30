@@ -1,4 +1,3 @@
-// @ts-check
 import 'whatwg-fetch';
 import VtsFormValidator from './utils/VtsFormValidator.js';
 import vtsEvents from './mixins/Events.js';
@@ -9,12 +8,21 @@ import vtsForm from './mixins/Form.js';
 import vtsDefaults from './defaults/index.js';
 import deepMerge from './utils/deepMerge.js';
 
-/// <reference path="./Vts.d.ts" />
+/// <reference path="./vts.d.ts" />
 export default class Vts {
+  static #instances = new Map();
+
+  static setDefaults(config) {
+    deepMerge(vtsDefaults, config);
+  }
+
   constructor(formId, config = {}) {
-    const form = VtsFormValidator.validateForm(formId);
+    // check instance
+    const hasInstance = Vts.#instances.get(formId);
+    if (hasInstance) return hasInstance;
+
+    const form = (this.form = VtsFormValidator.validateForm(formId));
     this.fields = form.querySelectorAll('[name]:not([data-vts-ignored])');
-    this.form = form;
     this.#init(config);
   }
 
@@ -24,14 +32,9 @@ export default class Vts {
     Object.assign(this, vtsForm, setVtsConfig(form, config));
     Object.assign(Vts.prototype, vtsEvents, vtsRules, vtsValidation);
 
-    // check instance
-    // VtsFormValidator.checkInstance(form.id);
-
     this._convertRulesToMap();
     this._addEventListeners();
-  }
 
-  static setDefaults(config) {
-    deepMerge(vtsDefaults, config);
+    Vts.#instances.set(form.getAttribute('id'), this);
   }
 }

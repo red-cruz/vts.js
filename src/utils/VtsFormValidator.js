@@ -1,32 +1,10 @@
 // @ts-check
-/** @type {string[]} - form Ids */
-const vtsInstances = [];
 
 /**
  * Utility class for form type validation and instance checking.
  * @abstract
  */
 export default class VtsFormValidator {
-  /**
-   * Checks if there is an existing instance associated with the provided form ID.
-   * Throws an error if an instance already exists for the form ID.
-   * If no instance exists, it adds the form ID to the instances array.
-   *
-   * @param {string} formId - The ID of the form element to check for an existing instance.
-   * @throws {Error} Throws an error if an instance already exists for the specified form ID.
-   */
-  static checkInstance(formId) {
-    // Check if an instance already exists for the form ID
-    if (vtsInstances.includes(formId)) {
-      throw new Error(
-        `An instance already exists for the specified form element: ${formId}`
-      );
-    }
-
-    // Add the form ID to the instances array
-    vtsInstances.push(formId);
-  }
-
   /**
    * Retrieves the form element with the provided form ID and checks its validity.
    *
