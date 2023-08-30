@@ -26,6 +26,8 @@ __webpack_require__.d(__webpack_exports__, {
   "default": () => (/* binding */ Vts)
 });
 
+// EXTERNAL MODULE: ./node_modules/whatwg-fetch/fetch.js
+var whatwg_fetch_fetch = __webpack_require__(147);
 ;// CONCATENATED MODULE: ./src/utils/VtsFormValidator.js
 function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -34,9 +36,6 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
 function _toPropertyKey(arg) { var key = _toPrimitive(arg, "string"); return _typeof(key) === "symbol" ? key : String(key); }
 function _toPrimitive(input, hint) { if (_typeof(input) !== "object" || input === null) return input; var prim = input[Symbol.toPrimitive]; if (prim !== undefined) { var res = prim.call(input, hint || "default"); if (_typeof(res) !== "object") return res; throw new TypeError("@@toPrimitive must return a primitive value."); } return (hint === "string" ? String : Number)(input); }
 // @ts-check
-/** @type {string[]} - form Ids */
-var vtsInstances = [];
-
 /**
  * Utility class for form type validation and instance checking.
  * @abstract
@@ -46,26 +45,8 @@ var VtsFormValidator = /*#__PURE__*/function () {
     _classCallCheck(this, VtsFormValidator);
   }
   _createClass(VtsFormValidator, null, [{
-    key: "checkInstance",
+    key: "validateForm",
     value:
-    /**
-     * Checks if there is an existing instance associated with the provided form ID.
-     * Throws an error if an instance already exists for the form ID.
-     * If no instance exists, it adds the form ID to the instances array.
-     *
-     * @param {string} formId - The ID of the form element to check for an existing instance.
-     * @throws {Error} Throws an error if an instance already exists for the specified form ID.
-     */
-    function checkInstance(formId) {
-      // Check if an instance already exists for the form ID
-      if (vtsInstances.includes(formId)) {
-        throw new Error("An instance already exists for the specified form element: ".concat(formId));
-      }
-
-      // Add the form ID to the instances array
-      vtsInstances.push(formId);
-    }
-
     /**
      * Retrieves the form element with the provided form ID and checks its validity.
      *
@@ -73,9 +54,7 @@ var VtsFormValidator = /*#__PURE__*/function () {
      * @returns {HTMLFormElement} The valid HTML form element.
      * @throws {TypeError} Throws a TypeError if the form element is not found or is not a valid HTML form element.
      */
-  }, {
-    key: "validateForm",
-    value: function validateForm(formId) {
+    function validateForm(formId) {
       var form = document.getElementById(formId);
 
       // Check if form element exists
@@ -124,10 +103,11 @@ function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArra
 function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
 function _iterableToArrayLimit(arr, i) { var _i = null == arr ? null : "undefined" != typeof Symbol && arr[Symbol.iterator] || arr["@@iterator"]; if (null != _i) { var _s, _e, _x, _r, _arr = [], _n = !0, _d = !1; try { if (_x = (_i = _i.call(arr)).next, 0 === i) { if (Object(_i) !== _i) return; _n = !1; } else for (; !(_n = (_s = _x.call(_i)).done) && (_arr.push(_s.value), _arr.length !== i); _n = !0); } catch (err) { _d = !0, _e = err; } finally { try { if (!_n && null != _i["return"] && (_r = _i["return"](), Object(_r) !== _r)) return; } finally { if (_d) throw _e; } } return _arr; } }
 function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
+function Events_typeof(obj) { "@babel/helpers - typeof"; return Events_typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, Events_typeof(obj); }
 function _createForOfIteratorHelper(o, allowArrayLike) { var it = typeof Symbol !== "undefined" && o[Symbol.iterator] || o["@@iterator"]; if (!it) { if (Array.isArray(o) || (it = _unsupportedIterableToArray(o)) || allowArrayLike && o && typeof o.length === "number") { if (it) o = it; var i = 0; var F = function F() {}; return { s: F, n: function n() { if (i >= o.length) return { done: true }; return { done: false, value: o[i++] }; }, e: function e(_e2) { throw _e2; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var normalCompletion = true, didErr = false, err; return { s: function s() { it = it.call(o); }, n: function n() { var step = it.next(); normalCompletion = step.done; return step; }, e: function e(_e3) { didErr = true; err = _e3; }, f: function f() { try { if (!normalCompletion && it["return"] != null) it["return"](); } finally { if (didErr) throw err; } } }; }
 function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
 function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) arr2[i] = arr[i]; return arr2; }
-// @t
+// @ts-chec
 
 
 /** @type {import('../vts').VtsEventsMixin} */
@@ -170,7 +150,7 @@ var vtsEvents = {
 
     // Fields
     var shouldListen = this.listen;
-    shouldListen && _addFieldListener();
+    shouldListen && this._addFieldListener();
 
     // Match events
     this._attachMatchEvents();
@@ -188,34 +168,52 @@ var vtsEvents = {
   },
   _attachMatchEvents: function _attachMatchEvents() {
     var _this3 = this;
-    var _iterator2 = _createForOfIteratorHelper(this.rules.entries()),
-      _step2;
-    try {
-      var _loop = function _loop() {
-        var _step2$value = _slicedToArray(_step2.value, 2),
-          fieldName = _step2$value[0],
-          rule = _step2$value[1];
-        var match = rule.match;
-        var form = _this3.form;
-        var field = form.querySelector("[name=\"".concat(fieldName, "\"]"));
-        var rules = _this3._getFieldRules(fieldName);
-        var eventType = _this3._getEventType(field.type, rules === null || rules === void 0 ? void 0 : rules.eventType);
-        if (match) {
+    var ruleEntries = this.rules;
+    if (Events_typeof(ruleEntries) === 'object' && ruleEntries instanceof Map) {
+      var _iterator2 = _createForOfIteratorHelper(ruleEntries.entries()),
+        _step2;
+      try {
+        var _loop = function _loop() {
+          var _step2$value = _slicedToArray(_step2.value, 2),
+            fieldName = _step2$value[0],
+            rule = _step2$value[1];
+          var match = rule.match;
+          var dependent = rule.requires;
+          var form = _this3.form;
+          var field = VtsFormValidator.validateField(form, fieldName);
+          var rules = _this3._getFieldRules(fieldName);
+          var eventType = _this3._getEventType(field.type, rules === null || rules === void 0 ? void 0 : rules.eventType);
           var inputEvent = new Event(eventType);
-          var matchField = VtsFormValidator.validateField(form, match);
-          form.querySelector("[name=\"".concat(match, "\"]"));
-          matchField.addEventListener(eventType, function () {
-            field.dispatchEvent(inputEvent);
-          });
+          if (match) {
+            var matchField = VtsFormValidator.validateField(form, match);
+            form.querySelector("[name=\"".concat(match, "\"]"));
+            matchField.addEventListener(eventType, function () {
+              field.dispatchEvent(inputEvent);
+            });
+          }
+          if (dependent) {
+            var neededField = VtsFormValidator.validateField(form, dependent);
+            form.querySelector("[name=\"".concat(dependent, "\"]"));
+            neededField.addEventListener(eventType, function () {
+              if (neededField.value) {
+                field.required = true;
+                field.disabled = false;
+              } else {
+                field.disabled = true;
+                field.required = false;
+              }
+              field.dispatchEvent(inputEvent);
+            });
+          }
+        };
+        for (_iterator2.s(); !(_step2 = _iterator2.n()).done;) {
+          _loop();
         }
-      };
-      for (_iterator2.s(); !(_step2 = _iterator2.n()).done;) {
-        _loop();
+      } catch (err) {
+        _iterator2.e(err);
+      } finally {
+        _iterator2.f();
       }
-    } catch (err) {
-      _iterator2.e(err);
-    } finally {
-      _iterator2.f();
     }
   },
   _getEventType: function _getEventType(fieldType, ruleEventType) {
@@ -269,10 +267,23 @@ var vtsRules = {
       // overwrite pattern
       pattern = (_rules$flags = rules.flags) !== null && _rules$flags !== void 0 && _rules$flags.includes('g') ? matchValue + '\\b' : "^".concat(matchValue, "$");
     }
+    var dependent = rules.requires;
+    var neededField = null;
+    if (dependent) {
+      neededField = VtsFormValidator.validateField(this.form, dependent);
+      if (neededField.value) {
+        field.required = true;
+        field.disabled = false;
+      } else {
+        field.disabled = true;
+        field.required = false;
+      }
+      neededField = neededField.value;
+    }
 
     // set validity
     var regExp = new RegExp(pattern, rules.flags);
-    if (regExp.test(field.value)) {
+    if (!neededField || regExp.test(field.value)) {
       var _ref, _rules$message$valid, _rules$message;
       message = (_ref = (_rules$message$valid = (_rules$message = rules.message) === null || _rules$message === void 0 ? void 0 : _rules$message.valid) !== null && _rules$message$valid !== void 0 ? _rules$message$valid : this.message.valid) !== null && _ref !== void 0 ? _ref : '';
       field.setCustomValidity('');
@@ -388,39 +399,109 @@ var vtsValidation = {
 };
 /* harmony default export */ const Validation = (vtsValidation);
 ;// CONCATENATED MODULE: ./src/defaults/ajax.js
+function ajax_typeof(obj) { "@babel/helpers - typeof"; return ajax_typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, ajax_typeof(obj); }
+// @ts-check
 /** @type {import("../types/config").VtsAjaxSettings} */
 var ajaxHandler = {
   action: '',
-  request: {
-    headers: {
-      'Content-Type': 'multipart/form-data'
+  request: {},
+  beforeSend: function beforeSend(requestInit, abortController, form) {
+    /** @type {HTMLButtonElement|HTMLInputElement|null} */
+    var submitBtn = form.querySelector('[type="submit"]');
+    if (submitBtn) {
+      var text = submitBtn.textContent || '';
+      submitBtn.textContent = 'Submitting...';
+      submitBtn.disabled = true;
+      window.sessionStorage.setItem("__Vts#".concat(form.id, "_submitText"), text);
     }
   },
-  beforeSend: function beforeSend(requestInit, abortController, form) {},
-  complete: function complete(form) {},
+  complete: function complete(form) {
+    var vtsSessionId = "__Vts#".concat(form.id, "_submitText");
+    /** @type {HTMLButtonElement|HTMLInputElement|null} */
+    var submitBtn = form.querySelector('[type="submit"]');
+    var storedSubmitText = window.sessionStorage.getItem(vtsSessionId);
+    if (storedSubmitText && submitBtn) {
+      submitBtn.textContent = storedSubmitText;
+      submitBtn.disabled = false;
+      window.sessionStorage.removeItem(vtsSessionId);
+    }
+  },
   error: function error(errorData, errorResponse, form) {
-    var data = errorData ? errorData : {};
-    var title = 'message' in errorResponse ? errorResponse.message : 'Error!';
-    var html = 'stack' in errorResponse ? errorResponse.stack : 'Unknown error occurred';
-    console.table(errorResponse);
-    var text = data.title || title;
-    var ok = confirm(text + ':\n' + 'Click "ok" to view more details.');
+    var title;
+    var message;
+
+    // transform data
+    // errorResponse is null if the error did not come from the server,
+    // i.e. AbortError or an error thrown from the success callback.
+    if (errorResponse) {
+      /* 
+        errorData here contains the response from the server.
+        If the content-type is 'application/json', errorData is the parsed JavaScript object obtained from the Response.json() method.
+        If the request headers' content-type is 'text/html' or 'text/plain', errorData is a string.
+        If the request headers' content-type is neither of the above, errorData is not null, but it
+        means the response body has a content-type that is not one of the expected types.
+        The response body could still be processed using other methods such as response.blob(),
+        response.formData(), or response.arrayBuffer(), depending on the actual content type.
+        If you have specific handling for different content types, you can check and process accordingly.
+      */
+
+      // Set default title to the HTTP status text
+      title = errorResponse.statusText;
+      message = errorData;
+      if (errorData) {
+        /* 
+          Handle the errorData when it's a valid response (JavaScript object or string).
+          For example, if it's an object, you can access data like errorData.title or errorData.message.
+          If it's a string, it contains the error message or HTML content.
+        */
+        if (ajax_typeof(errorData) === 'object') {
+          title = errorData.title || title; // Use the custom title from the errorData if available
+          message = errorData.message || message; // Use the custom message from the errorData if available
+        }
+      } else {
+        /* 
+          If errorData is not null, it means the response body has a content-type that is not
+          application/json, text/html, or text/plain.
+          To read the response body, you can use response methods here like response.blob(), response.formData(),
+          or response.arrayBuffer() depending on the actual content type.
+          For example, to read the response body as a blob:
+            const errorBlob = await errorResponse.blob();
+            console.log('Error response body as Blob:', errorBlob);
+        */
+        // Perform other handling for the error content.
+      }
+    } else {
+      // Check if the error is an AbortError, which occurs when the fetch request is aborted
+      if (errorData instanceof DOMException && errorData.name === 'AbortError') {
+        // Handle the aborted fetch request here
+        title = errorData.name;
+        message = errorData.message;
+      }
+      // Check if the error is a regular Error object
+      else if (errorData instanceof Error) {
+        // Handle other types of errors here
+        title = errorData.name;
+        message = errorData.message;
+      } else {
+        // Handle cases where the error is not an Error or an AbortError
+        title = 'Oops, sorry about that. An unknown error occurred.';
+        message = errorData;
+      }
+    }
+
+    // main function here
+    var ok = confirm("".concat(title, ". Click \"OK\" to view more details."));
     if (ok) {
-      var _data$html;
       var newWindow = window.open();
-      if (newWindow) newWindow.document.body.innerHTML = (_data$html = data.html) !== null && _data$html !== void 0 ? _data$html : html;
+      if (newWindow) newWindow.document.body.innerHTML = message;
     }
   },
   success: function success(data, response, form) {
-    alert(data.title + ':\n' + data.text);
+    var isDataObj = ajax_typeof(data) === 'object';
+    var title = isDataObj ? data.title : response.statusText;
+    var message = isDataObj ? data.message : data;
+    alert(title + ':\n' + message);
     form.reset();
-
-    /** @type {NodeListOf<HTMLElement>} */
-    var fields = form.querySelectorAll('[name]:not([data-vts-ignored])');
-    fields.forEach(function (field) {
-      field.style.border = '';
-      field.remove;
-    });
     form.classList.remove('was-validated');
   }
 };
@@ -597,7 +678,7 @@ var vtsForm = {
   submit: function submit() {
     var _this = this;
     return _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee() {
-      var ajax, form, url, _vtsFormBeforeSend$ca, _vtsFormBeforeSend$ca2, response, contentType, _yield$Promise$all, _yield$Promise$all2, data, rawResponse, _this$ajax$request, errorData;
+      var ajax, form, url, _vtsFormBeforeSend$ca, _vtsFormBeforeSend$ca2, response, contentType, data, _this$ajax$request, errorData, errorResponse, _contentType;
       return _regeneratorRuntime().wrap(function _callee$(_context) {
         while (1) switch (_context.prev = _context.next) {
           case 0:
@@ -605,6 +686,7 @@ var vtsForm = {
             form = _this.form;
             _context.prev = 2;
             url = ajax.action;
+            // fetch
             _vtsFormBeforeSend$ca = vtsFormBeforeSend.call(_this, url, ajax.request);
             _vtsFormBeforeSend$ca2 = Form_slicedToArray(_vtsFormBeforeSend$ca, 2);
             url = _vtsFormBeforeSend$ca2[0];
@@ -617,61 +699,103 @@ var vtsForm = {
               _context.next = 13;
               break;
             }
-            throw new Error(response.statusText);
+            throw response;
           case 13:
-            contentType = response.headers.get('content-type');
-            if (!(contentType && contentType.includes('application/json'))) {
-              _context.next = 24;
+            // get response data
+            contentType = response.headers.get('Content-Type');
+            if (!contentType) {
+              _context.next = 31;
               break;
             }
-            _context.next = 17;
-            return Promise.all([response.json(), response]);
-          case 17:
-            _yield$Promise$all = _context.sent;
-            _yield$Promise$all2 = Form_slicedToArray(_yield$Promise$all, 2);
-            data = _yield$Promise$all2[0];
-            rawResponse = _yield$Promise$all2[1];
-            ajax.success(data, rawResponse, form);
-            _context.next = 25;
+            if (!contentType.includes('application/json')) {
+              _context.next = 21;
+              break;
+            }
+            _context.next = 18;
+            return response.json();
+          case 18:
+            data = _context.sent;
+            _context.next = 28;
             break;
+          case 21:
+            if (!(contentType.includes('text/html') || contentType.includes('text/plain'))) {
+              _context.next = 27;
+              break;
+            }
+            _context.next = 24;
+            return response.text();
           case 24:
-            throw new TypeError('Response is not in JSON format');
-          case 25:
-            _context.next = 44;
+            data = _context.sent;
+            _context.next = 28;
             break;
           case 27:
-            _context.prev = 27;
+            data = null;
+          case 28:
+            // call success callback function
+            ajax.success(data, response, form);
+            _context.next = 32;
+            break;
+          case 31:
+            throw new Error('Content-Type header not found in the response');
+          case 32:
+            _context.next = 57;
+            break;
+          case 34:
+            _context.prev = 34;
             _context.t0 = _context["catch"](2);
+            errorData = _context.t0;
+            errorResponse = null; // Reinitialize abort controller if aborted
+            if ((_this$ajax$request = _this.ajax.request) !== null && _this$ajax$request !== void 0 && (_this$ajax$request = _this$ajax$request.signal) !== null && _this$ajax$request !== void 0 && _this$ajax$request.aborted) {
+              _this.ajax.abortController = new AbortController();
+            }
+
+            // Check if the error is an instance of Response
             if (!(_context.t0 instanceof Response)) {
-              _context.next = 41;
+              _context.next = 56;
               break;
             }
-            _context.prev = 30;
-            _context.next = 33;
+            errorResponse = _context.t0;
+            _contentType = _context.t0.headers.get('Content-Type'); // Check the content type of the error response
+            if (!_contentType) {
+              _context.next = 56;
+              break;
+            }
+            if (!_contentType.includes('application/json')) {
+              _context.next = 49;
+              break;
+            }
+            _context.next = 46;
             return _context.t0.json();
-          case 33:
+          case 46:
             errorData = _context.sent;
-            _context.next = 39;
+            _context.next = 56;
             break;
-          case 36:
-            _context.prev = 36;
-            _context.t1 = _context["catch"](30);
-            errorData = _context.t1;
-          case 39:
-            _context.next = 42;
+          case 49:
+            if (!(_contentType.includes('text/html') || _contentType.includes('text/plain'))) {
+              _context.next = 55;
+              break;
+            }
+            _context.next = 52;
+            return _context.t0.text();
+          case 52:
+            errorData = _context.sent;
+            _context.next = 56;
             break;
-          case 41:
+          case 55:
+            // Content type is not JSON, HTML, or plain text
+            // Set errorData to null for handling other types of response
             errorData = null;
-          case 42:
-            ajax.error(errorData, _context.t0, form);
-            if ((_this$ajax$request = _this.ajax.request) !== null && _this$ajax$request !== void 0 && (_this$ajax$request = _this$ajax$request.signal) !== null && _this$ajax$request !== void 0 && _this$ajax$request.aborted) _this.ajax.abortController = new AbortController();
-          case 44:
+          case 56:
+            // Call the error callback function with the appropriate data
+            ajax.error(errorData, errorResponse, form);
+          case 57:
+            // complete
             ajax.complete(form);
-          case 45:
+          case 58:
           case "end":
             return _context.stop();
         }
-      }, _callee, null, [[2, 27], [30, 36]]);
+      }, _callee, null, [[2, 34]]);
     }))();
   }
 };
@@ -700,8 +824,6 @@ function vtsFormBeforeSend(url, request) {
   return [url, request];
 }
 /* harmony default export */ const Form = (vtsForm);
-// EXTERNAL MODULE: ./node_modules/whatwg-fetch/fetch.js
-var whatwg_fetch_fetch = __webpack_require__(147);
 ;// CONCATENATED MODULE: ./src/vts.js
 function vts_typeof(obj) { "@babel/helpers - typeof"; return vts_typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, vts_typeof(obj); }
 function vts_classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -712,7 +834,10 @@ function vts_toPrimitive(input, hint) { if (vts_typeof(input) !== "object" || in
 function _classPrivateMethodInitSpec(obj, privateSet) { _checkPrivateRedeclaration(obj, privateSet); privateSet.add(obj); }
 function _checkPrivateRedeclaration(obj, privateCollection) { if (privateCollection.has(obj)) { throw new TypeError("Cannot initialize the same private elements twice on an object"); } }
 function _classPrivateMethodGet(receiver, privateSet, fn) { if (!privateSet.has(receiver)) { throw new TypeError("attempted to get private field on non-instance"); } return fn; }
-// @ts-check
+function _classStaticPrivateFieldSpecGet(receiver, classConstructor, descriptor) { _classCheckPrivateStaticAccess(receiver, classConstructor); _classCheckPrivateStaticFieldDescriptor(descriptor, "get"); return _classApplyDescriptorGet(receiver, descriptor); }
+function _classCheckPrivateStaticFieldDescriptor(descriptor, action) { if (descriptor === undefined) { throw new TypeError("attempted to " + action + " private static field before its declaration"); } }
+function _classCheckPrivateStaticAccess(receiver, classConstructor) { if (receiver !== classConstructor) { throw new TypeError("Private static access of wrong provenance"); } }
+function _classApplyDescriptorGet(receiver, descriptor) { if (descriptor.get) { return descriptor.get.call(receiver); } return descriptor.value; }
 
 
 
@@ -723,16 +848,18 @@ function _classPrivateMethodGet(receiver, privateSet, fn) { if (!privateSet.has(
 
 
 
-/// <reference path="./Vts.d.ts" />
+/// <reference path="./vts.d.ts" />
 var _init = /*#__PURE__*/new WeakSet();
 var Vts = /*#__PURE__*/function () {
   function Vts(formId) {
     var _config = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
     vts_classCallCheck(this, Vts);
     _classPrivateMethodInitSpec(this, _init);
-    var _form = VtsFormValidator.validateForm(formId);
+    // check instance
+    var hasInstance = _classStaticPrivateFieldSpecGet(Vts, Vts, _instances).get(formId);
+    if (hasInstance) return hasInstance;
+    var _form = this.form = VtsFormValidator.validateForm(formId);
     this.fields = _form.querySelectorAll('[name]:not([data-vts-ignored])');
-    this.form = _form;
     _classPrivateMethodGet(this, _init, _init2).call(this, _config);
   }
   vts_createClass(Vts, null, [{
@@ -748,12 +875,14 @@ function _init2(config) {
   // mixin
   Object.assign(this, Form, setVtsConfig(form, config));
   Object.assign(Vts.prototype, Events, Rules, Validation);
-
-  // check instance
-  VtsFormValidator.checkInstance(form.id);
   this._convertRulesToMap();
   this._addEventListeners();
+  _classStaticPrivateFieldSpecGet(Vts, Vts, _instances).set(form.getAttribute('id'), this);
 }
+var _instances = {
+  writable: true,
+  value: new Map()
+};
 
 
 /***/ }),

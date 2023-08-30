@@ -39,7 +39,7 @@ Include the Vts library in your HTML file using a CDN link:
 If you are using a module bundler like Webpack or Rollup, you can install Vts from npm:
 
 ```bash
-npm install vts.js
+npm i vts.js
 ```
 
 Import the library into your JavaScript file:
