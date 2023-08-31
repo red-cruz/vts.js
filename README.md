@@ -142,7 +142,17 @@ Vts provides several configuration options to customize its behavior. Here are t
     complete: (form) => {};
     ```
 
-- `error`: Function - called when an error occurs during the Ajax request. It receives the response, parsed into a JavaScript **_object_**; the raw error **response** object; and the HTML **_form_** element that was submitted. This function can handle error cases and provide appropriate feedback to the user.
+- `error`: Function - called when an error occurs during the Ajax request. It receives the following parameters:
+
+  - `errorData`:
+    - An `object` if the Content-Type is **application/json**.
+    - A `string` if the Content-Type is **text/html** or **text/plain**.
+    - `null` if the Content-Type is neither of the above.
+    - Can also be any `Error` thrown in the `beforeSend()` or `success()` function.
+  - `errorResponse`: The raw error `response` object. Can also be `null` if an error was thrown in the `beforeSend()` or `success()` function.
+  - `form`: The HTML `form element` that was submitted.
+
+  > **NOTE** If an error is thrown in the `beforeSend()` or `success()` function, the `error()` function will catch it and will pass the error to the **errorData** parameter. This also means that when the user aborted the request, the `error()` function will be called.
 
   - Default:
 
