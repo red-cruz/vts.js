@@ -31,7 +31,7 @@ const vtsEvents = {
       this.form.classList.add(formClass);
 
       if (this.isFormValid() && !this.halt) {
-        this.submit();
+        this.submit().catch(() => {});
       }
     });
 
