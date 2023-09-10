@@ -1,5 +1,3 @@
-// @ts-check
-
 /**
  * Represents the configuration options for Vts (Validate Then Submit).
  */
@@ -7,12 +5,12 @@ interface VtsConfig {
   /**
    * The Ajax settings for form submission.
    */
-  ajax?: Partial<VtsAjaxSettings>;
+  ajax?: VtsAjaxSettings;
 
   /**
    * Contains functions for handling field validation.
    */
-  handlers?: Partial<VtsHandlers>;
+  handlers?: VtsHandlers;
 
   /**
    * Determines whether to halt the form submission if there are invalid fields.
@@ -73,3 +71,5 @@ interface VtsConfig {
     valid?: string;
   };
 }
+
+export default VtsConfig;
