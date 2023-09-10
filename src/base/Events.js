@@ -16,16 +16,13 @@ const vtsEvents = {
       const wasValidated = form.classList.contains(formClass);
       const shouldListen = this.listen;
       if (!shouldListen && !wasValidated) {
-        // @ts-ignor
         this._addFieldListener();
       }
 
       // validate each field
       for (const field of this.fields) {
-        // @ts-ignor
         this._checkFieldValidity(field);
       }
-      // @ts-ignor
       this._reportValidity();
 
       this.form.classList.add(formClass);
@@ -37,11 +34,9 @@ const vtsEvents = {
 
     // Fields
     const shouldListen = this.listen;
-    // @ts-ignor
     shouldListen && this._addFieldListener();
 
     // Match events
-    // @ts-ignor
     this._attachMatchEvents();
   },
   _addFieldListener() {
