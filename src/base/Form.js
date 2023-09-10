@@ -1,14 +1,14 @@
 // @ts-check
+import getResponseData from '../utils/getResponseData';
 /** @type {import('../types/base/form').default} */
 const vtsForm = {
   isFormValid() {
     return this.form.checkValidity();
   },
   async submit() {
+    let promiseState;
     const ajax = this.ajax;
     const form = this.form;
-    let promiseState;
-
     try {
       let url = ajax.action;
       [url, ajax.request] = vtsFormBeforeSend.call(this, url, ajax.request);
@@ -29,33 +29,15 @@ const vtsForm = {
       let errorResponse = null;
 
       // Reinitialize abort controller if aborted
-      if (this.ajax.request?.signal?.aborted) {
+      if (this.ajax.request.signal?.aborted) {
         // @ts-ignore
         this.ajax.abortController = new AbortController();
       }
 
       // Check if the error is an instance of Response
       if (error instanceof Response) {
+        errorData = await getResponseData(error);
         errorResponse = error;
-        const contentType = error.headers.get('Content-Type');
-
-        // Check the content type of the error response
-        if (contentType) {
-          if (contentType.includes('application/json')) {
-            // Read the error response body as JSON
-            errorData = await error.json();
-          } else if (
-            contentType.includes('text/html') ||
-            contentType.includes('text/plain')
-          ) {
-            // Read the error response body as text
-            errorData = await error.text();
-          } else {
-            // Content type is not JSON, HTML, or plain text
-            // Set errorData to null for handling other types of response
-            errorData = null;
-          }
-        }
       }
 
       promiseState = Promise.reject({ errorData, errorResponse, form });
@@ -99,36 +81,6 @@ function vtsFormBeforeSend(url, request) {
     request.body = formData;
   }
   return [url, request];
-}
-/**
- * Gets the data from the response.
- *
- * @param {Response} response The response object.
- * @returns {Promise<any>} A promise that resolves with the data from the response or rejects with an error.
- * @async
- */
-async function getResponseData(response) {
-  let data;
-  try {
-    const contentType = response.headers.get('Content-Type');
-    if (contentType) {
-      if (contentType.includes('application/json')) {
-        data = await response.json();
-      } else if (
-        contentType.includes('text/html') ||
-        contentType.includes('text/plain')
-      ) {
-        data = await response.text();
-      } else {
-        data = null;
-      }
-    } else {
-      throw new Error('Content-Type header not found in the response');
-    }
-    return Promise.resolve(data);
-  } catch (error) {
-    return Promise.reject(error);
-  }
 }
 
 export default vtsForm;
