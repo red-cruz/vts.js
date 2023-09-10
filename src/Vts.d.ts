@@ -95,6 +95,18 @@ declare class Vts {
    * *  If *neither* of the above, the data is `null`.
    */
   static getResponseData(response: Response): Promise<any>;
+
+  /**
+   * Formats an error response from the server.
+   *
+   * @param data The parsed data from the server.
+   * @param response The response from the server.
+   * @returns {Object} An object with the title and message of the error.
+   */
+  static formatResponse(
+    data: any,
+    response: Response | null
+  ): { title: string; message: string };
 }
 
 export default Vts;

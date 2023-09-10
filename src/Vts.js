@@ -10,6 +10,7 @@ import setVtsConfig from './utils/setVtsConfig.js';
 import vtsDefaults from './defaults/index.js';
 import deepMerge from './utils/deepMerge.js';
 import getResponseDataUtil from './utils/getResponseData.js';
+import formatResponseUtil from './utils/formatResponse.js';
 
 /// <reference path="./Vts.d.ts" />
 export default class Vts {
@@ -90,11 +91,19 @@ export default class Vts {
   }
 
   /**
-   *
    * @param {Response} response
    * @returns {Promise<any>}
    */
   static async getResponseData(response) {
     return getResponseDataUtil(response);
+  }
+
+  /**
+   * @param {*} data
+   * @param {Response|null} response
+   * @returns {Object}
+   */
+  static formatResponse(data, response) {
+    return formatResponseUtil(data, response);
   }
 }
