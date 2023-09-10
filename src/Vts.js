@@ -1,4 +1,5 @@
 // @ts-check
+'use strict';
 import 'whatwg-fetch';
 import vtsForm from './base/Form.js';
 import VtsFormValidator from './utils/VtsFormValidator.js';
@@ -8,6 +9,7 @@ import vtsValidation from './base/Validation.js';
 import setVtsConfig from './utils/setVtsConfig.js';
 import vtsDefaults from './defaults/index.js';
 import deepMerge from './utils/deepMerge.js';
+import getResponseDataUtil from './utils/getResponseData.js';
 
 /// <reference path="./Vts.d.ts" />
 export default class Vts {
@@ -84,5 +86,23 @@ export default class Vts {
    */
   static removeInstance(formId) {
     return Vts.#instances.delete(formId);
+  }
+
+  /**
+   * Gets the data from the response.
+   *
+   * This is a static method that asynchronously gets the data from the response.
+   *
+   * @param {Response} response The response object.
+   * @returns {Promise<any>} A promise that resolves with the data from the response or rejects with an error.
+   *
+   * The data is parsed as based on *Content-Type*:
+   *
+   * * `application/json`: the data is parsed as an object using `response.json()`.
+   * *  `text/html` or `text/plain`: the data is parsed as a string using `response.text()`.
+   * *  If *neither* of the above, the data is `null`.
+   */
+  static async getResponseData(response) {
+    return getResponseDataUtil(response);
   }
 }
