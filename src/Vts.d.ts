@@ -14,11 +14,11 @@ import { VtsRuleMessage, VtsRules } from './types/config/rules';
 declare class Vts {
   /**
    * Creates an instance of Vts.
-   * @param formId form ID
+   * @param form form
    * @param config vts configurations
    *
    */
-  constructor(formId: string, config?: VtsConfig);
+  constructor(form: string | HTMLFormElement, config?: VtsConfig);
   ajax: VtsAjaxSettings;
   class: {
     form: string;

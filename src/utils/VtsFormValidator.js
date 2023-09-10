@@ -8,29 +8,23 @@ export default class VtsFormValidator {
   /**
    * Retrieves the form element with the provided form ID and checks its validity.
    *
-   * @param {string} formId - The ID of the form element to retrieve and check.
+   * @param {string|HTMLElement} form - The ID of the form or the form element to retrieve and check.
    * @returns {HTMLFormElement} The valid HTML form element.
    * @throws {TypeError} Throws a TypeError if the form element is not found or is not a valid HTML form element.
    */
-  static validateForm(formId) {
-    const form = document.getElementById(formId);
+  static validateForm(form) {
+    let _form;
+    if (typeof form === 'string') {
+      _form = document.getElementById(form);
 
-    // Check if form element exists
-    if (!form) {
-      throw new TypeError(
-        `The form element with ID "${formId}" was not found.`
-      );
-    }
-
-    // Check if form element is a valid HTML form element
-    if (!(form instanceof HTMLFormElement)) {
-      throw new TypeError(
-        `The element with ID "${formId}" is not a valid HTML form element.
-        Please ensure you are passing the ID of a valid form element.`
-      );
-    }
-
-    return form;
+      // Check if form element exists
+      if (!_form) {
+        throw new TypeError(
+          `The form element with ID "${form}" was not found.`
+        );
+      }
+    } else _form = form;
+    return checkHTMLFormInstance(_form);
   }
 
   /**
@@ -68,4 +62,22 @@ export default class VtsFormValidator {
 
     return field;
   }
+}
+
+/**
+ * Check if form element is a valid HTML form element
+ *
+ * @param {HTMLElement} element
+ * @returns {HTMLFormElement}
+ * @throws {TypeError} Throws a TypeError if the form element is not a valid HTML form element.
+ */
+function checkHTMLFormInstance(element) {
+  if (!(element instanceof HTMLFormElement)) {
+    const formId = element?.getAttribute('id');
+    const msg =
+      (formId ? `with ID "${formId}"` : `"${element?.tagName}"`) || '';
+
+    throw new TypeError(`The element ${msg} is not a valid HTML form element.`);
+  }
+  return element;
 }

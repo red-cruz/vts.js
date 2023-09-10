@@ -14,31 +14,32 @@ import getResponseDataUtil from './utils/getResponseData.js';
 /// <reference path="./Vts.d.ts" />
 export default class Vts {
   /**
-   * @param {string} formId
+   * @param {string | HTMLFormElement} form
    * @param {import('./types/config/index.js').default} [config={}]
    */
-  constructor(formId, config = {}) {
-    const form = (this.form = VtsFormValidator.validateForm(formId));
-    this.fields = form.querySelectorAll('[name]:not([data-vts-ignored])');
+  constructor(form, config = {}) {
+    const elem = (this.form = VtsFormValidator.validateForm(form));
+    this.fields = elem.querySelectorAll('[name]:not([data-vts-ignored])');
     // @ts-ignore
-    this.#init(formId, config);
+    this.#init(elem, config);
   }
 
   /**
-   * @param {string} formId
+   * @param {HTMLFormElement} form
    * @param {import('./types/config/index.js').default} config
    * @this {import('./types/base').default} Vts
    * @memberof Vts
    */
-  #init(formId, config) {
-    const form = this.form;
+  #init(form, config) {
     // mixin
     Object.assign(this, vtsForm, setVtsConfig(form, config));
     Object.assign(Vts.prototype, vtsEvents, vtsRules, vtsValidation);
     this._convertRulesToMap();
     this._addEventListeners();
+    const formId = form.getAttribute('id');
+    const id = formId || 'Vts_form_' + Vts.#instances.size;
     // @ts-ignore
-    Vts.#instances.set(formId, this);
+    Vts.#instances.set(id, this);
   }
 
   /**
