@@ -1,13 +1,18 @@
 /**
- * Represents the Ajax settings for form submission in Vts (Validate Then Submit).
+ * Represents the Ajax settings for form submission in Vts.js
  */
 interface VtsAjaxSettings {
-  abortController?: AbortController;
+  /**
+   * The `AbortController` associated with the request.
+   *
+   * This property is read-only.
+   */
+  readonly abortController?: AbortController;
 
   /**
    * The URL action for the form submission.
    *
-   * **default**: The value of the form's `action` attribute
+   * The default value is the value of the form's `action` attribute.
    */
   action: string;
 
