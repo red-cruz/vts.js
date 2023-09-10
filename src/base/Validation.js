@@ -1,6 +1,7 @@
+// @ts-check
 import getFieldLabel from '../utils/getFieldLabel';
 
-/** @type {import('../types/validation').VtsValidation} */
+/** @type {import('../types/base/validation').default} */
 const vtsValidation = {
   _data: {
     validFields: new Map(),
@@ -27,18 +28,23 @@ const vtsValidation = {
     handlers.invalid(this.class.invalid, invalidData, form);
   },
   _setValidityData(field, data) {
-    const field_name = field.getAttribute('name');
+    const fieldName = field.getAttribute('name');
+    if (!fieldName) return;
     if (field.validity.valid) {
-      this._data.invalidFields.delete(field_name);
-      this._data.validFields.set(field_name, data);
+      this._data.invalidFields.delete(fieldName);
+      this._data.validFields.set(fieldName, data);
     } else {
-      this._data.validFields.delete(field_name);
-      this._data.invalidFields.set(field_name, data);
+      this._data.validFields.delete(fieldName);
+      this._data.invalidFields.set(fieldName, data);
     }
   },
   _validate(field, label) {
     let message = field.validationMessage;
-    const rules = this._getFieldRules(field.getAttribute('name'));
+    const fieldName = field.getAttribute('name');
+
+    if (!fieldName) return message;
+
+    const rules = this._getFieldRules(fieldName);
     const validity = field.validity;
 
     for (const key in validity) {

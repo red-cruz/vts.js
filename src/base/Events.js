@@ -1,7 +1,7 @@
-// @ts-chec
+// @ts-check
 import VtsFormValidator from '../utils/VtsFormValidator';
 
-/** @type {import('../vts').VtsEventsMixin} */
+/** @type {import('../types/base/events').default} */
 const vtsEvents = {
   _addEventListeners() {
     // Form
@@ -16,14 +16,16 @@ const vtsEvents = {
       const wasValidated = form.classList.contains(formClass);
       const shouldListen = this.listen;
       if (!shouldListen && !wasValidated) {
+        // @ts-ignor
         this._addFieldListener();
       }
 
       // validate each field
       for (const field of this.fields) {
+        // @ts-ignor
         this._checkFieldValidity(field);
       }
-
+      // @ts-ignor
       this._reportValidity();
 
       this.form.classList.add(formClass);
@@ -35,20 +37,24 @@ const vtsEvents = {
 
     // Fields
     const shouldListen = this.listen;
+    // @ts-ignor
     shouldListen && this._addFieldListener();
 
     // Match events
+    // @ts-ignor
     this._attachMatchEvents();
   },
   _addFieldListener() {
-    this.fields.forEach((field) => {
-      const rules = this._getFieldRules(field.getAttribute('name'));
-      const eventType = this._getEventType(field.type, rules?.eventType);
-      field.addEventListener(eventType, () => {
-        this._checkFieldValidity(field);
-        this._reportValidity();
+    if (this.fields)
+      this.fields.forEach((field) => {
+        const fieldName = field.getAttribute('name');
+        const rules = this._getFieldRules(fieldName || '');
+        const eventType = this._getEventType(field.type, rules?.eventType);
+        field.addEventListener(eventType, () => {
+          this._checkFieldValidity(field);
+          this._reportValidity();
+        });
       });
-    });
   },
   _attachMatchEvents() {
     const ruleEntries = this.rules;

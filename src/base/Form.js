@@ -4,7 +4,6 @@ const vtsForm = {
   isFormValid() {
     return this.form.checkValidity();
   },
-
   async submit() {
     const ajax = this.ajax;
     const form = this.form;

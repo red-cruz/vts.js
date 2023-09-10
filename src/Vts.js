@@ -30,8 +30,9 @@ export default class Vts {
     // mixin
     Object.assign(this, vtsForm, setVtsConfig(form, config));
     Object.assign(Vts.prototype, vtsEvents, vtsRules, vtsValidation);
-
+    // @ts-ignore
     this._convertRulesToMap();
+    // @ts-ignore
     this._addEventListeners();
 
     // @ts-ignore

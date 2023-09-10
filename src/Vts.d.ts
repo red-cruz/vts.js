@@ -29,6 +29,7 @@ declare class Vts {
     HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
   >;
   form: HTMLFormElement;
+  halt: boolean;
   handlers: VtsHandlers;
   /**
    * Checks the validity of the form.

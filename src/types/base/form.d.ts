@@ -1,11 +1,11 @@
-import type Vts from '../../Vts';
+import type { VtsBase } from '.';
 
-export default interface VtsForm {
+export default interface VtsFormBase {
   /**
    * Checks the validity of the form.
    * @returns {Boolean} True if the form is valid, false otherwise.
    */
-  isFormValid(this: Vts): boolean;
+  isFormValid(this: VtsBase): boolean;
 
   /**
    * @description Submits the form via fetch API.
@@ -13,6 +13,6 @@ export default interface VtsForm {
    * @async
    */
   submit(
-    this: Vts
+    this: VtsBase
   ): Promise<{ data: any; response: Response; form: HTMLFormElement }>;
 }

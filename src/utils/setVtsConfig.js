@@ -10,7 +10,7 @@ import deepMerge from './deepMerge';
  *
  * @export
  * @param {HTMLFormElement} form - The HTML form element.
- * @param {import('../types/base/config').default} config - The partial configuration options.
+ * @param {import('../types/config').default} config - The partial configuration options.
  * @returns {import('../types/base/config').default} - The merged configuration options.
  */
 export default function setVtsConfig(form, config) {

@@ -2,23 +2,23 @@
 import VtsFValidator from '../utils/VtsFormValidator';
 import getFieldLabel from '../utils/getFieldLabel';
 
-/** @type {import('../Vts').VtsRulesMixin} */
+/** @type {import('../types/base/rules').default} */
 const vtsRules = {
   _applyRules(rules, field, label) {
     let message = this.message.invalid || 'Invalid field';
-    let pattern = 'pattern' in rules ? rules.pattern : '';
-    const isMatch = 'matches' in rules && !('pattern' in rules);
-    /** @type {*} */
+    let pattern = ('pattern' in rules ? rules.pattern : '') || '';
+    const matches =
+      'matches' in rules && !('pattern' in rules) ? rules.matches : false;
+
     let matchingField;
     let matchValue = '';
 
     // overwrite pattern
     pattern = rules.flags?.includes('g') ? pattern + '\\b' : pattern;
 
-    if (isMatch) {
-      console.log('ismatchh');
+    if (matches) {
       // get matching field target
-      matchingField = VtsFValidator.validateField(this.form, rules.matches);
+      matchingField = VtsFValidator.validateField(this.form, matches);
       // get value of target field
       matchValue = matchingField.value;
       // overwrite pattern
@@ -52,7 +52,7 @@ const vtsRules = {
     }
 
     // replace message placeholders for 'matches'
-    if (isMatch) {
+    if (matches && matchingField) {
       message = message
         ?.replace(/\${targetValue}/g, matchValue)
         .replace(/\${targetLabel}/g, getFieldLabel(matchingField, this.form));
@@ -91,7 +91,7 @@ export default vtsRules;
  * Displays a warning message if both "pattern" and "matches" properties exist in the field rule.
  *
  * @private
- * @param {import('../types/rules').VtsRules[string]} rules - The validation rules for the field.
+ * @param {import('../types/config/rules').VtsRules[string]} rules - The validation rules for the field.
  * @param {string} label - The label of the field.
  */
 function warnMultiRule(rules, label) {
