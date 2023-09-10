@@ -6,7 +6,7 @@ type VtsRules = {
     /**
      * the type of event that will be applied to the field
      */
-    eventType?: string;
+    eventType?: VtsEventTypes;
 
     /**
      * The flags that will be used when creating the RegExp object.
@@ -55,6 +55,15 @@ type VtsValidityState =
   | 'typeMismatch'
   | 'valueMissing'
   | 'valid';
+
+type VtsEventTypes =
+  | 'input'
+  | 'change'
+  | 'keydown'
+  | 'keyup'
+  | 'submit'
+  | 'mouseover'
+  | 'mouseout';
 
 /**
  * Represents the configuration for the validation rule messages in Vts (Validate Then Submit).

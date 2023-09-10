@@ -7,11 +7,15 @@ const vtsRules = {
   _applyRules(rules, field, label) {
     let message = this.message.invalid || 'Invalid field';
     let pattern = 'pattern' in rules ? rules.pattern : '';
-    const isMatch = 'matches' in rules && !pattern;
+    const isMatch = 'matches' in rules && !('pattern' in rules);
     /** @type {*} */
     let matchingField;
     let matchValue = '';
+
+    // overwrite pattern
+    pattern = rules.flags?.includes('g') ? pattern + '\\b' : pattern;
     if (isMatch) {
+      console.log('ismatchh');
       // get matching field target
       matchingField = VtsFValidator.validateField(this.form, rules.matches);
       // get value of target field
@@ -38,7 +42,7 @@ const vtsRules = {
 
     // set validity
     const regExp = new RegExp(pattern, rules.flags);
-    if (!neededField || regExp.test(field.value)) {
+    if (neededField || regExp.test(field.value)) {
       message = rules.message?.valid ?? this.message.valid ?? '';
       field.setCustomValidity('');
     } else {
@@ -47,7 +51,7 @@ const vtsRules = {
     }
 
     // replace message placeholders for 'matches'
-    if ('matches' in rules) {
+    if (isMatch) {
       message = message
         ?.replace(/\${targetValue}/g, matchValue)
         .replace(/\${targetLabel}/g, getFieldLabel(matchingField, this.form));

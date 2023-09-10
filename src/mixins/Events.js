@@ -12,7 +12,7 @@ const vtsEvents = {
         e.stopPropagation();
       }
 
-      const formClass = this.class.form;
+      const formClass = this.class.form || 'was-validated';
       const wasValidated = form.classList.contains(formClass);
       const shouldListen = this.listen;
       if (!shouldListen && !wasValidated) {
@@ -42,7 +42,7 @@ const vtsEvents = {
   },
   _addFieldListener() {
     this.fields.forEach((field) => {
-      const rules = this._getFieldRules(field.name);
+      const rules = this._getFieldRules(field.getAttribute('name'));
       const eventType = this._getEventType(field.type, rules?.eventType);
       field.addEventListener(eventType, () => {
         this._checkFieldValidity(field);
@@ -54,7 +54,7 @@ const vtsEvents = {
     const ruleEntries = this.rules;
     if (typeof ruleEntries === 'object' && ruleEntries instanceof Map)
       for (const [fieldName, rule] of ruleEntries.entries()) {
-        const match = rule.match;
+        const match = rule.matches;
         const dependent = rule.requires;
         const form = this.form;
         const field = VtsFormValidator.validateField(form, fieldName);
