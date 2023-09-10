@@ -56,7 +56,7 @@ declare class Vts {
    * @param config The configuration options.
    * @returns The instance of Vts for the specified form ID.
    */
-  static getOrCreateInstance(formId: string, config?: Partial<VtsConfig>): Vts;
+  static getOrCreateInstance(formId: string, config?: VtsConfig): Vts;
 
   /**
    * Removes the instance of Vts (Validate Then Submit) for the specified form ID.

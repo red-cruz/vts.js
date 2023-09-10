@@ -1,32 +1,32 @@
-import type VtsAjaxSettings from './ajaxSettings';
-import VtsHandlers from './handlers';
-import { VtsRuleMessage, VtsRules } from './rules';
+import type VtsAjaxSettings from '../config/ajaxSettings';
+import VtsHandlers from '../config/handlers';
+import { VtsRuleMessage, VtsRules } from '../config/rules';
 
 /**
  * Represents the configuration options for Vts (Validate Then Submit).
  */
-export default interface VtsConfig {
+export default interface VtsBaseConfig {
   /**
    * The Ajax settings for form submission.
    */
-  ajax?: Partial<VtsAjaxSettings>;
+  ajax: VtsAjaxSettings;
 
   /**
    * Contains functions for handling field validation.
    */
-  handlers?: Partial<VtsHandlers>;
+  handlers: VtsHandlers;
 
   /**
    * Determines whether to halt the form submission if there are invalid fields.
    * @default false
    */
-  halt?: boolean;
+  halt: boolean;
 
   /**
    * Determines whether to add event listeners immediately on Vts instantiation.
    * @default false
    */
-  listen?: boolean;
+  listen: boolean;
 
   /**
    * The validation rules for the form fields.
@@ -41,7 +41,7 @@ export default interface VtsConfig {
    *    }
    * }
    */
-  rules?: VtsRules;
+  rules: VtsRules;
 
   /**
    * The custom validation message configuration.
@@ -51,36 +51,36 @@ export default interface VtsConfig {
    *  valid: '',
    * }
    */
-  message?: VtsRuleMessage;
+  message: VtsRuleMessage;
 
   /**
    * Determines whether to stop event propagation on form submission.
    * @default true
    */
-  stopPropagation?: boolean;
+  stopPropagation: boolean;
 
   /**
    * The CSS classes to be applied.
    */
-  class?: {
+  class: {
     /**
      * The CSS class to apply to the form when it has been validated.
      * @default 'was-validated'
      */
-    form?: string;
+    form: string;
 
     /**
      * The CSS class to apply to the created div sibling of invalid field.
      * Disregard if default handlers will be overwritten.
      * @default 'invalid-feedback'
      */
-    invalid?: string;
+    invalid: string;
 
     /**
      * The CSS class to apply to the created div sibling of valid field.
      * Disregard if default handlers will be overwritten.
      * @default 'valid-feedback'
      */
-    valid?: string;
+    valid: string;
   };
 }

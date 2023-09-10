@@ -14,7 +14,7 @@ export default interface VtsHandlers {
    * @param form The HTML form element.
    *
    */
-  valid?: (
+  valid: (
     validClass: string,
     validFieldsData: VtsValidationData<string>,
     form: HTMLFormElement
@@ -34,7 +34,7 @@ export default interface VtsHandlers {
    * ]
    * @param form The HTML form element.
    */
-  invalid?: (
+  invalid: (
     invalidClass: string,
     invalidFieldsData: VtsValidationData<string>,
     form: HTMLFormElement

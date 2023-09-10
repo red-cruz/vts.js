@@ -1,7 +1,7 @@
 // @ts-chec
 import VtsFormValidator from '../utils/VtsFormValidator';
 
-/** @type {import('../Vts').VtsEventsMixin} */
+/** @type {import('../vts').VtsEventsMixin} */
 const vtsEvents = {
   _addEventListeners() {
     // Form

@@ -14,13 +14,13 @@ export default interface VtsAjaxSettings {
    *
    * The default value is the value of the form's `action` attribute.
    */
-  action?: string;
+  action: string;
 
   /**
    * The request options for the Ajax call.
    * @default {}
    */
-  request?: RequestInit;
+  request: RequestInit;
 
   /**
    * Called before the Ajax request is sent.
@@ -31,7 +31,7 @@ export default interface VtsAjaxSettings {
    *
    * **IMPORTANT:** If `requestInit` is modified, you need to `return requestInit` for the modifications to take effect.
    */
-  beforeSend?: (
+  beforeSend: (
     requestInit: RequestInit,
     abortController: AbortController,
     form: HTMLFormElement
@@ -42,7 +42,7 @@ export default interface VtsAjaxSettings {
    *
    * @param form The HTML form element that was submitted.
    */
-  complete?: (form: HTMLFormElement) => void;
+  complete: (form: HTMLFormElement) => void;
 
   /**
    * Called when an error occurs during the Ajax request.
@@ -51,7 +51,7 @@ export default interface VtsAjaxSettings {
    * @param response The Response object representing the error response, if applicable. Can be null if the error did not come from the server.
    * @param form The HTML form element that was submitted.
    */
-  error?: (
+  error: (
     errorData: any,
     response: Response | null,
     form: HTMLFormElement
@@ -64,7 +64,7 @@ export default interface VtsAjaxSettings {
    * @param response The Response object representing the successful response.
    * @param form The HTML form element that was submitted.
    */
-  success?: (
+  success: (
     data: any,
     response: Response,
     form: HTMLFormElement

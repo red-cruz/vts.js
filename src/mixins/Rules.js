@@ -7,13 +7,13 @@ const vtsRules = {
   _applyRules(rules, field, label) {
     let message = this.message.invalid || 'Invalid field';
     let pattern = 'pattern' in rules ? rules.pattern : '';
-    const isMatch = 'match' in rules && !pattern;
+    const isMatch = 'matches' in rules && !pattern;
     /** @type {*} */
     let matchingField;
     let matchValue = '';
     if (isMatch) {
       // get matching field target
-      matchingField = VtsFValidator.validateField(this.form, rules.match);
+      matchingField = VtsFValidator.validateField(this.form, rules.matches);
       // get value of target field
       matchValue = matchingField.value;
       // overwrite pattern
@@ -46,8 +46,8 @@ const vtsRules = {
       field.setCustomValidity(message);
     }
 
-    // replace message placeholders for 'match'
-    if ('match' in rules) {
+    // replace message placeholders for 'matches'
+    if ('matches' in rules) {
       message = message
         ?.replace(/\${targetValue}/g, matchValue)
         .replace(/\${targetLabel}/g, getFieldLabel(matchingField, this.form));
@@ -83,17 +83,17 @@ const vtsRules = {
 
 export default vtsRules;
 /**
- * Displays a warning message if both "pattern" and "match" properties exist in the field rule.
+ * Displays a warning message if both "pattern" and "matches" properties exist in the field rule.
  *
  * @private
  * @param {import('../types/rules').VtsRules[string]} rules - The validation rules for the field.
  * @param {string} label - The label of the field.
  */
 function warnMultiRule(rules, label) {
-  if ('pattern' in rules && 'match' in rules) {
+  if ('pattern' in rules && 'matches' in rules) {
     console.warn(
-      `Both "pattern" and "match" properties exist in the field rule for ${label}. ` +
-        'Ignoring the "match" property.'
+      `Both "pattern" and "matches" properties exist in the field rule for ${label}. ` +
+        'Ignoring the "matches" property.'
     );
   }
 }
