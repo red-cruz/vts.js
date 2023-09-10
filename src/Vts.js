@@ -20,25 +20,25 @@ export default class Vts {
   constructor(formId, config = {}) {
     const form = (this.form = VtsFormValidator.validateForm(formId));
     this.fields = form.querySelectorAll('[name]:not([data-vts-ignored])');
-    this.#init(config);
+    // @ts-ignore
+    this.#init(formId, config);
   }
 
   /**
+   * @param {string} formId
    * @param {import('./types/config/index.js').default} config
+   * @this {import('./types/base').default} Vts
    * @memberof Vts
    */
-  #init(config) {
+  #init(formId, config) {
     const form = this.form;
     // mixin
     Object.assign(this, vtsForm, setVtsConfig(form, config));
     Object.assign(Vts.prototype, vtsEvents, vtsRules, vtsValidation);
-    // @ts-ignore
     this._convertRulesToMap();
-    // @ts-ignore
     this._addEventListeners();
-
     // @ts-ignore
-    Vts.#instances.set(form.getAttribute('id'), this);
+    Vts.#instances.set(formId, this);
   }
 
   /**
@@ -89,18 +89,9 @@ export default class Vts {
   }
 
   /**
-   * Gets the data from the response.
    *
-   * This is a static method that asynchronously gets the data from the response.
-   *
-   * @param {Response} response The response object.
-   * @returns {Promise<any>} A promise that resolves with the data from the response or rejects with an error.
-   *
-   * The data is parsed as based on *Content-Type*:
-   *
-   * * `application/json`: the data is parsed as an object using `response.json()`.
-   * *  `text/html` or `text/plain`: the data is parsed as a string using `response.text()`.
-   * *  If *neither* of the above, the data is `null`.
+   * @param {Response} response
+   * @returns {Promise<any>}
    */
   static async getResponseData(response) {
     return getResponseDataUtil(response);

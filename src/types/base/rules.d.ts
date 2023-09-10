@@ -1,4 +1,4 @@
-import type { VtsBase } from '.';
+import type VtsBase from '.';
 import type { VtsRules } from '../config/rules';
 
 export default interface VtsRulesBase {

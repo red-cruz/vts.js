@@ -6,7 +6,8 @@ const vtsForm = {
     return this.form.checkValidity();
   },
   async submit() {
-    let promiseState;
+    let data, response;
+    let promiseResolved = true;
     const ajax = this.ajax;
     const form = this.form;
     try {
@@ -14,19 +15,17 @@ const vtsForm = {
       [url, ajax.request] = vtsFormBeforeSend.call(this, url, ajax.request);
 
       // fetch
-      const response = await fetch(new Request(url, ajax.request));
+      response = await fetch(new Request(url, ajax.request));
 
       if (!response.ok) throw response;
 
-      let data = await getResponseData(response);
+      data = await getResponseData(response);
 
-      promiseState = Promise.resolve({ data, response, form });
       // call success callback function
-      // @ts-ignore
-      await ajax.success(data, response, form);
+      ajax.success(data, response, form);
     } catch (error) {
-      let errorData = error;
-      let errorResponse = null;
+      data = error;
+      response = null;
 
       // Reinitialize abort controller if aborted
       if (this.ajax.request.signal?.aborted) {
@@ -36,17 +35,20 @@ const vtsForm = {
 
       // Check if the error is an instance of Response
       if (error instanceof Response) {
-        errorData = await getResponseData(error);
-        errorResponse = error;
+        data = await getResponseData(error);
+        response = error;
       }
 
-      promiseState = Promise.reject({ errorData, errorResponse, form });
+      promiseResolved = false;
       // Call the error callback function with the appropriate data
-      await ajax.error(errorData, errorResponse, form);
+      ajax.error(data, response, form);
     }
     // complete
     ajax.complete(form);
-    return promiseState;
+
+    return promiseResolved
+      ? Promise.resolve({ data, response, form })
+      : Promise.reject({ data, response, form });
   },
 };
 

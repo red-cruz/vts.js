@@ -1,4 +1,4 @@
-import type { VtsBase } from '.';
+import type VtsBase from '.';
 
 export default interface VtsEventsBase {
   _addFieldListener(this: VtsBase): void;

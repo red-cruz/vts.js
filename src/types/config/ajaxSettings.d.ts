@@ -55,7 +55,7 @@ export default interface VtsAjaxSettings {
     errorData: any,
     response: Response | null,
     form: HTMLFormElement
-  ) => void | Promise<any>;
+  ) => void;
 
   /**
    * Called when the Ajax request is successful.
@@ -64,9 +64,5 @@ export default interface VtsAjaxSettings {
    * @param response The Response object representing the successful response.
    * @param form The HTML form element that was submitted.
    */
-  success: (
-    data: any,
-    response: Response,
-    form: HTMLFormElement
-  ) => void | Promise<any>;
+  success: (data: any, response: Response, form: HTMLFormElement) => void;
 }

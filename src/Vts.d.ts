@@ -78,6 +78,23 @@ declare class Vts {
    * @returns True if the instance was removed, false otherwise.
    */
   static removeInstance(formId: string): boolean;
+
+  /**
+   * Gets the data from the response.
+   *
+   * This is a static method that asynchronously gets the data from the response.
+   *
+   * @async
+   * @param {Response} response The response object.
+   * @returns {Promise<any>} A promise that resolves with the data from the response or rejects with an error.
+   *
+   * The data is parsed based on *Content-Type*:
+   *
+   * * `application/json`: the data is parsed as an object using `response.json()`.
+   * *  `text/html` or `text/plain`: the data is parsed as a string using `response.text()`.
+   * *  If *neither* of the above, the data is `null`.
+   */
+  static getResponseData(response: Response): Promise<any>;
 }
 
 export default Vts;

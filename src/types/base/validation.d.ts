@@ -1,4 +1,4 @@
-import type { VtsBase } from '.';
+import type VtsBase from '.';
 import type { VtsValidationData } from '../config/handlers';
 
 export default interface VtsValidationBase {

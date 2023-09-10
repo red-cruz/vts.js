@@ -1,4 +1,4 @@
-import type { VtsBase } from '.';
+import type VtsBase from '.';
 
 export default interface VtsFormBase {
   /**
@@ -14,5 +14,5 @@ export default interface VtsFormBase {
    */
   submit(
     this: VtsBase
-  ): Promise<{ data: any; response: Response; form: HTMLFormElement }>;
+  ): Promise<{ data: any; response: Response | null; form: HTMLFormElement }>;
 }
