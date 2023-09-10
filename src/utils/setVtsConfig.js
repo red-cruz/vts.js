@@ -10,14 +10,13 @@ import deepMerge from './deepMerge';
  *
  * @export
  * @param {HTMLFormElement} form - The HTML form element.
- * @param {Partial<import('../Vts').VtsConfig>} config - The partial configuration options.
- * @returns {import('../Vts').VtsConfig} - The merged configuration options.
+ * @param {import('../types/base/config').default} config - The partial configuration options.
+ * @returns {import('../types/base/config').default} - The merged configuration options.
  */
 export default function setVtsConfig(form, config) {
-  /** @type {import('../types1/config').VtsConfig} */
+  /** @type {import('../types/base/config').default} */
   const options = deepMerge({}, vtsDefaults, config);
 
-  /** @type {Partial<import('../types1/config').VtsAjaxSettings>} */
   const ajax = options.ajax;
   options.ajax.action = ajax.action || form.action;
 
