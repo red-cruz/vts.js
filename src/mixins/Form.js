@@ -1,5 +1,5 @@
 // @ts-check
-/** @type {import('../Vts').VtsForm} */
+/** @type {import('../types/base/form').default} */
 const vtsForm = {
   isFormValid() {
     return this.form.checkValidity();
@@ -31,6 +31,7 @@ const vtsForm = {
 
       // Reinitialize abort controller if aborted
       if (this.ajax.request?.signal?.aborted) {
+        // @ts-ignore
         this.ajax.abortController = new AbortController();
       }
 
@@ -78,7 +79,7 @@ const vtsForm = {
  */
 function vtsFormBeforeSend(url, request) {
   const formData = new FormData(this.form);
-
+  // @ts-ignore
   this.ajax.abortController = new AbortController();
   this.ajax.request.signal = this.ajax.abortController.signal;
 
@@ -90,6 +91,7 @@ function vtsFormBeforeSend(url, request) {
     ) || request;
 
   const get = new RegExp('get', 'i');
+  //@ts-ignore
   const isGetMethod = get.test(request.method);
   if (isGetMethod) {
     const query = new URLSearchParams(formData.toString());

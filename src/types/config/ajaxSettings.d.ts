@@ -7,7 +7,7 @@ export default interface VtsAjaxSettings {
    *
    * This property is read-only.
    */
-  readonly abortController?: AbortController;
+  readonly abortController?w: AbortController;
 
   /**
    * The URL action for the form submission.
