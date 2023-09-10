@@ -1,4 +1,7 @@
 import type VtsConfig from './types/config';
+import VtsAjaxSettings from './types/config/ajaxSettings';
+import VtsHandlers from './types/config/handlers';
+import { VtsRuleMessage, VtsRules } from './types/config/rules';
 
 /**
  * A JavaScript library that provides a simple and flexible way to handle
@@ -13,19 +16,29 @@ declare class Vts {
    * Creates an instance of Vts.
    * @param formId form ID
    * @param config vts configurations
+   *
    */
   constructor(formId: string, config?: VtsConfig);
-  form: HTMLFormElement;
+  ajax: VtsAjaxSettings;
+  class: {
+    form: string;
+    invalid: string;
+    valid: string;
+  };
   fields: NodeListOf<
     HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
   >;
-
+  form: HTMLFormElement;
+  handlers: VtsHandlers;
   /**
    * Checks the validity of the form.
    * @returns {Boolean} True if the form is valid, false otherwise.
    */
   isFormValid(this: Vts): boolean;
-
+  listen: boolean;
+  message: VtsRuleMessage;
+  rules: Map<string, VtsRules[string]>;
+  stopPropagation: boolean;
   /**
    * @description Submits the form via fetch API.
    * @returns A promise that resolves on success or rejects on failure.

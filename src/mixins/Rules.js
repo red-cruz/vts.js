@@ -14,6 +14,7 @@ const vtsRules = {
 
     // overwrite pattern
     pattern = rules.flags?.includes('g') ? pattern + '\\b' : pattern;
+
     if (isMatch) {
       console.log('ismatchh');
       // get matching field target
