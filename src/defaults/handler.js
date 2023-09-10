@@ -1,5 +1,5 @@
 // @ts-check
-/** @type {import("../types/config").VtsHandlers} */
+/** @type {import("../types1/config").VtsHandlers} */
 const vtsHandlers = {
   invalid: showFeedback,
   valid: showFeedback,
@@ -7,7 +7,7 @@ const vtsHandlers = {
 
 /**
  * @param {string} fieldClass
- * @param  {import("../types/validation").VtsValidationData<string>} data
+ * @param  {import("../types1/validation").VtsValidationData<string>} data
  * @param {HTMLFormElement} form
  */
 function showFeedback(fieldClass, data, form) {

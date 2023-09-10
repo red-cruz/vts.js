@@ -1,7 +1,7 @@
 // @ts-check
-import type { VtsConfig } from './types/config';
-import type { VtsRulesMixin } from './types/rules';
-import type { VtsValidation } from './types/validation';
+import type { VtsConfig } from './types1/newconfig';
+import type { VtsRulesMixin } from './types1/rules';
+import type { VtsValidation } from './types1/validation';
 
 /**
  * A JavaScript library that provides a simple and flexible way to handle
@@ -13,6 +13,8 @@ import type { VtsValidation } from './types/validation';
 declare class Vts {
   /**
    * Creates an instance of Vts.
+   * @param {string} formId form ID
+   * @param {VtsConfig} config vts configurations
    */
   constructor(formId: string, config?: Partial<VtsConfig>);
   form: HTMLFormElement;
@@ -65,10 +67,14 @@ declare class VtsForm {
 
   /**
    * @description Submits the form via fetch API.
-   * @returns {Promise} A promise that resolves on success or rejects on failure.
+   * @returns A promise that resolves on success or rejects on failure.
    * @async
    */
-  submit(this: Vts): Promise<void>;
+  submit(this: Vts): Promise<{
+    data: any;
+    response: Response;
+    form: HTMLFormElement;
+  }>;
 }
 
 // mixin
@@ -82,5 +88,5 @@ interface Vts
 // exports
 export default Vts;
 export type { VtsEventsMixin, VtsRulesMixin, VtsForm, VtsValidation };
-export { VtsConfig } from './types/config';
-export type { VtsRuleMessage } from './types/rules';
+export { VtsConfig } from './types1/config';
+export type { VtsRuleMessage } from './types1/rules';

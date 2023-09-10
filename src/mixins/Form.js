@@ -1,4 +1,5 @@
-/** @type {import('../vts').VtsForm} */
+// @ts-check
+/** @type {import('../Vts').VtsForm} */
 const vtsForm = {
   isFormValid() {
     return this.form.checkValidity();
@@ -7,35 +8,23 @@ const vtsForm = {
   async submit() {
     const ajax = this.ajax;
     const form = this.form;
+    let promiseState;
+
     try {
       let url = ajax.action;
       [url, ajax.request] = vtsFormBeforeSend.call(this, url, ajax.request);
 
       // fetch
       const response = await fetch(new Request(url, ajax.request));
-      if (!response.ok) {
-        throw response;
-      }
 
-      // get response data
-      const contentType = response.headers.get('Content-Type');
-      if (contentType) {
-        let data;
-        if (contentType.includes('application/json')) {
-          data = await response.json();
-        } else if (
-          contentType.includes('text/html') ||
-          contentType.includes('text/plain')
-        ) {
-          data = await response.text();
-        } else {
-          data = null;
-        }
-        // call success callback function
-        ajax.success(data, response, form);
-      } else {
-        throw new Error('Content-Type header not found in the response');
-      }
+      if (!response.ok) throw response;
+
+      let data = await getResponseData(response);
+
+      promiseState = Promise.resolve({ data, response, form });
+      // call success callback function
+      // @ts-ignore
+      await ajax.success(data, response, form);
     } catch (error) {
       let errorData = error;
       let errorResponse = null;
@@ -68,11 +57,14 @@ const vtsForm = {
           }
         }
       }
+
+      promiseState = Promise.reject({ errorData, errorResponse, form });
       // Call the error callback function with the appropriate data
-      ajax.error(errorData, errorResponse, form);
+      await ajax.error(errorData, errorResponse, form);
     }
     // complete
     ajax.complete(form);
+    return promiseState;
   },
 };
 
@@ -82,7 +74,7 @@ const vtsForm = {
  * @param {string} url
  * @param {RequestInit} request
  * @returns {[url, request]}
- * @this {import('../vts').default}
+ * @this {import('../Vts').default}
  */
 function vtsFormBeforeSend(url, request) {
   const formData = new FormData(this.form);
@@ -106,6 +98,36 @@ function vtsFormBeforeSend(url, request) {
     request.body = formData;
   }
   return [url, request];
+}
+/**
+ * Gets the data from the response.
+ *
+ * @param {Response} response The response object.
+ * @returns {Promise<any>} A promise that resolves with the data from the response or rejects with an error.
+ * @async
+ */
+async function getResponseData(response) {
+  let data;
+  try {
+    const contentType = response.headers.get('Content-Type');
+    if (contentType) {
+      if (contentType.includes('application/json')) {
+        data = await response.json();
+      } else if (
+        contentType.includes('text/html') ||
+        contentType.includes('text/plain')
+      ) {
+        data = await response.text();
+      } else {
+        data = null;
+      }
+    } else {
+      throw new Error('Content-Type header not found in the response');
+    }
+    return Promise.resolve(data);
+  } catch (error) {
+    return Promise.reject(error);
+  }
 }
 
 export default vtsForm;

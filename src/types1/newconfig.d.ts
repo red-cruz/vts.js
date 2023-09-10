@@ -1,5 +1,5 @@
-// @ts-check
-
+import type { VtsAjaxSettings, VtsHandlers } from './config';
+import { VtsRuleMessage, VtsRules } from './rules';
 /**
  * Represents the configuration options for Vts (Validate Then Submit).
  */
@@ -12,7 +12,7 @@ interface VtsConfig {
   /**
    * Contains functions for handling field validation.
    */
-  handlers?: Partial<VtsHandlers>;
+  handlers?: VtsHandlers;
 
   /**
    * Determines whether to halt the form submission if there are invalid fields.
@@ -30,8 +30,7 @@ interface VtsConfig {
    * The validation rules for the form fields.
    * @default {}
    */
-  rules?: VtsRules;
-
+  rules?: VtsRules | Map<string, VtsRules[string]>;
   /**
    * The custom validation message configuration.
    * @default
@@ -40,14 +39,14 @@ interface VtsConfig {
    *  valid: '',
    * }
    */
-  message?: Partial<VtsRuleMessage>;
 
+  message?: Partial<VtsRuleMessage>;
   /**
    * Determines whether to stop event propagation on form submission.
    * @default true
    */
-  stopPropagation?: boolean;
 
+  stopPropagation?: boolean;
   /**
    * The CSS classes to be applied.
    */
@@ -57,14 +56,12 @@ interface VtsConfig {
      * @default 'was-validated'
      */
     form?: string;
-
     /**
      * The CSS class to apply to the created div sibling of invalid field.
      * Disregard if default handlers will be overwritten.
      * @default 'invalid-feedback'
      */
     invalid?: string;
-
     /**
      * The CSS class to apply to the created div sibling of valid field.
      * Disregard if default handlers will be overwritten.

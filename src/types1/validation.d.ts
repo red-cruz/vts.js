@@ -1,4 +1,4 @@
-import type Vts from '../vts';
+import type Vts from '../Vts';
 import { VtsValidationData } from './config';
 import type { VtsRuleMessage, VtsRules } from './rules';
 

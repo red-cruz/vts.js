@@ -1,5 +1,5 @@
 // @ts-check
-/** @type {import("../types/config").VtsAjaxSettings} */
+/** @type {import("../types1/config").VtsAjaxSettings} */
 const ajaxHandler = {
   action: '',
   request: {},
