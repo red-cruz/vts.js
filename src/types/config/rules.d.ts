@@ -21,7 +21,7 @@ type VtsRules = {
     /**
      * The message configuration for the validation rule.
      */
-    message?: Partial<VtsRuleMessage>;
+    message?: VtsRuleMessage;
 
     /**
      * The pattern that will be used to create a RegExp object for validation.
@@ -60,5 +60,7 @@ type VtsValidityState =
  * Represents the configuration for the validation rule messages in Vts (Validate Then Submit).
  */
 type VtsRuleMessage = {
-  [Key in VtsValidityState]: string;
+  [Key in VtsValidityState]?: string;
 };
+
+export { VtsRuleMessage, VtsRules };

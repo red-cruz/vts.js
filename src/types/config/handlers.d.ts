@@ -1,25 +1,42 @@
-interface VtsHandlers {
+export default interface VtsHandlers {
   /**
    * The function to call for all valid fields.
    * @param validClass The class name for valid fields.
-   * @param data The validation data for all valid fields.
+   * @param validFieldsData The validation data for all valid fields.
+   * @example
+   * [
+   *   'fieldName': {
+   *      field: HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
+   *      label: string; // The corresponding label for the validated field.
+   *      message: string | undefined; // The valid message.
+   *    }...
+   * ]
    * @param form The HTML form element.
+   *
    */
   valid?: (
     validClass: string,
-    data: VtsValidationData<string>,
+    validFieldsData: VtsValidationData<string>,
     form: HTMLFormElement
   ) => void;
 
   /**
    * The function to call for invalid fields.
    * @param invalidClass The class name for invalid fields.
-   * @param data The validation data for all invalid fields.
+   * @param invalidFieldsData The validation data for all invalid fields.
+   * @example
+   * [
+   *   'fieldName': {
+   *      field: HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
+   *      label: string; // The corresponding label for the validated field.
+   *      message: string; // The invalid message.
+   *    }...
+   * ]
    * @param form The HTML form element.
    */
   invalid?: (
     invalidClass: string,
-    data: VtsValidationData<string>,
+    invalidFieldsData: VtsValidationData<string>,
     form: HTMLFormElement
   ) => void;
 }

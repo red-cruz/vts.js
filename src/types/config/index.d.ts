@@ -1,7 +1,11 @@
+import type VtsAjaxSettings from './ajaxSettings';
+import VtsHandlers from './handlers';
+import { VtsRuleMessage, VtsRules } from './rules';
+
 /**
  * Represents the configuration options for Vts (Validate Then Submit).
  */
-interface VtsConfig {
+export default interface VtsConfig {
   /**
    * The Ajax settings for form submission.
    */
@@ -27,6 +31,15 @@ interface VtsConfig {
   /**
    * The validation rules for the form fields.
    * @default {}
+   * @example
+   *  rules: {
+   *    password_confirmation: {
+   *      matches: 'password',
+   *      message: {
+   *        invalid: 'This input must match the value of ${targetLabel}'
+   *      }
+   *    }
+   * }
    */
   rules?: VtsRules;
 
@@ -38,7 +51,7 @@ interface VtsConfig {
    *  valid: '',
    * }
    */
-  message?: Partial<VtsRuleMessage>;
+  message?: VtsRuleMessage;
 
   /**
    * Determines whether to stop event propagation on form submission.
@@ -71,5 +84,3 @@ interface VtsConfig {
     valid?: string;
   };
 }
-
-export default VtsConfig;
