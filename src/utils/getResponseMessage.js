@@ -37,7 +37,7 @@ export default function getResponseMessage(
         if (typeof data.message === 'object') {
           message = '';
           for (const err in data.message) {
-            message += `${data.message[err]}<br/>`;
+            message += `<span style="display:block">${data.message[err]}</span>`;
           }
         }
       }
