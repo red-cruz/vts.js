@@ -96,12 +96,15 @@ declare class Vts {
   static getResponseData(response: Response): Promise<any>;
 
   /**
-   * Formats the response from the server.
+   * Extracts title and message from response and formats it
+   *
+   * Can also get title and message from errors that occurred on the client side,
+   * such as when the fetch request throws an `AbortError` or any other error that was thrown in the `before` and `success` ajax callbacks.
    *
    * @param data The parsed data from the server.
    * @param response The response from the server.
    * @param messages
-   * @returns {{ title: string; message: string }} An object with the title and message of the error.
+   * @returns {{title:string, message: string}} An object with the title and message of the error.
    */
   static getResponseMessage(
     data: any,

@@ -4,11 +4,14 @@ import getDefaultMsgFromResponse from './response/getDefaultMsgFromResponse';
 import isMsgHTMLorScript from './response/isMsgHTMLorScript';
 
 /**
- * Extracts title and message from response
+ * Extracts title and message from response and formats it
+ *
+ * Note: This function can also get title and message from errors that occurred on the client side,
+ * such as when the fetch request is aborted or an error was thrown in the `before` and `success` ajax callbacks.
  *
  * @param {*} data The parsed data from the server.
  * @param {Response|null} response The response from the server.
- * @param {import("c:/wamp64/www/Projects/vts.js/src/types/config/responseMessage").default} [customMessages=vtsResponseMessages]
+ * @param {import('../types/config/responseMessage').default} [customMessages=vtsResponseMessages]
  * @returns {{title:string, message: string}} An object with the title and message of the error.
  */
 export default function getResponseMessage(
@@ -19,21 +22,21 @@ export default function getResponseMessage(
   let title = '';
   let message = '';
 
-  // check if data is from server - response is null if an error occured from client i.e 'AbortError'
+  // Check if data is from server - response is null if an error occured from client i.e 'AbortError'
   if (response) {
-    // set default messages based on response
+    // Set default messages based on response
     [title, message] = getDefaultMsgFromResponse(response, customMessages);
 
+    // If data is HTML or script, set message to data
     if (isMsgHTMLorScript(data)) {
-      // message now contains the html or the script
       message = data;
     } else {
+      // If data is an object, format message based on the title and message properties returned from the data
       if (typeof data === 'object') {
-        // format message based on the title and message properties returned from the data
         title = data.title ?? title;
         message = data.message ?? message;
 
-        // if message is an object, update the message and iterate and extract each values
+        // If message is an object, update the message and iterate and extract each values
         if (typeof data.message === 'object') {
           message = '';
           for (const err in data.message) {
@@ -41,6 +44,7 @@ export default function getResponseMessage(
           }
         }
       }
+      // else, use defaults
     }
   } else {
     // error occured from client
