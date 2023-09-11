@@ -1,25 +1,25 @@
 // @ts-check
 
-import { vtsResponseMessages } from '../constants';
-
 /**
+ * Gets the default title and message for a response
+ *
  * @param {Response} response
- * @param {import("c:/wamp64/www/Projects/vts.js/src/types/config/responseMessage").default} defaultMessages
+ * @param {import('../../types/config/responseMessage').default} defaultMessages
  * @returns {[title:string, message:string]}
  */
 export default function getDefaultMsgFromResponse(response, defaultMessages) {
   let title = '';
   let message = '';
-  // get assigned default message for the status code
+
+  // Get the default message for the status code
   const statusMsg = defaultMessages[response.status];
 
-  // assign new default values based on response
+  // If a default message exists, use it
   if (statusMsg) {
-    // assign default values from defaultMessagees
     title = statusMsg.title;
     message = statusMsg.message;
   } else {
-    // create and assign new default values based on response status
+    // Otherwise, create default messages based on the response status
     if (response.ok) {
       title = 'Success!';
       message = 'The request was successful.';
