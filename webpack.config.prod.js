@@ -6,14 +6,14 @@ module.exports = {
     library: 'Vts',
     libraryExport: 'default',
     libraryTarget: 'umd',
-    filename: 'vts.min.js',
+    filename: 'vts.js',
     path: path.resolve(__dirname, 'dist'),
   },
   mode: 'production',
   optimization: {
     usedExports: true,
     sideEffects: true,
-    // minimize: false,
+    minimize: false,
   },
   module: {
     rules: [

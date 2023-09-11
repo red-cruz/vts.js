@@ -103,13 +103,13 @@ declare class Vts {
    *
    * @param data The parsed data from the server.
    * @param response The response from the server.
-   * @param messages
+   * @param defaultResponseMessages An object with the default title and message for each status code.
    * @returns {{title:string, message: string}} An object with the title and message of the error.
    */
   static getResponseMessage(
     data: any,
     response: Response | null,
-    messages?: VtsResponseMessage
+    defaultResponseMessages?: VtsResponseMessage
   ): { title: string; message: string };
 }
 
