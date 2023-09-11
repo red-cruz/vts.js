@@ -80,9 +80,7 @@ declare class Vts {
   static removeInstance(formId: string): boolean;
 
   /**
-   * Gets the data from the response.
-   *
-   * This is a static method that asynchronously gets the data from the response.
+   * Asynchronously gets the data from the response.
    *
    * @async
    * @param {Response} response The response object.
@@ -97,7 +95,7 @@ declare class Vts {
   static getResponseData(response: Response): Promise<any>;
 
   /**
-   * Formats an error response from the server.
+   * Formats the response from the server.
    *
    * @param data The parsed data from the server.
    * @param response The response from the server.

@@ -1,13 +1,14 @@
 // @ts-check
+import messages from './messages';
 
 /**
  * Formats an error response from the server.
  *
- * @param {*} data The parsed error data from the server.
+ * @param {*} data The parsed data from the server.
  * @param {Response|null} response The error response from the server.
  * @returns {Object} An object with the title and message of the error.
  */
-export default function formatResponse(data, response) {
+export default function formatResponse(data, response, msg = messages) {
   // Handle error response
   let title = response
     ? `${response.statusText}:  ${response.status}`

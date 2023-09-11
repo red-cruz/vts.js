@@ -9,8 +9,9 @@
 export default async function getResponseData(response) {
   try {
     const contentType = response.headers.get('Content-Type');
-    if (!contentType)
+    if (!contentType) {
       throw new Error('Content-Type header not found in the response');
+    }
     let data = null;
     if (contentType.includes('application/json')) {
       data = await response.json();
