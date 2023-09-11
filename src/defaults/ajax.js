@@ -78,20 +78,13 @@ const ajaxHandler = {
   },
   error: (errorData, errorResponse, form) => {
     const { title, message } = Vts.getResponseMessage(errorData, errorResponse);
-
-    if (title === 'AbortError') return;
-
-    showDialog(title, message);
-
-    return;
+    if (title !== 'AbortError') showDialog(title, message);
   },
   success: (data, response, form) => {
     const { title, message } = Vts.getResponseMessage(data, response);
-
-    showDialog(title, message);
-
     form.reset();
     form.classList.remove('was-validated');
+    showDialog(title, message);
   },
 };
 

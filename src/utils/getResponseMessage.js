@@ -33,7 +33,7 @@ export default function getResponseMessage(
         title = data.title ?? title;
         message = data.message ?? message;
 
-        // if message is an object, iterate and extract each values
+        // if message is an object, update the message and iterate and extract each values
         if (typeof data.message === 'object') {
           message = '';
           for (const err in data.message) {
@@ -44,65 +44,14 @@ export default function getResponseMessage(
     }
   } else {
     // error occured from client
-  }
-  //
-
-  return { title, message };
-
-  // Check if data is an object
-  if (typeof data === 'object') {
-    if (response) {
-      // data is from server
-      title = data.title || title;
-      message = data.message || '';
-
-      // for validation errors from server
-      const validationErrors = data.validation_errors;
-      if (typeof validationErrors === 'object') {
-        // Construct error message for display
-        message = '';
-        for (const err in validationErrors) {
-          message += `${validationErrors[err]}<br/>`;
-        }
-      }
+    if (typeof data === 'object') {
+      title = data.name;
+      message = data.message;
     } else {
-      // data is an Error/Exception
-      title = data.name || title;
-      message = data.stack || data.message || message;
+      title = 'An unknown error has occurred';
+      message = data;
     }
   }
 
   return { title, message };
 }
-
-/* 
-// Handle error response
-  let title = response
-    ? `${response.statusText}:  ${response.status}`
-    : 'Error';
-  let message = data;
-
-  // Check if data is an object
-  if (typeof data === 'object') {
-    if (response) {
-      // data is from server
-      title = data.title || title;
-      message = data.message || '';
-
-      // for validation errors from server
-      const validationErrors = data.validation_errors;
-      if (typeof validationErrors === 'object') {
-        // Construct error message for display
-        message = '';
-        for (const err in validationErrors) {
-          message += `${validationErrors[err]}<br/>`;
-        }
-      }
-    } else {
-      // data is an Error/Exception
-      title = data.name || title;
-      message = data.stack || data.message || message;
-    }
-  }
-
-*/
