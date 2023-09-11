@@ -11,13 +11,13 @@ import isMsgHTMLorScript from './response/isMsgHTMLorScript';
  *
  * @param {*} data The parsed data from the server.
  * @param {Response|null} response The response from the server.
- * @param {import('../types/config/responseMessage').default} [customMessages=vtsResponseMessages]
+ * @param {import('../types/config/responseMessage').default} [defaultResponseMessages=vtsResponseMessages]
  * @returns {{title:string, message: string}} An object with the title and message of the error.
  */
 export default function getResponseMessage(
   data,
   response,
-  customMessages = vtsResponseMessages
+  defaultResponseMessages = vtsResponseMessages
 ) {
   let title = '';
   let message = '';
@@ -25,7 +25,10 @@ export default function getResponseMessage(
   // Check if data is from server - response is null if an error occured from client i.e 'AbortError'
   if (response) {
     // Set default messages based on response
-    [title, message] = getDefaultMsgFromResponse(response, customMessages);
+    [title, message] = getDefaultMsgFromResponse(
+      response,
+      defaultResponseMessages
+    );
 
     // If data is HTML or script, set message to data
     if (isMsgHTMLorScript(data)) {

@@ -1,5 +1,5 @@
 // @ts-check
-import Vts from '../Vts';
+import getResponseMessage from '../utils/getResponseMessage';
 import showDialog from '../utils/response/showDialog';
 
 /** @type {import("../types/config/ajaxSettings").default} */
@@ -77,11 +77,11 @@ const ajaxHandler = {
     }
   },
   error: (errorData, errorResponse, form) => {
-    const { title, message } = Vts.getResponseMessage(errorData, errorResponse);
+    const { title, message } = getResponseMessage(errorData, errorResponse);
     if (title !== 'AbortError') showDialog(title, message);
   },
   success: (data, response, form) => {
-    const { title, message } = Vts.getResponseMessage(data, response);
+    const { title, message } = getResponseMessage(data, response);
     form.reset();
     form.classList.remove('was-validated');
     showDialog(title, message);

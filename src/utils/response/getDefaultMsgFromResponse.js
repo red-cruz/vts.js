@@ -4,17 +4,12 @@ import { vtsResponseMessages } from '../constants';
 
 /**
  * @param {Response} response
- * @param {import("c:/wamp64/www/Projects/vts.js/src/types/config/responseMessage").default} customMessages
+ * @param {import("c:/wamp64/www/Projects/vts.js/src/types/config/responseMessage").default} defaultMessages
  * @returns {[title:string, message:string]}
  */
-export default function getDefaultMsgFromResponse(response, customMessages) {
+export default function getDefaultMsgFromResponse(response, defaultMessages) {
   let title = '';
   let message = '';
-  console.log('custom:', customMessages);
-  console.log('default:', vtsResponseMessages);
-  const defaultMessages = Object.assign(vtsResponseMessages, customMessages);
-  console.log('new:', defaultMessages);
-
   // get assigned default message for the status code
   const statusMsg = defaultMessages[response.status];
 
@@ -29,11 +24,10 @@ export default function getDefaultMsgFromResponse(response, customMessages) {
       title = 'Success!';
       message = 'The request was successful.';
     } else {
-      title = response.statusText + ' ' + response.status;
+      title = response.statusText + ': ' + response.status;
       message = 'Please try again later.';
     }
   }
 
-  console.log('from response:', { title, message });
   return [title, message];
 }

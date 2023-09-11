@@ -99,11 +99,12 @@ export default class Vts {
   }
 
   /**
-   * @param {*} data
-   * @param {Response|null} response
-   * @returns {{title:string, message: string}}
+   * @param {*} data The parsed data from the server.
+   * @param {Response|null} response The response from the server.
+   * @param {import('./types/config/responseMessage').default} [defaultResponseMessages=vtsResponseMessages]
+   * @returns {{title:string, message: string}} An object with the title and message of the error.
    */
-  static getResponseMessage(data, response) {
-    return getResponseMessageUtil(data, response);
+  static getResponseMessage(data, response, defaultResponseMessages) {
+    return getResponseMessageUtil(data, response, defaultResponseMessages);
   }
 }
