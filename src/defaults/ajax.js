@@ -1,6 +1,6 @@
 // @ts-check
 import Vts from '../Vts';
-import showDialog from '../utils/showDialog';
+import showDialog from '../utils/response/showDialog';
 
 /** @type {import("../types/config/ajaxSettings").default} */
 const ajaxHandler = {

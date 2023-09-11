@@ -1,7 +1,7 @@
 // @ts-check
 import { vtsResponseMessages } from './constants';
-import getDefaultMsgFromResponse from './getDefaultMsgFromResponse';
-import isMsgHTMLorScript from './isMsgHTMLorScript';
+import getDefaultMsgFromResponse from './response/getDefaultMsgFromResponse';
+import isMsgHTMLorScript from './response/isMsgHTMLorScript';
 
 /**
  * Extracts title and message from response

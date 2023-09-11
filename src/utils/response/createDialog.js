@@ -1,6 +1,6 @@
 // @ts-check
 
-import { dialogId, dialogMsgId, dialogTitleId } from './constants';
+import { dialogId, dialogMsgId, dialogTitleId } from '../constants';
 import createAnchor from './createAnchor';
 import isMsgHTMLorScript from './isMsgHTMLorScript';
 

@@ -1,6 +1,6 @@
 // @ts-check
 
-import { vtsResponseMessages } from './constants';
+import { vtsResponseMessages } from '../constants';
 
 /**
  * @param {Response} response

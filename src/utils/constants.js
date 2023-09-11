@@ -1,5 +1,4 @@
 // @ts-check
-
 const dialogId = '__Vts_dialog';
 const dialogTitleId = `${dialogId}_title`;
 const dialogMsgId = `${dialogId}_message`;
