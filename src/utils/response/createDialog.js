@@ -1,6 +1,11 @@
 // @ts-check
 
-import { dialogId, dialogMsgId, dialogTitleId } from '../constants';
+import {
+  dialogBtnContainerId,
+  dialogId,
+  dialogMsgId,
+  dialogTitleId,
+} from '../constants';
 import createAnchor from './createAnchor';
 import isMsgHTMLorScript from './isMsgHTMLorScript';
 
@@ -11,20 +16,21 @@ import isMsgHTMLorScript from './isMsgHTMLorScript';
  */
 export default function createDialog(title, message) {
   const dialog = document.createElement('dialog');
+  dialog.style.minWidth = '250px';
   dialog.id = dialogId;
 
   // create title container
   const titleBar = document.createElement('div');
   titleBar.id = dialogTitleId;
   titleBar.textContent = title;
-  titleBar.style.marginBottom = '5px';
+  titleBar.style.fontWeight = 'bold';
 
   // create ok btn
   const okButton = document.createElement('button');
-  okButton.textContent = 'Ok';
+  okButton.id = dialogBtnContainerId;
   okButton.style.padding = '3px 16px';
   okButton.style.float = 'right';
-  okButton.style.marginTop = '30px';
+  okButton.textContent = 'Ok';
   okButton.onclick = function () {
     dialog.close();
   };
@@ -32,12 +38,13 @@ export default function createDialog(title, message) {
   // create msg container
   const messageSection = document.createElement('div');
   messageSection.id = dialogMsgId;
+  messageSection.style.margin = '5px 0';
 
   // format text content
   if (isMsgHTMLorScript(message)) {
     createAnchor(dialog, messageSection, message);
   } else {
-    messageSection.textContent = message;
+    messageSection.innerHTML = message;
   }
 
   // append

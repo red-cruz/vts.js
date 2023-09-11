@@ -1,14 +1,14 @@
 // @ts-check
-const dialogId = '__Vts_dialog';
+const dialogId = 'Vts_dialog';
 const dialogTitleId = `${dialogId}_title`;
 const dialogMsgId = `${dialogId}_message`;
-const vtsResponseMessagesIterables = ['validation_errors', 'errors'];
+const dialogBtnContainerId = `${dialogId}_button`;
 
 /** @type {import("../types/config/responseMessage").default} */
 const vtsResponseMessages = {
   400: {
-    title: 'Invalid Request',
-    message: `The request was invalid. Please correct the errors and try again.`,
+    title: 'Something went wrong',
+    message: `The request was invalid. Please try again later.`,
   },
   401: {
     title: 'Unauthorized',
@@ -34,6 +34,11 @@ const vtsResponseMessages = {
     title: 'Unsupported Media Type',
     message: `The request is not in a supported format.`,
   },
+  422: {
+    title: 'Invalid Data',
+    message:
+      'The data provided was invalid. Please correct the errors and try again.',
+  },
   429: {
     title: 'Too Many Requests',
     message: `You have made too many requests in a short period of time. Please try again later.`,
@@ -53,5 +58,5 @@ export {
   dialogMsgId,
   dialogTitleId,
   vtsResponseMessages,
-  vtsResponseMessagesIterables,
+  dialogBtnContainerId,
 };

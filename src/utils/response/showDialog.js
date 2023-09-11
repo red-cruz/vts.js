@@ -20,7 +20,7 @@ export default function showDialog(title, message) {
         createAnchor(existingDialog, messageSection, message);
         console.log('existing dialog with html body');
       } else {
-        messageSection.textContent = message;
+        messageSection.innerHTML = message;
         console.log('existing dialog with new data', title, message);
       }
     }

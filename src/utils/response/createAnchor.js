@@ -17,6 +17,6 @@ export default function createAnchor(dialog, messageSection, message) {
     openNewWindow(message);
   };
   anchor.textContent = 'Click here to view more details.';
-  messageSection.textContent = '';
+  messageSection.innerHTML = '';
   messageSection.appendChild(anchor);
 }

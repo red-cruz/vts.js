@@ -32,6 +32,14 @@ export default function getResponseMessage(
         // format message based on the title and message properties returned from the data
         title = data.title ?? title;
         message = data.message ?? message;
+
+        // if message is an object, iterate and extract each values
+        if (typeof data.message === 'object') {
+          message = '';
+          for (const err in data.message) {
+            message += `${data.message[err]}<br/>`;
+          }
+        }
       }
     }
   } else {
