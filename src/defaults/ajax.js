@@ -1,5 +1,6 @@
 // @ts-check
 import Vts from '../Vts';
+import showDialog from '../utils/showDialog';
 
 /** @type {import("../types/config/ajaxSettings").default} */
 const ajaxHandler = {
@@ -80,11 +81,9 @@ const ajaxHandler = {
 
     if (title === 'AbortError') return;
 
-    const ok = confirm(`${title}. Click "OK" to view more details.`);
-    if (ok) {
-      const newWindow = window.open();
-      if (newWindow) newWindow.document.body.innerHTML = message;
-    }
+    showDialog(title, message);
+
+    return;
   },
   success: (data, response, form) => {
     const isDataObj = typeof data === 'object';

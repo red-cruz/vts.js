@@ -45,7 +45,7 @@ export default class Vts {
 
   /**
    * @static
-   * @type {Map<string, Vts}
+   * @type {Map<string, Vts>}
    * @memberof Vts
    */
   static #instances = new Map();
