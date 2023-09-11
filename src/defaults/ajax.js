@@ -86,11 +86,9 @@ const ajaxHandler = {
     return;
   },
   success: (data, response, form) => {
-    const isDataObj = typeof data === 'object';
-    const title = isDataObj ? data.title : response.statusText;
-    const message = isDataObj ? data.message : data;
+    const { title, message } = Vts.getResponseMessage(data, response);
 
-    alert(title + ':\n' + message);
+    showDialog(title, message);
 
     form.reset();
     form.classList.remove('was-validated');

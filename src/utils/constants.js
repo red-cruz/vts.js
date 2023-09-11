@@ -1,9 +1,15 @@
 // @ts-check
+
+const dialogId = '__Vts_dialog';
+const dialogTitleId = `${dialogId}_title`;
+const dialogMsgId = `${dialogId}_message`;
+const vtsResponseMessagesIterables = ['validation_errors', 'errors'];
+
 /** @type {import("../types/config/responseMessage").default} */
-const messages = {
+const vtsResponseMessages = {
   400: {
-    title: 'Something went wrong',
-    message: `There was a problem with your request. Please try again.`,
+    title: 'Invalid Request',
+    message: `The request was invalid. Please correct the errors and try again.`,
   },
   401: {
     title: 'Unauthorized',
@@ -43,4 +49,10 @@ const messages = {
   },
 };
 
-export default messages;
+export {
+  dialogId,
+  dialogMsgId,
+  dialogTitleId,
+  vtsResponseMessages,
+  vtsResponseMessagesIterables,
+};
