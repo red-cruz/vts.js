@@ -40,9 +40,15 @@ export default interface VtsAjaxSettings {
   /**
    * Called when the Ajax request is complete.
    *
+   * @param data The response data received from the server, parsed into a JavaScript object from JSON input or parsed into a text. Can be null if the content type is neither 'application/json', 'text/html', nor 'text/plain'.
+   * @param response The Response object representing the response.
    * @param form The HTML form element that was submitted.
    */
-  complete: (form: HTMLFormElement) => void;
+  complete: (
+    errorData: any,
+    response: Response | null,
+    form: HTMLFormElement
+  ) => void;
 
   /**
    * Called when an error occurs during the Ajax request.

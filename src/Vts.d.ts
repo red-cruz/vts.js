@@ -1,6 +1,7 @@
 import type VtsConfig from './types/config';
 import VtsAjaxSettings from './types/config/ajaxSettings';
 import VtsHandlers from './types/config/handlers';
+import VtsResponseMessage from './types/config/responseMessage';
 import { VtsRuleMessage, VtsRules } from './types/config/rules';
 
 /**
@@ -99,11 +100,13 @@ declare class Vts {
    *
    * @param data The parsed data from the server.
    * @param response The response from the server.
-   * @returns {Object} An object with the title and message of the error.
+   * @param messages
+   * @returns {{ title: string; message: string }} An object with the title and message of the error.
    */
-  static formatResponse(
+  static getResponseMessage(
     data: any,
-    response: Response | null
+    response: Response | null,
+    messages?: VtsResponseMessage
   ): { title: string; message: string };
 }
 

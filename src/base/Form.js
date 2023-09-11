@@ -45,7 +45,7 @@ const vtsForm = {
       ajax.error(data, response, form);
     }
     // complete
-    ajax.complete(form);
+    ajax.complete(data, response, form);
 
     return promiseResolved
       ? Promise.resolve({ data, response, form })

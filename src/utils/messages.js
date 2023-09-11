@@ -1,3 +1,5 @@
+// @ts-check
+/** @type {import("../types/config/responseMessage").default} */
 const messages = {
   400: {
     title: 'Something went wrong',
