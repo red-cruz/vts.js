@@ -3,20 +3,26 @@
 import openNewWindow from './openNewWindow';
 
 /**
- * @param {HTMLDialogElement} dialog
- * @param {HTMLDivElement} messageSection
- * @param {*} message
+ * Creates an anchor element with the given message.
+ * When the anchor element is clicked, it opens a new window with the given message.
+ *
+ * @param {HTMLDialogElement} dialog The dialog element that the anchor will be added to.
+ * @param {HTMLDivElement} messageSection The message section of the dialog element.
+ * @param {string} title The title of the alert dialog.
+ * @param {*} message The message that will be opened in the new window.
  */
-export default function createAnchor(dialog, messageSection, message) {
-  // create anchor
+export default function createAnchor(dialog, messageSection, title, message) {
+  // Create an anchor element
   const anchor = document.createElement('a');
   anchor.href = '#';
   anchor.role = 'button';
   anchor.onclick = () => {
     dialog.close();
-    openNewWindow(message);
+    openNewWindow(title, message);
   };
-  anchor.textContent = 'Click here to view more details.';
+  anchor.textContent = 'Click here to view more details';
+
+  // Add the anchor element to the message section
   messageSection.innerHTML = '';
   messageSection.appendChild(anchor);
 }

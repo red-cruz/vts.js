@@ -4,16 +4,16 @@ import isMsgHTMLorScript from './isMsgHTMLorScript';
 import openNewWindow from './openNewWindow';
 
 /**
- * @param {string} title
- * @param {string} message
+ * shows a fallback alert dialog with the given title and message.
+ *
+ * @param {string} title The title of the alert dialog.
+ * @param {string} message The message of the alert dialog.
  */
 export default function fallBackAlert(title, message) {
-  // add line breaks for better readability
-  message = `\n\n${message}`;
-
-  // prevent the script or html from being displayed in the alert message
-  if (isMsgHTMLorScript(message)) message = '';
-
-  const confirmed = confirm(`\n${title}.${message}`);
-  if (confirmed) openNewWindow(message);
+  if (isMsgHTMLorScript(message)) {
+    confirm(`${title}.\n\nClick 'OK' to view more details.`) &&
+      openNewWindow(title, message);
+  } else {
+    alert(`${title}.\n\n${message}`);
+  }
 }
