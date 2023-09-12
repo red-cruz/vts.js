@@ -18,16 +18,16 @@ export default function setVtsConfig(form, config) {
   const options = deepMerge({}, vtsDefaults, config);
 
   const ajax = options.ajax;
-  options.ajax.action = ajax.action || form.action;
+  options.ajax.action = ajax.action || form.getAttribute('action') || '';
 
-  const req = ajax.request;
+  const request = ajax.request;
   /** @type {RequestInit} */
-  const request = {
-    method: req?.method || form.method || 'get',
+  const method = {
+    method: request.method || form.getAttribute('method') || 'get',
   };
 
   /** @type {RequestInit} */
-  const merge = deepMerge(req, request);
+  const merge = Object.assign(request, method);
   options.ajax.request = merge;
 
   return options;
