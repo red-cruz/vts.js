@@ -1188,15 +1188,15 @@ function setVtsConfig(form, config) {
   /** @type {import('../types/base/config').default} */
   var options = deepMerge({}, defaults, config);
   var ajax = options.ajax;
-  options.ajax.action = ajax.action || form.action;
-  var req = ajax.request;
+  options.ajax.action = ajax.action || form.getAttribute('action') || '';
+  var request = ajax.request;
   /** @type {RequestInit} */
-  var request = {
-    method: (req === null || req === void 0 ? void 0 : req.method) || form.method || 'get'
+  var method = {
+    method: request.method || form.getAttribute('method') || 'get'
   };
 
   /** @type {RequestInit} */
-  var merge = deepMerge(req, request);
+  var merge = Object.assign(request, method);
   options.ajax.request = merge;
   return options;
 }
