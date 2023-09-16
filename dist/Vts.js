@@ -207,14 +207,22 @@ function vtsFormBeforeSend(url, request) {
   this.ajax.abortController = new AbortController();
   this.ajax.request.signal = this.ajax.abortController.signal;
   request = this.ajax.request = this.ajax.beforeSend(this.ajax.request, this.ajax.abortController, this.form) || request;
-  var get = new RegExp('get', 'i');
-  //@ts-ignore
-  var isGetMethod = get.test(request.method);
-  if (isGetMethod) {
-    var query = new URLSearchParams(formData.toString());
-    url = this.ajax.action = "".concat(url, "/?").concat(query);
-  } else {
-    request.body = formData;
+  var vMethod = request.method || 'get';
+  switch (vMethod.toLocaleLowerCase()) {
+    case 'get':
+    case 'delete':
+      var query = new URLSearchParams(formData.toString());
+      url = this.ajax.action = "".concat(url, "/?").concat(query);
+      break;
+    case 'put':
+    case 'patch':
+      formData.append('_method', vMethod);
+      request.method = 'post';
+      request.body = formData;
+      break;
+    default:
+      request.body = formData;
+      break;
   }
   return [url, request];
 }
