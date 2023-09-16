@@ -74,14 +74,23 @@ function vtsFormBeforeSend(url, request) {
       this.form
     ) || request;
 
-  const get = new RegExp('get', 'i');
-  //@ts-ignore
-  const isGetMethod = get.test(request.method);
-  if (isGetMethod) {
-    const query = new URLSearchParams(formData.toString());
-    url = this.ajax.action = `${url}/?${query}`;
-  } else {
-    request.body = formData;
+  const vMethod = request.method || 'get';
+
+  switch (vMethod.toLocaleLowerCase()) {
+    case 'get':
+    case 'delete':
+      const query = new URLSearchParams(formData.toString());
+      url = this.ajax.action = `${url}/?${query}`;
+      break;
+    case 'put':
+    case 'patch':
+      formData.append('_method', vMethod);
+      request.method = 'post';
+      request.body = formData;
+      break;
+    default:
+      request.body = formData;
+      break;
   }
   return [url, request];
 }
