@@ -34,20 +34,9 @@ export default function getResponseMessage(
     if (isMsgHTMLorScript(data)) {
       message = data;
     } else {
-      // If data is an object, format message based on the title and message properties returned from the data
-      if (typeof data === 'object') {
-        title = data.title ?? title;
-        message = data.message ?? message;
-
-        // If message is an object, update the message and iterate and extract each values
-        if (typeof data.message === 'object') {
-          message = '';
-          for (const err in data.message) {
-            message += `<span style="display:block">${data.message[err]}</span>`;
-          }
-        }
-      }
-      // else, use defaults
+      // get message based on the title and message properties returned from the data
+      title = data.title ?? title;
+      message = extractMessage(data.message ?? message);
     }
   } else {
     // error occured from client
@@ -61,4 +50,21 @@ export default function getResponseMessage(
   }
 
   return { title, message };
+}
+
+/**
+ * If message is an object, update the message and iterate and extract each values
+ *
+ * @param {*} data
+ */
+function extractMessage(data) {
+  let msg = '';
+  if (typeof data === 'object') {
+    for (const index in data) {
+      msg += extractMessage(data[index]);
+    }
+  } else {
+    msg = data + '<br />';
+  }
+  return msg;
 }
