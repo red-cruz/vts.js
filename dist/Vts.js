@@ -123,31 +123,32 @@ var vtsForm = {
             form = _this.form;
             _context.prev = 3;
             url = ajax.action;
-            // fetch
             _vtsFormBeforeSend$ca = vtsFormBeforeSend.call(_this, url, ajax.request);
             _vtsFormBeforeSend$ca2 = _slicedToArray(_vtsFormBeforeSend$ca, 2);
             url = _vtsFormBeforeSend$ca2[0];
             ajax.request = _vtsFormBeforeSend$ca2[1];
-            _context.next = 11;
+            console.log(ajax.request);
+            // fetch
+            _context.next = 12;
             return fetch(new Request(url, ajax.request));
-          case 11:
+          case 12:
             response = _context.sent;
             if (response.ok) {
-              _context.next = 14;
+              _context.next = 15;
               break;
             }
             throw response;
-          case 14:
-            _context.next = 16;
+          case 15:
+            _context.next = 17;
             return getResponseData_getResponseData(response);
-          case 16:
+          case 17:
             data = _context.sent;
             // call success callback function
             ajax.success(data, response, form);
-            _context.next = 32;
+            _context.next = 33;
             break;
-          case 20:
-            _context.prev = 20;
+          case 21:
+            _context.prev = 21;
             _context.t0 = _context["catch"](3);
             data = _context.t0;
             response = null;
@@ -160,19 +161,19 @@ var vtsForm = {
 
             // Check if the error is an instance of Response
             if (!(_context.t0 instanceof Response)) {
-              _context.next = 30;
+              _context.next = 31;
               break;
             }
-            _context.next = 28;
+            _context.next = 29;
             return getResponseData_getResponseData(_context.t0);
-          case 28:
+          case 29:
             data = _context.sent;
             response = _context.t0;
-          case 30:
+          case 31:
             promiseResolved = false;
             // Call the error callback function with the appropriate data
             ajax.error(data, response, form);
-          case 32:
+          case 33:
             // complete
             ajax.complete(data, response, form);
             return _context.abrupt("return", promiseResolved ? Promise.resolve({
@@ -184,11 +185,11 @@ var vtsForm = {
               response: response,
               form: form
             }));
-          case 34:
+          case 35:
           case "end":
             return _context.stop();
         }
-      }, _callee, null, [[3, 20]]);
+      }, _callee, null, [[3, 21]]);
     }))();
   }
 };
@@ -220,6 +221,8 @@ function vtsFormBeforeSend(url, request) {
       formData.forEach(function (value, key) {
         data[key] = value;
       });
+      // @ts-ignore
+      request.headers['Content-Type'] = 'application/json';
       request.body = JSON.stringify(data);
       break;
     default:
