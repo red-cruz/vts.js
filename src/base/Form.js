@@ -14,7 +14,6 @@ const vtsForm = {
     try {
       let url = ajax.action;
       [url, ajax.request] = vtsFormBeforeSend.call(this, url, ajax.request);
-      console.log(ajax.request);
       // fetch
       response = await fetch(new Request(url, ajax.request));
 
