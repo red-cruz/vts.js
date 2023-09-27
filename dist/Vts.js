@@ -216,9 +216,11 @@ function vtsFormBeforeSend(url, request) {
       break;
     case 'put':
     case 'patch':
-      formData.append('_method', vMethod);
-      request.method = 'post';
-      request.body = formData;
+      var data = {};
+      formData.forEach(function (value, key) {
+        data[key] = value;
+      });
+      request.body = JSON.stringify(data);
       break;
     default:
       request.body = formData;
@@ -761,6 +763,7 @@ function getResponseMessage_getResponseMessage(data, response) {
       message = data;
     } else {
       var _data$title, _data$message;
+      // get message based on the title and message properties returned from the data
       title = (_data$title = data.title) !== null && _data$title !== void 0 ? _data$title : title;
       message = extractMessage((_data$message = data.message) !== null && _data$message !== void 0 ? _data$message : message);
     }
@@ -783,9 +786,7 @@ function getResponseMessage_getResponseMessage(data, response) {
 /**
  * If message is an object, update the message and iterate and extract each values
  *
- * @author RED
  * @param {*} data
- * @returns {string}
  */
 function extractMessage(data) {
   var msg = '';
@@ -794,7 +795,7 @@ function extractMessage(data) {
       msg += extractMessage(data[index]);
     }
   } else {
-    msg = data + '<br>';
+    msg = data + '<br />';
   }
   return msg;
 }
