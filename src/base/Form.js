@@ -84,9 +84,11 @@ function vtsFormBeforeSend(url, request) {
       break;
     case 'put':
     case 'patch':
-      formData.append('_method', vMethod);
-      request.method = 'post';
-      request.body = formData;
+      const data = {};
+      formData.forEach((value, key) => {
+        data[key] = value;
+      });
+      request.body = JSON.stringify(data);
       break;
     default:
       request.body = formData;
