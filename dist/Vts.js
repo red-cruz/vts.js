@@ -760,21 +760,9 @@ function getResponseMessage_getResponseMessage(data, response) {
     if (isMsgHTMLorScript(data)) {
       message = data;
     } else {
-      // If data is an object, format message based on the title and message properties returned from the data
-      if (getResponseMessage_typeof(data) === 'object') {
-        var _data$title, _data$message;
-        title = (_data$title = data.title) !== null && _data$title !== void 0 ? _data$title : title;
-        message = (_data$message = data.message) !== null && _data$message !== void 0 ? _data$message : message;
-
-        // If message is an object, update the message and iterate and extract each values
-        if (getResponseMessage_typeof(data.message) === 'object') {
-          message = '';
-          for (var err in data.message) {
-            message += "<span style=\"display:block\">".concat(data.message[err], "</span>");
-          }
-        }
-      }
-      // else, use defaults
+      var _data$title, _data$message;
+      title = (_data$title = data.title) !== null && _data$title !== void 0 ? _data$title : title;
+      message = extractMessage((_data$message = data.message) !== null && _data$message !== void 0 ? _data$message : message);
     }
   } else {
     // error occured from client
@@ -790,6 +778,25 @@ function getResponseMessage_getResponseMessage(data, response) {
     title: title,
     message: message
   };
+}
+
+/**
+ * If message is an object, update the message and iterate and extract each values
+ *
+ * @author RED
+ * @param {*} data
+ * @returns {string}
+ */
+function extractMessage(data) {
+  var msg = '';
+  if (getResponseMessage_typeof(data) === 'object') {
+    for (var index in data) {
+      msg += extractMessage(data[index]);
+    }
+  } else {
+    msg = data + '<br>';
+  }
+  return msg;
 }
 ;// CONCATENATED MODULE: ./src/utils/response/openNewWindow.js
 // @ts-check
