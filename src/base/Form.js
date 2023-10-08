@@ -14,7 +14,6 @@ const vtsForm = {
     try {
       let url = ajax.action;
       [url, ajax.request] = vtsFormBeforeSend.call(this, url, ajax.request);
-
       // fetch
       response = await fetch(new Request(url, ajax.request));
 
@@ -88,6 +87,8 @@ function vtsFormBeforeSend(url, request) {
       formData.forEach((value, key) => {
         data[key] = value;
       });
+      // @ts-ignore
+      request.headers['Content-Type'] = 'application/json';
       request.body = JSON.stringify(data);
       break;
     default:

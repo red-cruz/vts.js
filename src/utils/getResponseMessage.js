@@ -55,7 +55,6 @@ export default function getResponseMessage(
 /**
  * If message is an object, update the message and iterate and extract each values
  *
- * @author RED
  * @param {*} data
  * @returns {string}
  */
@@ -66,7 +65,7 @@ function extractMessage(data) {
       msg += extractMessage(data[index]);
     }
   } else {
-    msg = data + '<br>';
+    msg = data + '<br />';
   }
   return msg;
 }
