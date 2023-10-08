@@ -83,19 +83,62 @@ function vtsFormBeforeSend(url, request) {
       break;
     case 'put':
     case 'patch':
-      const data = {};
-      formData.forEach((value, key) => {
-        data[key] = value;
-      });
+      // const data = {};
+      // const data = Object.fromEntries(formData);
+      // console.log(data);
+      // formData.forEach((value, key) => {
+      //   console.log(key);
+      //   console.table(value);
+      //   data[key] = value;
+      // });
       // @ts-ignore
       request.headers['Content-Type'] = 'application/json';
-      request.body = JSON.stringify(data);
+      request.body = formDataToJSON(formData);
       break;
     default:
       request.body = formData;
       break;
   }
   return [url, request];
+}
+
+/**
+ * @param {{}} obj
+ * @param {*} path
+ * @param {FormDataEntryValue} value
+ * @returns {{}}
+ */
+function deepSet(obj, path, value) {
+  if (Object(obj) !== obj) return obj; // When obj is not an object
+  // If not yet an array, get the keys from the string-path
+  if (!Array.isArray(path)) path = path.toString().match(/[^.[\]]+/g) || [];
+  path.slice(0, -1).reduce(
+    // Iterate all of them except the last one
+    (a, c, i) =>
+      Object(a[c]) === a[c] // Does the key exist and is its value an object?
+        ? // Yes: then follow that path
+          a[c]
+        : // No: create the key. Is the next key a potential array-index?
+          (a[c] =
+            Math.abs(path[i + 1]) >> 0 === +path[i + 1]
+              ? [] // Yes: assign a new array object
+              : {}), // No: assign a new plain object
+    obj
+  )[path[path.length - 1]] = value; // Finally assign the value to the last key
+  return obj; // Return the top-level object to allow chaining
+}
+
+/**
+ * @description
+ * @param {FormData} formData
+ * @returns {String}
+ */
+function formDataToJSON(formData) {
+  const json = {};
+  for (const [path, value] of formData) {
+    deepSet(json, path, value);
+  }
+  return JSON.stringify(json);
 }
 
 export default vtsForm;
