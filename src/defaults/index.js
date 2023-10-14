@@ -20,6 +20,7 @@ const vtsDefaults = {
   message: {
     invalid: 'Invalid ${label}',
     valid: '',
+    loading: 'Loading...',
   },
   rules: {},
   stopPropagation: true,

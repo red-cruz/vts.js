@@ -1,10 +1,10 @@
 // @ts-check
-import VtsFValidator from '../utils/VtsFormValidator';
+import VtsFormValidator from '../utils/VtsFormValidator';
 import getFieldLabel from '../utils/getFieldLabel';
 
 /** @type {import('../types/base/rules').default} */
 const vtsRules = {
-  _applyRules(rules, field, label) {
+  async _applyRules(rules, field, label) {
     let message = this.message.invalid || 'Invalid field';
     let pattern = ('pattern' in rules ? rules.pattern : '') || '';
     const matches =
@@ -18,7 +18,7 @@ const vtsRules = {
 
     if (matches) {
       // get matching field target
-      matchingField = VtsFValidator.validateField(this.form, matches);
+      matchingField = VtsFormValidator.validateField(this.form, matches);
       // get value of target field
       matchValue = matchingField.value;
       // overwrite pattern
@@ -30,7 +30,7 @@ const vtsRules = {
     const dependent = rules.requires;
     let neededField = null;
     if (dependent) {
-      neededField = VtsFValidator.validateField(this.form, dependent);
+      neededField = VtsFormValidator.validateField(this.form, dependent);
       if (neededField.value) {
         field.required = true;
         field.disabled = false;
@@ -41,13 +41,32 @@ const vtsRules = {
       neededField = neededField.value;
     }
 
+    // custom validator function
+    let validator;
+    const customValidator = rules.validator;
+    if (customValidator) {
+      const label = getFieldLabel(field, this.form); // @ts-ignored
+      const loadingMsg = (rules.message?.loading || this.message.loading)
+        .replace(/\${value}/g, field.value)
+        .replace(/\${label}/g, label);
+
+      field.setCustomValidity(loadingMsg);
+      this._setValidityData(field, {
+        field,
+        label,
+        message: loadingMsg,
+      });
+      this._reportValidity();
+      validator = (await customValidator(field, label)) || '';
+    }
+
     // set validity
     const regExp = new RegExp(pattern, rules.flags);
-    if (neededField || regExp.test(field.value)) {
+    if ((neededField || regExp.test(field.value)) && validator === '') {
       message = rules.message?.valid ?? this.message.valid ?? '';
       field.setCustomValidity('');
     } else {
-      message = rules.message?.invalid ?? message;
+      message = validator || rules.message?.invalid || message;
       field.setCustomValidity(message);
     }
 
@@ -87,6 +106,7 @@ const vtsRules = {
 };
 
 export default vtsRules;
+
 /**
  * Displays a warning message if both "pattern" and "matches" properties exist in the field rule.
  *

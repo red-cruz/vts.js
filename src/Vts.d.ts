@@ -10,7 +10,7 @@ import { VtsRuleMessage, VtsRules } from './types/config/rules';
  * error messages, and actions to be performed when a form field is valid or invalid.
  *
  * @author RED
- * @version 1.4
+ * @version 1.6
  */
 declare class Vts {
   /**

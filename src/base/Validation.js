@@ -7,16 +7,15 @@ const vtsValidation = {
     validFields: new Map(),
     invalidFields: new Map(),
   },
-  _checkFieldValidity(field) {
+  async _checkFieldValidity(field) {
     field.setCustomValidity('');
+
     const label = getFieldLabel(field, this.form);
-    let fieldData = {
-      field: field,
-      label: label,
-      message: this._validate(field, label),
-    };
+    const message = await this._validate(field, label);
+    const fieldData = { field, label, message: message };
 
     this._setValidityData(field, fieldData);
+    this._reportValidity();
   },
   _reportValidity() {
     const data = this._data;
@@ -38,7 +37,7 @@ const vtsValidation = {
       this._data.invalidFields.set(fieldName, data);
     }
   },
-  _validate(field, label) {
+  async _validate(field, label) {
     let message = field.validationMessage;
     const fieldName = field.getAttribute('name');
 
@@ -57,7 +56,7 @@ const vtsValidation = {
       if (validity[key]) {
         if (validity.valid) {
           // set custom error if rule config exists
-          if (rules) message = this._applyRules(rules, field, label);
+          if (rules) message = await this._applyRules(rules, field, label);
           // else the field is valid
           else message = custMsg;
         }

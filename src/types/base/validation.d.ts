@@ -28,7 +28,7 @@ export default interface VtsValidationBase {
     this: VtsBase,
     field: HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement,
     label: string
-  ): string;
+  ): Promise<string>;
 
   /**
    * Sets the validity state of a field.

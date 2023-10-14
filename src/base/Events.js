@@ -6,7 +6,7 @@ const vtsEvents = {
   _addEventListeners() {
     // Form
     const form = this.form;
-    form.addEventListener('submit', (e) => {
+    form.addEventListener('submit', async (e) => {
       e.preventDefault();
       if (this.stopPropagation) {
         e.stopPropagation();
@@ -19,13 +19,11 @@ const vtsEvents = {
         this._addFieldListener();
       }
 
+      this.form.classList.add(formClass);
       // validate each field
       for (const field of this.fields) {
-        this._checkFieldValidity(field);
+        await this._checkFieldValidity(field);
       }
-      this._reportValidity();
-
-      this.form.classList.add(formClass);
 
       if (this.isFormValid() && !this.halt) {
         this.submit().catch(() => {});
@@ -47,7 +45,6 @@ const vtsEvents = {
         const eventType = this._getEventType(field.type, rules?.eventType);
         field.addEventListener(eventType, () => {
           this._checkFieldValidity(field);
-          this._reportValidity();
         });
       });
   },

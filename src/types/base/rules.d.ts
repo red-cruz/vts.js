@@ -7,7 +7,7 @@ export default interface VtsRulesBase {
     rules: VtsRules[string],
     field: HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement,
     label: string
-  ): string;
+  ): Promise<string>;
 
   _getFieldRules(
     this: VtsBase,
