@@ -591,9 +591,10 @@ var vtsRules = {
             }
 
             // custom validator function
+            validator = '';
             customValidator = rules.validator;
             if (!customValidator) {
-              _context.next = 22;
+              _context.next = 23;
               break;
             }
             _label = getFieldLabel(field, _this.form); // @ts-ignored
@@ -605,18 +606,18 @@ var vtsRules = {
               message: loadingMsg
             });
             _this._reportValidity();
-            _context.next = 18;
+            _context.next = 19;
             return customValidator(field, _label);
-          case 18:
+          case 19:
             _context.t0 = _context.sent;
             if (_context.t0) {
-              _context.next = 21;
+              _context.next = 22;
               break;
             }
             _context.t0 = '';
-          case 21:
-            validator = _context.t0;
           case 22:
+            validator = _context.t0;
+          case 23:
             // set validity
             regExp = new RegExp(pattern, rules.flags);
             if ((neededField || regExp.test(field.value)) && validator === '') {
@@ -633,7 +634,7 @@ var vtsRules = {
             }
             warnMultiRule(rules, label);
             return _context.abrupt("return", message);
-          case 27:
+          case 28:
           case "end":
             return _context.stop();
         }
