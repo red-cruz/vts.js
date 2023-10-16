@@ -42,7 +42,7 @@ const vtsRules = {
     }
 
     // custom validator function
-    let validator;
+    let validator = '';
     const customValidator = rules.validator;
     if (customValidator) {
       const label = getFieldLabel(field, this.form); // @ts-ignored
