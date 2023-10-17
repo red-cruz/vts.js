@@ -12,10 +12,11 @@ const vtsForm = {
     const ajax = this.ajax;
     const form = this.form;
     try {
-      let url = ajax.action;
-      [url, ajax.request] = vtsFormBeforeSend.call(this, url, ajax.request);
+      // call beforesend callback function
+      vtsFormBeforeSend.call(this);
+
       // fetch
-      response = await fetch(new Request(url, ajax.request));
+      response = await fetch(new Request(this.ajax.action, this.ajax.request));
 
       if (!response.ok) throw response;
 
@@ -43,6 +44,7 @@ const vtsForm = {
       // Call the error callback function with the appropriate data
       ajax.error(data, response, form);
     }
+
     // complete
     ajax.complete(data, response, form);
 
@@ -53,53 +55,38 @@ const vtsForm = {
 };
 
 /**
- * @description
- * @author RED
- * @param {string} url
- * @param {RequestInit} request
- * @returns {[url, request]}
  * @this {import('../Vts').default}
  */
-function vtsFormBeforeSend(url, request) {
-  const formData = new FormData(this.form);
+function vtsFormBeforeSend() {
   // @ts-ignore
   this.ajax.abortController = new AbortController();
   this.ajax.request.signal = this.ajax.abortController.signal;
+  this.ajax.request.body = new FormData(this.form);
 
-  request = this.ajax.request =
-    this.ajax.beforeSend(
-      this.ajax.request,
-      this.ajax.abortController,
-      this.form
-    ) || request;
+  // call beforeSend config and assign the configured request
+  this.ajax.beforeSend(this.ajax.request, this.ajax.abortController, this.form);
 
-  const vMethod = request.method || 'get';
+  const vMethod = this.ajax.request.method || 'get';
 
-  switch (vMethod.toLocaleLowerCase()) {
-    case 'get':
-    case 'delete':
-      const query = new URLSearchParams(formData.toString());
-      url = this.ajax.action = `${url}/?${query}`;
-      break;
-    case 'put':
-    case 'patch':
-      // const data = {};
-      // const data = Object.fromEntries(formData);
-      // console.log(data);
-      // formData.forEach((value, key) => {
-      //   console.log(key);
-      //   console.table(value);
-      //   data[key] = value;
-      // });
-      // @ts-ignore
-      request.headers['Content-Type'] = 'application/json';
-      request.body = formDataToJSON(formData);
-      break;
-    default:
-      request.body = formData;
-      break;
-  }
-  return [url, request];
+  const formData = this.ajax.request.body;
+
+  if (typeof formData === 'object' && formData)
+    switch (vMethod.toLocaleLowerCase()) {
+      case 'get':
+      case 'delete':
+        const query = new URLSearchParams(formData.toString());
+        this.ajax.action = `${this.ajax.action}/?${query}`;
+        break;
+      case 'put':
+      case 'patch':
+        // @ts-ignore
+        this.ajax.request.headers['Content-Type'] = 'application/json';
+        this.ajax.request.body = formDataToJSON(formData);
+        break;
+      default:
+        this.ajax.request.body = formData;
+        break;
+    }
 }
 
 /**
@@ -130,7 +117,7 @@ function deepSet(obj, path, value) {
 
 /**
  * @description
- * @param {FormData} formData
+ * @param {*} formData
  * @returns {String}
  */
 function formDataToJSON(formData) {

@@ -18,7 +18,10 @@ export default interface VtsAjaxSettings {
 
   /**
    * The request options for the Ajax call.
-   * @default {}
+   * @default {
+   *  signal: this.ajax.abortController.signal,
+   *  body: new FormData(this.form)
+   * }
    */
   request: RequestInit;
 
@@ -29,13 +32,12 @@ export default interface VtsAjaxSettings {
    * @param abortController The `AbortController` associated with the request.
    * @param form The HTML form element being submitted.
    *
-   * **IMPORTANT:** If `requestInit` is modified, you need to `return requestInit` for the modifications to take effect.
    */
   beforeSend: (
     requestInit: RequestInit,
     abortController: AbortController,
     form: HTMLFormElement
-  ) => void | RequestInit;
+  ) => void;
 
   /**
    * Called when the Ajax request is complete.

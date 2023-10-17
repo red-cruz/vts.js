@@ -179,9 +179,9 @@ Vts provides several configuration options to customize its behavior. Here are t
   - Default:
     ```javascript
     request: {
-      headers: {
-        'Content-Type': 'multipart/form-data',
-      },
+        signal: this.ajax.abortController.signal,
+        method: this.form.method,
+        body: new FormData(this.form)
     }
     ```
 
@@ -414,8 +414,6 @@ Vts.setDefaults({
     },
     beforeSend: (requestInit, abortController, form) => {
       // Perform any necessary actions before sending the request
-      // Return the updated request object
-      return requestInit;
     },
     success: (data, response, form) => {
       // Handle the successful response
