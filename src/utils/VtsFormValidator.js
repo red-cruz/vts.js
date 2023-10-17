@@ -28,23 +28,14 @@ export default class VtsFormValidator {
   }
 
   /**
-   * Checks the field element in the form and validates its type.
-   * Throws an error if the field element is not found or is not a valid field element.
+   * Checks and gets the field element in the form.
    *
    * @param {HTMLFormElement} form - The HTML form element.
    * @param {string} fieldName - The name of the field element.
-   * @returns {HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement} - The validated field element.
-   * @throws {TypeError} Throws a TypeError if the field element is not found or is not a valid field element.
+   * @returns {HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement | null} - The validated field element.
    */
   static validateField(form, fieldName) {
     const field = form.querySelector(`[name="${fieldName}"]`);
-
-    // Check if field element exists
-    if (!field) {
-      throw new TypeError(
-        `The field element with the name "${fieldName}" was not found in the form.`
-      );
-    }
 
     // Check if field element is a valid field element
     if (
@@ -54,10 +45,7 @@ export default class VtsFormValidator {
         field instanceof HTMLTextAreaElement
       )
     ) {
-      throw new TypeError(
-        `The element with name "${fieldName}" is not a valid field element. 
-      Please ensure you are passing the name of a valid field in the form.`
-      );
+      return null;
     }
 
     return field;

@@ -56,11 +56,17 @@ const vtsEvents = {
         const dependent = rule.requires;
         const form = this.form;
         const field = VtsFormValidator.validateField(form, fieldName);
+
+        if (!field) continue;
+
         const rules = this._getFieldRules(fieldName);
         const eventType = this._getEventType(field.type, rules?.eventType);
         const inputEvent = new Event(eventType);
         if (match) {
           const matchField = VtsFormValidator.validateField(form, match);
+
+          if (!matchField) continue;
+
           form.querySelector(`[name="${match}"]`);
           matchField.addEventListener(eventType, function () {
             field.dispatchEvent(inputEvent);
@@ -68,6 +74,9 @@ const vtsEvents = {
         }
         if (dependent) {
           const neededField = VtsFormValidator.validateField(form, dependent);
+
+          if (!neededField) continue;
+
           form.querySelector(`[name="${dependent}"]`);
           neededField.addEventListener(eventType, function () {
             if (neededField.value) {

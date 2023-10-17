@@ -17,7 +17,7 @@ export default interface VtsValidationBase {
   _checkFieldValidity(
     this: VtsBase,
     field: HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
-  ): void;
+  ): Promise<void>;
 
   /**
    * Validates each field triggered by the form submit event.

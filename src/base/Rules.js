@@ -19,6 +19,14 @@ const vtsRules = {
     if (matches) {
       // get matching field target
       matchingField = VtsFormValidator.validateField(this.form, matches);
+      if (!matchingField) {
+        console.warn(
+          `The element with name "${matches}" is not a valid field element. 
+            Please ensure you are passing the name of a valid field in the form.`
+        );
+        return message;
+      }
+
       // get value of target field
       matchValue = matchingField.value;
       // overwrite pattern
@@ -31,6 +39,14 @@ const vtsRules = {
     let neededField = null;
     if (dependent) {
       neededField = VtsFormValidator.validateField(this.form, dependent);
+      if (!neededField) {
+        console.warn(
+          `The element with name "${dependent}" is not a valid field element. 
+            Please ensure you are passing the name of a valid field in the form.`
+        );
+        return message;
+      }
+
       if (neededField.value) {
         field.required = true;
         field.disabled = false;
