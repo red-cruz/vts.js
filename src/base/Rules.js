@@ -5,7 +5,8 @@ import getFieldLabel from '../utils/getFieldLabel';
 /** @type {import('../types/base/rules').default} */
 const vtsRules = {
   async _applyRules(rules, field, label) {
-    let message = this.message.invalid || 'Invalid field';
+    console.log(...arguments);
+    let message = this.message.invalid ?? 'Invalid field';
     let pattern = ('pattern' in rules ? rules.pattern : '') || '';
     const matches =
       'matches' in rules && !('pattern' in rules) ? rules.matches : false;
@@ -93,8 +94,6 @@ const vtsRules = {
         .replace(/:{targetLabel}/g, getFieldLabel(matchingField, this.form));
     }
 
-    warnMultiRule(rules, label);
-
     return message;
   },
 
@@ -122,19 +121,3 @@ const vtsRules = {
 };
 
 export default vtsRules;
-
-/**
- * Displays a warning message if both "pattern" and "matches" properties exist in the field rule.
- *
- * @private
- * @param {import('../types/config/rules').VtsRules[string]} rules - The validation rules for the field.
- * @param {string} label - The label of the field.
- */
-function warnMultiRule(rules, label) {
-  if ('pattern' in rules && 'matches' in rules) {
-    console.warn(
-      `Both "pattern" and "matches" properties exist in the field rule for ${label}. ` +
-        'Ignoring the "matches" property.'
-    );
-  }
-}
