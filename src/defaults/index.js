@@ -18,9 +18,9 @@ const vtsDefaults = {
   handlers: vtsHandlers,
   listen: false,
   message: {
-    invalid: 'Invalid ${label}',
+    invalid: 'Invalid :{label}',
     valid: '',
-    loading: 'Loading...',
+    loading: 'Checking...',
   },
   rules: {},
   stopPropagation: true,

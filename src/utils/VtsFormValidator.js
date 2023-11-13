@@ -53,7 +53,7 @@ export default class VtsFormValidator {
 }
 
 /**
- * Check if form element is a valid HTML form element
+ * Check if form element is a valid HTML form element and returns the form with the novalidate property set to `true`
  *
  * @param {HTMLElement} element
  * @returns {HTMLFormElement}
@@ -67,5 +67,6 @@ function checkHTMLFormInstance(element) {
 
     throw new TypeError(`The element ${msg} is not a valid HTML form element.`);
   }
+  element.noValidate = true;
   return element;
 }

@@ -63,8 +63,8 @@ const vtsRules = {
     if (customValidator) {
       const label = getFieldLabel(field, this.form); // @ts-ignored
       const loadingMsg = (rules.message?.loading || this.message.loading)
-        .replace(/\${value}/g, field.value)
-        .replace(/\${label}/g, label);
+        .replace(/:{value}/g, field.value)
+        .replace(/:{label}/g, label);
 
       field.setCustomValidity(loadingMsg);
       this._setValidityData(field, {
@@ -89,8 +89,8 @@ const vtsRules = {
     // replace message placeholders for 'matches'
     if (matches && matchingField) {
       message = message
-        ?.replace(/\${targetValue}/g, matchValue)
-        .replace(/\${targetLabel}/g, getFieldLabel(matchingField, this.form));
+        ?.replace(/:{targetValue}/g, matchValue)
+        .replace(/:{targetLabel}/g, getFieldLabel(matchingField, this.form));
     }
 
     warnMultiRule(rules, label);
