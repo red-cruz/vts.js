@@ -1,11 +1,13 @@
 // @ts-check
 import VtsFormValidator from '../utils/VtsFormValidator';
 import getFieldLabel from '../utils/getFieldLabel';
+import validatorRule from './rules/validator';
+
+const validState = '';
 
 /** @type {import('../types/base/rules').default} */
 const vtsRules = {
   async _applyRules(rules, field, label) {
-    console.log(...arguments);
     let message = this.message.invalid ?? 'Invalid field';
     let pattern = ('pattern' in rules ? rules.pattern : '') || '';
     const matches =
@@ -58,34 +60,37 @@ const vtsRules = {
       neededField = neededField.value;
     }
 
-    // custom validator function
-    let validator = '';
-    const customValidator = rules.validator;
-    if (customValidator) {
-      const label = getFieldLabel(field, this.form); // @ts-ignored
-      const loadingMsg = (rules.message?.loading || this.message.loading)
-        .replace(/:{value}/g, field.value)
-        .replace(/:{label}/g, label);
+    /**
+     * contains array of validation message. empty string for valid
+     * @type {string[]}
+     */
+    const states = [];
+    const registeredRules = [validatorRule];
 
-      field.setCustomValidity(loadingMsg);
-      this._setValidityData(field, {
-        field,
-        label,
-        message: loadingMsg,
-      });
-      this._reportValidity();
-      validator = (await customValidator(field, label)) || '';
+    for (const rule of registeredRules) {
+      const validationMessage = await rule.call(this, rules, field, label);
+      states.push(validationMessage);
+    }
+
+    for (const state of states) {
+      field.setCustomValidity(state);
+      if (state === validState) {
+        message = state ?? rules.message?.valid ?? this.message.valid ?? '';
+      } else {
+        message = state ?? rules.message?.invalid ?? message;
+        break;
+      }
     }
 
     // set validity
-    const regExp = new RegExp(pattern, rules.flags);
-    if ((neededField || regExp.test(field.value)) && validator === '') {
-      message = rules.message?.valid ?? this.message.valid ?? '';
-      field.setCustomValidity('');
-    } else {
-      message = validator || rules.message?.invalid || message;
-      field.setCustomValidity(message);
-    }
+    // const regExp = new RegExp(pattern, rules.flags);
+    // if (neededField || regExp.test(field.value)) {
+    //   message = rules.message?.valid ?? this.message.valid ?? '';
+    //   field.setCustomValidity('');
+    // } else {
+    //   message = rules.message?.invalid || message;
+    //   field.setCustomValidity(message);
+    // }
 
     // replace message placeholders for 'matches'
     if (matches && matchingField) {
