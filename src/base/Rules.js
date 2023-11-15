@@ -1,6 +1,7 @@
 // @ts-check
 import VtsFormValidator from '../utils/VtsFormValidator';
 import getFieldLabel from '../utils/getFieldLabel';
+import patternRule from './rules/pattern';
 import validatorRule from './rules/validator';
 
 const validState = '';
@@ -15,9 +16,6 @@ const vtsRules = {
 
     let matchingField;
     let matchValue = '';
-
-    // overwrite pattern
-    pattern = rules.flags?.includes('g') ? pattern + '\\b' : pattern;
 
     if (matches) {
       // get matching field target
@@ -65,7 +63,7 @@ const vtsRules = {
      * @type {string[]}
      */
     const states = [];
-    const registeredRules = [validatorRule];
+    const registeredRules = [validatorRule, patternRule];
 
     for (const rule of registeredRules) {
       const validationMessage = await rule.call(this, rules, field, label);
@@ -81,16 +79,6 @@ const vtsRules = {
         break;
       }
     }
-
-    // set validity
-    // const regExp = new RegExp(pattern, rules.flags);
-    // if (neededField || regExp.test(field.value)) {
-    //   message = rules.message?.valid ?? this.message.valid ?? '';
-    //   field.setCustomValidity('');
-    // } else {
-    //   message = rules.message?.invalid || message;
-    //   field.setCustomValidity(message);
-    // }
 
     // replace message placeholders for 'matches'
     if (matches && matchingField) {

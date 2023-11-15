@@ -24,9 +24,9 @@ type VtsRules = {
     message?: VtsRuleMessage;
 
     /**
-     * The pattern that will be used to create a RegExp object for validation.
+     * The pattern that will be used for validation.
      */
-    pattern?: string | RegExp;
+    pattern?: RegExp;
 
     /**
      * The name of the field that the this field requires

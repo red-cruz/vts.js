@@ -6,6 +6,7 @@ import getFieldLabel from '../../utils/getFieldLabel';
  * @param {HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement} field
  * @param {string} label
  * @this {import('../../types/base/index').default}
+ * @returns {Promise<string>}
  */
 export default async function validatorRule(rules, field, label) {
   const customValidator = rules.validator;

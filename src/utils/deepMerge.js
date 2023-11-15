@@ -18,6 +18,10 @@ export default function deepMerge(target, ...sources) {
       source[key] !== null &&
       !Array.isArray(source[key])
     ) {
+      if (source[key] instanceof RegExp) {
+        target[key] = source[key];
+        continue;
+      }
       if (
         !target[key] ||
         typeof target[key] !== 'object' ||
