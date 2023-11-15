@@ -1,6 +1,6 @@
 // @ts-check
-
 import VtsFormValidator from '../../utils/VtsFormValidator';
+import attachEvent from '../../utils/attachEvent';
 import getFieldLabel from '../../utils/getFieldLabel';
 
 /**
@@ -24,6 +24,8 @@ export default function equalToRule(rules, field, label) {
     );
     return '';
   }
+
+  attachEvent('equalTo', matchingField, field, rules);
 
   // get value of target field
   matchValue = matchingField.value;

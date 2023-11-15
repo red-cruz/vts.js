@@ -1,5 +1,5 @@
 // @ts-check
-import VtsFormValidator from '../utils/VtsFormValidator';
+import getEventType from '../utils/getEventType';
 
 /** @type {import('../types/base/events').default} */
 const vtsEvents = {
@@ -35,79 +35,18 @@ const vtsEvents = {
     shouldListen && this._addFieldListener();
 
     // Match events
-    this._attachMatchEvents();
+    // this._attachMatchEvents();
   },
   _addFieldListener() {
     if (this.fields)
       this.fields.forEach((field) => {
         const fieldName = field.getAttribute('name');
         const rules = this._getFieldRules(fieldName || '');
-        const eventType = this._getEventType(field.type, rules?.eventType);
+        const eventType = getEventType(field.type, rules?.eventType);
         field.addEventListener(eventType, () => {
           this._checkFieldValidity(field);
         });
       });
-  },
-  _attachMatchEvents() {
-    const ruleEntries = this.rules;
-    if (typeof ruleEntries === 'object' && ruleEntries instanceof Map)
-      for (const [fieldName, rule] of ruleEntries.entries()) {
-        const match = rule.equalTo;
-        const dependent = rule.requires;
-        const form = this.form;
-        const field = VtsFormValidator.validateField(form, fieldName);
-
-        if (!field) continue;
-
-        const rules = this._getFieldRules(fieldName);
-        const eventType = this._getEventType(field.type, rules?.eventType);
-        const inputEvent = new Event(eventType);
-        if (match) {
-          const matchField = VtsFormValidator.validateField(form, match);
-
-          if (!matchField) continue;
-
-          form.querySelector(`[name="${match}"]`);
-          matchField.addEventListener(eventType, function () {
-            field.dispatchEvent(inputEvent);
-          });
-        }
-        if (dependent) {
-          const neededField = VtsFormValidator.validateField(form, dependent);
-
-          if (!neededField) continue;
-
-          form.querySelector(`[name="${dependent}"]`);
-          neededField.addEventListener(eventType, function () {
-            if (neededField.value) {
-              field.required = true;
-              field.disabled = false;
-            } else {
-              field.disabled = true;
-              field.required = false;
-            }
-            field.dispatchEvent(inputEvent);
-          });
-        }
-      }
-  },
-  _getEventType(fieldType, ruleEventType) {
-    const changeEvents = [
-      'radio',
-      'select-one',
-      'select-multiple',
-      'checkbox',
-      'file',
-      'range',
-    ];
-
-    // Update event to 'change' based on the field type
-    let eventType = changeEvents.includes(fieldType) ? 'change' : 'input';
-
-    // Update event based on the specified rule
-    eventType = ruleEventType || eventType;
-
-    return eventType;
   },
 };
 

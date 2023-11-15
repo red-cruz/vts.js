@@ -29,9 +29,14 @@ type VtsRules = {
     pattern?: RegExp;
 
     /**
-     * The name of the field that the this field requires
+     * The name of the field that the this field requires or a Function that returns a boolean whether this field should be required
      */
-    requires?: string;
+    requiredIf?:
+      | string
+      | ((
+          field: HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement,
+          label: string
+        ) => Promise<string>);
 
     /**
      * A function that will be called to validate the input field.
