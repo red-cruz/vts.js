@@ -5,7 +5,7 @@ import getFieldLabel from '../../utils/getFieldLabel';
  * @param {import('../../types/config/rules').VtsRules[string]} rules
  * @param {HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement} field
  * @param {string} label
- * @this {import('../../types/base/index').default}
+ * @this {import('../../types/base/index').default} Vts
  * @returns {Promise<string>}
  */
 export default async function validatorRule(rules, field, label) {

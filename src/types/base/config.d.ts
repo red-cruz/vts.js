@@ -34,7 +34,7 @@ export default interface VtsBaseConfig {
    * @example
    *  rules: {
    *    password_confirmation: {
-   *      matches: 'password',
+   *      equalTo: 'password',
    *      message: {
    *        invalid: 'This input must match the value of ${targetLabel}'
    *      }

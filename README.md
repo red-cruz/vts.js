@@ -100,7 +100,7 @@ Each instance of Vts can be configured by passing the configuration object as th
 new Vts('myForm', {
   rules: {
     password_confirmation: {
-      matches: 'password',
+      equalTo: 'password',
       message: {
         invalid: '${label} must match ${targetLabel}',
       },
@@ -355,8 +355,8 @@ When customizing error messages, you can use the following `placeholders` to inc
 
 - `'${label}'`: Represents the `label` of the field being validated.
 - `'${value}'`: Represents the `value` of the field being validated.
-- `'${targetLabel}'`: Represents the `label` of the target field when the `matches` rule is applied.
-- `'${targetValue}'`: Represents the `value` of the target field when the `matches` rule is applied.
+- `'${targetLabel}'`: Represents the `label` of the target field when the `equalTo` rule is applied.
+- `'${targetValue}'`: Represents the `value` of the target field when the `equalTo` rule is applied.
 
 > Note that the placeholders should be treated as `string` literals.
 
@@ -374,7 +374,7 @@ Each key-value pair in the `rules` object represents a validation rule for a fie
 
 - `flags` (optional): `String` - The flags used when creating the regular expression object.
 
-- `matches` (optional): `String` - The name of the other field to match against. Specifies that this field's value should match the value of another field specified by the `matches` property. The `matches` property can reference any field name defined in the form.
+- `equalTo` (optional): `String` - The name of the other field to match against. Specifies that this field's value should match the value of another field specified by the `equalTo` property. The `equalTo` property can reference any field name defined in the form.
 
 - `message` (optional): The message configuration for the validation rule. It can override the default `message`. Please refer to the earlier section for more information on customizing the error messages.
 

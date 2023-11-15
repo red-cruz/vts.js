@@ -16,7 +16,7 @@ type VtsRules = {
     /**
      * The name of the field to match the value against.
      */
-    matches?: Extract<keyof VtsRules, string>;
+    equalTo?: Extract<keyof VtsRules, string>;
 
     /**
      * The message configuration for the validation rule.

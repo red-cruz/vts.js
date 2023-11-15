@@ -52,7 +52,7 @@ const vtsEvents = {
     const ruleEntries = this.rules;
     if (typeof ruleEntries === 'object' && ruleEntries instanceof Map)
       for (const [fieldName, rule] of ruleEntries.entries()) {
-        const match = rule.matches;
+        const match = rule.equalTo;
         const dependent = rule.requires;
         const form = this.form;
         const field = VtsFormValidator.validateField(form, fieldName);
