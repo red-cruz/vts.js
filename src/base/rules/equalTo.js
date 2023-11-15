@@ -15,7 +15,6 @@ export default function equalToRule(rules, field, label) {
   if (!equalTo) return '';
 
   let matchingField = VtsFormValidator.validateField(this.form, equalTo);
-  let matchValue = '';
 
   if (!matchingField) {
     console.warn(
@@ -28,7 +27,7 @@ export default function equalToRule(rules, field, label) {
   attachEvent('equalTo', matchingField, field, rules);
 
   // get value of target field
-  matchValue = matchingField.value;
+  let matchValue = matchingField.value;
   // overwrite pattern
   const pattern = rules.flags?.includes('g')
     ? matchValue + '\\b'

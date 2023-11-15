@@ -1,6 +1,7 @@
 // @ts-check
 import equalToRule from './rules/equalTo';
 import patternRule from './rules/pattern';
+import requiredIfRule from './rules/requiredIf';
 import validatorRule from './rules/validator';
 
 const validState = '';
@@ -13,7 +14,12 @@ const vtsRules = {
      * @type {string[]}
      */
     const states = [];
-    const registeredRules = [validatorRule, patternRule, equalToRule];
+    const registeredRules = [
+      validatorRule,
+      patternRule,
+      equalToRule,
+      requiredIfRule,
+    ];
 
     for (const rule of registeredRules) {
       /** @type {string} */
@@ -31,7 +37,7 @@ const vtsRules = {
           state ??
           rules.message?.invalid ??
           this.message.invalid ??
-          'Invalid field';
+          'Invalid :{label}';
         break;
       }
     }

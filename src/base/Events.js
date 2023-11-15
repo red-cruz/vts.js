@@ -33,9 +33,6 @@ const vtsEvents = {
     // Fields
     const shouldListen = this.listen;
     shouldListen && this._addFieldListener();
-
-    // Match events
-    // this._attachMatchEvents();
   },
   _addFieldListener() {
     if (this.fields)

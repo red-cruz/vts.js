@@ -36,7 +36,7 @@ type VtsRules = {
       | ((
           field: HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement,
           label: string
-        ) => Promise<string>);
+        ) => boolean);
 
     /**
      * A function that will be called to validate the input field.
