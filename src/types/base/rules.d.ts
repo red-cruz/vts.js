@@ -15,4 +15,11 @@ export default interface VtsRulesBase {
   ): VtsRules[string] | undefined;
 
   _convertRulesToMap(this: VtsBase): void;
+
+  _setCheckingRule(
+    this: VtsBase,
+    rules: VtsRules[string],
+    field: HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement,
+    label: string
+  );
 }

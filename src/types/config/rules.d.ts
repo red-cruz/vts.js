@@ -9,11 +9,6 @@ type VtsRules = {
     eventType?: VtsEventTypes;
 
     /**
-     * The flags that will be used when creating the RegExp object.
-     */
-    flags?: string;
-
-    /**
      * The name of the field to match the value against.
      */
     equalTo?: Extract<keyof VtsRules, string>;
@@ -36,7 +31,7 @@ type VtsRules = {
       | ((
           field: HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement,
           label: string
-        ) => boolean);
+        ) => Promise<boolean> | boolean);
 
     /**
      * A function that will be called to validate the input field.
@@ -48,10 +43,10 @@ type VtsRules = {
      * @param field The form field to validate.
      * @returns A promise that resolves with a falsey value, or rejects with a custom validity message.
      * */
-    validator: (
+    validator?: (
       field: HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement,
       label: string
-    ) => Promise<string>;
+    ) => Promise<string> | string;
   };
 };
 
@@ -66,7 +61,7 @@ type VtsValidityState =
   | 'badInput'
   | 'customError'
   | 'invalid'
-  | 'loading'
+  | 'checking'
   | 'patternMismatch'
   | 'rangeOverflow'
   | 'rangeUnderflow'
@@ -93,4 +88,4 @@ type VtsRuleMessage = {
   [Key in VtsValidityState]?: string;
 };
 
-export { VtsRuleMessage, VtsRules };
+export { VtsRuleMessage, VtsRules, VtsEventTypes };

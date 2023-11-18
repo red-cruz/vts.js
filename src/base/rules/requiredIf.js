@@ -8,15 +8,22 @@ import getEventType from '../../utils/getEventType';
  * @param {HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement} field
  * @param {string} label
  * @this {import('../../types/base/index').default} Vts
- * @returns {string}
+ * @returns {Promise<string>}
  */
-export default function requiredIfRule(rules, field, label) {
+export default async function requiredIfRule(rules, field, label) {
   const requiredIf = rules.requiredIf;
   const isFunction = typeof requiredIf === 'function';
   if (!isFunction && !requiredIf) return '';
 
+  let isInvalid = false;
+
+  const invalidMsg =
+    rules.message?.valueMissing ||
+    this.message.valueMissing ||
+    `Invalid ${label}`;
   if (isFunction) {
-    field.required = requiredIf(field, label);
+    this._setCheckingRule(rules, field, label);
+    isInvalid = await requiredIf(field, label);
   } else {
     const requiredField = VtsFormValidator.validateField(this.form, requiredIf);
     if (!requiredField) {
@@ -27,20 +34,10 @@ export default function requiredIfRule(rules, field, label) {
       return '';
     }
 
-    attachEvent('requiredIf', requiredField, field, rules, (event) => {
-      field.required = !!requiredField.value;
-      field.dispatchEvent(
-        new Event(getEventType(field.type, rules?.eventType))
-      );
-    });
+    isInvalid = !!requiredField.value && !field.value;
+
+    attachEvent('requiredIf', requiredField, field, rules);
   }
 
-  const invalidMsg =
-    rules.message?.valueMissing ||
-    this.message.valueMissing ||
-    field.validationMessage;
-
-  return !field.required || (field.required && field.checkValidity())
-    ? ''
-    : invalidMsg;
+  return isInvalid ? invalidMsg : '';
 }

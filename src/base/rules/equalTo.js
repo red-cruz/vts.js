@@ -27,12 +27,8 @@ export default function equalToRule(rules, field, label) {
   attachEvent('equalTo', matchingField, field, rules);
 
   // get value of target field
-  let matchValue = matchingField.value;
-  // overwrite pattern
-  const pattern = rules.flags?.includes('g')
-    ? matchValue + '\\b'
-    : `^${matchValue}$`;
-  const regex = new RegExp(pattern, rules.flags);
+  const matchValue = matchingField.value;
+  const regex = new RegExp(`^${matchValue}$`);
 
   const message = regex.test(field.value)
     ? ''

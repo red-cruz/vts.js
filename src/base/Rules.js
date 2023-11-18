@@ -54,6 +54,7 @@ const vtsRules = {
 
     return undefined;
   },
+
   _convertRulesToMap() {
     const rules = this.rules;
     const rulesMap = new Map();
@@ -65,6 +66,21 @@ const vtsRules = {
     }
 
     this.rules = rulesMap;
+  },
+
+  _setCheckingRule(rules, field, label) {
+    // @ts-ignore
+    const checkingMsg = (rules.message?.checking || this.message.checking)
+      .replace(/:{value}/g, field.value)
+      .replace(/:{label}/g, label);
+
+    field.setCustomValidity(checkingMsg);
+    this._setValidityData(field, {
+      field,
+      label,
+      message: checkingMsg,
+    });
+    this._reportValidity();
   },
 };
 

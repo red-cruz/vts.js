@@ -1,3 +1,9 @@
+// @ts-check
+/**
+ * @param {string} fieldType
+ * @param {import('../types/config/rules').VtsEventTypes|undefined} ruleEventType
+ * @returns {string}
+ */
 export default function getEventType(fieldType, ruleEventType) {
   const changeEvents = [
     'radio',
