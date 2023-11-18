@@ -35,7 +35,7 @@ export default class VtsFormValidator {
    * @returns {HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement | null} - The validated field element.
    */
   static validateField(form, fieldName) {
-    const field = form.querySelector(`[name="${fieldName}"]`);
+    const field = form.querySelector(`[name="${fieldName.split(' ')[0]}"]`);
 
     // Check if field element is a valid field element
     if (

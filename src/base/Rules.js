@@ -1,4 +1,5 @@
 // @ts-check
+import afterRule from './rules/after';
 import equalToRule from './rules/equalTo';
 import patternRule from './rules/pattern';
 import requiredIfRule from './rules/requiredIf';
@@ -19,6 +20,7 @@ const vtsRules = {
       patternRule,
       equalToRule,
       requiredIfRule,
+      afterRule,
     ];
 
     for (const rule of registeredRules) {
