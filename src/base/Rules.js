@@ -108,3 +108,4 @@ const vtsRules = {
 };
 
 export default vtsRules;
+export { validState };

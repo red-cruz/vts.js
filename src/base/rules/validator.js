@@ -1,4 +1,5 @@
 // @ts-check
+import { validState } from '../Rules';
 
 /**
  * @param {import('../../types/config/rules').VtsRules[string]} rules
@@ -11,6 +12,8 @@ export default async function validatorRule(rules, field, label) {
   const customValidator = rules.validator;
   if (customValidator) {
     this._setCheckingRule(rules, field, label);
-    return (await customValidator(field, label)) || '';
-  } else return '';
+    return (await customValidator(field, label)) || validState;
+  } else {
+    return validState;
+  }
 }

@@ -1,4 +1,5 @@
 // @ts-check
+import defaultMsg from '../../defaults/defaultMsg';
 import VtsFormValidator from '../../utils/VtsFormValidator';
 import attachEvent from '../../utils/attachEvent';
 import getFieldLabel from '../../utils/getFieldLabel';
@@ -32,9 +33,9 @@ export default function equalToRule(rules, field, label) {
 
   const message = regex.test(field.value)
     ? ''
-    : rules.message?.invalid || this.message.invalid || `Invalid ${label}`;
+    : rules.message?.equalTo || this.message.equalTo || defaultMsg.equalTo;
 
   return message
-    ?.replace(/:{targetValue}/g, matchValue)
-    .replace(/:{targetLabel}/g, getFieldLabel(targetField, this.form));
+    ?.replace(/{:targetValue}/g, matchValue)
+    .replace(/{:targetLabel}/g, getFieldLabel(targetField, this.form));
 }

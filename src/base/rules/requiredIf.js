@@ -1,4 +1,5 @@
 // @ts-check
+import defaultMsg from '../../defaults/defaultMsg';
 import VtsFormValidator from '../../utils/VtsFormValidator';
 import attachEvent from '../../utils/attachEvent';
 import getEventType from '../../utils/getEventType';
@@ -20,7 +21,8 @@ export default async function requiredIfRule(rules, field, label) {
   const invalidMsg =
     rules.message?.valueMissing ||
     this.message.valueMissing ||
-    `Invalid ${label}`;
+    defaultMsg.valueMissing;
+
   if (isFunction) {
     this._setCheckingRule(rules, field, label);
     isInvalid = await requiredIf(field, label);

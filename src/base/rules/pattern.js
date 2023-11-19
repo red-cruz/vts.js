@@ -1,5 +1,7 @@
 // @ts-check
 
+import defaultMsg from '../../defaults/defaultMsg';
+
 /**
  * @param {import('../../types/config/rules').VtsRules[string]} rules
  * @param {HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement} field
@@ -13,5 +15,7 @@ export default function patternRule(rules, field, label) {
 
   return pattern.test(field.value)
     ? ''
-    : rules.message?.invalid || this.message.invalid || `Invalid ${label}`;
+    : rules.message?.patternMismatch ||
+        this.message.patternMismatch ||
+        defaultMsg.patternMismatch;
 }

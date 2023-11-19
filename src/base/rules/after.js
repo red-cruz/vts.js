@@ -1,6 +1,7 @@
 // @ts-check
-import getFieldLabel from '../../utils/getFieldLabel';
+import defaultMsg from '../../defaults/defaultMsg';
 import { replaceDateMsg } from '../../utils/validation/replaceMessage';
+import { validState } from '../Rules';
 
 /**
  * @param {import('../../types/config/rules').VtsRules[string]} rules
@@ -29,8 +30,8 @@ export default function afterRule(rules, field, label) {
 
   const message =
     fieldDate > targetDate
-      ? ''
-      : rules.message?.after || this.message.after || 'Invalid {:label}';
+      ? validState
+      : rules.message?.after || this.message.after || defaultMsg.after;
 
   return replaceDateMsg(message, targetField, targetDate);
 }
