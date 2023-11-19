@@ -65,10 +65,11 @@ const vtsValidation = {
         break;
       }
     }
+
     // replace placeholders
     message = message
-      ?.replace(/:{value}/g, field.value)
-      .replace(/:{label}/g, label);
+      ?.replace(/{:value}/g, field.value)
+      .replace(/{:label}/g, label);
 
     return message;
   },

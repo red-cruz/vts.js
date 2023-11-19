@@ -38,11 +38,7 @@ const vtsRules = {
       if (state === validState) {
         message = rules.message?.valid ?? this.message.valid ?? '';
       } else {
-        message =
-          state ??
-          rules.message?.invalid ??
-          this.message.invalid ??
-          'Invalid :{label}';
+        message = state;
         break;
       }
     }

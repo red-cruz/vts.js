@@ -1,5 +1,6 @@
 // @ts-check
 import getFieldLabel from '../../utils/getFieldLabel';
+import { replaceDateMsg } from '../../utils/validation/replaceMessage';
 
 /**
  * @param {import('../../types/config/rules').VtsRules[string]} rules
@@ -29,16 +30,7 @@ export default function afterRule(rules, field, label) {
   const message =
     fieldDate > targetDate
       ? ''
-      : rules.message?.invalid ||
-        this.message.invalid ||
-        `${label} must be after ${
-          targetField?.value || targetDate.toLocaleString()
-        }`;
+      : rules.message?.after || this.message.after || 'Invalid {:label}';
 
-  console.log(targetDate.toLocaleString());
-  return message?.replace(
-    /:{targetValue}/g,
-    targetField?.value ?? targetDate.toLocaleString()
-  );
-  // .replace(/:{targetLabel}/g, getFieldLabel(targetField, this.form));
+  return replaceDateMsg(message, targetField, targetDate);
 }

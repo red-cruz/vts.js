@@ -77,25 +77,36 @@ type VtsRules = {
 
 /**
  * The values in this type are the possible validity states for a form field.
- *
- * `customError` - customvalidity that has been set outside of Vts
- *
- * `invalid` - error message for Vts
  */
 type VtsValidityState =
+  | 'after'
+  | 'afterOrEqual'
   | 'badInput'
-  | 'customError'
-  | 'invalid'
+  | 'before'
+  | 'beforeOrEqual'
+  | 'between'
   | 'checking'
+  | 'differentFrom'
+  | 'endsWith'
+  | 'equalTo'
+  | 'in'
+  | 'lowercase'
+  | 'max'
+  | 'min'
+  | 'notIn'
   | 'patternMismatch'
   | 'rangeOverflow'
   | 'rangeUnderflow'
+  | 'startsWith'
+  | 'size'
   | 'stepMismatch'
   | 'tooLong'
   | 'tooShort'
   | 'typeMismatch'
-  | 'valueMissing'
-  | 'valid';
+  | 'unique'
+  | 'uppercase'
+  | 'valid'
+  | 'valueMissing';
 
 type VtsEventTypes =
   | 'input'
