@@ -1,6 +1,4 @@
 // @ts-check
-import VtsFormValidator from '../../utils/VtsFormValidator';
-import attachEvent from '../../utils/attachEvent';
 import getFieldLabel from '../../utils/getFieldLabel';
 
 /**
@@ -14,59 +12,33 @@ export default function afterRule(rules, field, label) {
   const after = rules.after;
   if (!after) return '';
 
-  let targetField = VtsFormValidator.validateField(this.form, after);
+  let targetDate, targetField;
 
-  if (!targetField) {
-    console.warn(
-      `The element with name "${after}" is not a valid field element. 
-          Please ensure you are passing the name of a valid field in the form.`
-    );
-    return '';
+  if (typeof after === 'string') {
+    const rule = this._dateRule('after', rules, field);
+    if (!rule) return '';
+
+    targetDate = rule.targetDate;
+    targetField = rule.targetField;
+  } else {
+    targetDate = after(field, label);
   }
 
-  attachEvent('after', targetField, field, rules);
-
-  const targetDate = new Date(targetField.value);
-  const value = new Date(field.value);
-
-  // Extract the date modifier using a regular expression
-  const modifierRegex = /\+([\d]+)\s*(week|day|hour|minute|second)/g;
-  const modifierMatch = modifierRegex.exec(rules.after);
-
-  if (modifierMatch) {
-    const modifierValue = parseInt(modifierMatch[1]);
-    const modifierUnit = modifierMatch[2];
-
-    switch (modifierUnit) {
-      case 'week':
-        targetDate.setDate(targetDate.getDate() + 7 * modifierValue);
-        break;
-      case 'day':
-        targetDate.setDate(targetDate.getDate() + modifierValue);
-        break;
-      case 'hour':
-        targetDate.setHours(targetDate.getHours() + modifierValue);
-        break;
-      case 'minute':
-        targetDate.setMinutes(targetDate.getMinutes() + modifierValue);
-        break;
-      case 'second':
-        targetDate.setSeconds(targetDate.getSeconds() + modifierValue);
-        break;
-    }
-  }
-
-  console.log(targetDate, value);
-  console.log(modifierRegex, modifierMatch, rules.after);
+  const fieldDate = new Date(field.value);
 
   const message =
-    value > targetDate
+    fieldDate > targetDate
       ? ''
       : rules.message?.invalid ||
         this.message.invalid ||
-        `${label} must be after ${targetField.value}`;
+        `${label} must be after ${
+          targetField?.value || targetDate.toLocaleString()
+        }`;
 
-  return message
-    ?.replace(/:{targetValue}/g, targetField.value)
-    .replace(/:{targetLabel}/g, getFieldLabel(targetField, this.form));
+  console.log(targetDate.toLocaleString());
+  return message?.replace(
+    /:{targetValue}/g,
+    targetField?.value ?? targetDate.toLocaleString()
+  );
+  // .replace(/:{targetLabel}/g, getFieldLabel(targetField, this.form));
 }

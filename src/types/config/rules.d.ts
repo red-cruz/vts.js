@@ -4,14 +4,39 @@
 type VtsRules = {
   [key: string]: {
     /**
-     * the type of event that will be applied to the field
+     * The name of the field to match the date against.
      */
-    eventType?: VtsEventTypes;
+    after?:
+      | string
+      | ((
+          field: HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement,
+          label: string
+        ) => Promise<Date> | Date);
+
+    /**
+     * The name of the field to match the date against.
+     */
+    afterOrEqual?: string;
+
+    /**
+     * The name of the field to match the date against.
+     */
+    before?: string;
+
+    /**
+     * The name of the field to match the date against.
+     */
+    beforeOrEqual?: string;
 
     /**
      * The name of the field to match the value against.
      */
-    equalTo?: Extract<keyof VtsRules, string>;
+    equalTo?: string;
+
+    /**
+     * the type of event that will be applied to the field
+     */
+    eventType?: VtsEventTypes;
 
     /**
      * The message configuration for the validation rule.

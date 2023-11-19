@@ -37,8 +37,8 @@ const vtsEvents = {
   _addFieldListener() {
     if (this.fields)
       this.fields.forEach((field) => {
-        const fieldName = field.getAttribute('name');
-        const rules = this._getFieldRules(fieldName || '');
+        const fieldName = field.getAttribute('name') || '';
+        const rules = this._getFieldRules(fieldName);
         const eventType = getEventType(field.type, rules?.eventType);
         field.addEventListener(eventType, () => {
           this._checkFieldValidity(field);

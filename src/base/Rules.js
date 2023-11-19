@@ -1,4 +1,7 @@
 // @ts-check
+import VtsFormValidator from '../utils/VtsFormValidator';
+import attachEvent from '../utils/attachEvent';
+import applyDateModifier from '../utils/validation/applyDateModifier';
 import afterRule from './rules/after';
 import equalToRule from './rules/equalTo';
 import patternRule from './rules/pattern';
@@ -55,6 +58,28 @@ const vtsRules = {
     }
 
     return undefined;
+  },
+
+  _dateRule(rule, rules, field) {
+    const targetField = VtsFormValidator.validateField(this.form, rules[rule]);
+
+    if (!targetField) {
+      console.warn(
+        `The element with name "${rule}" is not a valid field element. 
+            Please ensure you are passing the name of a valid field in the form.`
+      );
+      return targetField;
+    }
+
+    attachEvent(rule, targetField, field, rules);
+
+    const targetDate = new Date(targetField.value);
+    applyDateModifier(rules[rule], targetDate);
+
+    return {
+      targetField,
+      targetDate,
+    };
   },
 
   _convertRulesToMap() {
