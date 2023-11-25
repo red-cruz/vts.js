@@ -6,7 +6,7 @@ import applyDateModifier from '../utils/validation/applyDateModifier';
 import afterRule from './rules/after';
 import equalToRule from './rules/equalTo';
 import patternRule from './rules/pattern';
-import requiredIfRule from './rules/requiredIf';
+import requiredIfRule from './rules/required';
 import validatorRule from './rules/validator';
 
 /** @type {import('../types/base/rules').default} */

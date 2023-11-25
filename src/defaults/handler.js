@@ -14,7 +14,7 @@ function showFeedback(fieldClass, data, form) {
   for (const key in data) {
     const { field, messages = {}, label } = data[key];
     const container = field.parentNode;
-    const feedbackDiv = container?.querySelector(`.${fieldClass}`);
+    const feedbackDiv = container?.querySelector('.' + fieldClass);
     const textContent = Object.values(messages).join('<br />');
 
     if (feedbackDiv) {

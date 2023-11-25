@@ -4,7 +4,7 @@ import getFieldLabel from '../utils/getFieldLabel';
 import afterRule from './rules/after';
 import equalToRule from './rules/equalTo';
 import patternRule from './rules/pattern';
-import requiredIfRule from './rules/requiredIf';
+import requiredIfRule from './rules/required';
 import validatorRule from './rules/validator';
 
 const registeredRules = [
@@ -108,7 +108,6 @@ async function getValidationMessages(rules, field, label) {
     /** @type {import('../types/base/validation').VtsValidationMessages} */
     const validationMessage = await rule.call(this, rules, field, label);
     const key = Object.keys(validationMessage)[0];
-    console.log(rule.name, validationMessage);
 
     if (key) {
       validationMessage[key] = validationMessage[key]

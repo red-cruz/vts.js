@@ -48,6 +48,10 @@ type VtsRules = {
      */
     pattern?: RegExp;
 
+    /*
+     */
+    required?: boolean;
+
     /**
      * The name of the field that the this field requires or a Function that returns a boolean whether this field should be required
      */

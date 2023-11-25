@@ -2,7 +2,6 @@
 import defaultMsg from '../../defaults/defaultMsg';
 import VtsFormValidator from '../../utils/VtsFormValidator';
 import attachEvent from '../../utils/attachEvent';
-import getEventType from '../../utils/getEventType';
 
 /**
  * @param {import('../../types/config/rules').VtsRules[string]} rules
@@ -42,4 +41,25 @@ export default async function requiredIfRule(rules, field, label) {
   }
 
   return isInvalid ? { requiredIf: invalidMsg } : {};
+}
+
+/**
+ * @param {import('../../types/config/rules').VtsRules[string]} rules
+ * @param {HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement} field
+ * @param {string} label
+ * @this {import('../../types/base/index').default} Vts
+ * @returns {import('../../types/base/validation').VtsValidationMessages}
+ */
+export function required(rules, field, label) {
+  const required = rules?.required;
+  if (!required) return {};
+
+  if (!field.value) {
+    return {
+      required:
+        rules.message?.valueMissing ||
+        this.message?.valueMissing ||
+        defaultMsg.valueMissing,
+    };
+  } else return {};
 }
