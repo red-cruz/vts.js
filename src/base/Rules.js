@@ -50,7 +50,7 @@ const vtsRules = {
       this._data.validFields.delete(fieldName);
       this._data.invalidFields.set(fieldName, {
         field,
-        message: validationMessages,
+        messages: validationMessages,
         label,
       });
     } else {
@@ -62,7 +62,7 @@ const vtsRules = {
       this._data.invalidFields.delete(fieldName);
       this._data.validFields.set(fieldName, {
         field,
-        message: validationMessages,
+        messages: validationMessages,
         label,
       });
     }

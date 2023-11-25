@@ -40,7 +40,7 @@ const vtsValidation = {
       this._data.validFields.delete(fieldName);
       this._data.invalidFields.set(fieldName, {
         field,
-        message: validationMessages,
+        messages: validationMessages,
         label,
       });
     } else {
@@ -52,7 +52,7 @@ const vtsValidation = {
       this._data.invalidFields.delete(fieldName);
       this._data.validFields.set(fieldName, {
         field,
-        message: validationMessages,
+        messages: validationMessages,
         label,
       });
     }
@@ -119,7 +119,6 @@ async function getValidationMessages(rules, field, label) {
     validationMessages = Object.assign(validationMessages, validationMessage);
   }
 
-  console.log(validationMessages);
   return validationMessages;
 }
 

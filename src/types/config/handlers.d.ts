@@ -63,6 +63,6 @@ type VtsValidationData<TFieldNames extends string> = {
     /**
      * The validation message.
      */
-    message: VtsValidationMessages | undefined;
+    messages: VtsValidationMessages | undefined;
   };
 };
