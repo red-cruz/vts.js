@@ -7,15 +7,18 @@ import defaultMsg from '../../defaults/defaultMsg';
  * @param {HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement} field
  * @param {string} label
  * @this {import('../../types/base/index').default} Vts
- * @returns {string}
+ * @returns {import('../../types/base/validation').VtsValidationMessages}
  */
 export default function patternRule(rules, field, label) {
-  const pattern = rules.pattern;
-  if (!pattern) return '';
+  const pattern = rules?.pattern;
+  if (!pattern) return {};
 
   return pattern.test(field.value)
-    ? ''
-    : rules.message?.patternMismatch ||
-        this.message.patternMismatch ||
-        defaultMsg.patternMismatch;
+    ? {}
+    : {
+        pattern:
+          rules.message?.patternMismatch ||
+          this.message.patternMismatch ||
+          defaultMsg.patternMismatch,
+      };
 }

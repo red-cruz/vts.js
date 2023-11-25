@@ -1,13 +1,14 @@
 import type VtsBase from '.';
 import type { VtsRules } from '../config/rules';
+import { VtsValidationMessages } from './validation';
 
 export default interface VtsRulesBase {
   _applyRules(
     this: VtsBase,
-    rules: VtsRules[string],
+    rules: VtsRules[string] | undefined,
     field: HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement,
     label: string
-  ): Promise<string>;
+  ): Promise<VtsValidationMessages>;
 
   _getFieldRules(
     this: VtsBase,

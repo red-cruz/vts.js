@@ -1,5 +1,6 @@
 import type VtsBase from '.';
 import type { VtsValidationData } from '../config/handlers';
+import { VtsRules } from '../config/rules';
 
 export default interface VtsValidationBase {
   /**
@@ -28,7 +29,7 @@ export default interface VtsValidationBase {
     this: VtsBase,
     field: HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement,
     label: string
-  ): Promise<string>;
+  ): Promise<VtsValidationMessages>;
 
   /**
    * Sets the validity state of a field.
@@ -47,3 +48,11 @@ export default interface VtsValidationBase {
    */
   _reportValidity(this: VtsBase): void;
 }
+
+type VtsRuleNames<T extends VtsRules> = keyof T[keyof T];
+
+type VtsValidationMessagesMap<T extends VtsRuleNames<VtsRules>> = {
+  [key in T]?: string;
+};
+
+type VtsValidationMessages = VtsValidationMessagesMap<VtsRuleNames<VtsRules>>;

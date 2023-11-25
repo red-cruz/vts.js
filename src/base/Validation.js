@@ -1,5 +1,19 @@
 // @ts-check
+import defaultMsg from '../defaults/defaultMsg';
 import getFieldLabel from '../utils/getFieldLabel';
+import afterRule from './rules/after';
+import equalToRule from './rules/equalTo';
+import patternRule from './rules/pattern';
+import requiredIfRule from './rules/requiredIf';
+import validatorRule from './rules/validator';
+
+const registeredRules = [
+  validatorRule,
+  patternRule,
+  equalToRule,
+  requiredIfRule,
+  afterRule,
+];
 
 /** @type {import('../types/base/validation').default} */
 const vtsValidation = {
@@ -8,13 +22,41 @@ const vtsValidation = {
     invalidFields: new Map(),
   },
   async _checkFieldValidity(field) {
-    field.setCustomValidity('');
-
     const label = getFieldLabel(field, this.form);
-    const message = await this._validate(field, label);
-    const fieldData = { field, label, message: message };
+    const fieldName = field.getAttribute('name') || field.name;
+    const rules = this._getFieldRules(fieldName);
 
-    this._setValidityData(field, fieldData);
+    let validationMessages = await getValidationMessages.call(
+      this,
+      rules,
+      field,
+      label
+    );
+
+    // set custom validity
+    if (Object.keys(validationMessages).length) {
+      const errorValidationMsg = Object.values(validationMessages).join(', ');
+      field.setCustomValidity(errorValidationMsg);
+      this._data.validFields.delete(fieldName);
+      this._data.invalidFields.set(fieldName, {
+        field,
+        message: validationMessages,
+        label,
+      });
+    } else {
+      field.setCustomValidity('');
+      // @ts-ignore
+      validationMessages.valid =
+        rules?.message?.valid ?? this.message.valid ?? defaultMsg.valid;
+
+      this._data.invalidFields.delete(fieldName);
+      this._data.validFields.set(fieldName, {
+        field,
+        message: validationMessages,
+        label,
+      });
+    }
+
     this._reportValidity();
   },
   _reportValidity() {
@@ -23,9 +65,23 @@ const vtsValidation = {
     const invalidData = Object.fromEntries(data.invalidFields);
     const form = this.form;
     const handlers = this.handlers;
-    handlers.valid(this.class.valid, validData, form);
-    handlers.invalid(this.class.invalid, invalidData, form);
+    const { valid, invalid } = this.class;
+
+    handlers.valid(valid, validData, form);
+    handlers.invalid(invalid, invalidData, form);
   },
+  /**
+   * @deprecated
+   */
+  async _validate(field, label) {
+    const fieldName = field.getAttribute('name'); // @ts-ignore
+    const rules = this._getFieldRules(fieldName);
+    const validationMessages = await this._applyRules(rules, field, label);
+    return validationMessages;
+  },
+  /**
+   * @deprecated
+   */
   _setValidityData(field, data) {
     const fieldName = field.getAttribute('name');
     if (!fieldName) return;
@@ -37,42 +93,34 @@ const vtsValidation = {
       this._data.invalidFields.set(fieldName, data);
     }
   },
-  async _validate(field, label) {
-    let message = field.validationMessage;
-    const fieldName = field.getAttribute('name');
+};
 
-    if (!fieldName) return message;
+/**
+ * @param {import('../types/config/rules').VtsRules[string]|undefined} rules
+ * @param {HTMLInputElement|HTMLSelectElement|HTMLTextAreaElement} field
+ * @param {string} label
+ * @returns {Promise<import('../types/base/validation').VtsValidationMessages>}
+ */
+async function getValidationMessages(rules, field, label) {
+  let validationMessages = {};
 
-    const rules = this._getFieldRules(fieldName);
-    const validity = field.validity;
+  for (const rule of registeredRules) {
+    /** @type {import('../types/base/validation').VtsValidationMessages} */
+    const validationMessage = await rule.call(this, rules, field, label);
+    const key = Object.keys(validationMessage)[0];
+    console.log(rule.name, validationMessage);
 
-    for (const key in validity) {
-      // default rule message object
-      const messageConfig = this.message;
-      // field specific rule message
-      const ruleMsg = rules?.message ? rules.message[key] : null;
-      const custMsg = ruleMsg ?? messageConfig[key];
-
-      if (validity[key]) {
-        if (validity.valid) {
-          // set custom error if rule config exists
-          if (rules) message = await this._applyRules(rules, field, label);
-          // else the field is valid
-          else message = custMsg;
-        }
-        // invalid
-        else message = custMsg ?? message;
-        break;
-      }
+    if (key) {
+      validationMessage[key] = validationMessage[key]
+        .replace(/{:value}/g, field.value)
+        .replace(/{:label}/g, label);
     }
 
-    // replace placeholders
-    message = message
-      ?.replace(/{:value}/g, field.value)
-      .replace(/{:label}/g, label);
+    validationMessages = Object.assign(validationMessages, validationMessage);
+  }
 
-    return message;
-  },
-};
+  console.log(validationMessages);
+  return validationMessages;
+}
 
 export default vtsValidation;

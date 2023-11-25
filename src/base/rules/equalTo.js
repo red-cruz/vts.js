@@ -9,11 +9,11 @@ import getFieldLabel from '../../utils/getFieldLabel';
  * @param {HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement} field
  * @param {string} label
  * @this {import('../../types/base/index').default} Vts
- * @returns {string}
+ * @returns {import('../../types/base/validation').VtsValidationMessages}
  */
 export default function equalToRule(rules, field, label) {
-  const equalTo = rules.equalTo;
-  if (!equalTo) return '';
+  const equalTo = rules?.equalTo;
+  if (!equalTo) return {};
 
   let targetField = VtsFormValidator.validateField(this.form, equalTo);
 
@@ -22,7 +22,7 @@ export default function equalToRule(rules, field, label) {
       `The element with name "${equalTo}" is not a valid field element. 
           Please ensure you are passing the name of a valid field in the form.`
     );
-    return '';
+    return {};
   }
 
   attachEvent('equalTo', targetField, field, rules);
@@ -35,7 +35,9 @@ export default function equalToRule(rules, field, label) {
     ? ''
     : rules.message?.equalTo || this.message.equalTo || defaultMsg.equalTo;
 
-  return message
-    ?.replace(/{:targetValue}/g, matchValue)
-    .replace(/{:targetLabel}/g, getFieldLabel(targetField, this.form));
+  return {
+    equalTo: message
+      ?.replace(/{:targetValue}/g, matchValue)
+      .replace(/{:targetLabel}/g, getFieldLabel(targetField, this.form)),
+  };
 }

@@ -1,4 +1,5 @@
 // @ts-check
+import defaultMsg from '../defaults/defaultMsg';
 import VtsFormValidator from '../utils/VtsFormValidator';
 import attachEvent from '../utils/attachEvent';
 import applyDateModifier from '../utils/validation/applyDateModifier';
@@ -8,16 +9,17 @@ import patternRule from './rules/pattern';
 import requiredIfRule from './rules/requiredIf';
 import validatorRule from './rules/validator';
 
-const validState = '';
-
 /** @type {import('../types/base/rules').default} */
 const vtsRules = {
+  /**
+   * @deprecated
+   */
   async _applyRules(rules, field, label) {
     /**
      * contains array of validation message. empty string for valid
-     * @type {string[]}
+     * @type {import('../types/base/validation').VtsValidationMessages}
      */
-    const states = [];
+    let validationMessages = {};
     const registeredRules = [
       validatorRule,
       patternRule,
@@ -27,23 +29,45 @@ const vtsRules = {
     ];
 
     for (const rule of registeredRules) {
-      /** @type {string} */
+      /** @type {import('../types/base/validation').VtsValidationMessages} */
       const validationMessage = await rule.call(this, rules, field, label);
-      states.push(validationMessage);
+      const key = Object.keys(validationMessage)[0];
+
+      validationMessage[key] = validationMessage[key]
+        .replace(/{:value}/g, field.value)
+        .replace(/{:label}/g, label);
+
+      validationMessages = Object.assign(validationMessages, validationMessage);
     }
 
-    let message = '';
-    for (const state of states) {
-      field.setCustomValidity(state);
-      if (state === validState) {
-        message = rules.message?.valid ?? this.message.valid ?? '';
-      } else {
-        message = state;
-        break;
-      }
+    /** @type {string} */ // @ts-ignore
+    const fieldName = field.getAttribute('name');
+
+    // set custom validity
+    if (Object.keys(validationMessages).length) {
+      field.setCustomValidity(Object.values(validationMessages).join(', '));
+
+      this._data.validFields.delete(fieldName);
+      this._data.invalidFields.set(fieldName, {
+        field,
+        message: validationMessages,
+        label,
+      });
+    } else {
+      field.setCustomValidity('');
+      // @ts-ignore
+      validationMessages.valid =
+        rules?.message?.valid ?? this.message.valid ?? defaultMsg.valid;
+
+      this._data.invalidFields.delete(fieldName);
+      this._data.validFields.set(fieldName, {
+        field,
+        message: validationMessages,
+        label,
+      });
     }
 
-    return message;
+    return validationMessages;
   },
 
   _getFieldRules(fieldName) {
@@ -92,20 +116,23 @@ const vtsRules = {
   },
 
   _setCheckingRule(rules, field, label) {
-    // @ts-ignore
-    const checkingMsg = (rules.message?.checking || this.message.checking)
+    const checking = (
+      rules.message?.checking ||
+      this.message.checking ||
+      defaultMsg.checking
+    )
       .replace(/:{value}/g, field.value)
       .replace(/:{label}/g, label);
 
-    field.setCustomValidity(checkingMsg);
+    field.setCustomValidity(checking);
+
     this._setValidityData(field, {
       field,
-      label,
-      message: checkingMsg,
+      label, // @ts-ignore
+      message: { checking },
     });
     this._reportValidity();
   },
 };
 
 export default vtsRules;
-export { validState };

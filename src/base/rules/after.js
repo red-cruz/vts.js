@@ -1,24 +1,23 @@
 // @ts-check
 import defaultMsg from '../../defaults/defaultMsg';
 import { replaceDateMsg } from '../../utils/validation/replaceMessage';
-import { validState } from '../Rules';
 
 /**
  * @param {import('../../types/config/rules').VtsRules[string]} rules
  * @param {HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement} field
  * @param {string} label
  * @this {import('../../types/base/index').default} Vts
- * @returns {string}
+ * @returns {import('../../types/base/validation').VtsValidationMessages}
  */
 export default function afterRule(rules, field, label) {
-  const after = rules.after;
-  if (!after) return '';
+  const after = rules?.after;
+  if (!after) return {};
 
   let targetDate, targetField;
 
   if (typeof after === 'string') {
     const rule = this._dateRule('after', rules, field);
-    if (!rule) return '';
+    if (!rule) return {};
 
     targetDate = rule.targetDate;
     targetField = rule.targetField;
@@ -30,8 +29,8 @@ export default function afterRule(rules, field, label) {
 
   const message =
     fieldDate > targetDate
-      ? validState
+      ? ''
       : rules.message?.after || this.message.after || defaultMsg.after;
 
-  return replaceDateMsg(message, targetField, targetDate);
+  return { after: replaceDateMsg(message, targetField, targetDate) };
 }

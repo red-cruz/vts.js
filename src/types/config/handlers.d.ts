@@ -1,3 +1,5 @@
+import { VtsValidationMessages } from '../base/validation';
+
 export default interface VtsHandlers {
   /**
    * The function to call for all valid fields.
@@ -61,6 +63,6 @@ type VtsValidationData<TFieldNames extends string> = {
     /**
      * The validation message.
      */
-    message: string | undefined;
+    message: VtsValidationMessages | undefined;
   };
 };
