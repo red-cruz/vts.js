@@ -11,8 +11,8 @@ export default async function validatorRule(rules, field, label) {
   const customValidator = rules?.validator;
   if (customValidator) {
     this._setCheckingRule(rules, field, label);
-    const invalid = await customValidator(field, label);
-    return invalid ? { validator: invalid } : {};
+    const invalidMsg = await customValidator(field, label);
+    return invalidMsg ? { validator: invalidMsg } : {};
   } else {
     return {};
   }

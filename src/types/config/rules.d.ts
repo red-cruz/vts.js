@@ -60,10 +60,10 @@ type VtsRules = {
 
     /**
      * A function that will be called to validate the input field.
-     * The function should return a `string` containing the custom validity message if the input field is invalid.
-     * Returning a falsey value will consider the field as `valid`
-     * The custom validity message will be set internally on the input field.
+     * The function should return a `string` containing the error message if the input field is invalid.
+     * Returning any falsey value will mark the field as `valid`
      * If the function resolves the promise, the input field will be considered valid.
+     *
      * @async
      * @param field The form field to validate.
      * @returns A promise that resolves with a falsey value, or rejects with a custom validity message.
@@ -71,7 +71,7 @@ type VtsRules = {
     validator?: (
       field: HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement,
       label: string
-    ) => Promise<string> | string;
+    ) => any;
   };
 };
 
