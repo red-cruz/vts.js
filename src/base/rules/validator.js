@@ -13,14 +13,14 @@ export default async function validatorRule(rules, field, label) {
 
   if (typeof customValidator === 'function') {
     this._setCheckingRule(rules, field, label);
-    const invalidMsg = await customValidator(field, label);
+    const invalidMsg = await customValidator(field, label, this.form);
     return invalidMsg ? { validator: invalidMsg } : {};
   } else {
     const invalidMsgs = {
       validator: [],
     };
     for (const validator of customValidator) {
-      const invalidMsg = await validator(field, label);
+      const invalidMsg = await validator(field, label, this.form);
       // @ts-ignore
       if (invalidMsg) invalidMsgs.validator.push(invalidMsg);
     }

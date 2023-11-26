@@ -38,6 +38,8 @@ type VtsRules = {
      */
     eventType?: VtsEventTypes;
 
+    label?: string;
+
     /**
      * The message configuration for the validation rule.
      */
@@ -59,7 +61,8 @@ type VtsRules = {
       | string
       | ((
           field: HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement,
-          label: string
+          label: string,
+          form: HTMLFormElement
         ) => Promise<boolean> | boolean);
 
     /**
@@ -74,12 +77,14 @@ type VtsRules = {
     validator?:
       | ((
           field: HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement,
-          label: string
+          label: string,
+          form: HTMLFormElement
         ) => any)
       | Array<
           (
             field: HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement,
-            label: string
+            label: string,
+            form: HTMLFormElement
           ) => any
         >;
   };

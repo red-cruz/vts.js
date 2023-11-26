@@ -22,7 +22,7 @@ const vtsEvents = {
       this.form.classList.add(formClass);
       // validate each field
       for (const field of this.fields) {
-        await this._checkFieldValidity(field);
+        await this._validate(field);
       }
 
       if (this.isFormValid() && !this.halt) {
@@ -41,7 +41,7 @@ const vtsEvents = {
         const rules = this._getFieldRules(fieldName);
         const eventType = getEventType(field.type, rules?.eventType);
         field.addEventListener(eventType, () => {
-          this._checkFieldValidity(field);
+          this._validate(field);
         });
       });
   },

@@ -21,10 +21,10 @@ const vtsValidation = {
     validFields: new Map(),
     invalidFields: new Map(),
   },
-  async _checkFieldValidity(field) {
-    const label = getFieldLabel(field, this.form);
+  async _validate(field) {
     const fieldName = field.getAttribute('name') || field.name;
     const rules = this._getFieldRules(fieldName);
+    const label = getFieldLabel(rules?.label, field, this.form);
 
     /** @type {import('../types/base/validation').VtsValidationMessages} */
     let validationMessages = await getValidationMessages.call(
@@ -70,29 +70,6 @@ const vtsValidation = {
     handlers.valid(valid, validData, form);
     handlers.invalid(invalid, invalidData, form);
   },
-  /**
-   * @deprecated
-   */
-  async _validate(field, label) {
-    const fieldName = field.getAttribute('name'); // @ts-ignore
-    const rules = this._getFieldRules(fieldName);
-    const validationMessages = await this._applyRules(rules, field, label);
-    return validationMessages;
-  },
-  /**
-   * @deprecated
-   */
-  _setValidityData(field, data) {
-    const fieldName = field.getAttribute('name');
-    if (!fieldName) return;
-    if (field.validity.valid) {
-      this._data.invalidFields.delete(fieldName);
-      this._data.validFields.set(fieldName, data);
-    } else {
-      this._data.validFields.delete(fieldName);
-      this._data.invalidFields.set(fieldName, data);
-    }
-  },
 };
 
 /**
@@ -110,14 +87,18 @@ async function getValidationMessages(rules, field, label) {
     const key = Object.keys(validationMessage)[0];
 
     if (key) {
-      if (typeof validationMessage[key] === 'string') {
-        validationMessage[key] = validationMessage[key]
+      const message = validationMessage[key];
+      if (typeof message === 'string') {
+        validationMessage[key] = message
           .replace(/{:value}/g, field.value)
           .replace(/{:label}/g, label);
       } else {
-        // validationMessage[key] = validationMessage[key]
-        //   .replace(/{:value}/g, field.value)
-        //   .replace(/{:label}/g, label);
+        // array
+        for (const subKey in message) {
+          validationMessage[key][subKey] = message[subKey]
+            .replace(/{:value}/g, field.value || 'value')
+            .replace(/{:label}/g, label);
+        }
       }
     }
 

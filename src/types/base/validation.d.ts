@@ -12,36 +12,13 @@ export default interface VtsValidationBase {
   };
 
   /**
-   * Checks the validity of a field.
-   * @param field The field to check.
-   */
-  _checkFieldValidity(
-    this: VtsBase,
-    field: HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
-  ): Promise<void>;
-
-  /**
    * Validates each field triggered by the form submit event.
-   * @param field The field to get the validity state message for.
-   * @returns The validity state message.
+   * @param field The field to check.
    */
   _validate(
     this: VtsBase,
-    field: HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement,
-    label: string
-  ): Promise<VtsValidationMessages>;
-
-  /**
-   * Sets the validity state of a field.
-   * @param valid Whether the field is valid.
-   * @param field The field to set the validity state for.
-   * @param data The validation data for the field.
-   */
-  _setValidityData(
-    this: VtsBase,
-    field: HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement,
-    data: VtsValidationData<string>[string]
-  ): void;
+    field: HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
+  ): Promise<void>;
 
   /**
    * Reports the validity of all fields to the form.

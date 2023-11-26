@@ -126,11 +126,14 @@ const vtsRules = {
 
     field.setCustomValidity(checking);
 
-    this._setValidityData(field, {
+    const fieldName = field.getAttribute('name') || field.name;
+    this._data.validFields.delete(fieldName);
+    this._data.invalidFields.set(fieldName, {
       field,
-      label,
       messages: { checking },
+      label,
     });
+
     this._reportValidity();
   },
 };

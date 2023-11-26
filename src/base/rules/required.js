@@ -24,7 +24,7 @@ export default async function requiredIfRule(rules, field, label) {
 
   if (isFunction) {
     this._setCheckingRule(rules, field, label);
-    isInvalid = await requiredIf(field, label);
+    isInvalid = await requiredIf(field, label, this.form);
   } else {
     const requiredField = VtsFormValidator.validateField(this.form, requiredIf);
     if (!requiredField) {
