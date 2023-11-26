@@ -128,8 +128,8 @@ const vtsRules = {
 
     this._setValidityData(field, {
       field,
-      label, // @ts-ignore
-      message: { checking },
+      label,
+      messages: { checking },
     });
     this._reportValidity();
   },

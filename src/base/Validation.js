@@ -26,6 +26,7 @@ const vtsValidation = {
     const fieldName = field.getAttribute('name') || field.name;
     const rules = this._getFieldRules(fieldName);
 
+    /** @type {import('../types/base/validation').VtsValidationMessages} */
     let validationMessages = await getValidationMessages.call(
       this,
       rules,
@@ -45,7 +46,6 @@ const vtsValidation = {
       });
     } else {
       field.setCustomValidity('');
-      // @ts-ignore
       validationMessages.valid =
         rules?.message?.valid ?? this.message.valid ?? defaultMsg.valid;
 
@@ -110,9 +110,15 @@ async function getValidationMessages(rules, field, label) {
     const key = Object.keys(validationMessage)[0];
 
     if (key) {
-      validationMessage[key] = validationMessage[key]
-        .replace(/{:value}/g, field.value)
-        .replace(/{:label}/g, label);
+      if (typeof validationMessage[key] === 'string') {
+        validationMessage[key] = validationMessage[key]
+          .replace(/{:value}/g, field.value)
+          .replace(/{:label}/g, label);
+      } else {
+        // validationMessage[key] = validationMessage[key]
+        //   .replace(/{:value}/g, field.value)
+        //   .replace(/{:label}/g, label);
+      }
     }
 
     validationMessages = Object.assign(validationMessages, validationMessage);

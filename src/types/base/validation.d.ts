@@ -49,10 +49,18 @@ export default interface VtsValidationBase {
   _reportValidity(this: VtsBase): void;
 }
 
-type VtsRuleNames<T extends VtsRules> = keyof T[keyof T];
-
-type VtsValidationMessagesMap<T extends VtsRuleNames<VtsRules>> = {
-  [key in T]?: string;
+type VtsValidationMessages = {
+  after?: string;
+  afterOrEqual?: string;
+  before?: string;
+  beforeOrEqual?: string;
+  checking?: string;
+  equalTo?: string;
+  eventType?: string;
+  message?: string;
+  pattern?: string;
+  required?: string;
+  requiredIf?: string;
+  valid?: string;
+  validator?: string | string[];
 };
-
-type VtsValidationMessages = VtsValidationMessagesMap<VtsRuleNames<VtsRules>>;
