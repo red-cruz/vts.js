@@ -8,9 +8,34 @@ import attachEvent from '../../utils/attachEvent';
  * @param {HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement} field
  * @param {string} label
  * @this {import('../../types/base/index').default} Vts
+ * @returns {import('../../types/base/validation').VtsValidationMessages}
+ */
+export function requiredRule(rules, field, label) {
+  const ruleMsg = rules?.message?.valueMissing || this.message?.valueMissing;
+
+  if (field.validity.valueMissing) {
+    return {
+      required: ruleMsg || field.validationMessage,
+    };
+  }
+
+  if (rules?.required && !field.value) {
+    return {
+      required: ruleMsg || defaultMsg.valueMissing,
+    };
+  }
+
+  return {};
+}
+
+/**
+ * @param {import('../../types/config/rules').VtsRules[string]} rules
+ * @param {HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement} field
+ * @param {string} label
+ * @this {import('../../types/base/index').default} Vts
  * @returns {Promise<import('../../types/base/validation').VtsValidationMessages>}
  */
-export default async function requiredIfRule(rules, field, label) {
+export async function requiredIfRule(rules, field, label) {
   const requiredIf = rules?.requiredIf;
   const isFunction = typeof requiredIf === 'function';
   if (!isFunction && !requiredIf) return {};
@@ -41,25 +66,4 @@ export default async function requiredIfRule(rules, field, label) {
   }
 
   return isInvalid ? { requiredIf: invalidMsg } : {};
-}
-
-/**
- * @param {import('../../types/config/rules').VtsRules[string]} rules
- * @param {HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement} field
- * @param {string} label
- * @this {import('../../types/base/index').default} Vts
- * @returns {import('../../types/base/validation').VtsValidationMessages}
- */
-export function required(rules, field, label) {
-  const required = rules?.required;
-  if (!required) return {};
-
-  if (!field.value) {
-    return {
-      required:
-        rules.message?.valueMissing ||
-        this.message?.valueMissing ||
-        defaultMsg.valueMissing,
-    };
-  } else return {};
 }

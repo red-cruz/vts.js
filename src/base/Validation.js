@@ -4,13 +4,14 @@ import getFieldLabel from '../utils/getFieldLabel';
 import afterRule from './rules/after';
 import equalToRule from './rules/equalTo';
 import patternRule from './rules/pattern';
-import requiredIfRule from './rules/required';
+import { requiredIfRule, requiredRule } from './rules/required';
 import validatorRule from './rules/validator';
 
 const registeredRules = [
   validatorRule,
   patternRule,
   equalToRule,
+  requiredRule,
   requiredIfRule,
   afterRule,
 ];
