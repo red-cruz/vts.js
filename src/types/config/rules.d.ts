@@ -39,7 +39,13 @@ type VtsRules = {
     eventType?: VtsEventTypes;
 
     label?: string;
-    inArray?: Array<string>;
+    inArray?:
+      | Array<string>
+      | ((
+          field: HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement,
+          label: string,
+          form: HTMLFormElement
+        ) => Promise<Array<string>> | Array<string>);
     /**
      * The message configuration for the validation rule.
      */

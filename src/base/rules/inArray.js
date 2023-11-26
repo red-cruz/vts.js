@@ -6,18 +6,26 @@ import defaultMsg from '../../defaults/defaultMsg';
  * @param {HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement} field
  * @param {string} label
  * @this {import('../../types/base/index').default} Vts
- * @returns {import('../../types/base/validation').VtsValidationMessages}
+ * @returns {Promise<import('../../types/base/validation').VtsValidationMessages>}
  */
-export default function inArrayRule(rules, field, label) {
+export default async function inArrayRule(rules, field, label) {
   const inArray = rules?.inArray;
   if (!inArray) return {};
 
   const message =
     rules.message?.inArray || this.message.inArray || defaultMsg.inArray;
 
-  return inArray.includes(field.value)
+  let arr = [];
+  if (typeof inArray === 'function') {
+    this._setCheckingRule(rules, field, label);
+    arr = await inArray(field, label, this.form);
+  } else {
+    arr = inArray;
+  }
+
+  return arr.includes(field.value)
     ? {}
     : {
-        inArray: message.replace(/{:values}/g, inArray.join(', ')),
+        inArray: message.replace(/{:values}/g, arr.join(', ')),
       };
 }

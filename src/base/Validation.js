@@ -95,7 +95,7 @@ async function getValidationMessages(rules, field, label) {
 
     validationMessages = Object.assign(validationMessages, validationMessage);
   }
-  console.log(validationMessages);
+
   return validationMessages;
 }
 

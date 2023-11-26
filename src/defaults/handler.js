@@ -15,7 +15,9 @@ function showFeedback(fieldClass, data, form) {
     const { field, messages = {}, label } = data[key];
     const container = field.parentNode;
     const feedbackDiv = container?.querySelector('.' + fieldClass);
-    const textContent = Object.values(messages).flat().join('<br />');
+    const textContent = messages.required
+      ? messages.required
+      : Object.values(messages).flat().join('<br />');
 
     if (feedbackDiv) {
       feedbackDiv.innerHTML = textContent;
