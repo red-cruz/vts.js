@@ -51,6 +51,13 @@ type VtsRules = {
      */
     message?: VtsRuleMessage;
 
+    notInArray?:
+      | Array<string>
+      | ((
+          field: HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement,
+          label: string,
+          form: HTMLFormElement
+        ) => Promise<Array<string>> | Array<string>);
     /**
      * The pattern that will be used for validation.
      */
@@ -115,7 +122,7 @@ type VtsValidityState =
   | 'lowercase'
   | 'max'
   | 'min'
-  | 'notIn'
+  | 'notInArray'
   | 'patternMismatch'
   | 'rangeOverflow'
   | 'rangeUnderflow'

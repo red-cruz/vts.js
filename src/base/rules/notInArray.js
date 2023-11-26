@@ -9,24 +9,26 @@ import isRequiredAndInvalid from './required';
  * @this {import('../../types/base/index').default} Vts
  * @returns {Promise<import('../../types/base/validation').VtsValidationMessages>}
  */
-export default async function inArrayRule(rules, field, label) {
-  const inArray = rules?.inArray;
-  if (!inArray || isRequiredAndInvalid(rules, field)) return {};
+export default async function notInArrayRule(rules, field, label) {
+  const notInArray = rules?.notInArray;
+  if (!notInArray || isRequiredAndInvalid(rules, field)) return {};
 
   const message =
-    rules.message?.inArray || this.message.inArray || defaultMsg.inArray;
+    rules.message?.notInArray ||
+    this.message.notInArray ||
+    defaultMsg.notInArray;
 
   let arr = [];
-  if (typeof inArray === 'function') {
+  if (typeof notInArray === 'function') {
     this._setCheckingRule(rules, field, label);
-    arr = await inArray(field, label, this.form);
+    arr = await notInArray(field, label, this.form);
   } else {
-    arr = inArray;
+    arr = notInArray;
   }
 
-  return arr.includes(field.value)
+  return !arr.includes(field.value)
     ? {}
     : {
-        inArray: message.replace(/{:values}/g, arr.join(', ')),
+        notInArray: message.replace(/{:values}/g, arr.join(', ')),
       };
 }

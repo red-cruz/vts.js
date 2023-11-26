@@ -1,5 +1,7 @@
 // @ts-check
 
+import isRequiredAndInvalid from './required';
+
 /**
  * @param {import('../../types/config/rules').VtsRules[string]} rules
  * @param {HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement} field
@@ -9,7 +11,7 @@
  */
 export default async function validatorRule(rules, field, label) {
   const customValidator = rules?.validator;
-  if (!customValidator) return {};
+  if (!customValidator || isRequiredAndInvalid(rules, field)) return {};
 
   if (typeof customValidator === 'function') {
     this._setCheckingRule(rules, field, label);

@@ -6,6 +6,7 @@ import applyDateModifier from '../utils/validation/applyDateModifier';
 import afterRule from './rules/after';
 import equalToRule from './rules/equalTo';
 import inArrayRule from './rules/inArray';
+import notInArrayRule from './rules/notInArray';
 import patternRule from './rules/pattern';
 import { requiredIfRule, requiredRule } from './rules/required';
 import sizeRule from './rules/size';
@@ -15,6 +16,7 @@ const registeredRules = [
   afterRule,
   equalToRule,
   inArrayRule,
+  notInArrayRule,
   patternRule,
   requiredIfRule,
   requiredRule,

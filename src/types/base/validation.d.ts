@@ -36,6 +36,7 @@ type VtsValidationMessages = {
   equalTo?: string;
   eventType?: string;
   message?: string;
+  notInArray?: string;
   pattern?: string;
   required?: string;
   requiredIf?: string;

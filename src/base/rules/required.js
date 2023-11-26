@@ -6,6 +6,15 @@ import attachEvent from '../../utils/attachEvent';
 /**
  * @param {import('../../types/config/rules').VtsRules[string]} rules
  * @param {HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement} field
+ * @returns {boolean}
+ */
+export default function isRequiredAndInvalid(rules, field) {
+  return (rules?.required && !field.value) || field.validity.valueMissing;
+}
+
+/**
+ * @param {import('../../types/config/rules').VtsRules[string]} rules
+ * @param {HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement} field
  * @param {string} label
  * @this {import('../../types/base/index').default} Vts
  * @returns {import('../../types/base/validation').VtsValidationMessages}
@@ -13,7 +22,7 @@ import attachEvent from '../../utils/attachEvent';
 export function requiredRule(rules, field, label) {
   const ruleMsg = rules?.message?.valueMissing || this.message?.valueMissing;
 
-  if ((rules?.required && !field.value) || field.validity.valueMissing) {
+  if (isRequiredAndInvalid(rules, field)) {
     return {
       required: ruleMsg || defaultMsg.valueMissing,
     };
@@ -32,7 +41,10 @@ export function requiredRule(rules, field, label) {
 export async function requiredIfRule(rules, field, label) {
   const requiredIf = rules?.requiredIf;
   const isFunction = typeof requiredIf === 'function';
-  if (!isFunction && !requiredIf) return {};
+
+  if ((!isFunction && !requiredIf) || isRequiredAndInvalid(rules, field)) {
+    return {};
+  }
 
   let isInvalid = false;
 
