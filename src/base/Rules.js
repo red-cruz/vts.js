@@ -5,19 +5,21 @@ import attachEvent from '../utils/attachEvent';
 import applyDateModifier from '../utils/validation/applyDateModifier';
 import afterRule from './rules/after';
 import equalToRule from './rules/equalTo';
+import inArrayRule from './rules/inArray';
 import patternRule from './rules/pattern';
 import { requiredIfRule, requiredRule } from './rules/required';
 import sizeRule from './rules/size';
 import validatorRule from './rules/validator';
 
 const registeredRules = [
-  validatorRule,
-  patternRule,
-  equalToRule,
-  requiredRule,
-  requiredIfRule,
   afterRule,
+  equalToRule,
+  inArrayRule,
+  patternRule,
+  requiredIfRule,
+  requiredRule,
   sizeRule,
+  validatorRule,
 ];
 
 /** @type {import('../types/base/rules').default} */

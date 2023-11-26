@@ -13,13 +13,7 @@ import attachEvent from '../../utils/attachEvent';
 export function requiredRule(rules, field, label) {
   const ruleMsg = rules?.message?.valueMissing || this.message?.valueMissing;
 
-  if (field.validity.valueMissing) {
-    return {
-      required: ruleMsg || field.validationMessage,
-    };
-  }
-
-  if (rules?.required && !field.value) {
+  if ((rules?.required && !field.value) || field.validity.valueMissing) {
     return {
       required: ruleMsg || defaultMsg.valueMissing,
     };

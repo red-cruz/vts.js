@@ -39,7 +39,7 @@ type VtsRules = {
     eventType?: VtsEventTypes;
 
     label?: string;
-
+    inArray?: Array<string>;
     /**
      * The message configuration for the validation rule.
      */
@@ -105,7 +105,7 @@ type VtsValidityState =
   | 'differentFrom'
   | 'endsWith'
   | 'equalTo'
-  | 'in'
+  | 'inArray'
   | 'lowercase'
   | 'max'
   | 'min'

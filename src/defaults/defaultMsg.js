@@ -9,11 +9,11 @@ const defaultMsg = {
   differentFrom: '{:label} must be different from {:targetValue}.',
   endsWith: '{:label} must end with {:value}.',
   equalTo: '{:label} must be equal to {:targetLabel}.',
-  in: '{:label} must be one of the following: {:values}.',
+  inArray: '{:label} must be one of the following: {:values}.',
   lowercase: '{:label} must be lowercase.',
   max: '{:label} must be less than or equal to {:maxValue}.',
   min: '{:label} must be greater than or equal to {:minValue}.',
-  notIn: '{:label} must not be one of the following: {:values}.',
+  notInArray: '{:label} must not be one of the following: {:values}.',
   patternMismatch: '{:label} must match the requested pattern.',
   rangeOverflow:
     '{:label} must be within the range of {:minValue} to {:maxValue}.',
