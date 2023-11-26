@@ -65,6 +65,7 @@ type VtsRules = {
           form: HTMLFormElement
         ) => Promise<boolean> | boolean);
 
+    size?: number;
     /**
      * A function that will be called to validate the input field.
      * The function should return a `string` containing the error message if the input field is invalid.

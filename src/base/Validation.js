@@ -1,20 +1,7 @@
 // @ts-check
 import defaultMsg from '../defaults/defaultMsg';
 import getFieldLabel from '../utils/getFieldLabel';
-import afterRule from './rules/after';
-import equalToRule from './rules/equalTo';
-import patternRule from './rules/pattern';
-import { requiredIfRule, requiredRule } from './rules/required';
-import validatorRule from './rules/validator';
-
-const registeredRules = [
-  validatorRule,
-  patternRule,
-  equalToRule,
-  requiredRule,
-  requiredIfRule,
-  afterRule,
-];
+import { registeredRules } from './Rules';
 
 /** @type {import('../types/base/validation').default} */
 const vtsValidation = {
@@ -94,14 +81,14 @@ async function getValidationMessages(rules, field, label) {
         validationMessage[key] = message
           .replace(/{:value}/g, value)
           .replace(/{:label}/g, label)
-          .replace(/{:size}/g, String(value.length));
+          .replace(/{:length}/g, String(value.length));
       } else {
         // array
         for (const subKey in message) {
           validationMessage[key][subKey] = message[subKey]
             .replace(/{:value}/g, value || 'value')
             .replace(/{:label}/g, label)
-            .replace(/{:size}/g, String(value.length));
+            .replace(/{:length}/g, String(value.length));
         }
       }
     }

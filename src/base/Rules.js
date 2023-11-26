@@ -3,6 +3,22 @@ import defaultMsg from '../defaults/defaultMsg';
 import VtsFormValidator from '../utils/VtsFormValidator';
 import attachEvent from '../utils/attachEvent';
 import applyDateModifier from '../utils/validation/applyDateModifier';
+import afterRule from './rules/after';
+import equalToRule from './rules/equalTo';
+import patternRule from './rules/pattern';
+import { requiredIfRule, requiredRule } from './rules/required';
+import sizeRule from './rules/size';
+import validatorRule from './rules/validator';
+
+const registeredRules = [
+  validatorRule,
+  patternRule,
+  equalToRule,
+  requiredRule,
+  requiredIfRule,
+  afterRule,
+  sizeRule,
+];
 
 /** @type {import('../types/base/rules').default} */
 const vtsRules = {
@@ -75,3 +91,4 @@ const vtsRules = {
 };
 
 export default vtsRules;
+export { registeredRules };

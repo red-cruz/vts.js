@@ -38,6 +38,7 @@ type VtsValidationMessages = {
   pattern?: string;
   required?: string;
   requiredIf?: string;
+  size?: string;
   valid?: string;
   validator?: string | string[];
 };
