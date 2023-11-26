@@ -20,7 +20,7 @@ const defaultMsg = {
   rangeUnderflow:
     '{:label} must be within the range of {:minValue} to {:maxValue}.',
   startsWith: '{:label} must start with {:value}.',
-  size: '{:label} must be between {:minLength} and {:maxLength} characters long.',
+  size: '{:label} must be exactly {:size} characters long.',
   stepMismatch: '{:label} must be a multiple of {:stepValue}.',
   tooLong: '{:label} must be at most {:maxLength} characters long.',
   tooShort: '{:label} must be at least {:minLength} characters long.',

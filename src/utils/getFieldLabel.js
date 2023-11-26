@@ -11,7 +11,12 @@ export default function getFieldLabel(ruleLabel, field, form) {
   const labelElement = form.querySelector(`label[for="${field.id}"]`);
   const labelText = labelElement?.textContent;
   const placeholder = field.getAttribute('placeholder');
+  const name = field.getAttribute('name') || field.name;
+  const label =
+    ruleLabel ||
+    labelText ||
+    placeholder ||
+    name.replace(/[`~!@#$%^&*()_|+\-=?;:'",.<>\{\}\[\]\\\/]/gi, ' ');
 
-  const label = ruleLabel || labelText || placeholder || '';
   return label;
 }

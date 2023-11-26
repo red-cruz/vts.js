@@ -88,16 +88,19 @@ async function getValidationMessages(rules, field, label) {
 
     if (key) {
       const message = validationMessage[key];
+      const value = field.value;
       if (typeof message === 'string') {
         validationMessage[key] = message
-          .replace(/{:value}/g, field.value)
-          .replace(/{:label}/g, label);
+          .replace(/{:value}/g, value)
+          .replace(/{:label}/g, label)
+          .replace(/{:size}/g, String(value.length));
       } else {
         // array
         for (const subKey in message) {
           validationMessage[key][subKey] = message[subKey]
-            .replace(/{:value}/g, field.value || 'value')
-            .replace(/{:label}/g, label);
+            .replace(/{:value}/g, value || 'value')
+            .replace(/{:label}/g, label)
+            .replace(/{:size}/g, String(value.length));
         }
       }
     }
