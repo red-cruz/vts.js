@@ -5,20 +5,24 @@ import attachEvent from '../../utils/attachEvent';
 import applyDateModifier from '../../utils/validation/applyDateModifier';
 import { replaceDateMsg } from '../../utils/validation/replaceMessage';
 
-export function afterRule(rules, field, label) {
-  return dateRule.call(this, 'after', rules, field, label);
+export async function afterRule(rules, field, label) {
+  const msg = await dateRule.call(this, 'after', rules, field, label);
+  return msg;
 }
 
-export function afterOrEqual(rules, field, label) {
-  return dateRule.call(this, 'afterOrEqual', rules, field, label);
+export async function afterOrEqual(rules, field, label) {
+  const msg = await dateRule.call(this, 'afterOrEqual', rules, field, label);
+  return msg;
 }
 
-export function beforeOrEqual(rules, field, label) {
-  return dateRule.call(this, 'beforeOrEqual', rules, field, label);
+export async function before(rules, field, label) {
+  const msg = await dateRule.call(this, 'before', rules, field, label);
+  return msg;
 }
 
-export function before(rules, field, label) {
-  return dateRule.call(this, 'before', rules, field, label);
+export async function beforeOrEqual(rules, field, label) {
+  const msg = await dateRule.call(this, 'beforeOrEqual', rules, field, label);
+  return msg;
 }
 
 /**
@@ -29,20 +33,20 @@ export function before(rules, field, label) {
  * @this {import('../../types/base/index').default} Vts
  * @returns {import('../../types/base/validation').VtsValidationMessages}
  */
-function dateRule(ruleName, rules, field, label) {
+async function dateRule(ruleName, rules, field, label) {
   const rule = rules ? rules[ruleName] : null;
   if (!rule) return {};
 
   let targetDate, targetField;
 
   if (typeof rule === 'string') {
-    const _rule = getDateFromRule(ruleName, rules, field);
-    if (!_rule) return {};
+    const ruleDates = getDateFromRule(ruleName, rules, field);
+    if (!ruleDates) return {};
 
-    targetDate = _rule.targetDate;
-    targetField = _rule.targetField;
+    targetDate = ruleDates.targetDate;
+    targetField = ruleDates.targetField;
   } else {
-    targetDate = rule(field, label);
+    targetDate = await rule(field, label);
   }
 
   const fieldDate = new Date(field.value);
