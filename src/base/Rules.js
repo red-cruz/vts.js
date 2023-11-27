@@ -5,12 +5,14 @@ import attachEvent from '../utils/attachEvent';
 import applyDateModifier from '../utils/validation/applyDateModifier';
 import { afterOrEqual, afterRule, before, beforeOrEqual } from './rules/date';
 import differentFrom from './rules/differentFrom';
+import endsWithRule from './rules/endsWith';
 import equalToRule from './rules/equalTo';
 import inArrayRule from './rules/inArray';
 import notInArrayRule from './rules/notInArray';
 import patternRule from './rules/pattern';
 import { requiredIfRule, requiredRule } from './rules/required';
 import sizeRule from './rules/size';
+import startsWithRule from './rules/startsWith';
 import validatorRule from './rules/validator';
 
 const registeredRules = [
@@ -18,6 +20,7 @@ const registeredRules = [
   afterOrEqual,
   before,
   beforeOrEqual,
+  endsWithRule,
   differentFrom,
   equalToRule,
   inArrayRule,
@@ -26,6 +29,7 @@ const registeredRules = [
   requiredIfRule,
   requiredRule,
   sizeRule,
+  startsWithRule,
   validatorRule,
 ];
 

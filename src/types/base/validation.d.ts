@@ -34,6 +34,7 @@ type VtsValidationMessages = {
   checking?: string;
   differentFrom?: string;
   inArray?: string;
+  endsWith?: string;
   equalTo?: string;
   eventType?: string;
   message?: string;
@@ -41,6 +42,7 @@ type VtsValidationMessages = {
   pattern?: string;
   required?: string;
   requiredIf?: string;
+  startsWith?: string;
   size?: string;
   valid?: string;
   validator?: string | string[];

@@ -44,6 +44,7 @@ type VtsRules = {
         ) => Promise<Date> | Date);
 
     differentFrom?: string;
+    endsWith?: string | number;
     /**
      * The name of the field to match the value against.
      */
@@ -94,8 +95,8 @@ type VtsRules = {
           label: string,
           form: HTMLFormElement
         ) => Promise<boolean> | boolean);
-
     size?: number;
+    startsWith?: string | number;
     /**
      * A function that will be called to validate the input field.
      * The function should return a `string` containing the error message if the input field is invalid.

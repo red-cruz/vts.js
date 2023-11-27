@@ -29,13 +29,13 @@ export default function differentFrom(rules, field, label) {
 
   // get value of target field
   const matchValue = targetField.value;
-  const regex = new RegExp(`^${matchValue}$`);
 
-  const message = !regex.test(field.value)
-    ? ''
-    : rules.message?.differentFrom ||
-      this.message.differentFrom ||
-      defaultMsg.differentFrom;
+  const message =
+    field.value !== matchValue
+      ? ''
+      : rules.message?.differentFrom ||
+        this.message.differentFrom ||
+        defaultMsg.differentFrom;
 
   return {
     differentFrom: message

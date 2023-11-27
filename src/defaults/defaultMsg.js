@@ -7,7 +7,7 @@ const defaultMsg = {
   between: '{:label} must be between {:minValue} and {:maxValue}.',
   checking: 'Checking...',
   differentFrom: '{:label} must be different from {:targetValue}.',
-  endsWith: '{:label} must end with {:value}.',
+  endsWith: '{:label} must end with {:endsWith}.',
   equalTo: '{:label} must be equal to {:targetLabel}.',
   inArray: '{:label} must be one of the following: {:values}.',
   lowercase: '{:label} must be lowercase.',
@@ -19,7 +19,7 @@ const defaultMsg = {
     '{:label} must be within the range of {:minValue} to {:maxValue}.',
   rangeUnderflow:
     '{:label} must be within the range of {:minValue} to {:maxValue}.',
-  startsWith: '{:label} must start with {:value}.',
+  startsWith: '{:label} must start with {:startsWith}.',
   size: '{:label} must be exactly {:size} characters long. You are currently using {:length} characters.',
   stepMismatch: '{:label} must be a multiple of {:stepValue}.',
   tooLong: '{:label} must be at most {:maxLength} characters long.',
