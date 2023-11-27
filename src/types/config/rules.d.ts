@@ -39,6 +39,7 @@ type VtsRules = {
     eventType?: VtsEventTypes;
 
     label?: string;
+
     inArray?:
       | Array<string>
       | ((
@@ -107,10 +108,9 @@ type VtsRules = {
 /**
  * The values in this type are the possible validity states for a form field.
  */
-type VtsValidityState =
+type VtsRuleKeys =
   | 'after'
   | 'afterOrEqual'
-  | 'badInput'
   | 'before'
   | 'beforeOrEqual'
   | 'between'
@@ -123,19 +123,14 @@ type VtsValidityState =
   | 'max'
   | 'min'
   | 'notInArray'
-  | 'patternMismatch'
-  | 'rangeOverflow'
-  | 'rangeUnderflow'
   | 'startsWith'
   | 'size'
-  | 'stepMismatch'
-  | 'tooLong'
-  | 'tooShort'
-  | 'typeMismatch'
   | 'unique'
   | 'uppercase'
-  | 'valid'
-  | 'valueMissing';
+  | 'validator'
+  | 'required'
+  | 'requiredIf'
+  | 'valid';
 
 type VtsEventTypes =
   | 'input'
@@ -150,7 +145,7 @@ type VtsEventTypes =
  * Represents the configuration for the validation rule messages in Vts (Validate Then Submit).
  */
 type VtsRuleMessage = {
-  [Key in VtsValidityState]?: string;
+  [Key in VtsRuleKeys]?: string;
 };
 
-export { VtsRuleMessage, VtsRules, VtsEventTypes };
+export { VtsRuleMessage, VtsRules, VtsEventTypes, VtsRuleKeys };

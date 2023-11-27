@@ -8,16 +8,6 @@ export default interface VtsRulesBase {
     fieldName: string
   ): VtsRules[string] | undefined;
 
-  _dateRule(
-    this: VtsBase,
-    rule: string,
-    rules: VtsRules[string],
-    field: HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
-  ): {
-    targetField: HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement;
-    targetDate: Date;
-  } | null;
-
   _convertRulesToMap(this: VtsBase): void;
 
   _setCheckingRule(

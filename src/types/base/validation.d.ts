@@ -1,6 +1,6 @@
 import type VtsBase from '.';
 import type { VtsValidationData } from '../config/handlers';
-import { VtsRules } from '../config/rules';
+import { VtsRuleKeys } from '../config/rules';
 
 export default interface VtsValidationBase {
   /**

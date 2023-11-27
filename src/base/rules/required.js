@@ -20,7 +20,7 @@ export default function isRequiredAndInvalid(rules, field) {
  * @returns {import('../../types/base/validation').VtsValidationMessages}
  */
 export function requiredRule(rules, field, label) {
-  const ruleMsg = rules?.message?.valueMissing || this.message?.valueMissing;
+  const ruleMsg = rules?.message?.requiredIf || this.message?.requiredIf;
 
   if (isRequiredAndInvalid(rules, field)) {
     return {
@@ -49,8 +49,8 @@ export async function requiredIfRule(rules, field, label) {
   let isInvalid = false;
 
   const invalidMsg =
-    rules.message?.valueMissing ||
-    this.message?.valueMissing ||
+    rules.message?.required ||
+    this.message?.requiredIf ||
     defaultMsg.valueMissing;
 
   if (isFunction) {
