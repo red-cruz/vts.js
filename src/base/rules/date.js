@@ -2,8 +2,8 @@
 import defaultMsg from '../../defaults/defaultMsg';
 import VtsFormValidator from '../../utils/VtsFormValidator';
 import attachEvent from '../../utils/attachEvent';
+import getFieldLabel from '../../utils/getFieldLabel';
 import applyDateModifier from '../../utils/validation/applyDateModifier';
-import { replaceDateMsg } from '../../utils/validation/replaceMessage';
 
 export async function afterRule(rules, field, label) {
   const msg = await dateRule.call(this, 'after', rules, field, label);
@@ -37,21 +37,23 @@ async function dateRule(ruleName, rules, field, label) {
   const rule = rules ? rules[ruleName] : null;
   if (!rule) return {};
 
-  let targetDate, targetField;
+  let targetDate, targetField, dateModifier;
 
   if (typeof rule === 'string') {
-    const ruleDates = getDateFromRule(ruleName, rules, field);
+    const ruleDates = getDateFromRule(this.form, ruleName, rules, field);
     if (!ruleDates) return {};
 
-    targetDate = ruleDates.targetDate;
+    targetDate = new Date(ruleDates.targetDate.toDateString());
     targetField = ruleDates.targetField;
+    dateModifier = ruleDates.dateModifier;
   } else {
     // rule is function
-    targetDate = await rule(field, label);
+    const awaited = await rule(field, label);
+    targetDate = new Date(awaited.toDateString());
   }
 
   let valid = false;
-  const fieldDate = new Date(field.value);
+  const fieldDate = new Date(new Date(field.value).toDateString());
   switch (ruleName) {
     case 'after':
       valid = fieldDate > targetDate;
@@ -67,16 +69,22 @@ async function dateRule(ruleName, rules, field, label) {
       break;
   }
 
-  const ruleMsg = rules.message
-    ? rules.message[ruleName]
-    : this.message[ruleName];
-  const message = valid ? '' : ruleMsg || defaultMsg[ruleName];
-
-  return { [ruleName]: replaceDateMsg(message, targetField, targetDate) };
+  return valid
+    ? {}
+    : {
+        [ruleName]: replaceDateMsg.call(
+          this,
+          ruleName,
+          rules,
+          targetField,
+          targetDate,
+          dateModifier
+        ),
+      };
 }
 
 function getDateFromRule(form, rule, rules, field) {
-  const targetField = VtsFormValidator.validateField(this.form, rules[rule]);
+  const targetField = VtsFormValidator.validateField(form, rules[rule]);
 
   if (!targetField) {
     console.warn(
@@ -89,10 +97,45 @@ function getDateFromRule(form, rule, rules, field) {
   attachEvent(rule, targetField, field, rules);
 
   const targetDate = new Date(targetField.value);
-  applyDateModifier(rules[rule], targetDate);
+  const dateModifier = applyDateModifier(rules[rule], targetDate);
 
   return {
+    dateModifier,
     targetField,
     targetDate,
   };
+}
+
+/**
+ * @param {string} ruleName
+ * @param {Date|Promise<Date>} targetDate
+ * @param {string} dateModifier
+ * @this {import('../../types/base/index').default} Vts
+ * @return {string}
+ */
+export function replaceDateMsg(
+  ruleName,
+  rules,
+  targetField,
+  targetDate,
+  dateModifier = ''
+) {
+  const isDate = targetDate instanceof Date && !isNaN(targetDate.valueOf());
+
+  const targetLabel = targetField
+    ? getFieldLabel(rules[ruleName].label, targetField, this.form)
+    : '';
+  const specified = targetLabel || 'the specified date';
+  const dateStr = isDate ? targetDate.toLocaleString() : specified;
+
+  const ruleMsg = rules.message
+    ? rules.message[ruleName]
+    : this.message[ruleName];
+
+  const message = (ruleMsg || defaultMsg[ruleName])
+    .replace(/{:targetValue}/g, dateStr)
+    .replace(/{:targetLabel}/g, targetLabel)
+    .replace(/{:offset}/g, dateModifier);
+
+  return message;
 }

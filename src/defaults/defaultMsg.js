@@ -1,6 +1,6 @@
 const defaultMsg = {
-  after: '{:label} must be after {:targetValue}.',
-  afterOrEqual: '{:label} must be after or equal to {:targetValue}.',
+  after: '{:label} must be {:offset} after {:targetLabel}.',
+  afterOrEqual: '{:label} must be {:offset} after or equal to {:targetLabel}.',
   before: '{:label} must be before {:targetValue}.',
   beforeOrEqual: '{:label} must be before or equal to {:targetValue}.',
   between: '{:label} must be between {:minValue} and {:maxValue}.',

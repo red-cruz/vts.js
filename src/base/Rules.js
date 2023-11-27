@@ -1,8 +1,5 @@
 // @ts-check
 import defaultMsg from '../defaults/defaultMsg';
-import VtsFormValidator from '../utils/VtsFormValidator';
-import attachEvent from '../utils/attachEvent';
-import applyDateModifier from '../utils/validation/applyDateModifier';
 import { afterOrEqual, afterRule, before, beforeOrEqual } from './rules/date';
 import differentFrom from './rules/differentFrom';
 import endsWithRule from './rules/endsWith';

@@ -34,4 +34,6 @@ export default function applyDateModifier(dateRule, targetDate) {
       targetDate.setSeconds(targetDate.getSeconds() + adjustedValue);
       break;
   }
+  const offset = modifierValue > 1 ? modifierMatch[3] + 's' : modifierMatch[3];
+  return modifierValue + ' ' + offset;
 }
