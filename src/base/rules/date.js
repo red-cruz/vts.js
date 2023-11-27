@@ -31,7 +31,7 @@ export async function beforeOrEqual(rules, field, label) {
  * @param {HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement} field
  * @param {string} label
  * @this {import('../../types/base/index').default} Vts
- * @returns {import('../../types/base/validation').VtsValidationMessages}
+ * @returns {Promise<import('../../types/base/validation').VtsValidationMessages>}
  */
 async function dateRule(ruleName, rules, field, label) {
   const rule = rules ? rules[ruleName] : null;
@@ -46,15 +46,12 @@ async function dateRule(ruleName, rules, field, label) {
     targetDate = ruleDates.targetDate;
     targetField = ruleDates.targetField;
   } else {
+    // rule is function
     targetDate = await rule(field, label);
   }
 
-  const fieldDate = new Date(field.value);
-  const ruleMsg = rules.message
-    ? rules.message[ruleName]
-    : this.message[ruleName];
-
   let valid = false;
+  const fieldDate = new Date(field.value);
   switch (ruleName) {
     case 'after':
       valid = fieldDate > targetDate;
@@ -70,6 +67,9 @@ async function dateRule(ruleName, rules, field, label) {
       break;
   }
 
+  const ruleMsg = rules.message
+    ? rules.message[ruleName]
+    : this.message[ruleName];
   const message = valid ? '' : ruleMsg || defaultMsg[ruleName];
 
   return { [ruleName]: replaceDateMsg(message, targetField, targetDate) };

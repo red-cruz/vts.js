@@ -32,6 +32,7 @@ type VtsValidationMessages = {
   before?: string;
   beforeOrEqual?: string;
   checking?: string;
+  differentFrom?: string;
   inArray?: string;
   equalTo?: string;
   eventType?: string;

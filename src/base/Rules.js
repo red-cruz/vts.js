@@ -4,6 +4,7 @@ import VtsFormValidator from '../utils/VtsFormValidator';
 import attachEvent from '../utils/attachEvent';
 import applyDateModifier from '../utils/validation/applyDateModifier';
 import { afterOrEqual, afterRule, before, beforeOrEqual } from './rules/date';
+import differentFrom from './rules/differentFrom';
 import equalToRule from './rules/equalTo';
 import inArrayRule from './rules/inArray';
 import notInArrayRule from './rules/notInArray';
@@ -17,6 +18,7 @@ const registeredRules = [
   afterOrEqual,
   before,
   beforeOrEqual,
+  differentFrom,
   equalToRule,
   inArrayRule,
   notInArrayRule,

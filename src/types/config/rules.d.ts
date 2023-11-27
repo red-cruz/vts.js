@@ -16,18 +16,34 @@ type VtsRules = {
     /**
      * The name of the field to match the date against.
      */
-    afterOrEqual?: string;
+    afterOrEqual?:
+      | string
+      | ((
+          field: HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement,
+          label: string
+        ) => Promise<Date> | Date);
 
     /**
      * The name of the field to match the date against.
      */
-    before?: string;
+    before?:
+      | string
+      | ((
+          field: HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement,
+          label: string
+        ) => Promise<Date> | Date);
 
     /**
      * The name of the field to match the date against.
      */
-    beforeOrEqual?: string;
+    beforeOrEqual?:
+      | string
+      | ((
+          field: HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement,
+          label: string
+        ) => Promise<Date> | Date);
 
+    differentFrom?: string;
     /**
      * The name of the field to match the value against.
      */
@@ -125,7 +141,6 @@ type VtsRuleKeys =
   | 'notInArray'
   | 'startsWith'
   | 'size'
-  | 'unique'
   | 'uppercase'
   | 'validator'
   | 'required'
