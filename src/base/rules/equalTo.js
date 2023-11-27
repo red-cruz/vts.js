@@ -37,7 +37,7 @@ export default function equalToRule(rules, field, label) {
 
   return {
     equalTo: message
-      ?.replace(/{:targetValue}/g, matchValue)
+      .replace(/{:targetValue}/g, matchValue)
       .replace(
         /{:targetLabel}/g,
         getFieldLabel(rules.label, targetField, this.form)

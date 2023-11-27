@@ -135,6 +135,7 @@ type VtsRuleKeys =
   | 'differentFrom'
   | 'endsWith'
   | 'equalTo'
+  | 'pattern'
   | 'inArray'
   | 'lowercase'
   | 'max'

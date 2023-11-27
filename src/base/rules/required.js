@@ -2,6 +2,7 @@
 import defaultMsg from '../../defaults/defaultMsg';
 import VtsFormValidator from '../../utils/VtsFormValidator';
 import attachEvent from '../../utils/attachEvent';
+import getFieldLabel from '../../utils/getFieldLabel';
 
 /**
  * @param {import('../../types/config/rules').VtsRules[string]} rules
@@ -20,11 +21,11 @@ export default function isRequiredAndInvalid(rules, field) {
  * @returns {import('../../types/base/validation').VtsValidationMessages}
  */
 export function requiredRule(rules, field, label) {
-  const ruleMsg = rules?.message?.requiredIf || this.message?.requiredIf;
+  const ruleMsg = rules?.message?.required || this.message?.required;
 
   if (isRequiredAndInvalid(rules, field)) {
     return {
-      required: ruleMsg || defaultMsg.valueMissing,
+      required: ruleMsg || defaultMsg.required,
     };
   }
 
@@ -48,10 +49,10 @@ export async function requiredIfRule(rules, field, label) {
 
   let isInvalid = false;
 
-  const invalidMsg =
-    rules.message?.required ||
+  let invalidMsg =
+    rules.message?.requiredIf ||
     this.message?.requiredIf ||
-    defaultMsg.valueMissing;
+    defaultMsg.requiredIf;
 
   if (isFunction) {
     this._setCheckingRule(rules, field, label);
@@ -67,6 +68,12 @@ export async function requiredIfRule(rules, field, label) {
     }
 
     isInvalid = !!requiredField.value && !field.value;
+    invalidMsg = invalidMsg
+      .replace(/{:targetValue}/g, requiredField.value)
+      .replace(
+        /{:targetLabel}/g,
+        getFieldLabel(rules.label, requiredField, this.form)
+      );
 
     attachEvent('requiredIf', requiredField, field, rules);
   }

@@ -17,8 +17,6 @@ export default function patternRule(rules, field, label) {
     ? {}
     : {
         pattern:
-          rules.message?.patternMismatch ||
-          this.message.patternMismatch ||
-          defaultMsg.patternMismatch,
+          rules.message?.pattern || this.message.pattern || defaultMsg.pattern,
       };
 }
