@@ -13,6 +13,9 @@ import startsWithRule from './rules/startsWith';
 import validatorRule from './rules/validator';
 
 const registeredRules = [
+  requiredRule,
+  requiredIfRule,
+
   afterRule,
   afterOrEqual,
   before,
@@ -23,8 +26,6 @@ const registeredRules = [
   inArrayRule,
   notInArrayRule,
   patternRule,
-  requiredIfRule,
-  requiredRule,
   sizeRule,
   startsWithRule,
   validatorRule,
