@@ -62,8 +62,8 @@ const vtsRules = {
       this.message.checking ||
       defaultMsg.checking
     )
-      .replace(/:{value}/g, field.value)
-      .replace(/:{label}/g, label);
+      .replace(/{:value}/g, field.value)
+      .replace(/{:label}/g, label);
 
     field.setCustomValidity(checking);
 

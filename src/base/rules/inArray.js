@@ -1,6 +1,5 @@
 // @ts-check
 import defaultMsg from '../../defaults/defaultMsg';
-import isRequiredAndInvalid from './required';
 
 /**
  * @param {import('../../types/config/rules').VtsRules[string]} rules
@@ -11,7 +10,7 @@ import isRequiredAndInvalid from './required';
  */
 export default async function inArrayRule(rules, field, label) {
   const inArray = rules?.inArray;
-  if (!inArray || isRequiredAndInvalid(rules, field)) return {};
+  if (!inArray) return {};
 
   const message =
     rules.message?.inArray || this.message.inArray || defaultMsg.inArray;

@@ -97,7 +97,8 @@ async function getValidationMessages(rules, field, label) {
 
     // if the field is invalid and has required rule, break the loop to prevent other rules from executing
     const isRequired =
-      validationMessages.required || validationMessages.requiredIf;
+      (rule.name === 'required' || rule.name === 'requiredIf') &&
+      (validationMessages.required || validationMessages.requiredIf);
     if (isRequired) break;
   }
 
