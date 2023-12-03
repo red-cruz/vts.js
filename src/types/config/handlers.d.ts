@@ -19,7 +19,10 @@ export default interface VtsHandlers {
   valid: (
     validClass: string,
     validFieldsData: VtsValidationData<string>,
-    form: HTMLFormElement
+    form: HTMLFormElement,
+    fields: NodeListOf<
+      HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
+    >
   ) => void;
 
   /**
@@ -39,7 +42,10 @@ export default interface VtsHandlers {
   invalid: (
     invalidClass: string,
     invalidFieldsData: VtsValidationData<string>,
-    form: HTMLFormElement
+    form: HTMLFormElement,
+    fields: NodeListOf<
+      HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
+    >
   ) => void;
 }
 

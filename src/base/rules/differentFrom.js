@@ -37,12 +37,10 @@ export default function differentFrom(rules, field, label) {
         this.message.differentFrom ||
         defaultMsg.differentFrom;
 
+  const targetLabel = getFieldLabel(rules.label, targetField, this.form);
   return {
     differentFrom: message
-      ?.replace(/{:targetValue}/g, matchValue)
-      .replace(
-        /{:targetLabel}/g,
-        getFieldLabel(rules.label, targetField, this.form)
-      ),
+      ?.replace(/{:targetValue}/g, matchValue || targetLabel)
+      .replace(/{:targetLabel}/g, targetLabel),
   };
 }

@@ -9,7 +9,7 @@ import getFieldLabel from '../../utils/getFieldLabel';
  * @param {HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement} field
  * @returns {boolean}
  */
-function isRequiredAndInvalid(rules, field) {
+export default function isRequiredAndInvalid(rules, field) {
   return (rules?.required && !field.value) || field.validity.valueMissing;
 }
 

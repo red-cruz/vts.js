@@ -59,28 +59,6 @@ declare class Vts {
   static setDefaults(config: VtsConfig): void;
 
   /**
-   * Gets the instance of Vts for the specified form ID.
-   * @param formId The ID of the form.
-   * @returns The instance of Vts for the specified form ID, or undefined if the instance does not exist.
-   */
-  static getInstance(formId: string): Vts | undefined;
-
-  /**
-   * Gets or creates an instance of Vts (Validate Then Submit) for the specified form ID.
-   * @param formId The ID of the form.
-   * @param config The configuration options.
-   * @returns The instance of Vts for the specified form ID.
-   */
-  static getOrCreateInstance(formId: string, config?: VtsConfig): Vts;
-
-  /**
-   * Removes the instance of Vts (Validate Then Submit) for the specified form ID.
-   * @param formId The ID of the form.
-   * @returns True if the instance was removed, false otherwise.
-   */
-  static removeInstance(formId: string): boolean;
-
-  /**
    * Asynchronously gets the data from the response.
    *
    * @async
@@ -111,6 +89,17 @@ declare class Vts {
     response: Response | null,
     defaultResponseMessages?: VtsResponseMessage
   ): { title: string; message: string };
+
+  /**
+   * Retrieves an array of HTML input elements that belong to the same group as the specified field.
+   *
+   * @param fields The NodeListOf HTML input elements to search within.
+   * @param fieldName The name of the field for which to find the corresponding group.
+   * @returns An array of HTML input elements belonging to the same group as the specified field.
+   */
+  static getGroupedFields<
+    T extends HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
+  >(fields: NodeListOf<T>, fieldName: string): T[];
 }
 
 export default Vts;

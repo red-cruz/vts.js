@@ -20,6 +20,7 @@ export default class Vts {
    */
   constructor(form, config = {}) {
     const elem = (this.form = VtsFormValidator.validateForm(form));
+    elem.vts = this;
     this.fields = elem.querySelectorAll('[name]:not([data-vts-ignored])');
     // @ts-ignore
     this.#init(elem, config);
@@ -37,18 +38,7 @@ export default class Vts {
     Object.assign(Vts.prototype, vtsEvents, vtsRules, vtsValidation);
     this._convertRulesToMap();
     this._addEventListeners();
-    const formId = form.getAttribute('id');
-    const id = formId || 'Vts_form_' + Vts.#instances.size;
-    // @ts-ignore
-    Vts.#instances.set(id, this);
   }
-
-  /**
-   * @static
-   * @type {Map<string, Vts>}
-   * @memberof Vts
-   */
-  static #instances = new Map();
 
   /**
    * @static
@@ -57,37 +47,6 @@ export default class Vts {
    */
   static setDefaults(config) {
     deepMerge(vtsDefaults, config);
-  }
-
-  /**
-   * @static
-   * @param {string} formId
-   * @memberof Vts
-   */
-  static getInstance(formId) {
-    return Vts.#instances.get(formId);
-  }
-
-  /**
-   * @static
-   * @param {string} formId
-   * @param {import('./types/config/index.js').default} [config={}]
-   * @returns {Vts}
-   * @memberof Vts
-   */
-  static getOrCreateInstance(formId, config = {}) {
-    const hasInstance = Vts.#instances.get(formId);
-    return hasInstance ? hasInstance : new Vts(formId, config);
-  }
-
-  /**
-   * @static
-   * @param {string} formId
-   * @returns {boolean}
-   * @memberof Vts
-   */
-  static removeInstance(formId) {
-    return Vts.#instances.delete(formId);
   }
 
   /**
@@ -106,5 +65,37 @@ export default class Vts {
    */
   static getResponseMessage(data, response, defaultResponseMessages) {
     return getResponseMessageUtil(data, response, defaultResponseMessages);
+  }
+
+  /**
+   * @param {NodeListOf<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>} fields
+   * @param {string} fieldName
+   * @returns {Array<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>}
+   */
+  static getGroupedFields(fields, fieldName) {
+    // Build regular expression
+    const baseName = fieldName.split('[')[0];
+    const dynamicParts = fieldName
+      .split(']')
+      .slice(1)
+      .map((part) => part.split('[')[1]);
+    let regexPattern = `^${baseName}`;
+
+    if (dynamicParts.length > 0) {
+      regexPattern += `(\\[${dynamicParts.join('|')}\\])?`;
+    }
+
+    const groupRegex = new RegExp(regexPattern);
+
+    // Find all matching inputs
+    const groupedFields = [];
+
+    for (const field of fields) {
+      if (groupRegex.test(field.name)) {
+        groupedFields.push(field);
+      }
+    }
+
+    return groupedFields;
   }
 }

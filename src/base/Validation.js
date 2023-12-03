@@ -1,4 +1,5 @@
 // @ts-check
+import Vts from '../Vts';
 import defaultMsg from '../defaults/defaultMsg';
 import getFieldLabel from '../utils/getFieldLabel';
 import { registeredRules } from './Rules';
@@ -22,8 +23,22 @@ const vtsValidation = {
       label
     );
 
+    const setAsValid = (vField = field, vRule = rules) => {
+      vField.setCustomValidity('');
+      validationMessages.valid =
+        vRule?.message?.valid ?? this.message.valid ?? defaultMsg.valid;
+
+      this._data.invalidFields.delete(vField.name);
+      this._data.validFields.set(vField.name, {
+        field,
+        messages: validationMessages,
+        label,
+      });
+    };
+
     // set custom validity
     if (Object.keys(validationMessages).length) {
+      // INVALID
       const errorValidationMsg = Object.values(validationMessages).join(', ');
       field.setCustomValidity(errorValidationMsg);
       this._data.validFields.delete(fieldName);
@@ -33,15 +48,25 @@ const vtsValidation = {
         label,
       });
     } else {
-      field.setCustomValidity('');
-      validationMessages.valid =
-        rules?.message?.valid ?? this.message.valid ?? defaultMsg.valid;
+      // VALID
+      setAsValid();
+    }
 
-      this._data.invalidFields.delete(fieldName);
-      this._data.validFields.set(fieldName, {
-        field,
-        messages: validationMessages,
-        label,
+    let fieldIdx = 0;
+    const group = Vts.getGroupedFields(this.fields, fieldName);
+    const hasGroup = group.find((gField, index) => {
+      const match = gField === field;
+      if (match) fieldIdx = index;
+      return match;
+    });
+    const isGroupValid = hasGroup
+      ? !!this._data.validFields.get(fieldName)
+      : true;
+
+    if (isGroupValid) {
+      group.splice(fieldIdx, 1);
+      group.forEach((gField) => {
+        setAsValid(gField, this._getFieldRules(gField.name));
       });
     }
 
@@ -55,8 +80,8 @@ const vtsValidation = {
     const handlers = this.handlers;
     const { valid, invalid } = this.class;
 
-    handlers.valid(valid, validData, form);
-    handlers.invalid(invalid, invalidData, form);
+    handlers.valid(valid, validData, form, this.fields);
+    handlers.invalid(invalid, invalidData, form, this.fields);
   },
 };
 
@@ -64,11 +89,13 @@ const vtsValidation = {
  * @param {import('../types/config/rules').VtsRules[string]|undefined} rules
  * @param {HTMLInputElement|HTMLSelectElement|HTMLTextAreaElement} field
  * @param {string} label
+ * @this {import('../types/base').default}
  * @returns {Promise<import('../types/base/validation').VtsValidationMessages>}
  */
 async function getValidationMessages(rules, field, label) {
   let validationMessages = {};
 
+  // TODO: if field is not required, no need to execute validation rules if there is no value
   for (const rule of registeredRules) {
     /** @type {import('../types/base/validation').VtsValidationMessages} */
     const validationMessage = await rule.call(this, rules, field, label);
@@ -78,15 +105,16 @@ async function getValidationMessages(rules, field, label) {
       const message = validationMessage[key];
       const value = field.value;
       if (typeof message === 'string') {
+        const val = value || label;
         validationMessage[key] = message
-          .replace(/{:value}/g, value)
+          .replace(/{:value}/g, value || label)
           .replace(/{:label}/g, label)
           .replace(/{:length}/g, String(value.length));
       } else {
         // array
         for (const subKey in message) {
           validationMessage[key][subKey] = message[subKey]
-            .replace(/{:value}/g, value || 'value')
+            .replace(/{:value}/g, value || label)
             .replace(/{:label}/g, label)
             .replace(/{:length}/g, String(value.length));
         }
@@ -99,7 +127,9 @@ async function getValidationMessages(rules, field, label) {
     const isRequired =
       (rule.name === 'required' || rule.name === 'requiredIf') &&
       (validationMessages.required || validationMessages.requiredIf);
-    if (isRequired) break;
+    if (isRequired) {
+      break;
+    }
   }
 
   return validationMessages;

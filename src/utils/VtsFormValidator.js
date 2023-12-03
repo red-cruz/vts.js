@@ -24,6 +24,7 @@ export default class VtsFormValidator {
         );
       }
     } else _form = form;
+
     return checkHTMLFormInstance(_form);
   }
 
@@ -68,5 +69,6 @@ function checkHTMLFormInstance(element) {
     throw new TypeError(`The element ${msg} is not a valid HTML form element.`);
   }
   element.noValidate = true;
+
   return element;
 }
