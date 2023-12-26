@@ -1,5 +1,4 @@
 // @ts-check
-
 import Vts from '../Vts';
 
 /** @type {import("../types/config/handlers").default} */
@@ -15,8 +14,10 @@ const vtsHandlers = {
  * @param {NodeListOf<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>} fields
  */
 function showFeedback(fieldClass, data, form, fields) {
+  console.log(fieldClass, data);
   for (const fieldName in data) {
     const { field, messages = {}, label } = data[fieldName];
+
     const container = field.parentNode;
     const feedbackDiv = container?.querySelector('.' + fieldClass);
     const textContent = isFirstField(fields, field)

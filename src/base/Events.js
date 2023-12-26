@@ -1,4 +1,6 @@
 // @ts-check
+import Vts from '../Vts';
+import attachEvent from '../utils/attachEvent';
 import getEventType from '../utils/getEventType';
 
 /** @type {import('../types/base/events').default} */
@@ -37,8 +39,7 @@ const vtsEvents = {
   _addFieldListener() {
     if (this.fields)
       this.fields.forEach((field) => {
-        const fieldName = field.getAttribute('name') || '';
-        const rules = this._getFieldRules(fieldName);
+        const rules = this._getFieldRules(field);
         const eventType = getEventType(field.type, rules?.eventType);
         field.addEventListener(eventType, () => {
           this._validate(field);

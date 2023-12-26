@@ -4,7 +4,7 @@ import type { VtsRules } from '../config/rules';
 export default interface VtsRulesBase {
   _getFieldRules(
     this: VtsBase,
-    fieldName: string
+    field: HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
   ): VtsRules[string] | undefined;
 
   _convertRulesToMap(this: VtsBase): void;

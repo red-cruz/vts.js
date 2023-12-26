@@ -10,6 +10,15 @@ import getFieldLabel from '../../utils/getFieldLabel';
  * @returns {boolean}
  */
 export default function isRequiredAndInvalid(rules, field) {
+  // if (
+  //   field instanceof HTMLInputElement &&
+  //   (field.type === 'checkbox' || field.type === 'radio')
+  // ) {
+  //   return (
+  //     (!!rules?.required && !field.checked) ||
+  //     (field.required && !field.checked)
+  //   );
+  // }
   return (rules?.required && !field.value) || field.validity.valueMissing;
 }
 

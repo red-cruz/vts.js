@@ -33,11 +33,12 @@ const registeredRules = [
 
 /** @type {import('../types/base/rules').default} */
 const vtsRules = {
-  _getFieldRules(fieldName) {
+  _getFieldRules(field) {
     const rules = this.rules;
 
     if (rules && rules instanceof Map) {
-      return rules.get(fieldName);
+      const src = field.dataset.vtsRule || field.name;
+      return rules.get(src);
     }
 
     return undefined;
