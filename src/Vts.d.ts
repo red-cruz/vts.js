@@ -1,3 +1,4 @@
+import { VtsValidationMessages } from './types/base/validation';
 import type VtsConfig from './types/config';
 import VtsAjaxSettings from './types/config/ajaxSettings';
 import VtsHandlers from './types/config/handlers';
@@ -31,7 +32,14 @@ declare class Vts {
   >;
   form: HTMLFormElement;
   halt: boolean;
-  handlers: VtsHandlers;
+  /**
+   * Handle field feedback.
+   */
+  handler: (
+    this: HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement,
+    message: VtsValidationMessages,
+    fieldClass: string
+  ) => void;
   /**
    * Checks the validity of the form.
    * @returns {Boolean} True if the form is valid, false otherwise.

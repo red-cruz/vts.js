@@ -1,7 +1,7 @@
 // @ts-check
 'use strict';
 import ajaxHandler from './ajax';
-import vtsHandlers from './handler';
+import handler from './handler';
 import defaultMsg from './defaultMsg';
 /**
  * Global default configuration for Vts (Validate Then Submit).
@@ -16,7 +16,7 @@ const vtsDefaults = {
     valid: 'valid-feedback',
   },
   halt: false,
-  handlers: vtsHandlers,
+  handler,
   listen: false,
   message: defaultMsg,
   rules: {},

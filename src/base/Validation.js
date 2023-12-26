@@ -7,112 +7,86 @@ import { registeredRules } from './Rules';
 
 /** @type {import('../types/base/validation').default} */
 const vtsValidation = {
-  _data: {
-    validFields: new Map(),
-    invalidFields: new Map(),
-  },
   async _validate(field) {
-    // refactor, validate fields based on their type!!!
+    if (field.type === 'checkbox') {
+      // validate cbox
+    } else if (field.type === 'radio') {
+      // validate cbox
+    } else {
+      // inputs.push(field);
+    }
+
     const rules = this._getFieldRules(field);
     const label = getFieldLabel(rules?.label, field, this.form);
 
     /** @type {import('../types/base/validation').VtsValidationMessages} */
-    let validationMessages = await getValidationMessages.call(
+    let invalidMessages = await getValidationMessages.call(
       this,
       rules,
       field,
       label
     );
-
-    const setAsValid = (vField = field, vRule = rules) => {
-      vField.setCustomValidity('');
-      validationMessages.valid =
-        vRule?.message?.valid ?? this.message.valid ?? defaultMsg.valid;
-
-      this._data.invalidFields.delete(vField.name);
-      this._data.validFields.set(vField.name, {
-        field: vField,
-        messages: validationMessages,
-        label,
-      });
-    };
-
-    const setAsInvalid = (vField = field) => {
-      const errorValidationMsg = Object.values(validationMessages).join(', ');
-      vField.setCustomValidity(errorValidationMsg);
-      this._data.validFields.delete(vField.name);
-      this._data.invalidFields.set(vField.name, {
-        field: vField,
-        messages: validationMessages,
-        label,
-      });
-    };
-
-    const isValid = Object.keys(validationMessages).length;
+    const isValid = Object.keys(invalidMessages).length;
     // set custom validity
     if (isValid) {
       // INVALID
-      setAsInvalid();
+      const errorValidationMsg = Object.values(invalidMessages).join(', ');
+      field.setCustomValidity(errorValidationMsg);
+      this.handler.call(field, invalidMessages, this.class.invalid);
     } else {
       // VALID
-      setAsValid();
+      field.setCustomValidity('');
+      const validMessage = {
+        valid: rules?.message?.valid ?? this.message.valid ?? defaultMsg.valid,
+      };
+      this.handler.call(field, validMessage, this.class.valid);
     }
+    console.log(isValid);
 
-    if (
-      field instanceof HTMLInputElement &&
-      (field.type === 'checkbox' || field.type === 'radio')
-    ) {
-      let fieldIdx = 0;
-      const fieldName = field.getAttribute('name') || field.name;
-      const group = Vts.getGroupedFields(this.fields, fieldName);
-      const hasGroup = group.find((gField, index) => {
-        const match = gField === field;
-        if (match) fieldIdx = index;
-        return match;
-      });
+    // if (
+    //   field instanceof HTMLInputElement &&
+    //   (field.type === 'checkbox' || field.type === 'radio')
+    // ) {
+    //   let fieldIdx = 0;
+    //   const fieldName = field.getAttribute('name') || field.name;
+    //   const group = Vts.getGroupedFields(this.fields, fieldName);
+    //   const hasGroup = group.find((gField, index) => {
+    //     const match = gField === field;
+    //     if (match) fieldIdx = index;
+    //     return match;
+    //   });
 
-      if (hasGroup) {
-        group.splice(fieldIdx, 1);
-        for (const gField of group) {
-          const gRules = this._getFieldRules(gField);
-          if (isValid) {
-            gField.setCustomValidity('');
-            validationMessages.valid =
-              gRules?.message?.valid ?? this.message.valid ?? defaultMsg.valid;
+    //   if (hasGroup) {
+    //     group.splice(fieldIdx, 1);
+    //     for (const gField of group) {
+    //       const gRules = this._getFieldRules(gField);
+    //       if (isValid) {
+    //         gField.setCustomValidity('');
+    //         invalidMessages.valid =
+    //           gRules?.message?.valid ?? this.message.valid ?? defaultMsg.valid;
 
-            this._data.invalidFields.delete(gField.name);
-            this._data.validFields.set(gField.name, {
-              field: gField,
-              messages: validationMessages,
-              label: getFieldLabel(gRules?.label, gField, this.form),
-            });
-          } else {
-            const errorValidationMsg =
-              Object.values(validationMessages).join(', ');
-            gField.setCustomValidity(errorValidationMsg);
-            this._data.validFields.delete(gField.name);
-            this._data.invalidFields.set(gField.name, {
-              field: gField,
-              messages: validationMessages,
-              label: getFieldLabel(gRules?.label, gField, this.form),
-            });
-          }
-        }
-      }
-    }
+    //         this._data.invalidFields.delete(gField.name);
+    //         this._data.validFields.set(gField.name, {
+    //           field: gField,
+    //           messages: invalidMessages,
+    //           label: getFieldLabel(gRules?.label, gField, this.form),
+    //         });
+    //       } else {
+    //         const errorValidationMsg =
+    //           Object.values(invalidMessages).join(', ');
+    //         gField.setCustomValidity(errorValidationMsg);
+    //         this._data.validFields.delete(gField.name);
+    //         this._data.invalidFields.set(gField.name, {
+    //           field: gField,
+    //           messages: invalidMessages,
+    //           label: getFieldLabel(gRules?.label, gField, this.form),
+    //         });
+    //       }
+    //     }
+    //   }
+    // }
 
-    this._reportValidity();
-  },
-  _reportValidity() {
-    const data = this._data;
-    const validData = Object.fromEntries(data.validFields);
-    const invalidData = Object.fromEntries(data.invalidFields);
-    const form = this.form;
-    const handlers = this.handlers;
-    const { valid, invalid } = this.class;
-
-    handlers.valid(valid, validData, form, this.fields);
-    handlers.invalid(invalid, invalidData, form, this.fields);
+    // this._reportValidity();
   },
 };
 
@@ -124,7 +98,7 @@ const vtsValidation = {
  * @returns {Promise<import('../types/base/validation').VtsValidationMessages>}
  */
 async function getValidationMessages(rules, field, label) {
-  let validationMessages = {};
+  let invalidMessages = {};
 
   // TODO: if field is not required, no need to execute validation rules if there is no value
   for (const rule of registeredRules) {
@@ -152,18 +126,22 @@ async function getValidationMessages(rules, field, label) {
       }
     }
 
-    validationMessages = Object.assign(validationMessages, validationMessage);
+    invalidMessages = Object.assign(invalidMessages, validationMessage);
 
     // if the field is invalid and has required rule, break the loop to prevent other rules from executing
     const isRequired =
       (rule.name === 'required' || rule.name === 'requiredIf') &&
-      (validationMessages.required || validationMessages.requiredIf);
+      (invalidMessages.required || invalidMessages.requiredIf);
     if (isRequired) {
       break;
     }
   }
 
-  return validationMessages;
+  return invalidMessages;
 }
+
+async function validateCheckbox(field) {}
+
+async function validateRadioButton(field) {}
 
 export default vtsValidation;

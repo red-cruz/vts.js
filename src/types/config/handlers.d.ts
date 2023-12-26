@@ -1,6 +1,6 @@
 import { VtsValidationMessages } from '../base/validation';
 
-export default interface VtsHandlers {
+export default interface VtsHandler {
   /**
    * The function to call for all valid fields.
    * @param validClass The class name for valid fields.
@@ -17,12 +17,10 @@ export default interface VtsHandlers {
    *
    */
   valid: (
+    this: HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement,
     validClass: string,
     validFieldsData: VtsValidationData<string>,
-    form: HTMLFormElement,
-    fields: NodeListOf<
-      HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
-    >
+    form: HTMLFormElement
   ) => void;
 
   /**
@@ -40,12 +38,9 @@ export default interface VtsHandlers {
    * @param form The HTML form element.
    */
   invalid: (
-    invalidClass: string,
-    invalidFieldsData: VtsValidationData<string>,
-    form: HTMLFormElement,
-    fields: NodeListOf<
-      HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
-    >
+    this: HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement,
+    message: string,
+    form: HTMLFormElement
   ) => void;
 }
 

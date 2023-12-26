@@ -1,6 +1,7 @@
 import type VtsAjaxSettings from '../config/ajaxSettings';
 import VtsHandlers from '../config/handlers';
 import { VtsRuleMessage, VtsRules } from '../config/rules';
+import { VtsValidationMessages } from './validation';
 
 /**
  * Represents the configuration options for Vts (Validate Then Submit).
@@ -12,9 +13,13 @@ export default interface VtsBaseConfig {
   ajax: VtsAjaxSettings;
 
   /**
-   * Contains functions for handling field validation.
+   * Handle field feedback.
    */
-  handlers: VtsHandlers;
+  handler: (
+    this: HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement,
+    message: VtsValidationMessages,
+    fieldClass: string
+  ) => void;
 
   /**
    * Determines whether to halt the form submission if there are invalid fields.

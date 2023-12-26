@@ -20,10 +20,11 @@ export default class Vts {
    */
   constructor(form, config = {}) {
     const elem = (this.form = VtsFormValidator.validateForm(form));
-    elem.vts = this;
-    this.fields = elem.querySelectorAll('[name]:not([data-vts-ignored])');
-    // @ts-ignore
+    this.fields = elem.querySelectorAll(
+      '[name]:not([data-vts-ignored]):not([type="submit"]):not([type="reset"]):not([type="button"]):not([type="hidden"])'
+    ); // @ts-ignore
     this.#init(elem, config);
+    elem.vts = this;
   }
 
   /**
