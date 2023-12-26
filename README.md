@@ -201,16 +201,16 @@ Vts provides several configuration options to customize its behavior. Here are t
 
 - `form`: String - The CSS class to apply to the form when it has been validated.
   - Default: `'was-validated'`
-- `invalid`: String - The CSS class to be passed as the first parameter of the `invalid handler` function.
+- `invalid`: String - The CSS class to be passed as the first parameter of the `invalid renderFeedback` function.
   - Default: `'invalid-feedback'`
-- `valid`: String - The CSS class to be passed as the first parameter of the `valid handler` function.
+- `valid`: String - The CSS class to be passed as the first parameter of the `valid renderFeedback` function.
   - Default: `'valid-feedback'`
 
 ### `halt`: Boolean - Determines whether to halt the form's submission.
 
 - Default: `false`
 
-When the `halt` property is set to `true`, the form's submission will be halted, and you need to add an event listener to the form's `submit` event. Inside the event handler, you can perform additional actions or validations before manually calling the `Vts.submit()` method to submit the form.
+When the `halt` property is set to `true`, the form's submission will be halted, and you need to add an event listener to the form's `submit` event. Inside the event renderFeedback, you can perform additional actions or validations before manually calling the `Vts.submit()` method to submit the form.
 
 - Example:
 
@@ -224,7 +224,7 @@ When the `halt` property is set to `true`, the form's submission will be halted,
   });
   ```
 
-  In the example above, the submit event listener is added to the form's submit event. Inside the event handler, the `Vts.isFormValid()` method is called to check if all form fields are valid. If they are, the `submit()` method of the Vts instance is called to manually submit the form.
+  In the example above, the submit event listener is added to the form's submit event. Inside the event renderFeedback, the `Vts.isFormValid()` method is called to check if all form fields are valid. If they are, the `submit()` method of the Vts instance is called to manually submit the form.
 
 ### `handlers`: Object - Contains functions for handling field validation.
 

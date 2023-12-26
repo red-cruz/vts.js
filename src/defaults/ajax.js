@@ -8,7 +8,7 @@ const ajaxHandler = {
   request: {},
   beforeSend: (requestInit, abortController, form) => {
     /*
-     * This is the `beforeSend` event handler for the form.
+     * This is the `beforeSend` event renderFeedback for the form.
      * It is called before the form is submitted, and it can be used to modify the request or prevent the form from being submitted.
      */
 
@@ -48,7 +48,7 @@ const ajaxHandler = {
   },
   complete: (data, response, form) => {
     /*
-     * This is the `complete` event handler for the form.
+     * This is the `complete` event renderFeedback for the form.
      * It is called after the form is submitted, and it can be used to handle the response or perform cleanup tasks.
      */
 

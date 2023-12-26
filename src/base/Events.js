@@ -1,6 +1,4 @@
 // @ts-check
-import Vts from '../Vts';
-import attachEvent from '../utils/attachEvent';
 import getEventType from '../utils/getEventType';
 
 /** @type {import('../types/base/events').default} */
@@ -14,7 +12,7 @@ const vtsEvents = {
         e.stopPropagation();
       }
 
-      const formClass = this.class.form || 'was-validated';
+      const formClass = this.class.form;
       const wasValidated = form.classList.contains(formClass);
       const shouldListen = this.listen;
       if (!shouldListen && !wasValidated) {

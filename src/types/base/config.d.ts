@@ -15,7 +15,7 @@ export default interface VtsBaseConfig {
   /**
    * Handle field feedback.
    */
-  handler: (
+  renderFeedback: (
     this: HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement,
     message: VtsValidationMessages,
     fieldClass: string

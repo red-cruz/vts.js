@@ -1,7 +1,5 @@
 // @ts-check
-import Vts from '../Vts';
 import defaultMsg from '../defaults/defaultMsg';
-import attachEvent from '../utils/attachEvent';
 import getFieldLabel from '../utils/getFieldLabel';
 import { registeredRules } from './Rules';
 
@@ -32,14 +30,14 @@ const vtsValidation = {
       // INVALID
       const errorValidationMsg = Object.values(invalidMessages).join(', ');
       field.setCustomValidity(errorValidationMsg);
-      this.handler.call(field, invalidMessages, this.class.invalid);
+      this.renderFeedback.call(field, invalidMessages, this.class.invalid);
     } else {
       // VALID
       field.setCustomValidity('');
       const validMessage = {
         valid: rules?.message?.valid ?? this.message.valid ?? defaultMsg.valid,
       };
-      this.handler.call(field, validMessage, this.class.valid);
+      this.renderFeedback.call(field, validMessage, this.class.valid);
     }
     console.log(isValid);
 

@@ -1,7 +1,6 @@
 // @ts-check
 'use strict';
 import ajaxHandler from './ajax';
-import handler from './handler';
 import defaultMsg from './defaultMsg';
 /**
  * Global default configuration for Vts (Validate Then Submit).
@@ -16,7 +15,20 @@ const vtsDefaults = {
     valid: 'valid-feedback',
   },
   halt: false,
-  handler,
+  renderFeedback: function (messages, fieldClass) {
+    const fieldWrapper = this.parentNode;
+    const feedbackContainer = fieldWrapper?.querySelector('.' + fieldClass);
+    const textContent = Object.values(messages).flat().join('<br />');
+    console.log(arguments);
+    if (feedbackContainer) {
+      feedbackContainer.innerHTML = textContent;
+    } else {
+      const newContainer = document.createElement('div');
+      newContainer.classList.add(fieldClass);
+      newContainer.innerHTML = textContent;
+      fieldWrapper?.append(newContainer);
+    }
+  },
   listen: false,
   message: defaultMsg,
   rules: {},

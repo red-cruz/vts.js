@@ -67,16 +67,7 @@ const vtsRules = {
       .replace(/{:label}/g, label);
 
     field.setCustomValidity(checking);
-
-    const fieldName = field.getAttribute('name') || field.name;
-    this._data.validFields.delete(fieldName);
-    this._data.invalidFields.set(fieldName, {
-      field,
-      messages: { checking },
-      label,
-    });
-
-    this._reportValidity();
+    this.renderFeedback.call(field, { checking }, this.class.invalid);
   },
 };
 

@@ -35,7 +35,7 @@ declare class Vts {
   /**
    * Handle field feedback.
    */
-  handler: (
+  renderFeedback: (
     this: HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement,
     message: VtsValidationMessages,
     fieldClass: string
