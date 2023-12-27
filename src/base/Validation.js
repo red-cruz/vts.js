@@ -16,13 +16,26 @@ const vtsValidation = {
     if (field.type === 'checkbox') {
       const group = Vts.getGroupedFields(field);
       const lastField = group[group.length - 1];
-      this.renderFeedback.call(
-        lastField,
-        {
-          invalid: 'test',
-        },
-        this.class.invalid
+      const isValid = group.some(
+        (field) => field instanceof HTMLInputElement && field.checked
       );
+
+      if (isValid) {
+        group.forEach((gField) => (gField.required = false));
+        this.renderFeedback.call(lastField, validMessage, this.class.valid);
+      } else {
+        group.forEach((gField) => (gField.required = true));
+        this.renderFeedback.call(
+          lastField,
+          {
+            required:
+              rules?.message?.required ??
+              this.message.required ??
+              defaultMsg.required,
+          },
+          this.class.invalid
+        );
+      }
     } else if (field.type === 'radio') {
       const group = Vts.getGroupedFields(field);
       const lastField = group[group.length - 1];
@@ -42,7 +55,6 @@ const vtsValidation = {
           },
           this.class.invalid
         );
-        console.log('ok');
       }
     } else {
       /** @type {import('../types/base/validation').VtsValidationMessages} */
