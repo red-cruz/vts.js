@@ -7,6 +7,12 @@ import { registeredRules } from './Rules';
 /** @type {import('../types/base/validation').default} */
 const vtsValidation = {
   async _validate(field) {
+    const rules = this._getFieldRules(field);
+    const label = getFieldLabel(rules?.label, field, this.form);
+    const validMessage = {
+      valid: rules?.message?.valid ?? this.message.valid ?? defaultMsg.valid,
+    };
+
     if (field.type === 'checkbox') {
       const group = Vts.getGroupedFields(field);
       const lastField = group[group.length - 1];
@@ -20,17 +26,25 @@ const vtsValidation = {
     } else if (field.type === 'radio') {
       const group = Vts.getGroupedFields(field);
       const lastField = group[group.length - 1];
-      this.renderFeedback.call(
-        lastField,
-        {
-          invalid: 'test',
-        },
-        this.class.invalid
-      );
-    } else {
-      const rules = this._getFieldRules(field);
-      const label = getFieldLabel(rules?.label, field, this.form);
+      const isValid = group.some((field) => field.checkValidity());
 
+      if (isValid) {
+        // field.setCustomValidity('');
+        this.renderFeedback.call(lastField, validMessage, this.class.valid);
+      } else {
+        this.renderFeedback.call(
+          lastField,
+          {
+            required:
+              rules?.message?.required ??
+              this.message.required ??
+              defaultMsg.required,
+          },
+          this.class.invalid
+        );
+        console.log('ok');
+      }
+    } else {
       /** @type {import('../types/base/validation').VtsValidationMessages} */
       let invalidMessages = await getValidationMessages.call(
         this,
@@ -38,9 +52,9 @@ const vtsValidation = {
         field,
         label
       );
-      const isValid = Object.keys(invalidMessages).length;
+      const isInvalid = Object.keys(invalidMessages).length;
       // set custom validity
-      if (isValid) {
+      if (isInvalid) {
         // INVALID
         const errorValidationMsg = Object.values(invalidMessages).join(', ');
         field.setCustomValidity(errorValidationMsg);
@@ -48,10 +62,6 @@ const vtsValidation = {
       } else {
         // VALID
         field.setCustomValidity('');
-        const validMessage = {
-          valid:
-            rules?.message?.valid ?? this.message.valid ?? defaultMsg.valid,
-        };
         this.renderFeedback.call(field, validMessage, this.class.valid);
       }
     }
@@ -62,16 +72,19 @@ const vtsValidation = {
  * @param {import('../types/config/rules').VtsRules[string]|undefined} rules
  * @param {HTMLInputElement|HTMLSelectElement|HTMLTextAreaElement} field
  * @param {string} label
+ * @param {Function|null} [enforceRule=null]
  * @this {import('../types/base').default}
  * @returns {Promise<import('../types/base/validation').VtsValidationMessages>}
  */
-async function getValidationMessages(rules, field, label) {
+async function getValidationMessages(rules, field, label, enforceRule = null) {
   let invalidMessages = {};
 
   // TODO: if field is not required, no need to execute validation rules if there is no value
   for (const rule of registeredRules) {
     /** @type {import('../types/base/validation').VtsValidationMessages} */
-    const validationMessage = await rule.call(this, rules, field, label);
+    const validationMessage = enforceRule
+      ? await enforceRule.call(this, rules, field, label)
+      : await rule.call(this, rules, field, label);
     const key = Object.keys(validationMessage)[0];
 
     if (key) {
@@ -100,16 +113,12 @@ async function getValidationMessages(rules, field, label) {
     const isRequired =
       (rule.name === 'required' || rule.name === 'requiredIf') &&
       (invalidMessages.required || invalidMessages.requiredIf);
-    if (isRequired) {
+    if (isRequired || enforceRule) {
       break;
     }
   }
 
   return invalidMessages;
 }
-
-async function validateCheckbox(field) {}
-
-async function validateRadioButton(field) {}
 
 export default vtsValidation;

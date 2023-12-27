@@ -17,7 +17,7 @@ const defaultMsg = {
   size: '{:label} must be exactly {:size} characters long. You are currently using {:length} characters.',
   uppercase: '{:label} must be uppercase.',
   valid: '',
-  required: 'Please enter a value for {:label}.',
+  required: 'This field is required.',
   requiredIf: '{:label} is required if {:targetLabel} has a value.',
 };
 
