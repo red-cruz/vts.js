@@ -12,6 +12,9 @@ import deepMerge from './utils/deepMerge.js';
 import getResponseDataUtil from './utils/getResponseData.js';
 import getResponseMessageUtil from './utils/getResponseMessage.js';
 
+const fieldQuery =
+  '[name]:not([data-vts-ignored]):not([type="submit"]):not([type="reset"]):not([type="button"]):not([type="hidden"])';
+
 /// <reference path="./Vts.d.ts" />
 export default class Vts {
   /**
@@ -20,9 +23,7 @@ export default class Vts {
    */
   constructor(form, config = {}) {
     const elem = (this.form = VtsFormValidator.validateForm(form));
-    this.fields = elem.querySelectorAll(
-      '[name]:not([data-vts-ignored]):not([type="submit"]):not([type="reset"]):not([type="button"]):not([type="hidden"])'
-    ); // @ts-ignore
+    this.fields = elem.querySelectorAll(fieldQuery); // @ts-ignore
     this.#init(elem, config);
     elem.vts = this;
   }
@@ -69,11 +70,17 @@ export default class Vts {
   }
 
   /**
-   * @param {NodeListOf<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>} fields
-   * @param {string} fieldName
-   * @returns {Array<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>}
+   * @param {HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement} field
+   * @returns {Array<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement|Element>}
    */
-  static getGroupedFields(fields, fieldName) {
+  static getGroupedFields(field) {
+    const form = field.closest('form');
+    const fields = form?.querySelectorAll(fieldQuery);
+
+    if (!form || !fields) return [];
+
+    const fieldName = field.name;
+
     // Build regular expression
     const baseName = fieldName.split('[')[0];
     const dynamicParts = fieldName
@@ -91,9 +98,10 @@ export default class Vts {
     // Find all matching inputs
     const groupedFields = [];
 
-    for (const field of fields) {
-      if (groupRegex.test(field.name)) {
-        groupedFields.push(field);
+    for (const gField of fields) {
+      //@ts-ignore
+      if (groupRegex.test(gField.name)) {
+        groupedFields.push(gField);
       }
     }
 

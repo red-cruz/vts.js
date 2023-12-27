@@ -13,13 +13,14 @@ const vtsDefaults = {
     form: 'was-validated',
     invalid: 'invalid-feedback',
     valid: 'valid-feedback',
+    wrapper: 'vts-wrapper',
   },
   halt: false,
   renderFeedback: function (messages, fieldClass) {
     const fieldWrapper = this.parentNode;
     const feedbackContainer = fieldWrapper?.querySelector('.' + fieldClass);
     const textContent = Object.values(messages).flat().join('<br />');
-    console.log(arguments);
+
     if (feedbackContainer) {
       feedbackContainer.innerHTML = textContent;
     } else {

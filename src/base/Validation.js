@@ -1,4 +1,5 @@
 // @ts-check
+import Vts from '../Vts';
 import defaultMsg from '../defaults/defaultMsg';
 import getFieldLabel from '../utils/getFieldLabel';
 import { registeredRules } from './Rules';
@@ -7,84 +8,53 @@ import { registeredRules } from './Rules';
 const vtsValidation = {
   async _validate(field) {
     if (field.type === 'checkbox') {
-      // validate cbox
+      const group = Vts.getGroupedFields(field);
+      const lastField = group[group.length - 1];
+      this.renderFeedback.call(
+        lastField,
+        {
+          invalid: 'test',
+        },
+        this.class.invalid
+      );
     } else if (field.type === 'radio') {
-      // validate cbox
+      const group = Vts.getGroupedFields(field);
+      const lastField = group[group.length - 1];
+      this.renderFeedback.call(
+        lastField,
+        {
+          invalid: 'test',
+        },
+        this.class.invalid
+      );
     } else {
-      // inputs.push(field);
+      const rules = this._getFieldRules(field);
+      const label = getFieldLabel(rules?.label, field, this.form);
+
+      /** @type {import('../types/base/validation').VtsValidationMessages} */
+      let invalidMessages = await getValidationMessages.call(
+        this,
+        rules,
+        field,
+        label
+      );
+      const isValid = Object.keys(invalidMessages).length;
+      // set custom validity
+      if (isValid) {
+        // INVALID
+        const errorValidationMsg = Object.values(invalidMessages).join(', ');
+        field.setCustomValidity(errorValidationMsg);
+        this.renderFeedback.call(field, invalidMessages, this.class.invalid);
+      } else {
+        // VALID
+        field.setCustomValidity('');
+        const validMessage = {
+          valid:
+            rules?.message?.valid ?? this.message.valid ?? defaultMsg.valid,
+        };
+        this.renderFeedback.call(field, validMessage, this.class.valid);
+      }
     }
-
-    const rules = this._getFieldRules(field);
-    const label = getFieldLabel(rules?.label, field, this.form);
-
-    /** @type {import('../types/base/validation').VtsValidationMessages} */
-    let invalidMessages = await getValidationMessages.call(
-      this,
-      rules,
-      field,
-      label
-    );
-    const isValid = Object.keys(invalidMessages).length;
-    // set custom validity
-    if (isValid) {
-      // INVALID
-      const errorValidationMsg = Object.values(invalidMessages).join(', ');
-      field.setCustomValidity(errorValidationMsg);
-      this.renderFeedback.call(field, invalidMessages, this.class.invalid);
-    } else {
-      // VALID
-      field.setCustomValidity('');
-      const validMessage = {
-        valid: rules?.message?.valid ?? this.message.valid ?? defaultMsg.valid,
-      };
-      this.renderFeedback.call(field, validMessage, this.class.valid);
-    }
-    console.log(isValid);
-
-    // if (
-    //   field instanceof HTMLInputElement &&
-    //   (field.type === 'checkbox' || field.type === 'radio')
-    // ) {
-    //   let fieldIdx = 0;
-    //   const fieldName = field.getAttribute('name') || field.name;
-    //   const group = Vts.getGroupedFields(this.fields, fieldName);
-    //   const hasGroup = group.find((gField, index) => {
-    //     const match = gField === field;
-    //     if (match) fieldIdx = index;
-    //     return match;
-    //   });
-
-    //   if (hasGroup) {
-    //     group.splice(fieldIdx, 1);
-    //     for (const gField of group) {
-    //       const gRules = this._getFieldRules(gField);
-    //       if (isValid) {
-    //         gField.setCustomValidity('');
-    //         invalidMessages.valid =
-    //           gRules?.message?.valid ?? this.message.valid ?? defaultMsg.valid;
-
-    //         this._data.invalidFields.delete(gField.name);
-    //         this._data.validFields.set(gField.name, {
-    //           field: gField,
-    //           messages: invalidMessages,
-    //           label: getFieldLabel(gRules?.label, gField, this.form),
-    //         });
-    //       } else {
-    //         const errorValidationMsg =
-    //           Object.values(invalidMessages).join(', ');
-    //         gField.setCustomValidity(errorValidationMsg);
-    //         this._data.validFields.delete(gField.name);
-    //         this._data.invalidFields.set(gField.name, {
-    //           field: gField,
-    //           messages: invalidMessages,
-    //           label: getFieldLabel(gRules?.label, gField, this.form),
-    //         });
-    //       }
-    //     }
-    //   }
-    // }
-
-    // this._reportValidity();
   },
 };
 

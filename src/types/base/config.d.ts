@@ -75,17 +75,25 @@ export default interface VtsBaseConfig {
     form: string;
 
     /**
-     * The CSS class to apply to the created div sibling of invalid field.
-     * Disregard if default handlers will be overwritten.
+     * The CSS class to apply to the feedback container when the field is invalid.
+     *
      * @default 'invalid-feedback'
      */
     invalid: string;
 
     /**
-     * The CSS class to apply to the created div sibling of valid field.
-     * Disregard if default handlers will be overwritten.
+     * The CSS class to apply to the feedback container when the field is valid.
+     *
      * @default 'valid-feedback'
      */
     valid: string;
+
+    /**
+     * The CSS class to apply to the field wrapper.
+     * Also used as a reference to the parent where the feedback will be appended
+     *
+     * @default 'vts-wrapper'
+     */
+    wrapper: string;
   };
 }

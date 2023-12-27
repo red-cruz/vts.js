@@ -10,6 +10,7 @@ export default interface VtsValidationBase {
   _validate(
     this: VtsBase,
     field: HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
+    // fieldGroup: HTMLFieldSetElement
   ): Promise<void>;
 }
 

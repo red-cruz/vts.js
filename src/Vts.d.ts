@@ -101,13 +101,12 @@ declare class Vts {
   /**
    * Retrieves an array of HTML input elements that belong to the same group as the specified field.
    *
-   * @param fields The NodeListOf HTML input elements to search within.
-   * @param fieldName The name of the field for which to find the corresponding group.
+   * @param field The field element for which to find the corresponding group.
    * @returns An array of HTML input elements belonging to the same group as the specified field.
    */
-  static getGroupedFields<
-    T extends HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
-  >(fields: NodeListOf<T>, fieldName: string): T[];
+  static getGroupedFields(
+    field: HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
+  ): Array<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>;
 }
 
 export default Vts;
