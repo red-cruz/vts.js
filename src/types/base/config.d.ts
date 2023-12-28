@@ -1,5 +1,4 @@
 import type VtsAjaxSettings from '../config/ajaxSettings';
-import VtsHandlers from '../config/handlers';
 import { VtsRuleMessage, VtsRules } from '../config/rules';
 import { VtsValidationMessages } from './validation';
 
@@ -18,7 +17,12 @@ export default interface VtsBaseConfig {
   renderFeedback: (
     this: HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement,
     message: VtsValidationMessages,
-    fieldClass: string
+    renderClass: {
+      form: string;
+      invalid: string;
+      valid: string;
+      wrapper?: string;
+    }
   ) => void;
 
   /**
@@ -41,7 +45,7 @@ export default interface VtsBaseConfig {
    *    password_confirmation: {
    *      equalTo: 'password',
    *      message: {
-   *        invalid: 'This input must match the value of ${targetLabel}'
+   *        equalTo: '{:label} must match the value of {:targetLabel}'
    *      }
    *    }
    * }
@@ -52,7 +56,7 @@ export default interface VtsBaseConfig {
    * The custom validation message configuration.
    * @default
    * {
-   *  invalid: 'Invalid :{label}',
+   *  invalid: 'Invalid {:label}',
    *  valid: '',
    * }
    */
@@ -92,8 +96,8 @@ export default interface VtsBaseConfig {
      * The CSS class to apply to the field wrapper.
      * Also used as a reference to the parent where the feedback will be appended
      *
-     * @default 'vts-wrapper'
+     * @default undefined - the fields parentNode
      */
-    wrapper: string;
+    wrapper?: string;
   };
 }

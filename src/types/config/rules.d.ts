@@ -119,6 +119,8 @@ type VtsRules = {
             form: HTMLFormElement
           ) => any
         >;
+
+    wrapper?: string;
   };
 };
 

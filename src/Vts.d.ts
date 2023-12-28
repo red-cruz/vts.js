@@ -38,7 +38,7 @@ declare class Vts {
   renderFeedback: (
     this: HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement,
     message: VtsValidationMessages,
-    fieldClass: string
+    renderClass: string
   ) => void;
   /**
    * Checks the validity of the form.

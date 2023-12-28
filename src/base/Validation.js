@@ -13,6 +13,8 @@ const vtsValidation = {
       valid: rules?.message?.valid ?? this.message.valid ?? defaultMsg.valid,
     };
 
+    const renderClass = Object.assign(this.class, { wrapper: rules?.wrapper });
+
     if (field.type === 'checkbox') {
       const group = Vts.getGroupedFields(field);
       const lastField = group[group.length - 1];
@@ -22,7 +24,7 @@ const vtsValidation = {
 
       if (isValid) {
         group.forEach((gField) => (gField.required = false));
-        this.renderFeedback.call(lastField, validMessage, this.class.valid);
+        this.renderFeedback.call(lastField, validMessage, renderClass);
       } else {
         group.forEach((gField) => (gField.required = true));
         this.renderFeedback.call(
@@ -33,7 +35,7 @@ const vtsValidation = {
               this.message.required ??
               defaultMsg.required,
           },
-          this.class.invalid
+          renderClass
         );
       }
     } else if (field.type === 'radio') {
@@ -43,7 +45,7 @@ const vtsValidation = {
 
       if (isValid) {
         // field.setCustomValidity('');
-        this.renderFeedback.call(lastField, validMessage, this.class.valid);
+        this.renderFeedback.call(lastField, validMessage, renderClass);
       } else {
         this.renderFeedback.call(
           lastField,
@@ -53,7 +55,7 @@ const vtsValidation = {
               this.message.required ??
               defaultMsg.required,
           },
-          this.class.invalid
+          renderClass
         );
       }
     } else {
@@ -70,11 +72,11 @@ const vtsValidation = {
         // INVALID
         const errorValidationMsg = Object.values(invalidMessages).join(', ');
         field.setCustomValidity(errorValidationMsg);
-        this.renderFeedback.call(field, invalidMessages, this.class.invalid);
+        this.renderFeedback.call(field, invalidMessages, renderClass);
       } else {
         // VALID
         field.setCustomValidity('');
-        this.renderFeedback.call(field, validMessage, this.class.valid);
+        this.renderFeedback.call(field, validMessage, renderClass);
       }
     }
   },

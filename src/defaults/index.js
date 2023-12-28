@@ -13,20 +13,30 @@ const vtsDefaults = {
     form: 'was-validated',
     invalid: 'invalid-feedback',
     valid: 'valid-feedback',
-    wrapper: 'vts-wrapper',
+    wrapper: '',
   },
   halt: false,
-  renderFeedback: function (messages, fieldClass) {
-    const fieldWrapper = this.parentNode;
-    const feedbackContainer = fieldWrapper?.querySelector('.' + fieldClass);
+  renderFeedback: function (messages, renderClass) {
+    const { wrapper, invalid, valid } = renderClass;
+    const isValid = this.checkValidity();
+    const fieldWrapper = wrapper
+      ? this.closest(`.${wrapper}`)
+      : this.parentNode;
+    const feedbackContainerClass = isValid ? valid : invalid;
+    const feedbackContainer = fieldWrapper?.querySelector(`.vts-feedback`);
     const textContent = Object.values(messages).flat().join('<br />');
 
-    if (feedbackContainer) {
+    if (feedbackContainer instanceof HTMLElement) {
       feedbackContainer.innerHTML = textContent;
+      feedbackContainer.style.display = 'block';
+      feedbackContainer.classList.add(isValid ? valid : invalid);
+      feedbackContainer.classList.remove(!isValid ? valid : invalid);
     } else {
       const newContainer = document.createElement('div');
-      newContainer.classList.add(fieldClass);
+      newContainer.classList.add('vts-feedback');
+      newContainer.classList.add(feedbackContainerClass);
       newContainer.innerHTML = textContent;
+      newContainer.style.display = 'block';
       fieldWrapper?.append(newContainer);
     }
   },

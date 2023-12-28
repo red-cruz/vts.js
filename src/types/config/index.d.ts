@@ -1,5 +1,5 @@
+import { VtsValidationMessages } from '../base/validation';
 import type VtsAjaxSettings from './ajaxSettings';
-import VtsHandlers from './handlers';
 import { VtsRuleMessage, VtsRules } from './rules';
 
 /**
@@ -12,11 +12,6 @@ export default interface VtsConfig {
   ajax?: Partial<VtsAjaxSettings>;
 
   /**
-   * Contains functions for handling field validation.
-   */
-  handlers?: Partial<VtsHandlers>;
-
-  /**
    * Determines whether to halt the form submission if there are invalid fields.
    * @default false
    */
@@ -27,6 +22,15 @@ export default interface VtsConfig {
    * @default false
    */
   listen?: boolean;
+
+  /**
+   * Handle field feedback.
+   */
+  renderFeedback: (
+    this: HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement,
+    message: VtsValidationMessages,
+    renderClass: string
+  ) => void;
 
   /**
    * The validation rules for the form fields.
@@ -82,5 +86,13 @@ export default interface VtsConfig {
      * @default 'valid-feedback'
      */
     valid?: string;
+
+    /**
+     * The CSS class to apply to the field wrapper.
+     * Also used as a reference to the parent where the feedback will be appended
+     *
+     * @default undefined - the fields parentNode
+     */
+    wrapper?: string;
   };
 }

@@ -288,17 +288,17 @@ When the `halt` property is set to `true`, the form's submission will be halted,
   The `showFeedback()` function iterates over the validation data object and updates the DOM to display the validation messages for each field. It checks if there is already an element with the appropriate feedback class and updates its text content. If no such element exists, it creates a new \<div> element and appends it to the parent element.
 
   ```javascript
-  function showFeedback(fieldClass, data, form) {
+  function showFeedback(renderClass, data, form) {
     for (const key in data) {
       const { field, label, message = ' ' } = data[key];
       const parent = field.parentNode;
-      const sibling = parent?.querySelector(`.${fieldClass}`);
+      const sibling = parent?.querySelector(`.${renderClass}`);
 
       if (sibling) {
         sibling.textContent = message;
       } else {
         const div = document.createElement('div');
-        div.classList.add(fieldClass);
+        div.classList.add(renderClass);
         div.textContent = message;
         parent?.append(div);
       }

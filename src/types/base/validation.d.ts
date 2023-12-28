@@ -1,6 +1,4 @@
 import type VtsBase from '.';
-import type { VtsValidationData } from '../config/handlers';
-import { VtsRuleKeys } from '../config/rules';
 
 export default interface VtsValidationBase {
   /**
@@ -34,4 +32,5 @@ type VtsValidationMessages = {
   size?: string;
   valid?: string;
   validator?: string | string[];
+  wrapper?: string;
 };
