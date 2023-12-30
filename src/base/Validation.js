@@ -12,72 +12,37 @@ const vtsValidation = {
     const validMessage = {
       valid: rules?.message?.valid ?? this.message.valid ?? defaultMsg.valid,
     };
-
     const renderClass = Object.assign(this.class, { wrapper: rules?.wrapper });
 
-    if (field.type === 'checkbox') {
-      const group = Vts.getGroupedFields(field);
-      const lastField = group[group.length - 1];
-      const isValid = group.some(
-        (field) => field instanceof HTMLInputElement && field.checked
-      );
+    switch (field.type) {
+      case 'checkbox':
+        validateCheckbox.call(this, field, rules, validMessage, renderClass);
+        break;
 
-      if (isValid) {
-        group.forEach((gField) => (gField.required = false));
-        this.renderFeedback.call(lastField, validMessage, renderClass);
-      } else {
-        group.forEach((gField) => (gField.required = true));
-        this.renderFeedback.call(
-          lastField,
-          {
-            required:
-              rules?.message?.required ??
-              this.message.required ??
-              defaultMsg.required,
-          },
-          renderClass
-        );
-      }
-    } else if (field.type === 'radio') {
-      const group = Vts.getGroupedFields(field);
-      const lastField = group[group.length - 1];
-      const isValid = group.some((field) => field.checkValidity());
+      case 'radio':
+        validateRadio.call(this, field, rules, validMessage, renderClass);
+        break;
 
-      if (isValid) {
-        // field.setCustomValidity('');
-        this.renderFeedback.call(lastField, validMessage, renderClass);
-      } else {
-        this.renderFeedback.call(
-          lastField,
-          {
-            required:
-              rules?.message?.required ??
-              this.message.required ??
-              defaultMsg.required,
-          },
-          renderClass
+      default:
+        /** @type {import('../types/base/validation').VtsValidationResults} */
+        let invalidMessages = await getValidationMessages.call(
+          this,
+          rules,
+          field,
+          label
         );
-      }
-    } else {
-      /** @type {import('../types/base/validation').VtsValidationResults} */
-      let invalidMessages = await getValidationMessages.call(
-        this,
-        rules,
-        field,
-        label
-      );
-      const isInvalid = Object.keys(invalidMessages).length;
-      // set custom validity
-      if (isInvalid) {
-        // INVALID
-        const errorValidationMsg = Object.values(invalidMessages).join(', ');
-        field.setCustomValidity(errorValidationMsg);
-        this.renderFeedback.call(field, invalidMessages, renderClass);
-      } else {
-        // VALID
-        field.setCustomValidity('');
-        this.renderFeedback.call(field, validMessage, renderClass);
-      }
+        const isInvalid = Object.keys(invalidMessages).length;
+        // set custom validity
+        if (isInvalid) {
+          // INVALID
+          const errorValidationMsg = Object.values(invalidMessages).join(', ');
+          field.setCustomValidity(errorValidationMsg);
+          this.renderFeedback.call(field, invalidMessages, renderClass);
+        } else {
+          // VALID
+          field.setCustomValidity('');
+          this.renderFeedback.call(field, validMessage, renderClass);
+        }
     }
   },
 };
@@ -133,6 +98,53 @@ async function getValidationMessages(rules, field, label, enforceRule = null) {
   }
 
   return invalidMessages;
+}
+
+function validateCheckbox(field, rules, validMessage, renderClass) {
+  const group = Vts.getGroupedFields(field);
+  const lastField = group[group.length - 1];
+  const isValid = group.some(
+    (field) => field instanceof HTMLInputElement && field.checked
+  );
+
+  if (isValid) {
+    group.forEach((gField) => (gField.required = false));
+    this.renderFeedback.call(lastField, validMessage, renderClass);
+  } else {
+    group.forEach((gField) => (gField.required = true));
+    this.renderFeedback.call(
+      lastField,
+      {
+        required:
+          rules?.message?.required ??
+          this.message.required ??
+          defaultMsg.required,
+      },
+      renderClass
+    );
+  }
+}
+
+function validateRadio(field, rules, validMessage, renderClass) {
+  const group = Vts.getGroupedFields(field);
+  const lastField = group[group.length - 1];
+  const isValid = group.some((field) => field.checkValidity());
+
+  if (isValid) {
+    // field.setCustomValidity('');
+    this.renderFeedback.call(lastField, validMessage, renderClass);
+  } else {
+    this.renderFeedback.call(
+      lastField,
+      {
+        required:
+          rules?.message?.required ??
+          this.message.required ??
+          defaultMsg.required,
+      },
+      renderClass
+    );
+  }
 }
 
 export default vtsValidation;

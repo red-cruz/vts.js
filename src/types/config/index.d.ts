@@ -24,12 +24,20 @@ export default interface VtsConfig {
   listen?: boolean;
 
   /**
-   * Handle field feedback.
+   * Renders feedback to the user based on the validation result.
+   *
+   * @param {VtsValidationResults} validationResults  - Feedback messages.
+   * @param {Object} renderClass - An object containing classes for the invalid and valid feedback.
    */
-  renderFeedback: (
+  renderFeedback?: (
     this: HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement,
-    message: VtsValidationResults,
-    renderClass: string
+    validationResults: VtsValidationResults,
+    renderClass: {
+      form: string;
+      invalid: string;
+      valid: string;
+      wrapper?: string;
+    }
   ) => void;
 
   /**

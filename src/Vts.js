@@ -42,6 +42,11 @@ export default class Vts {
     this._addEventListeners();
   }
 
+  resetForm() {
+    this.form.reset(); // @ts-ignore
+    this.form.classList.remove(this.class.form);
+  }
+
   /**
    * @static
    * @param {import('./types/config/index.js').default} config
