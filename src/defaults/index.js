@@ -31,8 +31,9 @@ const vtsDefaults = {
       : this.parentNode;
 
     // Find the feedback container
+    const vtsFeedbackClass = 'vts-feedback-container';
     const feedbackContainer = fieldWrapper?.querySelector(
-      `.vts-feedback-container`
+      `.${vtsFeedbackClass}`
     );
 
     // Create the feedback container if it doesn't exist
@@ -41,12 +42,14 @@ const vtsDefaults = {
       // Update the feedback content and display
       feedbackContainer.innerHTML = textContent;
       feedbackContainer.style.display = 'block'; // forces the feedback to show when using bootstrap
+
+      // toggle the feedback class
       feedbackContainer.classList.add(feedbackClass);
       feedbackContainer.classList.remove(!isValid ? valid : invalid);
     } else {
       // Create a new feedback container and append it to the field wrapper
       const newContainer = document.createElement('div');
-      newContainer.classList.add('vts-feedback-container', feedbackClass);
+      newContainer.classList.add(vtsFeedbackClass, feedbackClass);
       newContainer.innerHTML = textContent;
       newContainer.style.display = 'block';
       fieldWrapper?.append(newContainer);
