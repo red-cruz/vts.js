@@ -98,7 +98,6 @@ async function getValidationMessages(rules, field, label) {
 }
 
 /**
- * @this {Vts}
  * @param {HTMLInputElement|HTMLSelectElement|HTMLTextAreaElement} field
  * @param {import('../types/config/rules').VtsRules[string]|undefined} rules
  * @param {{valid:string}} validMessage
@@ -131,7 +130,6 @@ function validateCheckbox(field, rules, validMessage, renderClass) {
 }
 
 /**
- * @this {Vts}
  * @param {HTMLInputElement|HTMLSelectElement|HTMLTextAreaElement} field
  * @param {import('../types/config/rules').VtsRules[string]|undefined} rules
  * @param {{valid:string}} validMessage

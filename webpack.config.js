@@ -1,7 +1,7 @@
 const path = require('path');
 const webpack = require('webpack');
 module.exports = {
-  entry: ['whatwg-fetch', './src/vts.js'],
+  entry: ['whatwg-fetch', './src/Vts.js'],
   output: {
     library: 'Vts',
     libraryExport: 'default',
