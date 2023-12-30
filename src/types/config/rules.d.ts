@@ -64,6 +64,7 @@ type VtsRules = {
           label: string,
           form: HTMLFormElement
         ) => Promise<Array<string>> | Array<string>);
+
     /**
      * The message configuration for the validation rule.
      */

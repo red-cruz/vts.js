@@ -51,19 +51,16 @@ const vtsValidation = {
  * @param {import('../types/config/rules').VtsRules[string]|undefined} rules
  * @param {HTMLInputElement|HTMLSelectElement|HTMLTextAreaElement} field
  * @param {string} label
- * @param {Function|null} [enforceRule=null]
  * @this {import('../types/base').default}
  * @returns {Promise<import('../types/base/validation').VtsValidationResults>}
  */
-async function getValidationMessages(rules, field, label, enforceRule = null) {
+async function getValidationMessages(rules, field, label) {
   let invalidMessages = {};
 
   // TODO: if field is not required, no need to execute validation rules if there is no value
   for (const rule of registeredRules) {
     /** @type {import('../types/base/validation').VtsValidationResults} */
-    const validationMessage = enforceRule
-      ? await enforceRule.call(this, rules, field, label)
-      : await rule.call(this, rules, field, label);
+    const validationMessage = await rule.call(this, rules, field, label);
     const key = Object.keys(validationMessage)[0];
 
     if (key) {
@@ -92,7 +89,7 @@ async function getValidationMessages(rules, field, label, enforceRule = null) {
     const isRequired =
       (rule.name === 'required' || rule.name === 'requiredIf') &&
       (invalidMessages.required || invalidMessages.requiredIf);
-    if (isRequired || enforceRule) {
+    if (isRequired) {
       break;
     }
   }
@@ -100,6 +97,14 @@ async function getValidationMessages(rules, field, label, enforceRule = null) {
   return invalidMessages;
 }
 
+/**
+ * @this {Vts}
+ * @param {HTMLInputElement|HTMLSelectElement|HTMLTextAreaElement} field
+ * @param {import('../types/config/rules').VtsRules[string]|undefined} rules
+ * @param {{valid:string}} validMessage
+ * @param {{}} renderClass
+ * @this {import('../types/base').default}
+ */
 function validateCheckbox(field, rules, validMessage, renderClass) {
   const group = Vts.getGroupedFields(field);
   const lastField = group[group.length - 1];
@@ -125,13 +130,20 @@ function validateCheckbox(field, rules, validMessage, renderClass) {
   }
 }
 
-function validateRadio(field, rules, validMessage, renderClass) {
+/**
+ * @this {Vts}
+ * @param {HTMLInputElement|HTMLSelectElement|HTMLTextAreaElement} field
+ * @param {import('../types/config/rules').VtsRules[string]|undefined} rules
+ * @param {{valid:string}} validMessage
+ * @param {{}} renderClass
+ * @this {import('../types/base').default}
+ */
+async function validateRadio(field, rules, validMessage, renderClass) {
   const group = Vts.getGroupedFields(field);
   const lastField = group[group.length - 1];
   const isValid = group.some((field) => field.checkValidity());
 
   if (isValid) {
-    // field.setCustomValidity('');
     this.renderFeedback.call(lastField, validMessage, renderClass);
   } else {
     this.renderFeedback.call(

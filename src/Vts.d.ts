@@ -1,7 +1,6 @@
 import { VtsValidationResults } from './types/base/validation';
 import type VtsConfig from './types/config';
 import VtsAjaxSettings from './types/config/ajaxSettings';
-import VtsHandlers from './types/config/handlers';
 import VtsResponseMessage from './types/config/responseMessage';
 import { VtsRuleMessage, VtsRules } from './types/config/rules';
 
@@ -11,7 +10,7 @@ import { VtsRuleMessage, VtsRules } from './types/config/rules';
  * error messages, and actions to be performed when a form field is valid or invalid.
  *
  * @author RED
- * @version 1.6.2
+ * @version 1.7.0-beta
  */
 declare class Vts {
   /**
