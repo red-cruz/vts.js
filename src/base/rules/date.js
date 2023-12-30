@@ -31,7 +31,7 @@ export async function beforeOrEqual(rules, field, label) {
  * @param {HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement} field
  * @param {string} label
  * @this {import('../../types/base/index').default} Vts
- * @returns {Promise<import('../../types/base/validation').VtsValidationMessages>}
+ * @returns {Promise<import('../../types/base/validation').VtsValidationResults>}
  */
 async function dateRule(ruleName, rules, field, label) {
   const rule = rules ? rules[ruleName] : null;

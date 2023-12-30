@@ -12,7 +12,7 @@ export default interface VtsValidationBase {
   ): Promise<void>;
 }
 
-type VtsValidationMessages = {
+type VtsValidationResults = {
   after?: string;
   afterOrEqual?: string;
   before?: string;

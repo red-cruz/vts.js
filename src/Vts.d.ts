@@ -1,4 +1,4 @@
-import { VtsValidationMessages } from './types/base/validation';
+import { VtsValidationResults } from './types/base/validation';
 import type VtsConfig from './types/config';
 import VtsAjaxSettings from './types/config/ajaxSettings';
 import VtsHandlers from './types/config/handlers';
@@ -37,7 +37,7 @@ declare class Vts {
    */
   renderFeedback: (
     this: HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement,
-    message: VtsValidationMessages,
+    message: VtsValidationResults,
     renderClass: string
   ) => void;
   /**

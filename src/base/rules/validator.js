@@ -5,7 +5,7 @@
  * @param {HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement} field
  * @param {string} label
  * @this {import('../../types/base/index').default} Vts
- * @returns {Promise<import('../../types/base/validation').VtsValidationMessages>}
+ * @returns {Promise<import('../../types/base/validation').VtsValidationResults>}
  */
 export default async function validatorRule(rules, field, label) {
   const customValidator = rules?.validator;

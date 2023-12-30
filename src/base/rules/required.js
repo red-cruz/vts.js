@@ -27,7 +27,7 @@ export default function isRequiredAndInvalid(rules, field) {
  * @param {HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement} field
  * @param {string} label
  * @this {import('../../types/base/index').default} Vts
- * @returns {import('../../types/base/validation').VtsValidationMessages}
+ * @returns {import('../../types/base/validation').VtsValidationResults}
  */
 export function requiredRule(rules, field, label) {
   const ruleMsg = rules?.message?.required || this.message?.required;
@@ -46,7 +46,7 @@ export function requiredRule(rules, field, label) {
  * @param {HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement} field
  * @param {string} label
  * @this {import('../../types/base/index').default} Vts
- * @returns {Promise<import('../../types/base/validation').VtsValidationMessages>}
+ * @returns {Promise<import('../../types/base/validation').VtsValidationResults>}
  */
 export async function requiredIfRule(rules, field, label) {
   const requiredIf = rules?.requiredIf;

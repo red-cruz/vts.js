@@ -1,4 +1,4 @@
-import { VtsValidationMessages } from '../base/validation';
+import { VtsValidationResults } from '../base/validation';
 import type VtsAjaxSettings from './ajaxSettings';
 import { VtsRuleMessage, VtsRules } from './rules';
 
@@ -28,7 +28,7 @@ export default interface VtsConfig {
    */
   renderFeedback: (
     this: HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement,
-    message: VtsValidationMessages,
+    message: VtsValidationResults,
     renderClass: string
   ) => void;
 

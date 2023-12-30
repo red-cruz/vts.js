@@ -13,28 +13,40 @@ const vtsDefaults = {
     form: 'was-validated',
     invalid: 'invalid-feedback',
     valid: 'valid-feedback',
-    wrapper: '',
   },
   halt: false,
-  renderFeedback: function (messages, renderClass) {
+  renderFeedback: function (validationResults, renderClass) {
+    // Extract the renderClass object
     const { wrapper, invalid, valid } = renderClass;
+
+    // Check if field is valid
     const isValid = this.checkValidity();
+
+    // Determine the feedback class based on the validation result
+    const feedbackClass = isValid ? valid : invalid;
+
+    // Find the field wrapper
     const fieldWrapper = wrapper
       ? this.closest(`.${wrapper}`)
       : this.parentNode;
-    const feedbackContainerClass = isValid ? valid : invalid;
-    const feedbackContainer = fieldWrapper?.querySelector(`.vts-feedback`);
-    const textContent = Object.values(messages).flat().join('<br />');
 
+    // Find the feedback container
+    const feedbackContainer = fieldWrapper?.querySelector(
+      `.vts-feedback-container`
+    );
+
+    // Create the feedback container if it doesn't exist
+    const textContent = Object.values(validationResults).flat().join('<br />');
     if (feedbackContainer instanceof HTMLElement) {
+      // Update the feedback content and display
       feedbackContainer.innerHTML = textContent;
-      feedbackContainer.style.display = 'block';
-      feedbackContainer.classList.add(isValid ? valid : invalid);
+      feedbackContainer.style.display = 'block'; // forces the feedback to show when using bootstrap
+      feedbackContainer.classList.add(feedbackClass);
       feedbackContainer.classList.remove(!isValid ? valid : invalid);
     } else {
+      // Create a new feedback container and append it to the field wrapper
       const newContainer = document.createElement('div');
-      newContainer.classList.add('vts-feedback');
-      newContainer.classList.add(feedbackContainerClass);
+      newContainer.classList.add('vts-feedback-container', feedbackClass);
       newContainer.innerHTML = textContent;
       newContainer.style.display = 'block';
       fieldWrapper?.append(newContainer);

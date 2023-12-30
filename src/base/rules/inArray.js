@@ -6,7 +6,7 @@ import defaultMsg from '../../defaults/defaultMsg';
  * @param {HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement} field
  * @param {string} label
  * @this {import('../../types/base/index').default} Vts
- * @returns {Promise<import('../../types/base/validation').VtsValidationMessages>}
+ * @returns {Promise<import('../../types/base/validation').VtsValidationResults>}
  */
 export default async function inArrayRule(rules, field, label) {
   const inArray = rules?.inArray;

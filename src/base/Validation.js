@@ -59,7 +59,7 @@ const vtsValidation = {
         );
       }
     } else {
-      /** @type {import('../types/base/validation').VtsValidationMessages} */
+      /** @type {import('../types/base/validation').VtsValidationResults} */
       let invalidMessages = await getValidationMessages.call(
         this,
         rules,
@@ -88,14 +88,14 @@ const vtsValidation = {
  * @param {string} label
  * @param {Function|null} [enforceRule=null]
  * @this {import('../types/base').default}
- * @returns {Promise<import('../types/base/validation').VtsValidationMessages>}
+ * @returns {Promise<import('../types/base/validation').VtsValidationResults>}
  */
 async function getValidationMessages(rules, field, label, enforceRule = null) {
   let invalidMessages = {};
 
   // TODO: if field is not required, no need to execute validation rules if there is no value
   for (const rule of registeredRules) {
-    /** @type {import('../types/base/validation').VtsValidationMessages} */
+    /** @type {import('../types/base/validation').VtsValidationResults} */
     const validationMessage = enforceRule
       ? await enforceRule.call(this, rules, field, label)
       : await rule.call(this, rules, field, label);
