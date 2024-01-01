@@ -23,7 +23,9 @@ type VtsValidationResults = {
   endsWith?: string;
   equalTo?: string;
   eventType?: string;
+  max?: string;
   message?: string;
+  min?: string;
   notInArray?: string;
   pattern?: string;
   required?: string;

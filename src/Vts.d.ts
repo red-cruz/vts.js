@@ -10,7 +10,7 @@ import { VtsRuleMessage, VtsRules } from './types/config/rules';
  * error messages, and actions to be performed when a form field is valid or invalid.
  *
  * @author RED
- * @version 1.7.0-beta
+ * @version 1.7.1-beta
  */
 declare class Vts {
   /**
@@ -39,6 +39,12 @@ declare class Vts {
     message: VtsValidationResults,
     renderClass: string
   ) => void;
+
+  /**
+   * Reset the form
+   */
+  resetForm: () => void;
+
   /**
    * Checks the validity of the form.
    * @returns {Boolean} True if the form is valid, false otherwise.

@@ -70,6 +70,12 @@ type VtsRules = {
      */
     message?: VtsRuleMessage;
 
+    /**
+     *
+     */
+    max?: number;
+    min?: number;
+
     notInArray?:
       | Array<string>
       | ((

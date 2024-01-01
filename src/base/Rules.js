@@ -5,6 +5,8 @@ import differentFrom from './rules/differentFrom';
 import endsWithRule from './rules/endsWith';
 import equalToRule from './rules/equalTo';
 import inArrayRule from './rules/inArray';
+import maxRule from './rules/max';
+import minRule from './rules/min';
 import notInArrayRule from './rules/notInArray';
 import patternRule from './rules/pattern';
 import { requiredIfRule, requiredRule } from './rules/required';
@@ -24,6 +26,8 @@ const registeredRules = [
   differentFrom,
   equalToRule,
   inArrayRule,
+  maxRule,
+  minRule,
   notInArrayRule,
   patternRule,
   sizeRule,

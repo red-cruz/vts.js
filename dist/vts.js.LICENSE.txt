@@ -1,6 +1,6 @@
 /*!
 * Vts - Validate then submit.
-* (c) 2023 Raymark Eduarte Dela Cruz
+* (c) 2024 Raymark Eduarte Dela Cruz
 * Released under the MIT License.
 */
 
