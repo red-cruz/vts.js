@@ -98,7 +98,7 @@ async function getValidationMessages(rules, field, label) {
 }
 
 /**
- * @param {HTMLInputElement|HTMLSelectElement|HTMLTextAreaElement} field
+ * @param {HTMLInputElement} field
  * @param {import('../types/config/rules').VtsRules[string]|undefined} rules
  * @param {{valid:string}} validMessage
  * @param {{}} renderClass
@@ -106,31 +106,71 @@ async function getValidationMessages(rules, field, label) {
  */
 function validateCheckbox(field, rules, validMessage, renderClass) {
   const group = Vts.getGroupedFields(field);
+  const label = getFieldLabel(rules?.label, field, this.form);
   const lastField = group[group.length - 1];
-  const isValid = group.some(
-    (field) => field instanceof HTMLInputElement && field.checked
-  );
+
+  const checkedItems = group
+    .map((gField) => gField instanceof HTMLInputElement && gField.checked)
+    .filter(Boolean).length;
+
+  const invalidMsgObj = {};
+
+  let isValid = true;
+
+  const min = rules?.min;
+  if (min && checkedItems < min) {
+    isValid = false;
+    invalidMsgObj.min = (
+      rules?.message?.min ??
+      this.message.min ??
+      defaultMsg.min
+    )
+      .replace(/{:min}/g, String(min))
+      .replace(/{:label}/g, label);
+  } else {
+    const hasChecked = group.some(
+      (gField) => gField instanceof HTMLInputElement && gField.checked
+    );
+
+    if (rules?.required && !hasChecked) {
+      isValid = false;
+      invalidMsgObj.required = (
+        rules?.message?.required ??
+        this.message.required ??
+        defaultMsg.required
+      ).replace(/{:label}/g, label);
+    }
+  }
+
+  const max = rules?.max;
+  if (max && checkedItems > max) {
+    isValid = false;
+    invalidMsgObj.max = (
+      rules?.message?.max ??
+      this.message.max ??
+      defaultMsg.max
+    )
+      .replace(/{:max}/g, String(max))
+      .replace(/{:label}/g, label);
+  }
 
   if (isValid) {
-    group.forEach((gField) => (gField.required = false));
+    group.forEach((gField) => {
+      gField.required = false;
+      gField.setCustomValidity('');
+    });
     this.renderFeedback.call(lastField, validMessage, renderClass);
   } else {
-    group.forEach((gField) => (gField.required = true));
-    this.renderFeedback.call(
-      lastField,
-      {
-        required:
-          rules?.message?.required ??
-          this.message.required ??
-          defaultMsg.required,
-      },
-      renderClass
-    );
+    group.forEach((gField) => {
+      gField.required = true;
+      gField.setCustomValidity(Object.keys(invalidMsgObj).join(','));
+    });
+    this.renderFeedback.call(lastField, invalidMsgObj, renderClass);
   }
 }
 
 /**
- * @param {HTMLInputElement|HTMLSelectElement|HTMLTextAreaElement} field
+ * @param {HTMLInputElement} field
  * @param {import('../types/config/rules').VtsRules[string]|undefined} rules
  * @param {{valid:string}} validMessage
  * @param {{}} renderClass
