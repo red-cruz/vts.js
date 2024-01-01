@@ -9,12 +9,12 @@ import defaultMsg from '../../defaults/defaultMsg';
  * @returns {import('../../types/base/validation').VtsValidationResults}
  */
 export default function startsWithRule(rules, field, label) {
-  const startsWith = rules?.startsWith;
+  const startsWith = rules?.startsWith || field.dataset['vts-rule-startsWith'];
   if (!startsWith) return {};
 
   const message =
     rules.message?.startsWith ||
-    this.message.startsWith ||
+    this.message?.startsWith ||
     defaultMsg.startsWith;
 
   return field.value.startsWith(String(startsWith))

@@ -27,7 +27,7 @@ module.exports = {
   plugins: [
     new webpack.BannerPlugin({
       banner: `/*!
-* Vts - Validate then submit.
+* Vts.js - Validate then submit.
 * (c) ${new Date().getFullYear()} Raymark Eduarte Dela Cruz
 * Released under the MIT License.
 */`,

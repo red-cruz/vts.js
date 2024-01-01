@@ -12,7 +12,8 @@ import getFieldLabel from '../../utils/getFieldLabel';
  * @returns {import('../../types/base/validation').VtsValidationResults}
  */
 export default function differentFrom(rules, field, label) {
-  const differentFrom = rules?.differentFrom;
+  const differentFrom =
+    rules?.differentFrom || field.dataset['vts-rule-differentFrom'];
   if (!differentFrom) return {};
 
   let targetField = VtsFormValidator.validateField(this.form, differentFrom);
@@ -34,7 +35,7 @@ export default function differentFrom(rules, field, label) {
     field.value !== matchValue
       ? ''
       : rules.message?.differentFrom ||
-        this.message.differentFrom ||
+        this.message?.differentFrom ||
         defaultMsg.differentFrom;
 
   const targetLabel = getFieldLabel(rules.label, targetField, this.form);

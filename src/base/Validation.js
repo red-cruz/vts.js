@@ -10,7 +10,7 @@ const vtsValidation = {
     const rules = this._getFieldRules(field);
     const label = getFieldLabel(rules?.label, field, this.form);
     const validMessage = {
-      valid: rules?.message?.valid ?? this.message.valid ?? defaultMsg.valid,
+      valid: rules?.message?.valid ?? this.message?.valid ?? defaultMsg.valid,
     };
     const renderClass = Object.assign(this.class, { wrapper: rules?.wrapper });
 
@@ -117,12 +117,12 @@ function validateCheckbox(field, rules, validMessage, renderClass) {
 
   let isValid = true;
 
-  const min = rules?.min;
+  const min = rules?.min || Number(field.dataset.vtsRuleMin);
   if (min && checkedItems < min) {
     isValid = false;
     invalidMsgObj.min = (
       rules?.message?.min ??
-      this.message.min ??
+      this.message?.min ??
       defaultMsg.min
     )
       .replace(/{:min}/g, String(min))
@@ -132,22 +132,29 @@ function validateCheckbox(field, rules, validMessage, renderClass) {
       (gField) => gField instanceof HTMLInputElement && gField.checked
     );
 
-    if (rules?.required && !hasChecked) {
+    const hasRequiredRule =
+      rules?.required ||
+      Boolean(
+        field.dataset.vtsRuleRequired !== undefined &&
+          field.dataset.vtsRuleRequired != 'false'
+      );
+    console.log(field.dataset.vtsRuleRequired);
+    if (hasRequiredRule && !hasChecked) {
       isValid = false;
       invalidMsgObj.required = (
         rules?.message?.required ??
-        this.message.required ??
+        this.message?.required ??
         defaultMsg.required
       ).replace(/{:label}/g, label);
     }
   }
 
-  const max = rules?.max;
+  const max = rules?.max || Number(field.dataset.vtsRuleMax);
   if (max && checkedItems > max) {
     isValid = false;
     invalidMsgObj.max = (
       rules?.message?.max ??
-      this.message.max ??
+      this.message?.max ??
       defaultMsg.max
     )
       .replace(/{:max}/g, String(max))
@@ -189,7 +196,7 @@ async function validateRadio(field, rules, validMessage, renderClass) {
       {
         required:
           rules?.message?.required ??
-          this.message.required ??
+          this.message?.required ??
           defaultMsg.required,
       },
       renderClass

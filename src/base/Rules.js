@@ -58,7 +58,7 @@ const vtsRules = {
   _setCheckingRule(rules, field, label) {
     const checking = (
       rules.message?.checking ||
-      this.message.checking ||
+      this.message?.checking ||
       defaultMsg.checking
     )
       .replace(/{:value}/g, field.value)

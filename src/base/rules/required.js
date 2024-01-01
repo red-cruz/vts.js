@@ -19,7 +19,13 @@ export default function isRequiredAndInvalid(rules, field) {
   //     (field.required && !field.checked)
   //   );
   // }
-  return (rules?.required && !field.value) || field.validity.valueMissing;
+  const hasRequiredRule =
+    rules?.required ||
+    Boolean(
+      field.dataset.vtsRuleRequired !== undefined &&
+        field.dataset.vtsRuleRequired != 'false'
+    );
+  return (hasRequiredRule && !field.value) || field.validity.valueMissing;
 }
 
 /**

@@ -10,11 +10,14 @@ import isRequiredAndInvalid from './required';
  * @returns {Promise<import('../../types/base/validation').VtsValidationResults>}
  */
 export default async function notInArrayRule(rules, field, label) {
-  const notInArray = rules?.notInArray;
+  const dataset = field.dataset['vts-rule-notInArray'];
+  const notInArray =
+    rules?.notInArray || (dataset ? JSON.parse(dataset) : null);
+
   if (!notInArray) return {};
   const message =
     rules.message?.notInArray ||
-    this.message.notInArray ||
+    this.message?.notInArray ||
     defaultMsg.notInArray;
 
   let arr = [];

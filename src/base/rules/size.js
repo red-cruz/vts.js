@@ -9,10 +9,10 @@ import defaultMsg from '../../defaults/defaultMsg';
  * @returns {import('../../types/base/validation').VtsValidationResults}
  */
 export default function sizeRule(rules, field, label) {
-  const size = rules?.size;
+  const size = rules?.size || Number(field.dataset.vtsRuleSize);
   if (!size) return {};
 
-  const message = rules.message?.size || this.message.size || defaultMsg.size;
+  const message = rules.message?.size || this.message?.size || defaultMsg.size;
   return size === field.value.length
     ? {}
     : {

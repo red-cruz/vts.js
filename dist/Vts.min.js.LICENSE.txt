@@ -1,5 +1,5 @@
 /*!
-* Vts - Validate then submit.
+* Vts.js - Validate then submit.
 * (c) 2024 Raymark Eduarte Dela Cruz
 * Released under the MIT License.
 */

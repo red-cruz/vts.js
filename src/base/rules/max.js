@@ -9,10 +9,10 @@ import defaultMsg from '../../defaults/defaultMsg';
  * @returns {import('../../types/base/validation').VtsValidationResults}
  */
 export default function maxRule(rules, field, label) {
-  const max = rules?.max;
+  const max = rules?.max || Number(field.dataset.vtsRuleMax);
   if (!max) return {};
 
-  const message = rules.message?.max || this.message.max || defaultMsg.max;
+  const message = rules?.message?.max || this.message?.max || defaultMsg.max;
 
   let valid = false;
 

@@ -34,7 +34,7 @@ export async function beforeOrEqual(rules, field, label) {
  * @returns {Promise<import('../../types/base/validation').VtsValidationResults>}
  */
 async function dateRule(ruleName, rules, field, label) {
-  const rule = rules ? rules[ruleName] : null;
+  const rule = (rules ? rules[ruleName] : null) || field.dataset.vtsRuleDate;
   if (!rule) return {};
 
   let targetDate, targetField, dateModifier;

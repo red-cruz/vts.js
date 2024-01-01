@@ -8,7 +8,8 @@
  * @returns {Promise<import('../../types/base/validation').VtsValidationResults>}
  */
 export default async function validatorRule(rules, field, label) {
-  const customValidator = rules?.validator;
+  const dataset = field.dataset.vtsRuleValidator || '';
+  const customValidator = rules?.validator || window[dataset];
   if (!customValidator) return {};
 
   if (typeof customValidator === 'function') {

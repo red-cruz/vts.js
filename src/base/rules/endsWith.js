@@ -9,11 +9,11 @@ import defaultMsg from '../../defaults/defaultMsg';
  * @returns {import('../../types/base/validation').VtsValidationResults}
  */
 export default function endsWithRule(rules, field, label) {
-  const endsWith = rules?.endsWith;
+  const endsWith = rules?.endsWith || field.dataset['vts-rule-endsWith'];
   if (!endsWith) return {};
 
   const message =
-    rules.message?.endsWith || this.message.endsWith || defaultMsg.endsWith;
+    rules.message?.endsWith || this.message?.endsWith || defaultMsg.endsWith;
 
   return field.value.endsWith(String(endsWith))
     ? {}

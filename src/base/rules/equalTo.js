@@ -12,7 +12,7 @@ import getFieldLabel from '../../utils/getFieldLabel';
  * @returns {import('../../types/base/validation').VtsValidationResults}
  */
 export default function equalToRule(rules, field, label) {
-  const equalTo = rules?.equalTo;
+  const equalTo = rules?.equalTo || field.dataset['vts-rule-equalTo'];
   if (!equalTo) return {};
 
   let targetField = VtsFormValidator.validateField(this.form, equalTo);
@@ -33,7 +33,7 @@ export default function equalToRule(rules, field, label) {
 
   const message = regex.test(field.value)
     ? ''
-    : rules.message?.equalTo || this.message.equalTo || defaultMsg.equalTo;
+    : rules.message?.equalTo || this.message?.equalTo || defaultMsg.equalTo;
 
   return {
     equalTo: message
