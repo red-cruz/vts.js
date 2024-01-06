@@ -29,11 +29,10 @@ export default function equalToRule(rules, field, label) {
 
   // get value of target field
   const matchValue = targetField.value;
-  const regex = new RegExp(`^${matchValue}$`);
-
-  const message = regex.test(field.value)
-    ? ''
-    : rules.message?.equalTo || this.message?.equalTo || defaultMsg.equalTo;
+  const message =
+    matchValue === field.value
+      ? ''
+      : rules.message?.equalTo || this.message?.equalTo || defaultMsg.equalTo;
 
   return {
     equalTo: message
