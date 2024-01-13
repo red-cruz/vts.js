@@ -20,10 +20,7 @@ const vtsEvents = {
       }
 
       this.form.classList.add(formClass);
-      // validate each field
-      for (const field of this.fields) {
-        await this._validate(field);
-      }
+      this.validate();
 
       if (this.isFormValid() && !this.halt) {
         this.submit().catch(() => {});
@@ -34,10 +31,18 @@ const vtsEvents = {
     const shouldListen = this.listen;
     shouldListen && this._addFieldListener();
   },
+
   _addFieldListener() {
     this.fields.forEach((field) => {
+      const cstmAttr = 'vts_listener_exists';
+      const listenerExists = field.dataset[cstmAttr];
+
+      if (listenerExists) return;
+      field.dataset[cstmAttr] = 'true';
+
       const rules = this._getFieldRules(field);
       const eventType = getEventType(field.type, rules?.eventType);
+
       field.addEventListener(eventType, () => {
         this._validate(field);
       });

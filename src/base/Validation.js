@@ -138,7 +138,7 @@ function validateCheckbox(field, rules, validMessage, renderClass) {
         field.dataset.vtsRuleRequired !== undefined &&
           field.dataset.vtsRuleRequired != 'false'
       );
-    console.log(field.dataset.vtsRuleRequired);
+
     if (hasRequiredRule && !hasChecked) {
       isValid = false;
       invalidMsgObj.required = (

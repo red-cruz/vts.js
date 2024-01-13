@@ -32,6 +32,15 @@ declare class Vts {
   form: HTMLFormElement;
   halt: boolean;
   /**
+   * Checks the validity of the form.
+   * @returns {Boolean} True if the form is valid, false otherwise.
+   */
+  isFormValid(this: Vts): boolean;
+
+  listen: boolean;
+  message: VtsRuleMessage;
+
+  /**
    * Handle field feedback.
    */
   renderFeedback: (
@@ -41,17 +50,9 @@ declare class Vts {
   ) => void;
 
   /**
-   * Reset the form
+   * Resets the form to its initial state and removes the 'was-validated' class.
    */
   resetForm: () => void;
-
-  /**
-   * Checks the validity of the form.
-   * @returns {Boolean} True if the form is valid, false otherwise.
-   */
-  isFormValid(this: Vts): boolean;
-  listen: boolean;
-  message: VtsRuleMessage;
   rules: Map<string, VtsRules[string]>;
   stopPropagation: boolean;
   /**
@@ -64,6 +65,18 @@ declare class Vts {
     response: Response;
     form: HTMLFormElement;
   }>;
+
+  /**
+   * Updates the internal list of fields in the form and attaches validation listeners to them.
+   * This method is typically called when new fields are added dynamically.
+   */
+  updateFields(): void;
+
+  /**
+   * Validates each field in the form.
+   * @async
+   */
+  validate(this: Vts): void;
 
   /**
    * Sets the default configuration for Vts (Validate Then Submit).

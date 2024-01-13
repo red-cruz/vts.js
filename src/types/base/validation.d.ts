@@ -2,13 +2,12 @@ import type VtsBase from '.';
 
 export default interface VtsValidationBase {
   /**
-   * Validates each field triggered by the form submit event.
+   * Validates each field.
    * @param field The field to check.
    */
   _validate(
     this: VtsBase,
     field: HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
-    // fieldGroup: HTMLFieldSetElement
   ): Promise<void>;
 }
 

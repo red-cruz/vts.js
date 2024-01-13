@@ -35,16 +35,39 @@ export default class Vts {
    * @memberof Vts
    */
   #init(form, config) {
-    // mixin
     Object.assign(this, vtsForm, setVtsConfig(form, config));
     Object.assign(Vts.prototype, vtsEvents, vtsRules, vtsValidation);
     this._convertRulesToMap();
     this._addEventListeners();
   }
 
+  /**
+   * @this {import('./types/base').default} Vts
+   * @memberof Vts
+   */
+  updateFields() {
+    this.fields = this.form.querySelectorAll(fieldQuery);
+    this._addFieldListener();
+  }
+
+  /**
+   * @this {import('./types/base').default} Vts
+   * @memberof Vts
+   */
   resetForm() {
-    this.form.reset(); // @ts-ignore
+    this.form.reset();
     this.form.classList.remove(this.class.form);
+  }
+
+  /**
+   * Validates each field.
+   * @this {import('./types/base').default} Vts
+   * @memberof Vts
+   */
+  async validate() {
+    for (const field of this.fields) {
+      await this._validate(field);
+    }
   }
 
   /**
