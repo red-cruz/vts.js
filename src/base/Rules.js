@@ -43,14 +43,42 @@ const vtsRules = {
   },
 
   _convertRulesToMap() {
-    const rules = this.rules;
+    /** @type {Map<string,import('../types/config/rules').VtsRules[string]>} */
     const rulesMap = new Map();
+    const rules = this.rules;
 
+    // set defined rules
     for (const fieldName in rules) {
       if (Object.prototype.hasOwnProperty.call(rules, fieldName)) {
         rulesMap.set(fieldName, rules[fieldName]);
       }
     }
+
+    // map field constraints
+    this.fields.forEach((field) => {
+      // get defined rules
+      const ruleName = field.dataset.vtsRule || field.name;
+      const existingRule = rulesMap.get(ruleName) || {};
+
+      rulesMap.set(ruleName, {
+        ...{
+          required: field.required,
+        },
+        ...existingRule,
+      });
+
+      if (field instanceof HTMLInputElement) {
+        if (field.type === 'checkbox' || field.type === 'radio') {
+          //
+        } else {
+          //
+        }
+      } else if (field instanceof HTMLSelectElement) {
+        //
+      } else {
+        //
+      }
+    });
 
     this.rules = rulesMap;
   },
