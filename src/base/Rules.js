@@ -45,27 +45,22 @@ const vtsRules = {
   _convertRulesToMap() {
     /** @type {Map<string,import('../types/config/rules').VtsRules[string]>} */
     const rulesMap = new Map();
-    const rules = this.rules;
 
-    // set defined rules
-    for (const fieldName in rules) {
-      if (Object.prototype.hasOwnProperty.call(rules, fieldName)) {
-        rulesMap.set(fieldName, rules[fieldName]);
-      }
-    }
+    /** @type {import('../types/config/rules').VtsRules[string]} */
+    const rules = this.rules;
 
     // map field constraints
     this.fields.forEach((field) => {
       // get defined rules
       const ruleName = field.dataset.vtsRule || field.name;
-      const existingRule = rulesMap.get(ruleName) || {};
+      const definedRules = rules[ruleName] || {};
 
-      rulesMap.set(ruleName, {
-        ...{
-          required: field.required,
+      mergeRules(
+        {
+          required: Boolean(field.dataset.vtsRuleRequired) || field.required,
         },
-        ...existingRule,
-      });
+        definedRules
+      );
 
       if (field instanceof HTMLInputElement) {
         if (field.type === 'checkbox' || field.type === 'radio') {
@@ -77,6 +72,17 @@ const vtsRules = {
         //
       } else {
         //
+      }
+
+      /**
+       * @param {import('../types/config/rules').VtsRules[string]} attrRules
+       * @param {import('../types/config/rules').VtsRules[string]} [mainRules=definedRules]
+       */
+      function mergeRules(
+        attrRules,
+        mainRules = (() => rulesMap.get(ruleName))()
+      ) {
+        rulesMap.set(ruleName, Object.assign(attrRules, mainRules));
       }
     });
 
