@@ -51,13 +51,15 @@ const vtsRules = {
 
     // map field constraints
     this.fields.forEach((field) => {
-      // get defined rules
       const ruleName = field.dataset.vtsRule || field.name;
       const definedRules = rules[ruleName] || {};
 
+      const { vtsRuleAfter, vtsRuleRequired } = field.dataset;
+
       mergeRules(
         {
-          required: Boolean(field.dataset.vtsRuleRequired) || field.required,
+          min: extractRule(vtsRuleAfter),
+          required: vtsRuleRequired === 'true' ?? field.required,
         },
         definedRules
       );
@@ -82,7 +84,15 @@ const vtsRules = {
         attrRules,
         mainRules = (() => rulesMap.get(ruleName))()
       ) {
-        rulesMap.set(ruleName, Object.assign(attrRules, mainRules));
+        const mergedRuleObj = Object.assign(attrRules, mainRules);
+
+        // filter undefined
+        Object.keys(mergedRuleObj).forEach(
+          (key) => mergedRuleObj[key] === undefined && delete mergedRuleObj[key]
+        );
+
+        // set the rule
+        rulesMap.set(ruleName, mergedRuleObj);
       }
     });
 
@@ -105,3 +115,13 @@ const vtsRules = {
 
 export default vtsRules;
 export { registeredRules };
+
+/**
+ * @param {string} [rule]
+ */
+function extractRule(rule) {
+  if (rule)
+    return rule.startsWith('window.')
+      ? window[rule.replace('window.', '')]()
+      : rule;
+}
