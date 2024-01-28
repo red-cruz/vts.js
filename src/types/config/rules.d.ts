@@ -3,6 +3,9 @@
  */
 type VtsRules = {
   [key: string]: {
+    accept?: string;
+    // OLD -------------------
+
     /**
      * The name of the field to match the date against.
      */
@@ -131,33 +134,6 @@ type VtsRules = {
   };
 };
 
-/**
- * The values in this type are the possible validity states for a form field.
- */
-type VtsRuleKeys =
-  | 'after'
-  | 'afterOrEqual'
-  | 'before'
-  | 'beforeOrEqual'
-  | 'between'
-  | 'checking'
-  | 'differentFrom'
-  | 'endsWith'
-  | 'equalTo'
-  | 'pattern'
-  | 'inArray'
-  | 'lowercase'
-  | 'max'
-  | 'min'
-  | 'notInArray'
-  | 'startsWith'
-  | 'size'
-  | 'uppercase'
-  | 'validator'
-  | 'required'
-  | 'requiredIf'
-  | 'valid';
-
 type VtsEventTypes =
   | 'input'
   | 'change'
@@ -166,6 +142,16 @@ type VtsEventTypes =
   | 'submit'
   | 'mouseover'
   | 'mouseout';
+
+/**
+ * Helper type to extract keys from an object type
+ */
+type KeysOfType<T> = keyof T;
+
+/**
+ * The values in this type are the possible validity states for a form field.
+ */
+type VtsRuleKeys = KeysOfType<VtsRules[string]> | 'checking';
 
 /**
  * Represents the configuration for the validation rule messages in Vts (Validate Then Submit).
