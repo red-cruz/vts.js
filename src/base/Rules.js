@@ -54,116 +54,123 @@ const vtsRules = {
       const ruleName = field.dataset.vtsRule || field.name;
       const definedRules = rules[ruleName] || {};
 
-      const rulesFromDataset = Object.entries(field.dataset)
+      // get default rules from field dataset
+      let rulesFromDataset = Object.entries(field.dataset)
         .filter(([key]) => key.startsWith('vtsRule') && key !== 'vtsRule')
-        .reduce((rules, [key, value]) => {
-          const rKey = key.slice('vtsRule'.length);
-          const ruleKey = parseRuleKey(rKey);
+        .reduce(
+          /**
+           * @param {import('../types/config/rules').Rules[string]} rules
+           */
+          (rules, [key, value]) => {
+            const rKey = key.slice('vtsRule'.length);
+            const ruleKey = parseRuleKey(rKey);
 
-          // parse
-          const extractedRule = extractRule(value);
-          if (extractedRule instanceof Function) {
-            rules[ruleKey] = extractedRule;
-          } else if (typeof extractedRule === 'string') {
-            if (extractedRule.startsWith('field:')) {
-              // let base rules get the value of the matching field
+            // parse
+            const extractedRule = extractRule(value);
+            if (extractedRule instanceof Function) {
               rules[ruleKey] = extractedRule;
+            } else if (typeof extractedRule === 'string') {
+              if (extractedRule.startsWith('field:')) {
+                // let base rules get the value of the matching field
+                rules[ruleKey] = extractedRule;
+              } else {
+                // parse rules based on rule
+                switch (ruleKey) {
+                  case 'after':
+                  case 'afterOrEqual':
+                  case 'before':
+                  case 'beforeOrEqual':
+                    rules[ruleKey] = new Date(extractedRule);
+                    break;
+
+                  case 'max':
+                  case 'maxlength':
+                  case 'maxWords':
+                  case 'min':
+                  case 'minlength':
+                  case 'minWords':
+                  case 'size':
+                    rules[ruleKey] = Number(extractedRule);
+                    break;
+
+                  case 'pattern':
+                    rules[ruleKey] = new RegExp(extractedRule);
+                    break;
+
+                  case 'required':
+                    rules[ruleKey] = value !== 'false' ?? field.required;
+                    break;
+
+                  case 'inArray':
+                  case 'notInArray':
+                    try {
+                      const obj = JSON.parse(extractedRule);
+                      rules[ruleKey] = Object.values(obj);
+                    } catch (error) {
+                      rules[ruleKey] = extractedRule
+                        .split(',')
+                        .map((val) => val.trim());
+                    }
+                    break;
+
+                  default:
+                    rules[ruleKey] = extractedRule;
+                    break;
+                }
+              }
             } else {
-              // parse rules based on rule
-              switch (ruleKey) {
-                case 'after':
-                case 'afterOrEqual':
-                case 'before':
-                case 'beforeOrEqual':
-                  rules[ruleKey] = new Date(extractedRule);
-                  break;
-
-                case 'max':
-                case 'maxlength':
-                case 'maxWords':
-                case 'min':
-                case 'minlength':
-                case 'minWords':
-                case 'size':
-                  rules[ruleKey] = Number(extractedRule);
-                  break;
-
-                case 'pattern':
-                  rules[ruleKey] = new RegExp(extractedRule);
-                  break;
-
-                case 'required':
-                  rules[ruleKey] = value !== 'false' ?? field.required;
-                  break;
-
-                case 'inArray':
-                case 'notInArray':
-                  try {
-                    const obj = JSON.parse(extractedRule);
-                    rules[ruleKey] = Object.values(obj);
-                  } catch (error) {
-                    rules[ruleKey] = extractedRule
-                      .split(',')
-                      .map((val) => val.trim());
-                  }
-                  break;
-
-                default:
-                  rules[ruleKey] = extractedRule;
-                  break;
+              // allow data attribute usage without value
+              if (ruleKey === 'required') {
+                rules[ruleKey] = value !== 'false' ?? field.required;
               }
             }
-          } else {
-            // allow data attribute usage without value
-            if (ruleKey === 'required') {
-              rules[ruleKey] = value !== 'false' ?? field.required;
-            }
-          }
-          //
 
-          return rules;
-        }, {});
-
-      mergeRules(rulesFromDataset, definedRules);
-
-      if (field instanceof HTMLInputElement) {
-        switch (field.type) {
-          case 'checkbox':
-          case 'radio':
-            // min, max, size rule
-            break;
-          case 'date':
-          case 'datetime-local':
-            // rule for date
-            break;
-          case 'number':
-            break;
-        }
-      } else if (field instanceof HTMLSelectElement) {
-        if (field.type === 'select-multiple') {
-          // min, max, size rule
-        }
-      } else {
-        // field is a textarea
-      }
-
-      /**
-       * @param {import('../types/config/rules').Rules[string]} attrRules
-       * @param {import('../types/config/rules').Rules[string]} [mainRules=definedRules]
-       */
-      function mergeRules(
-        attrRules,
-        mainRules = (() => rulesMap.get(ruleName))()
-      ) {
-        const mergedRuleObj = Object.assign(attrRules, mainRules);
-
-        // filter undefined
-        Object.keys(mergedRuleObj).forEach(
-          (key) => mergedRuleObj[key] === undefined && delete mergedRuleObj[key]
+            return rules;
+          },
+          {}
         );
 
-        // set the rule
-        rulesMap.set(ruleName, mergedRuleObj);
+      // get default rules from field attributes
+      mergeToDatasetRules({
+        required: field.required,
+      });
+
+      if (field instanceof HTMLInputElement) {
+        mergeToDatasetRules({
+          maxLength: field.maxLength < 1 && undefined,
+          minLength: field.minLength < 1 && undefined,
+        });
+
+        switch (field.type) {
+          case 'date':
+          case 'datetime-local':
+            Object.assign(rulesFromDataset);
+            mergeToDatasetRules({
+              afterOrEqual: field.min ? new Date(field.min) : undefined,
+              beforeOrEqual: field.max ? new Date(field.max) : undefined,
+            });
+            break;
+          case 'number':
+            mergeToDatasetRules({
+              min: field.min ? Number(field.min) : undefined,
+              max: field.max ? Number(field.max) : undefined,
+            });
+            break;
+        }
+      }
+
+      const mergedRuleObj = Object.assign(rulesFromDataset, definedRules);
+
+      // filter undefined
+      Object.keys(mergedRuleObj).forEach(
+        (key) => mergedRuleObj[key] === undefined && delete mergedRuleObj[key]
+      );
+
+      // set the rule
+      rulesMap.set(ruleName, mergedRuleObj);
+
+      function mergeToDatasetRules(obj) {
+        rulesFromDataset = Object.assign(obj, rulesFromDataset);
       }
     });
 
@@ -240,6 +247,6 @@ function parseRuleKey(key) {
       return 'startsWith';
 
     default:
-      return key;
+      return key.toLocaleLowerCase();
   }
 }
