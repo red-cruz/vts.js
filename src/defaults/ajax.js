@@ -77,14 +77,14 @@ const ajaxHandler = {
     }
   },
   error: (errorData, errorResponse, form) => {
-    const { title, message } = getResponseMessage(errorData, errorResponse);
-    if (title !== 'AbortError') showDialog(title, message);
+    const { title, messages } = getResponseMessage(errorData, errorResponse);
+    if (title !== 'AbortError') showDialog(title, messages);
   },
   success: (data, response, form) => {
-    const { title, message } = getResponseMessage(data, response);
+    const { title, messages } = getResponseMessage(data, response);
     form.reset();
     form.classList.remove('was-validated');
-    showDialog(title, message);
+    showDialog(title, messages);
   },
 };
 

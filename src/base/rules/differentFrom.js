@@ -31,16 +31,16 @@ export default function differentFrom(rules, field, label) {
   // get value of target field
   const matchValue = targetField.value;
 
-  const message =
+  const messages =
     field.value !== matchValue
       ? ''
-      : rules.message?.differentFrom ||
-        this.message?.differentFrom ||
+      : rules.messages?.differentFrom ||
+        this.messages?.differentFrom ||
         defaultMsg.differentFrom;
 
   const targetLabel = getFieldLabel(rules.label, targetField, this.form);
   return {
-    differentFrom: message
+    differentFrom: messages
       ?.replace(/{:targetValue}/g, matchValue || targetLabel)
       .replace(/{:targetLabel}/g, targetLabel),
   };

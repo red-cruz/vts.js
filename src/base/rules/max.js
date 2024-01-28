@@ -12,7 +12,7 @@ export default function maxRule(rules, field, label) {
   const max = rules?.max || Number(field.dataset.vtsRuleMax);
   if (!max) return {};
 
-  const message = rules?.message?.max || this.message?.max || defaultMsg.max;
+  const messages = rules?.messages?.max || this.messages?.max || defaultMsg.max;
 
   let valid = false;
 
@@ -40,6 +40,6 @@ export default function maxRule(rules, field, label) {
   return valid
     ? {}
     : {
-        max: message.replace(/{:max}/g, String(max)),
+        max: messages.replace(/{:max}/g, String(max)),
       };
 }

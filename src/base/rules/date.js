@@ -128,14 +128,14 @@ export function replaceDateMsg(
   const specified = targetLabel || 'the specified date';
   const dateStr = isDate ? targetDate.toLocaleString() : specified;
 
-  const ruleMsg = rules.message
-    ? rules.message[ruleName]
-    : this.message[ruleName];
+  const ruleMsg = rules.messages
+    ? rules.messages[ruleName]
+    : this.messages[ruleName];
 
-  const message = (ruleMsg || defaultMsg[ruleName])
+  const messages = (ruleMsg || defaultMsg[ruleName])
     .replace(/{:targetValue}/g, dateStr)
     .replace(/{:targetLabel}/g, targetLabel)
     .replace(/{:offset}/g, dateModifier);
 
-  return message;
+  return messages;
 }

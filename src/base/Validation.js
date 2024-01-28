@@ -10,7 +10,7 @@ const vtsValidation = {
     const rules = this._getFieldRules(field);
     const label = getFieldLabel(rules?.label, field, this.form);
     const validMessage = {
-      valid: rules?.message?.valid ?? this.message?.valid ?? defaultMsg.valid,
+      valid: rules?.messages?.valid ?? this.messages?.valid ?? defaultMsg.valid,
     };
     const renderClass = Object.assign(this.class, { wrapper: rules?.wrapper });
 
@@ -64,18 +64,18 @@ async function getValidationMessages(rules, field, label) {
     const key = Object.keys(validationMessage)[0];
 
     if (key) {
-      const message = validationMessage[key];
+      const messages = validationMessage[key];
       const value = field.value;
-      if (typeof message === 'string') {
+      if (typeof messages === 'string') {
         const val = value || label;
-        validationMessage[key] = message
+        validationMessage[key] = messages
           .replace(/{:value}/g, value || label)
           .replace(/{:label}/g, label)
           .replace(/{:length}/g, String(value.length));
       } else {
         // array
-        for (const subKey in message) {
-          validationMessage[key][subKey] = message[subKey]
+        for (const subKey in messages) {
+          validationMessage[key][subKey] = messages[subKey]
             .replace(/{:value}/g, value || label)
             .replace(/{:label}/g, label)
             .replace(/{:length}/g, String(value.length));
@@ -121,8 +121,8 @@ function validateCheckbox(field, rules, validMessage, renderClass) {
   if (min && checkedItems < min) {
     isValid = false;
     invalidMsgObj.min = (
-      rules?.message?.min ??
-      this.message?.min ??
+      rules?.messages?.min ??
+      this.messages?.min ??
       defaultMsg.min
     )
       .replace(/{:min}/g, String(min))
@@ -142,8 +142,8 @@ function validateCheckbox(field, rules, validMessage, renderClass) {
     if (hasRequiredRule && !hasChecked) {
       isValid = false;
       invalidMsgObj.required = (
-        rules?.message?.required ??
-        this.message?.required ??
+        rules?.messages?.required ??
+        this.messages?.required ??
         defaultMsg.required
       ).replace(/{:label}/g, label);
     }
@@ -153,8 +153,8 @@ function validateCheckbox(field, rules, validMessage, renderClass) {
   if (max && checkedItems > max) {
     isValid = false;
     invalidMsgObj.max = (
-      rules?.message?.max ??
-      this.message?.max ??
+      rules?.messages?.max ??
+      this.messages?.max ??
       defaultMsg.max
     )
       .replace(/{:max}/g, String(max))
@@ -195,8 +195,8 @@ async function validateRadio(field, rules, validMessage, renderClass) {
       lastField,
       {
         required:
-          rules?.message?.required ??
-          this.message?.required ??
+          rules?.messages?.required ??
+          this.messages?.required ??
           defaultMsg.required,
       },
       renderClass

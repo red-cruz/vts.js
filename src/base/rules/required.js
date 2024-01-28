@@ -36,7 +36,7 @@ export default function isRequiredAndInvalid(rules, field) {
  * @returns {import('../../types/base/validation').ValidationResults}
  */
 export function requiredRule(rules, field, label) {
-  const ruleMsg = rules?.message?.required || this.message?.required;
+  const ruleMsg = rules?.messages?.required || this.messages?.required;
 
   if (isRequiredAndInvalid(rules, field)) {
     return {
@@ -65,8 +65,8 @@ export async function requiredIfRule(rules, field, label) {
   let isInvalid = false;
 
   let invalidMsg =
-    rules.message?.requiredIf ||
-    this.message?.requiredIf ||
+    rules.messages?.requiredIf ||
+    this.messages?.requiredIf ||
     defaultMsg.requiredIf;
 
   if (isFunction) {

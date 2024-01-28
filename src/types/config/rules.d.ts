@@ -69,7 +69,7 @@ type Rules = {
     eventType?: EventTypes;
 
     /**
-     * The label used when rendering the validation message.
+     * The label used when rendering the validation messages.
      *
      * @example
      *    messages: {
@@ -84,7 +84,7 @@ type Rules = {
     inArray?: Rule<string[]>;
 
     /**
-     * The message configuration for the validation rule.
+     * The messages configuration for the validation rule.
      */
     messages?: ValidationMessages;
 
@@ -140,10 +140,10 @@ type Rules = {
 
     /**
      * A function that will be called to validate the input field.
-     * The function should return a `string` containing the error message if the input field is invalid.
+     * The function should return a `string` containing the error messages if the input field is invalid.
      * Returning any falsey value will mark the field as `valid`.
      *
-     * @returns A promise that resolves with a falsey value, or rejects with a custom validity message.
+     * @returns A promise that resolves with a falsey value, or rejects with a custom validity messages.
      * */
     validator?: RuleFunction<any> | RuleFunction<any>[];
 

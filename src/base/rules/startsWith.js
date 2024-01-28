@@ -12,14 +12,14 @@ export default function startsWithRule(rules, field, label) {
   const startsWith = rules?.startsWith || field.dataset['vts-rule-startsWith'];
   if (!startsWith) return {};
 
-  const message =
-    rules.message?.startsWith ||
-    this.message?.startsWith ||
+  const messages =
+    rules.messages?.startsWith ||
+    this.messages?.startsWith ||
     defaultMsg.startsWith;
 
   return field.value.startsWith(String(startsWith))
     ? {}
     : {
-        startsWith: message.replace(/{:startsWith}/g, String(startsWith)),
+        startsWith: messages.replace(/{:startsWith}/g, String(startsWith)),
       };
 }

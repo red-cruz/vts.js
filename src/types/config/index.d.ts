@@ -47,7 +47,7 @@ export default interface VtsConfig {
    *  rules: {
    *    password_confirmation: {
    *      equalTo: 'password',
-   *      message: {
+   *      messages: {
    *        equalTo: '{:label} must match the value of {:targetLabel}'
    *      }
    *    }
@@ -56,14 +56,14 @@ export default interface VtsConfig {
   rules: Rules;
 
   /**
-   * The custom validation message configuration.
+   * The custom validation messages configuration.
    * @default
    * {
    *  invalid: 'Invalid {:label}',
    *  valid: '',
    * }
    */
-  message: ValidationMessages;
+  messages: ValidationMessages;
 
   /**
    * Determines whether to stop event propagation on form submission.

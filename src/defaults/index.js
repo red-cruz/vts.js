@@ -57,7 +57,7 @@ const vtsDefaults = {
     }
   },
   listen: false,
-  message: defaultMsg,
+  messages: defaultMsg,
   rules: {},
   stopPropagation: true,
 };

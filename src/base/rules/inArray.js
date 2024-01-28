@@ -13,8 +13,8 @@ export default async function inArrayRule(rules, field, label) {
   const inArray = rules?.inArray || (dataset ? JSON.parse(dataset) : null);
   if (!inArray) return {};
 
-  const message =
-    rules.message?.inArray || this.message?.inArray || defaultMsg.inArray;
+  const messages =
+    rules.messages?.inArray || this.messages?.inArray || defaultMsg.inArray;
 
   let arr = [];
   if (typeof inArray === 'function') {
@@ -27,6 +27,6 @@ export default async function inArrayRule(rules, field, label) {
   return arr.includes(field.value)
     ? {}
     : {
-        inArray: message.replace(/{:values}/g, arr.join(', ')),
+        inArray: messages.replace(/{:values}/g, arr.join(', ')),
       };
 }

@@ -39,14 +39,14 @@ declare class Vts {
   isFormValid(this: Vts): boolean;
 
   listen: boolean;
-  message: ValidationMessages;
+  messages: ValidationMessages;
 
   /**
    * Handle field feedback.
    */
   renderFeedback: (
     this: HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement,
-    message: ValidationResults,
+    messages: ValidationResults,
     renderClass: string
   ) => void;
 

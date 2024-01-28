@@ -15,9 +15,9 @@ export default async function notInArrayRule(rules, field, label) {
     rules?.notInArray || (dataset ? JSON.parse(dataset) : null);
 
   if (!notInArray) return {};
-  const message =
-    rules.message?.notInArray ||
-    this.message?.notInArray ||
+  const messages =
+    rules.messages?.notInArray ||
+    this.messages?.notInArray ||
     defaultMsg.notInArray;
 
   let arr = [];
@@ -31,6 +31,6 @@ export default async function notInArrayRule(rules, field, label) {
   return !arr.includes(field.value)
     ? {}
     : {
-        notInArray: message.replace(/{:values}/g, arr.join(', ')),
+        notInArray: messages.replace(/{:values}/g, arr.join(', ')),
       };
 }

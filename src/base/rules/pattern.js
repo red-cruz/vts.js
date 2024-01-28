@@ -18,6 +18,8 @@ export default function patternRule(rules, field, label) {
     ? {}
     : {
         pattern:
-          rules.message?.pattern || this.message?.pattern || defaultMsg.pattern,
+          rules.messages?.pattern ||
+          this.messages?.pattern ||
+          defaultMsg.pattern,
       };
 }

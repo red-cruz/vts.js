@@ -29,13 +29,13 @@ export default function equalToRule(rules, field, label) {
 
   // get value of target field
   const matchValue = targetField.value;
-  const message =
+  const messages =
     matchValue === field.value
       ? ''
-      : rules.message?.equalTo || this.message?.equalTo || defaultMsg.equalTo;
+      : rules.messages?.equalTo || this.messages?.equalTo || defaultMsg.equalTo;
 
   return {
-    equalTo: message
+    equalTo: messages
       .replace(/{:targetValue}/g, matchValue)
       .replace(
         /{:targetLabel}/g,

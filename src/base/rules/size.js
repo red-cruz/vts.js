@@ -12,10 +12,11 @@ export default function sizeRule(rules, field, label) {
   const size = rules?.size || Number(field.dataset.vtsRuleSize);
   if (!size) return {};
 
-  const message = rules.message?.size || this.message?.size || defaultMsg.size;
+  const messages =
+    rules.messages?.size || this.messages?.size || defaultMsg.size;
   return size === field.value.length
     ? {}
     : {
-        size: message.replace(/{:size}/g, String(size)),
+        size: messages.replace(/{:size}/g, String(size)),
       };
 }
