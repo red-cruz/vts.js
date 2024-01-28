@@ -15,12 +15,12 @@ export default function isRequiredAndInvalid(rules, field) {
   //   (field.type === 'checkbox' || field.type === 'radio')
   // ) {
   //   return (
-  //     (!!rules?.required && !field.checked) ||
+  //     (!!rules.required && !field.checked) ||
   //     (field.required && !field.checked)
   //   );
   // }
   const hasRequiredRule =
-    rules?.required ||
+    rules.required ||
     Boolean(
       field.dataset.vtsRuleRequired !== undefined &&
         field.dataset.vtsRuleRequired != 'false'
@@ -36,7 +36,7 @@ export default function isRequiredAndInvalid(rules, field) {
  * @returns {import('../../types/base/validation').ValidationResults}
  */
 export function requiredRule(rules, field, label) {
-  const ruleMsg = rules?.messages?.required || this.messages?.required;
+  const ruleMsg = rules.messages?.required || this.messages?.required;
 
   if (isRequiredAndInvalid(rules, field)) {
     return {
@@ -55,7 +55,7 @@ export function requiredRule(rules, field, label) {
  * @returns {Promise<import('../../types/base/validation').ValidationResults>}
  */
 export async function requiredIfRule(rules, field, label) {
-  const requiredIf = rules?.requiredIf;
+  const requiredIf = rules.requiredIf;
   const isFunction = typeof requiredIf === 'function';
 
   if ((!isFunction && !requiredIf) || isRequiredAndInvalid(rules, field)) {

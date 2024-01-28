@@ -11,8 +11,7 @@ import isRequiredAndInvalid from './required';
  */
 export default async function notInArrayRule(rules, field, label) {
   const dataset = field.dataset['vts-rule-notInArray'];
-  const notInArray =
-    rules?.notInArray || (dataset ? JSON.parse(dataset) : null);
+  const notInArray = rules.notInArray || (dataset ? JSON.parse(dataset) : null);
 
   if (!notInArray) return {};
   const messages =

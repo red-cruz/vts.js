@@ -9,7 +9,7 @@ import defaultMsg from '../../defaults/defaultMsg';
  * @returns {import('../../types/base/validation').ValidationResults}
  */
 export default function sizeRule(rules, field, label) {
-  const size = rules?.size || Number(field.dataset.vtsRuleSize);
+  const size = rules.size || Number(field.dataset.vtsRuleSize);
   if (!size) return {};
 
   const messages =

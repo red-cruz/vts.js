@@ -12,7 +12,7 @@ import getFieldLabel from '../../utils/getFieldLabel';
  * @returns {import('../../types/base/validation').ValidationResults}
  */
 export default function equalToRule(rules, field, label) {
-  const equalTo = rules?.equalTo || field.dataset['vts-rule-equalTo'];
+  const equalTo = rules.equalTo || field.dataset['vts-rule-equalTo'];
   if (!equalTo) return {};
 
   let targetField = VtsFormValidator.validateField(this.form, equalTo);

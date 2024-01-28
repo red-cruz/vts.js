@@ -13,7 +13,7 @@ import getFieldLabel from '../../utils/getFieldLabel';
  */
 export default function differentFrom(rules, field, label) {
   const differentFrom =
-    rules?.differentFrom || field.dataset['vts-rule-differentFrom'];
+    rules.differentFrom || field.dataset['vts-rule-differentFrom'];
   if (!differentFrom) return {};
 
   let targetField = VtsFormValidator.validateField(this.form, differentFrom);

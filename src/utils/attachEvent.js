@@ -15,7 +15,7 @@ export default function attachEvent(
 ) {
   const cstmAttr = `vts_${ruleName}_listener_exists`;
   const listenerExists = targetField.dataset[cstmAttr];
-  const eventType = getEventType(field.type, rules?.eventType);
+  const eventType = getEventType(field.type, rules.eventType);
 
   if (listenerExists || !eventType) return;
 

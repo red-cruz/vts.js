@@ -11,7 +11,7 @@ import defaultMsg from '../../defaults/defaultMsg';
  */
 export default function patternRule(rules, field, label) {
   const dataset = field.dataset.vtsRulePattern;
-  const pattern = rules?.pattern || (dataset ? RegExp(dataset) : null);
+  const pattern = rules.pattern || (dataset ? RegExp(dataset) : null);
   if (!pattern) return {};
 
   return pattern.test(field.value)

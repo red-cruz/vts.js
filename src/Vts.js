@@ -12,8 +12,11 @@ import deepMerge from './utils/deepMerge.js';
 import getResponseDataUtil from './utils/getResponseData.js';
 import getResponseMessageUtil from './utils/getResponseMessage.js';
 
-const fieldQuery =
-  '[name]:not([data-vts-ignored]):not([type="submit"]):not([type="reset"]):not([type="button"]):not([type="hidden"])';
+const ignoredTypes = ['submit', 'reset', 'button', 'hidden']
+  .map((type) => `:not([type="${type}"])`)
+  .join('');
+
+const fieldQuery = '[name]:not([data-vts-ignored])' + ignoredTypes;
 
 /// <reference path="./Vts.d.ts" />
 export default class Vts {
@@ -41,50 +44,34 @@ export default class Vts {
     this._addEventListeners();
   }
 
-  /**
-   * @this {import('./types/base').default} Vts
-   * @memberof Vts
-   */
+  /** @this {import('./types/base').default} Vts */
   updateFields() {
     this.fields = this.form.querySelectorAll(fieldQuery);
     this._addFieldListener();
   }
 
-  /**
-   * @this {import('./types/base').default} Vts
-   * @memberof Vts
-   */
+  /** @this {import('./types/base').default} Vts */
   resetForm() {
     this.form.reset();
     this.form.classList.remove(this.class.form);
   }
 
-  /**
-   * Validates each field.
-   * @this {import('./types/base').default} Vts
-   * @memberof Vts
-   */
+  /** @this {import('./types/base').default} Vts */
   async validate() {
     for (const field of this.fields) {
       await this._validate(field);
     }
   }
 
-  /**
-   * @static
-   * @param {import('./types/config/index.js').default} config
-   * @memberof Vts
-   */
+  /** @param {import('./utils/types.js').DeepPartial<import('./types/config').default>} config */
   static setDefaults(config) {
     deepMerge(vtsDefaults, config);
   }
 
-  /**
-   * @param {Response} response
-   * @returns {Promise<any>}
-   */
+  /** @param {Response} response */
   static async getResponseData(response) {
-    return getResponseDataUtil(response);
+    const data = await getResponseDataUtil(response);
+    return data;
   }
 
   /**

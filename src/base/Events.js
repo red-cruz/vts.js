@@ -41,7 +41,7 @@ const vtsEvents = {
       field.dataset[cstmAttr] = 'true';
 
       const rules = this._getFieldRules(field);
-      const eventType = getEventType(field.type, rules?.eventType);
+      const eventType = getEventType(field.type, rules.eventType);
 
       field.addEventListener(eventType, () => {
         this._validate(field);

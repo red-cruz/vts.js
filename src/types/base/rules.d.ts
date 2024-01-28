@@ -5,7 +5,7 @@ export default interface VtsRulesBase {
   _getFieldRules(
     this: VtsBase,
     field: HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
-  ): Rules[string] | undefined;
+  ): Rules[string];
 
   _convertRulesToMap(this: VtsBase): void;
 

@@ -9,7 +9,7 @@ import defaultMsg from '../../defaults/defaultMsg';
  * @returns {import('../../types/base/validation').ValidationResults}
  */
 export default function endsWithRule(rules, field, label) {
-  const endsWith = rules?.endsWith || field.dataset['vts-rule-endsWith'];
+  const endsWith = rules.endsWith || field.dataset['vts-rule-endsWith'];
   if (!endsWith) return {};
 
   const messages =

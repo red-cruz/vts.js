@@ -39,7 +39,7 @@ const registeredRules = [
 const vtsRules = {
   _getFieldRules(field) {
     const rule = field.dataset.vtsRule || field.name;
-    return this.rules.get(rule);
+    return this.rules.get(rule) || {};
   },
 
   _convertRulesToMap() {

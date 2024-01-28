@@ -9,7 +9,7 @@ import defaultMsg from '../../defaults/defaultMsg';
  * @returns {import('../../types/base/validation').ValidationResults}
  */
 export default function startsWithRule(rules, field, label) {
-  const startsWith = rules?.startsWith || field.dataset['vts-rule-startsWith'];
+  const startsWith = rules.startsWith || field.dataset['vts-rule-startsWith'];
   if (!startsWith) return {};
 
   const messages =

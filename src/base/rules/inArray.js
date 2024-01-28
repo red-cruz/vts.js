@@ -10,7 +10,7 @@ import defaultMsg from '../../defaults/defaultMsg';
  */
 export default async function inArrayRule(rules, field, label) {
   const dataset = field.dataset['vts-rule-inArray'];
-  const inArray = rules?.inArray || (dataset ? JSON.parse(dataset) : null);
+  const inArray = rules.inArray || (dataset ? JSON.parse(dataset) : null);
   if (!inArray) return {};
 
   const messages =

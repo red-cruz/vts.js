@@ -177,4 +177,4 @@ type ValidationMessages = {
   [Key in RuleKeys]?: string;
 };
 
-export { ValidationMessages, Rules, EventTypes, RuleKeys };
+export { ValidationMessages, Rule, Rules, EventTypes, RuleKeys };

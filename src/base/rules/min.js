@@ -9,10 +9,10 @@ import defaultMsg from '../../defaults/defaultMsg';
  * @returns {import('../../types/base/validation').ValidationResults}
  */
 export default function minRule(rules, field, label) {
-  const min = rules?.min || Number(field.dataset.vtsRuleMin);
+  const min = rules.min || Number(field.dataset.vtsRuleMin);
   if (!min) return {};
 
-  const messages = rules?.messages?.min || this.messages?.min || defaultMsg.min;
+  const messages = rules.messages?.min || this.messages?.min || defaultMsg.min;
 
   let valid = false;
 

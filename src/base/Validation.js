@@ -8,11 +8,11 @@ import { registeredRules } from './Rules';
 const vtsValidation = {
   async _validate(field) {
     const rules = this._getFieldRules(field);
-    const label = getFieldLabel(rules?.label, field, this.form);
+    const label = getFieldLabel(rules.label, field, this.form);
     const validMessage = {
-      valid: rules?.messages?.valid ?? this.messages?.valid ?? defaultMsg.valid,
+      valid: rules.messages?.valid ?? this.messages?.valid ?? defaultMsg.valid,
     };
-    const renderClass = Object.assign(this.class, { wrapper: rules?.wrapper });
+    const renderClass = Object.assign(this.class, { wrapper: rules.wrapper });
 
     switch (field.type) {
       case 'checkbox':
@@ -99,14 +99,14 @@ async function getValidationMessages(rules, field, label) {
 
 /**
  * @param {HTMLInputElement} field
- * @param {import('../types/config/rules').Rules[string]|undefined} rules
+ * @param {import('../types/config/rules').Rules[string]} rules
  * @param {{valid:string}} validMessage
  * @param {{}} renderClass
  * @this {import('../types/base').default}
  */
 function validateCheckbox(field, rules, validMessage, renderClass) {
   const group = Vts.getGroupedFields(field);
-  const label = getFieldLabel(rules?.label, field, this.form);
+  const label = getFieldLabel(rules.label, field, this.form);
   const lastField = group[group.length - 1];
 
   const checkedItems = group
@@ -117,11 +117,11 @@ function validateCheckbox(field, rules, validMessage, renderClass) {
 
   let isValid = true;
 
-  const min = rules?.min || Number(field.dataset.vtsRuleMin);
+  const min = rules.min || Number(field.dataset.vtsRuleMin);
   if (min && checkedItems < min) {
     isValid = false;
     invalidMsgObj.min = (
-      rules?.messages?.min ??
+      rules.messages?.min ??
       this.messages?.min ??
       defaultMsg.min
     )
@@ -133,7 +133,7 @@ function validateCheckbox(field, rules, validMessage, renderClass) {
     );
 
     const hasRequiredRule =
-      rules?.required ||
+      rules.required ||
       Boolean(
         field.dataset.vtsRuleRequired !== undefined &&
           field.dataset.vtsRuleRequired != 'false'
@@ -142,18 +142,18 @@ function validateCheckbox(field, rules, validMessage, renderClass) {
     if (hasRequiredRule && !hasChecked) {
       isValid = false;
       invalidMsgObj.required = (
-        rules?.messages?.required ??
+        rules.messages?.required ??
         this.messages?.required ??
         defaultMsg.required
       ).replace(/{:label}/g, label);
     }
   }
 
-  const max = rules?.max || Number(field.dataset.vtsRuleMax);
+  const max = rules.max || Number(field.dataset.vtsRuleMax);
   if (max && checkedItems > max) {
     isValid = false;
     invalidMsgObj.max = (
-      rules?.messages?.max ??
+      rules.messages?.max ??
       this.messages?.max ??
       defaultMsg.max
     )
@@ -195,7 +195,7 @@ async function validateRadio(field, rules, validMessage, renderClass) {
       lastField,
       {
         required:
-          rules?.messages?.required ??
+          rules.messages?.required ??
           this.messages?.required ??
           defaultMsg.required,
       },
