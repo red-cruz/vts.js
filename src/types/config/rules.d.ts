@@ -20,11 +20,6 @@ type Rule<T = string> = T | RuleFunction<T>;
 type Rules = {
   [key: string]: {
     /**
-     * The accepted file types. Only works with input type `file`.
-     */
-    accept?: Rule;
-
-    /**
      * Field must be after the specified date.
      * A date object or date parseable string.
      */
@@ -61,7 +56,7 @@ type Rules = {
     /**
      * Field must be equal to the specified value.
      */
-    equalTo?: Rule<any>;
+    equalTo?: Rule;
 
     /**
      * The type of event that will trigger validation on the field.
@@ -96,7 +91,12 @@ type Rules = {
     /**
      * Field's value must be at least the specified maximum length
      */
-    maxlength?: Rule<number>;
+    maxLength?: Rule<number>;
+
+    /**
+     * Field's value must be at least the specified maximum number of words
+     */
+    maxWords?: Rule<number>;
 
     /**
      * Field's value must be at least the specified minimum number.
@@ -106,7 +106,12 @@ type Rules = {
     /**
      * Field's value must be at least the specified minimum length
      */
-    minlength?: Rule<number>;
+    minLength?: Rule<number>;
+
+    /**
+     * Field's value must be at least the specified minimum number of words
+     */
+    minWords?: Rule<number>;
 
     /**
      * Field's value must not be found within the specified array.
@@ -124,11 +129,6 @@ type Rules = {
     required?: Rule<boolean>;
 
     /**
-     * Field is required if the specified condition is met.
-     */
-    requiredIf?: Rule<boolean>;
-
-    /**
      * Field's value must be of the specified size.
      */
     size?: Rule<number>;
@@ -136,7 +136,7 @@ type Rules = {
     /**
      * Field's value must start with the specified string or substring.
      */
-    startsWith?: Rule<string | number>;
+    startsWith?: Rule;
 
     /**
      * A function that will be called to validate the input field.
@@ -177,4 +177,4 @@ type ValidationMessages = {
   [Key in RuleKeys]?: string;
 };
 
-export { ValidationMessages, Rule, Rules, EventTypes, RuleKeys };
+export { ValidationMessages, Rule, Rules, RuleFunction, EventTypes, RuleKeys };

@@ -54,26 +54,97 @@ const vtsRules = {
       const ruleName = field.dataset.vtsRule || field.name;
       const definedRules = rules[ruleName] || {};
 
-      const { vtsRuleAfter, vtsRuleRequired } = field.dataset;
+      const rulesFromDataset = Object.entries(field.dataset)
+        .filter(([key]) => key.startsWith('vtsRule') && key !== 'vtsRule')
+        .reduce((rules, [key, value]) => {
+          const rKey = key.slice('vtsRule'.length);
+          const ruleKey = parseRuleKey(rKey);
 
-      mergeRules(
-        {
-          min: extractRule(vtsRuleAfter),
-          required: vtsRuleRequired === 'true' ?? field.required,
-        },
-        definedRules
-      );
+          // parse
+          const extractedRule = extractRule(value);
+          if (extractedRule instanceof Function) {
+            rules[ruleKey] = extractedRule;
+          } else if (typeof extractedRule === 'string') {
+            if (extractedRule.startsWith('field:')) {
+              // let base rules get the value of the matching field
+              rules[ruleKey] = extractedRule;
+            } else {
+              // parse rules based on rule
+              switch (ruleKey) {
+                case 'after':
+                case 'afterOrEqual':
+                case 'before':
+                case 'beforeOrEqual':
+                  rules[ruleKey] = new Date(extractedRule);
+                  break;
+
+                case 'max':
+                case 'maxlength':
+                case 'maxWords':
+                case 'min':
+                case 'minlength':
+                case 'minWords':
+                case 'size':
+                  rules[ruleKey] = Number(extractedRule);
+                  break;
+
+                case 'pattern':
+                  rules[ruleKey] = new RegExp(extractedRule);
+                  break;
+
+                case 'required':
+                  rules[ruleKey] = value !== 'false' ?? field.required;
+                  break;
+
+                case 'inArray':
+                case 'notInArray':
+                  try {
+                    const obj = JSON.parse(extractedRule);
+                    rules[ruleKey] = Object.values(obj);
+                  } catch (error) {
+                    rules[ruleKey] = extractedRule
+                      .split(',')
+                      .map((val) => val.trim());
+                  }
+                  break;
+
+                default:
+                  rules[ruleKey] = extractedRule;
+                  break;
+              }
+            }
+          } else {
+            // allow data attribute usage without value
+            if (ruleKey === 'required') {
+              rules[ruleKey] = value !== 'false' ?? field.required;
+            }
+          }
+          //
+
+          return rules;
+        }, {});
+
+      mergeRules(rulesFromDataset, definedRules);
 
       if (field instanceof HTMLInputElement) {
-        if (field.type === 'checkbox' || field.type === 'radio') {
-          //
-        } else {
-          //
+        switch (field.type) {
+          case 'checkbox':
+          case 'radio':
+            // min, max, size rule
+            break;
+          case 'date':
+          case 'datetime-local':
+            // rule for date
+            break;
+          case 'number':
+            break;
         }
       } else if (field instanceof HTMLSelectElement) {
-        //
+        if (field.type === 'select-multiple') {
+          // min, max, size rule
+        }
       } else {
-        //
+        // field is a textarea
       }
 
       /**
@@ -118,10 +189,57 @@ export { registeredRules };
 
 /**
  * @param {string} [rule]
+ * @returns {string|undefined|import('../types/config/rules').RuleFunction<any>}
  */
 function extractRule(rule) {
   if (rule)
     return rule.startsWith('window.')
       ? window[rule.replace('window.', '')]
       : rule;
+}
+
+/**
+ * @param {string} key
+ */
+function parseRuleKey(key) {
+  switch (key.toLocaleLowerCase()) {
+    case 'afterOrEqual'.toLocaleLowerCase():
+      return 'afterOrEqual';
+
+    case 'beforeOrEqual'.toLocaleLowerCase():
+      return 'beforeOrEqual';
+
+    case 'differentFrom'.toLocaleLowerCase():
+      return 'differentFrom';
+
+    case 'endsWith'.toLocaleLowerCase():
+      return 'endsWith';
+
+    case 'equalTo'.toLocaleLowerCase():
+      return 'equalTo';
+
+    case 'inArray'.toLocaleLowerCase():
+      return 'inArray';
+
+    case 'maxLength'.toLocaleLowerCase():
+      return 'maxLength';
+
+    case 'maxWords'.toLocaleLowerCase():
+      return 'maxWords';
+
+    case 'minLength'.toLocaleLowerCase():
+      return 'minLength';
+
+    case 'minWords'.toLocaleLowerCase():
+      return 'minWords';
+
+    case 'notInArray'.toLocaleLowerCase():
+      return 'notInArray';
+
+    case 'startsWith'.toLocaleLowerCase():
+      return 'startsWith';
+
+    default:
+      return key;
+  }
 }

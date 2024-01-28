@@ -87,7 +87,7 @@ export async function requiredIfRule(rules, field, label) {
       .replace(/{:targetValue}/g, requiredField.value)
       .replace(
         /{:targetLabel}/g,
-        getFieldLabel(rules.label, requiredField, this.form)
+        getFieldLabel(rules, requiredField, this.form)
       );
 
     attachEvent('requiredIf', requiredField, field, rules);
