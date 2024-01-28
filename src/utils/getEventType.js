@@ -1,7 +1,7 @@
 // @ts-check
 /**
  * @param {string} fieldType
- * @param {import('../types/config/rules').VtsEventTypes|undefined} ruleEventType
+ * @param {import('../types/config/rules').EventTypes|undefined} ruleEventType
  * @returns {string}
  */
 export default function getEventType(fieldType, ruleEventType) {

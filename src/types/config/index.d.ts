@@ -1,6 +1,6 @@
-import { VtsValidationResults } from '../base/validation';
+import { ValidationResults } from '../base/validation';
 import type VtsAjaxSettings from './ajaxSettings';
-import { VtsRuleMessage, VtsRules } from './rules';
+import { ValidationMessages, Rules } from './rules';
 
 /**
  * Represents the configuration options for Vts (Validate Then Submit).
@@ -26,12 +26,12 @@ export default interface VtsConfig {
   /**
    * Renders feedback to the user based on the validation result.
    *
-   * @param {VtsValidationResults} validationResults  - Feedback messages.
+   * @param {ValidationResults} validationResults  - Feedback messages.
    * @param {Object} renderClass - An object containing classes for the invalid and valid feedback.
    */
   renderFeedback?: (
     this: HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement,
-    validationResults: VtsValidationResults,
+    validationResults: ValidationResults,
     renderClass: {
       form: string;
       invalid: string;
@@ -53,7 +53,7 @@ export default interface VtsConfig {
    *    }
    * }
    */
-  rules?: VtsRules;
+  rules?: Rules;
 
   /**
    * The custom validation message configuration.
@@ -63,7 +63,7 @@ export default interface VtsConfig {
    *  valid: '',
    * }
    */
-  message?: VtsRuleMessage;
+  message?: ValidationMessages;
 
   /**
    * Determines whether to stop event propagation on form submission.

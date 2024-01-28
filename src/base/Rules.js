@@ -43,10 +43,10 @@ const vtsRules = {
   },
 
   _convertRulesToMap() {
-    /** @type {Map<string,import('../types/config/rules').VtsRules[string]>} */
+    /** @type {Map<string,import('../types/config/rules').Rules[string]>} */
     const rulesMap = new Map();
 
-    /** @type {import('../types/config/rules').VtsRules[string]} */
+    /** @type {import('../types/config/rules').Rules[string]} */
     const rules = this.rules;
 
     // map field constraints
@@ -77,8 +77,8 @@ const vtsRules = {
       }
 
       /**
-       * @param {import('../types/config/rules').VtsRules[string]} attrRules
-       * @param {import('../types/config/rules').VtsRules[string]} [mainRules=definedRules]
+       * @param {import('../types/config/rules').Rules[string]} attrRules
+       * @param {import('../types/config/rules').Rules[string]} [mainRules=definedRules]
        */
       function mergeRules(
         attrRules,
@@ -122,6 +122,6 @@ export { registeredRules };
 function extractRule(rule) {
   if (rule)
     return rule.startsWith('window.')
-      ? window[rule.replace('window.', '')]()
+      ? window[rule.replace('window.', '')]
       : rule;
 }

@@ -4,7 +4,7 @@ import getEventType from './getEventType';
  * @param {string} ruleName
  * @param {HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement} targetField
  * @param {HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement} field
- * @param {import('../../types/config/rules').VtsRules[string]} rules
+ * @param {import('../../types/config/rules').Rules[string]} rules
  */
 export default function attachEvent(
   ruleName,

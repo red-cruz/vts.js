@@ -1,9 +1,31 @@
+type PromiseOrString = Promise<string> | string;
+
 /**
  * Represents the validation rules for a set of fields in Vts (Validate Then Submit).
  */
-type VtsRules = {
+type Rules = {
   [key: string]: {
-    accept?: string;
+    /**
+     * Hint for expected file type in file upload controls
+     */
+    accept?:
+      | string
+      | ((
+          field: HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement,
+          label: string
+        ) => PromiseOrString);
+
+    /**
+     * Maximum value
+     */
+    max?:
+      | string
+      | number
+      | ((
+          field: HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement,
+          label: string
+        ) => PromiseOrString);
+
     // OLD -------------------
 
     /**
@@ -56,7 +78,7 @@ type VtsRules = {
     /**
      * the type of event that will be applied to the field
      */
-    eventType?: VtsEventTypes;
+    eventType?: EventTypes;
 
     label?: string;
 
@@ -71,12 +93,8 @@ type VtsRules = {
     /**
      * The message configuration for the validation rule.
      */
-    message?: VtsRuleMessage;
+    message?: ValidationMessages;
 
-    /**
-     *
-     */
-    max?: number;
     min?: number;
 
     notInArray?:
@@ -134,7 +152,7 @@ type VtsRules = {
   };
 };
 
-type VtsEventTypes =
+type EventTypes =
   | 'input'
   | 'change'
   | 'keydown'
@@ -151,13 +169,13 @@ type KeysOfType<T> = keyof T;
 /**
  * The values in this type are the possible validity states for a form field.
  */
-type VtsRuleKeys = KeysOfType<VtsRules[string]> | 'checking';
+type RuleKeys = KeysOfType<Rules[string]> | 'checking' | 'valid';
 
 /**
  * Represents the configuration for the validation rule messages in Vts (Validate Then Submit).
  */
-type VtsRuleMessage = {
-  [Key in VtsRuleKeys]?: string;
+type ValidationMessages = {
+  [Key in RuleKeys]?: string;
 };
 
-export { VtsRuleMessage, VtsRules, VtsEventTypes, VtsRuleKeys };
+export { ValidationMessages, Rules, EventTypes, RuleKeys };

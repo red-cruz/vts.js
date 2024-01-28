@@ -24,7 +24,7 @@ const vtsValidation = {
         break;
 
       default:
-        /** @type {import('../types/base/validation').VtsValidationResults} */
+        /** @type {import('../types/base/validation').ValidationResults} */
         let invalidMessages = await getValidationMessages.call(
           this,
           rules,
@@ -48,18 +48,18 @@ const vtsValidation = {
 };
 
 /**
- * @param {import('../types/config/rules').VtsRules[string]|undefined} rules
+ * @param {import('../types/config/rules').Rules[string]|undefined} rules
  * @param {HTMLInputElement|HTMLSelectElement|HTMLTextAreaElement} field
  * @param {string} label
  * @this {import('../types/base').default}
- * @returns {Promise<import('../types/base/validation').VtsValidationResults>}
+ * @returns {Promise<import('../types/base/validation').ValidationResults>}
  */
 async function getValidationMessages(rules, field, label) {
   let invalidMessages = {};
 
   // TODO: if field is not required, no need to execute validation rules if there is no value
   for (const rule of registeredRules) {
-    /** @type {import('../types/base/validation').VtsValidationResults} */
+    /** @type {import('../types/base/validation').ValidationResults} */
     const validationMessage = await rule.call(this, rules, field, label);
     const key = Object.keys(validationMessage)[0];
 
@@ -99,7 +99,7 @@ async function getValidationMessages(rules, field, label) {
 
 /**
  * @param {HTMLInputElement} field
- * @param {import('../types/config/rules').VtsRules[string]|undefined} rules
+ * @param {import('../types/config/rules').Rules[string]|undefined} rules
  * @param {{valid:string}} validMessage
  * @param {{}} renderClass
  * @this {import('../types/base').default}
@@ -178,7 +178,7 @@ function validateCheckbox(field, rules, validMessage, renderClass) {
 
 /**
  * @param {HTMLInputElement} field
- * @param {import('../types/config/rules').VtsRules[string]|undefined} rules
+ * @param {import('../types/config/rules').Rules[string]|undefined} rules
  * @param {{valid:string}} validMessage
  * @param {{}} renderClass
  * @this {import('../types/base').default}

@@ -1,8 +1,8 @@
-import { VtsValidationResults } from './types/base/validation';
+import { ValidationResults } from './types/base/validation';
 import type VtsConfig from './types/config';
 import VtsAjaxSettings from './types/config/ajaxSettings';
 import VtsResponseMessage from './types/config/responseMessage';
-import { VtsRuleMessage, VtsRules } from './types/config/rules';
+import { ValidationMessages, Rules } from './types/config/rules';
 
 /**
  * A JavaScript library that provides a simple and flexible way to handle
@@ -38,14 +38,14 @@ declare class Vts {
   isFormValid(this: Vts): boolean;
 
   listen: boolean;
-  message: VtsRuleMessage;
+  message: ValidationMessages;
 
   /**
    * Handle field feedback.
    */
   renderFeedback: (
     this: HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement,
-    message: VtsValidationResults,
+    message: ValidationResults,
     renderClass: string
   ) => void;
 
@@ -53,7 +53,7 @@ declare class Vts {
    * Resets the form to its initial state and removes the 'was-validated' class.
    */
   resetForm: () => void;
-  rules: Map<string, VtsRules[string]>;
+  rules: Map<string, Rules[string]>;
   stopPropagation: boolean;
   /**
    * @description Submits the form via fetch API.

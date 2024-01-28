@@ -1,11 +1,11 @@
 // @ts-check
 
 /**
- * @param {import('../../types/config/rules').VtsRules[string]} rules
+ * @param {import('../../types/config/rules').Rules[string]} rules
  * @param {HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement} field
  * @param {string} label
  * @this {import('../../types/base/index').default} Vts
- * @returns {Promise<import('../../types/base/validation').VtsValidationResults>}
+ * @returns {Promise<import('../../types/base/validation').ValidationResults>}
  */
 export default async function validatorRule(rules, field, label) {
   const dataset = field.dataset.vtsRuleValidator || '';

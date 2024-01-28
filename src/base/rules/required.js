@@ -5,7 +5,7 @@ import attachEvent from '../../utils/attachEvent';
 import getFieldLabel from '../../utils/getFieldLabel';
 
 /**
- * @param {import('../../types/config/rules').VtsRules[string]} rules
+ * @param {import('../../types/config/rules').Rules[string]} rules
  * @param {HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement} field
  * @returns {boolean}
  */
@@ -29,11 +29,11 @@ export default function isRequiredAndInvalid(rules, field) {
 }
 
 /**
- * @param {import('../../types/config/rules').VtsRules[string]} rules
+ * @param {import('../../types/config/rules').Rules[string]} rules
  * @param {HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement} field
  * @param {string} label
  * @this {import('../../types/base/index').default} Vts
- * @returns {import('../../types/base/validation').VtsValidationResults}
+ * @returns {import('../../types/base/validation').ValidationResults}
  */
 export function requiredRule(rules, field, label) {
   const ruleMsg = rules?.message?.required || this.message?.required;
@@ -48,11 +48,11 @@ export function requiredRule(rules, field, label) {
 }
 
 /**
- * @param {import('../../types/config/rules').VtsRules[string]} rules
+ * @param {import('../../types/config/rules').Rules[string]} rules
  * @param {HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement} field
  * @param {string} label
  * @this {import('../../types/base/index').default} Vts
- * @returns {Promise<import('../../types/base/validation').VtsValidationResults>}
+ * @returns {Promise<import('../../types/base/validation').ValidationResults>}
  */
 export async function requiredIfRule(rules, field, label) {
   const requiredIf = rules?.requiredIf;

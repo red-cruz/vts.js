@@ -1,4 +1,5 @@
 import type VtsBase from '.';
+import { RuleKeys } from '../config/rules';
 
 export default interface VtsValidationBase {
   /**
@@ -11,27 +12,10 @@ export default interface VtsValidationBase {
   ): Promise<void>;
 }
 
-type VtsValidationResults = {
-  after?: string;
-  afterOrEqual?: string;
-  before?: string;
-  beforeOrEqual?: string;
-  checking?: string;
-  differentFrom?: string;
-  inArray?: string;
-  endsWith?: string;
-  equalTo?: string;
-  eventType?: string;
-  max?: string;
-  message?: string;
-  min?: string;
-  notInArray?: string;
-  pattern?: string;
-  required?: string;
-  requiredIf?: string;
-  startsWith?: string;
-  size?: string;
-  valid?: string;
-  validator?: string | string[];
-  wrapper?: string;
+type RuleKeysWithValid = RuleKeys | 'valid';
+
+export type ValidationResults = {
+  [Key in RuleKeysWithValid]?: Key extends 'validator'
+    ? string | string[]
+    : string;
 };

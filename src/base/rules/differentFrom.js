@@ -5,11 +5,11 @@ import attachEvent from '../../utils/attachEvent';
 import getFieldLabel from '../../utils/getFieldLabel';
 
 /**
- * @param {import('../../types/config/rules').VtsRules[string]} rules
+ * @param {import('../../types/config/rules').Rules[string]} rules
  * @param {HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement} field
  * @param {string} label
  * @this {import('../../types/base/index').default} Vts
- * @returns {import('../../types/base/validation').VtsValidationResults}
+ * @returns {import('../../types/base/validation').ValidationResults}
  */
 export default function differentFrom(rules, field, label) {
   const differentFrom =
