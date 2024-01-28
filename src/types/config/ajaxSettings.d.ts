@@ -1,7 +1,7 @@
 /**
  * Represents the Ajax settings for form submission in Vts.js
  */
-export default interface VtsAjaxSettings {
+export default interface AjaxSettings {
   /**
    * The `AbortController` associated with the request.
    *

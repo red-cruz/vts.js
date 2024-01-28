@@ -1,15 +1,15 @@
-import type VtsAjaxSettings from '../config/ajaxSettings';
+import type AjaxSettings from '../config/ajaxSettings';
 import { ValidationMessages, Rules } from '../config/rules';
 import { ValidationResults } from './validation';
 
 /**
  * Represents the configuration options for Vts (Validate Then Submit).
  */
-export default interface VtsBaseConfig {
+export default interface BaseConfig {
   /**
    * The Ajax settings for form submission.
    */
-  ajax: VtsAjaxSettings;
+  ajax: AjaxSettings;
 
   /**
    * Renders feedback to the user based on the validation result.

@@ -1,5 +1,5 @@
 import { ValidationResults } from '../base/validation';
-import type VtsAjaxSettings from './ajaxSettings';
+import type AjaxSettings from './ajaxSettings';
 import { ValidationMessages, Rules } from './rules';
 
 /**
@@ -9,7 +9,7 @@ export default interface VtsConfig {
   /**
    * The Ajax settings for form submission.
    */
-  ajax?: Partial<VtsAjaxSettings>;
+  ajax?: Partial<AjaxSettings>;
 
   /**
    * Determines whether to halt the form submission if there are invalid fields.

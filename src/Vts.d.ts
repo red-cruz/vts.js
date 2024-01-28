@@ -1,6 +1,6 @@
 import { ValidationResults } from './types/base/validation';
 import type VtsConfig from './types/config';
-import VtsAjaxSettings from './types/config/ajaxSettings';
+import AjaxSettings from './types/config/ajaxSettings';
 import VtsResponseMessage from './types/config/responseMessage';
 import { ValidationMessages, Rules } from './types/config/rules';
 
@@ -20,7 +20,7 @@ declare class Vts {
    *
    */
   constructor(form: string | HTMLFormElement, config?: VtsConfig);
-  ajax: VtsAjaxSettings;
+  ajax: AjaxSettings;
   class: {
     form: string;
     invalid: string;
