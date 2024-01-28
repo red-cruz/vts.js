@@ -1,155 +1,157 @@
 import type { KeysOfType } from '../../utils/types';
 
-type PromiseOrString = Promise<string> | string;
+/**
+ * Represents a function used for validation rules that can return a value of type T or a Promise resolving to T.
+ */
+type RuleFunction<T> = (
+  field: HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement,
+  label: string
+) => Promise<string | T> | string | T;
 
 /**
- * Represents the validation rules for a set of fields in Vts (Validate Then Submit).
+ * Represents a rule that can be either T or a RuleFunction.
+ * @param {string} T Specifies the expected return type of the RuleFunction (defaults to string if not provided).
+ */
+type Rule<T = string> = T | RuleFunction<T>;
+
+/**
+ * Represents the validation rules for a set of fields.
  */
 type Rules = {
   [key: string]: {
     /**
-     * Hint for expected file type in file upload controls
+     * The accepted file types. Only works with input type `file`.
      */
-    accept?:
-      | string
-      | ((
-          field: HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement,
-          label: string
-        ) => PromiseOrString);
+    accept?: Rule;
 
     /**
-     * Maximum value
+     * Field must be after the specified date.
+     * A date object or date parseable string.
      */
-    max?:
-      | string
-      | number
-      | ((
-          field: HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement,
-          label: string
-        ) => PromiseOrString);
-
-    // OLD -------------------
+    after?: Rule<string | Date>;
 
     /**
-     * The name of the field to match the date against.
+     * Field must be after or equal to the specified date.
+     * A date object or date parseable string.
      */
-    after?:
-      | string
-      | ((
-          field: HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement,
-          label: string
-        ) => Promise<Date> | Date);
+    afterOrEqual?: Rule<string | Date>;
 
     /**
-     * The name of the field to match the date against.
+     * Field must be before the specified date.
+     * A date object or date parseable string.
      */
-    afterOrEqual?:
-      | string
-      | ((
-          field: HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement,
-          label: string
-        ) => Promise<Date> | Date);
+    before?: Rule<string | Date>;
 
     /**
-     * The name of the field to match the date against.
+     * Field must be before or equal to the specified date.
+     * A date object or date parseable string.
      */
-    before?:
-      | string
-      | ((
-          field: HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement,
-          label: string
-        ) => Promise<Date> | Date);
+    beforeOrEqual?: Rule<string | Date>;
 
     /**
-     * The name of the field to match the date against.
+     * Field must be different from the specified value.
      */
-    beforeOrEqual?:
-      | string
-      | ((
-          field: HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement,
-          label: string
-        ) => Promise<Date> | Date);
-
-    differentFrom?: string;
-    endsWith?: string | number;
-    /**
-     * The name of the field to match the value against.
-     */
-    equalTo?: string;
+    differentFrom?: Rule;
 
     /**
-     * the type of event that will be applied to the field
+     * Field's value must end with the specified string or substring.
+     */
+    endsWith?: Rule;
+
+    /**
+     * Field must be equal to the specified value.
+     */
+    equalTo?: Rule<any>;
+
+    /**
+     * The type of event that will trigger validation on the field.
      */
     eventType?: EventTypes;
 
-    label?: string;
+    /**
+     * The label used when rendering the validation message.
+     *
+     * @example
+     *    messages: {
+     *      required: '{:label} is a required field'
+     *    }
+     */
+    label?: Rule;
 
-    inArray?:
-      | Array<string>
-      | ((
-          field: HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement,
-          label: string,
-          form: HTMLFormElement
-        ) => Promise<Array<string>> | Array<string>);
+    /**
+     * Field's value must be found within the specified array.
+     */
+    inArray?: Rule<string[]>;
 
     /**
      * The message configuration for the validation rule.
      */
-    message?: ValidationMessages;
-
-    min?: number;
-
-    notInArray?:
-      | Array<string>
-      | ((
-          field: HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement,
-          label: string,
-          form: HTMLFormElement
-        ) => Promise<Array<string>> | Array<string>);
-    /**
-     * The pattern that will be used for validation.
-     */
-    pattern?: RegExp;
-
-    /*
-     */
-    required?: boolean;
+    messages?: ValidationMessages;
 
     /**
-     * The name of the field that the this field requires or a Function that returns a boolean whether this field should be required
+     * Field's value must be at least the specified maximum number.
      */
-    requiredIf?:
-      | string
-      | ((
-          field: HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement,
-          label: string,
-          form: HTMLFormElement
-        ) => Promise<boolean> | boolean);
-    size?: number;
-    startsWith?: string | number;
+    max?: Rule<number>;
+
+    /**
+     * Field's value must be at least the specified maximum length
+     */
+    maxlength?: Rule<number>;
+
+    /**
+     * Field's value must be at least the specified minimum number.
+     */
+    min?: Rule<number>;
+
+    /**
+     * Field's value must be at least the specified minimum length
+     */
+    minlength?: Rule<number>;
+
+    /**
+     * Field's value must not be found within the specified array.
+     */
+    notInArray?: Rule<string[]>;
+
+    /**
+     * The regular expression pattern that will be used for validation.
+     */
+    pattern?: Rule<RegExp>;
+
+    /**
+     * Field is required.
+     */
+    required?: Rule<boolean>;
+
+    /**
+     * Field is required if the specified condition is met.
+     */
+    requiredIf?: Rule<boolean>;
+
+    /**
+     * Field's value must be of the specified size.
+     */
+    size?: Rule<number>;
+
+    /**
+     * Field's value must start with the specified string or substring.
+     */
+    startsWith?: Rule<string | number>;
+
     /**
      * A function that will be called to validate the input field.
      * The function should return a `string` containing the error message if the input field is invalid.
      * Returning any falsey value will mark the field as `valid`.
      *
-     * @async
-     * @param field The form field to validate.
      * @returns A promise that resolves with a falsey value, or rejects with a custom validity message.
      * */
-    validator?:
-      | ((
-          field: HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement,
-          label: string,
-          form: HTMLFormElement
-        ) => any)
-      | Array<
-          (
-            field: HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement,
-            label: string,
-            form: HTMLFormElement
-          ) => any
-        >;
+    validator?: RuleFunction<any> | RuleFunction<any>[];
 
+    /**
+     * A CSS selector that specifies the element where the validation feedback will be appended.
+     * It's used to target the element that will visually display the validation messages.
+     * Defaults to the field's parent element.
+     */
     wrapper?: string;
   };
 };
@@ -169,7 +171,7 @@ type EventTypes =
 type RuleKeys = KeysOfType<Rules[string]> | 'checking' | 'valid';
 
 /**
- * Represents the configuration for the validation rule messages in Vts (Validate Then Submit).
+ * Represents the configuration for the validation rule messages.
  */
 type ValidationMessages = {
   [Key in RuleKeys]?: string;
