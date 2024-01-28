@@ -1,8 +1,9 @@
 import { ValidationResults } from './types/base/validation';
-import type VtsConfig from './types/config';
+import VtsConfig from './types/config';
 import AjaxSettings from './types/config/ajaxSettings';
 import VtsResponseMessage from './types/config/responseMessage';
 import { ValidationMessages, Rules } from './types/config/rules';
+import { DeepPartial } from './utils/types';
 
 /**
  * A JavaScript library that provides a simple and flexible way to handle
@@ -19,7 +20,7 @@ declare class Vts {
    * @param config vts configurations
    *
    */
-  constructor(form: string | HTMLFormElement, config?: VtsConfig);
+  constructor(form: string | HTMLFormElement, config?: DeepPartial<VtsConfig>);
   ajax: AjaxSettings;
   class: {
     form: string;

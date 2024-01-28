@@ -2,10 +2,11 @@
 'use strict';
 import ajaxHandler from './ajax';
 import defaultMsg from './defaultMsg';
+
 /**
  * Global default configuration for Vts (Validate Then Submit).
  *
- * @type {import('../types/base/config').default}
+ * @type {import('../types/config').default}
  */
 const vtsDefaults = {
   ajax: ajaxHandler,

@@ -1,6 +1,6 @@
 import { ValidationResults } from '../base/validation';
 import type AjaxSettings from './ajaxSettings';
-import { ValidationMessages, Rules } from './rules';
+import type { ValidationMessages, Rules } from './rules';
 
 /**
  * Represents the configuration options for Vts (Validate Then Submit).
@@ -9,19 +9,7 @@ export default interface VtsConfig {
   /**
    * The Ajax settings for form submission.
    */
-  ajax?: Partial<AjaxSettings>;
-
-  /**
-   * Determines whether to halt the form submission if there are invalid fields.
-   * @default false
-   */
-  halt?: boolean;
-
-  /**
-   * Determines whether to add event listeners immediately on Vts instantiation.
-   * @default false
-   */
-  listen?: boolean;
+  ajax: AjaxSettings;
 
   /**
    * Renders feedback to the user based on the validation result.
@@ -29,7 +17,7 @@ export default interface VtsConfig {
    * @param {ValidationResults} validationResults  - Feedback messages.
    * @param {Object} renderClass - An object containing classes for the invalid and valid feedback.
    */
-  renderFeedback?: (
+  renderFeedback: (
     this: HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement,
     validationResults: ValidationResults,
     renderClass: {
@@ -41,6 +29,18 @@ export default interface VtsConfig {
   ) => void;
 
   /**
+   * Determines whether to halt the form submission if there are invalid fields.
+   * @default false
+   */
+  halt: boolean;
+
+  /**
+   * Determines whether to add event listeners immediately on Vts instantiation.
+   * @default false
+   */
+  listen: boolean;
+
+  /**
    * The validation rules for the form fields.
    * @default {}
    * @example
@@ -48,52 +48,52 @@ export default interface VtsConfig {
    *    password_confirmation: {
    *      equalTo: 'password',
    *      message: {
-   *        invalid: 'This input must match the value of ${targetLabel}'
+   *        equalTo: '{:label} must match the value of {:targetLabel}'
    *      }
    *    }
    * }
    */
-  rules?: Rules;
+  rules: Rules;
 
   /**
    * The custom validation message configuration.
    * @default
    * {
-   *  invalid: 'Invalid :{label}',
+   *  invalid: 'Invalid {:label}',
    *  valid: '',
    * }
    */
-  message?: ValidationMessages;
+  message: ValidationMessages;
 
   /**
    * Determines whether to stop event propagation on form submission.
    * @default true
    */
-  stopPropagation?: boolean;
+  stopPropagation: boolean;
 
   /**
    * The CSS classes to be applied.
    */
-  class?: {
+  class: {
     /**
      * The CSS class to apply to the form when it has been validated.
      * @default 'was-validated'
      */
-    form?: string;
+    form: string;
 
     /**
-     * The CSS class to apply to the created div sibling of invalid field.
-     * Disregard if default handlers will be overwritten.
+     * The CSS class to apply to the feedback container when the field is invalid.
+     *
      * @default 'invalid-feedback'
      */
-    invalid?: string;
+    invalid: string;
 
     /**
-     * The CSS class to apply to the created div sibling of valid field.
-     * Disregard if default handlers will be overwritten.
+     * The CSS class to apply to the feedback container when the field is valid.
+     *
      * @default 'valid-feedback'
      */
-    valid?: string;
+    valid: string;
 
     /**
      * The CSS class to apply to the field wrapper.

@@ -14,5 +14,5 @@ export default interface VtsRulesBase {
     rules: Rules[string],
     field: HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement,
     label: string
-  );
+  ): void;
 }

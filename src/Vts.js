@@ -19,7 +19,7 @@ const fieldQuery =
 export default class Vts {
   /**
    * @param {string | HTMLFormElement} form
-   * @param {import('./types/config/index.js').default} [config={}]
+   * @param {import('./utils/types.js').DeepPartial<import('./types/config').default>} [config={}]
    */
   constructor(form, config = {}) {
     const elem = (this.form = VtsFormValidator.validateForm(form));

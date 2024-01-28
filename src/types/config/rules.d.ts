@@ -1,3 +1,5 @@
+import { KeysOfType } from '../../utils/types';
+
 type PromiseOrString = Promise<string> | string;
 
 /**
@@ -160,11 +162,6 @@ type EventTypes =
   | 'submit'
   | 'mouseover'
   | 'mouseout';
-
-/**
- * Helper type to extract keys from an object type
- */
-type KeysOfType<T> = keyof T;
 
 /**
  * The values in this type are the possible validity states for a form field.
