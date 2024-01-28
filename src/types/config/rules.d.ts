@@ -1,4 +1,4 @@
-import { KeysOfType } from '../../utils/types';
+import type { KeysOfType } from '../../utils/types';
 
 type PromiseOrString = Promise<string> | string;
 

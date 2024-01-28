@@ -12,10 +12,8 @@ export default interface VtsValidationBase {
   ): Promise<void>;
 }
 
-type RuleKeysWithValid = RuleKeys | 'valid';
-
 export type ValidationResults = {
-  [Key in RuleKeysWithValid]?: Key extends 'validator'
+  [Key in RuleKeys | 'valid']?: Key extends 'validator'
     ? string | string[]
     : string;
 };
