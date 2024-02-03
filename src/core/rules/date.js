@@ -30,8 +30,8 @@ export async function beforeOrEqual(rules, field, label) {
  * @param {import('../../types/config/rules').Rules[string]} rules
  * @param {HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement} field
  * @param {string} label
- * @this {import('../../types/base/index').default} Vts
- * @returns {Promise<import('../../types/base/validation').ValidationResults>}
+ * @this {import('../../types/core/index').default} Vts
+ * @returns {Promise<import('../../types/core/validation').ValidationResults>}
  */
 async function dateRule(ruleName, rules, field, label) {
   const rule = (rules ? rules[ruleName] : null) || field.dataset.vtsRuleDate;
@@ -110,7 +110,7 @@ function getDateFromRule(form, rule, rules, field) {
  * @param {string} ruleName
  * @param {Date|Promise<Date>} targetDate
  * @param {string} dateModifier
- * @this {import('../../types/base/index').default} Vts
+ * @this {import('../../types/core/index').default} Vts
  * @return {string}
  */
 export function replaceDateMsg(

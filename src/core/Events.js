@@ -1,7 +1,7 @@
 // @ts-check
 import getEventType from '../utils/getEventType';
 
-/** @type {import('../types/base/events').default} */
+/** @type {import('../types/core/events').default} */
 const vtsEvents = {
   _addEventListeners() {
     // Form

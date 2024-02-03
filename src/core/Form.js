@@ -1,7 +1,7 @@
 // @ts-check
 import getResponseData from '../utils/getResponseData';
 
-/** @type {import('../types/base/form').default} */
+/** @type {import('../types/core/form').default} */
 const vtsForm = {
   isFormValid() {
     return this.form.checkValidity();

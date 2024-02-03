@@ -1,11 +1,11 @@
 // @ts-check
 'use strict';
 import 'whatwg-fetch';
-import vtsForm from './base/Form.js';
+import vtsForm from './core/Form.js';
 import VtsFormValidator from './utils/VtsFormValidator.js';
-import vtsEvents from './base/Events.js';
-import vtsRules from './base/Rules.js';
-import vtsValidation from './base/Validation.js';
+import vtsEvents from './core/Events.js';
+import vtsRules from './core/Rules.js';
+import vtsValidation from './core/Validation.js';
 import setVtsConfig from './utils/setVtsConfig.js';
 import vtsDefaults from './defaults/index.js';
 import deepMerge from './utils/deepMerge.js';
@@ -34,7 +34,7 @@ export default class Vts {
   /**
    * @param {HTMLFormElement} form
    * @param {import('./types/config/index.js').default} config
-   * @this {import('./types/base').default} Vts
+   * @this {import('./types/core').default} Vts
    * @memberof Vts
    */
   #init(form, config) {
@@ -44,19 +44,19 @@ export default class Vts {
     this._addEventListeners();
   }
 
-  /** @this {import('./types/base').default} Vts */
+  /** @this {import('./types/core').default} Vts */
   updateFields() {
     this.fields = this.form.querySelectorAll(fieldQuery);
     this._addFieldListener();
   }
 
-  /** @this {import('./types/base').default} Vts */
+  /** @this {import('./types/core').default} Vts */
   resetForm() {
     this.form.reset();
     this.form.classList.remove(this.class.form);
   }
 
-  /** @this {import('./types/base').default} Vts */
+  /** @this {import('./types/core').default} Vts */
   async validate() {
     for (const field of this.fields) {
       await this._validate(field);

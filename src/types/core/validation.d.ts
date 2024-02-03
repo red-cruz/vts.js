@@ -1,4 +1,4 @@
-import type VtsBase from '.';
+import type VtsCore from '.';
 import { RuleKeys } from '../config/rules';
 
 export default interface VtsValidationBase {
@@ -7,7 +7,7 @@ export default interface VtsValidationBase {
    * @param field The field to check.
    */
   _validate(
-    this: VtsBase,
+    this: VtsCore,
     field: HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
   ): Promise<void>;
 }

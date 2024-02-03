@@ -1,4 +1,4 @@
-import type { ValidationResults } from '../base/validation';
+import type { ValidationResults } from '../core/validation';
 import type AjaxSettings from './ajaxSettings';
 import type { ValidationMessages, Rules } from './rules';
 

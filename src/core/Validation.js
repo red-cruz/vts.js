@@ -4,7 +4,7 @@ import defaultMsg from '../defaults/defaultMsg';
 import getFieldLabel from '../utils/getFieldLabel';
 import { registeredRules } from './Rules';
 
-/** @type {import('../types/base/validation').default} */
+/** @type {import('../types/core/validation').default} */
 const vtsValidation = {
   async _validate(field) {
     const rules = this._getFieldRules(field);
@@ -24,7 +24,7 @@ const vtsValidation = {
         break;
 
       default:
-        /** @type {import('../types/base/validation').ValidationResults} */
+        /** @type {import('../types/core/validation').ValidationResults} */
         let invalidMessages = await getValidationMessages.call(
           this,
           rules,
@@ -51,15 +51,15 @@ const vtsValidation = {
  * @param {import('../types/config/rules').Rules[string]|undefined} rules
  * @param {HTMLInputElement|HTMLSelectElement|HTMLTextAreaElement} field
  * @param {string} label
- * @this {import('../types/base').default}
- * @returns {Promise<import('../types/base/validation').ValidationResults>}
+ * @this {import('../types/core').default}
+ * @returns {Promise<import('../types/core/validation').ValidationResults>}
  */
 async function getValidationMessages(rules, field, label) {
   let invalidMessages = {};
 
   // TODO: if field is not required, no need to execute validation rules if there is no value
   for (const rule of registeredRules) {
-    /** @type {import('../types/base/validation').ValidationResults} */
+    /** @type {import('../types/core/validation').ValidationResults} */
     const validationMessage = await rule.call(this, rules, field, label);
     const key = Object.keys(validationMessage)[0];
 
@@ -102,7 +102,7 @@ async function getValidationMessages(rules, field, label) {
  * @param {import('../types/config/rules').Rules[string]} rules
  * @param {{valid:string}} validMessage
  * @param {{}} renderClass
- * @this {import('../types/base').default}
+ * @this {import('../types/core').default}
  */
 function validateCheckbox(field, rules, validMessage, renderClass) {
   const group = Vts.getGroupedFields(field);
@@ -181,7 +181,7 @@ function validateCheckbox(field, rules, validMessage, renderClass) {
  * @param {import('../types/config/rules').Rules[string]|undefined} rules
  * @param {{valid:string}} validMessage
  * @param {{}} renderClass
- * @this {import('../types/base').default}
+ * @this {import('../types/core').default}
  */
 async function validateRadio(field, rules, validMessage, renderClass) {
   const group = Vts.getGroupedFields(field);

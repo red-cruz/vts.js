@@ -8,8 +8,8 @@ import getFieldLabel from '../../utils/getFieldLabel';
  * @param {import('../../types/config/rules').Rules[string]} rules
  * @param {HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement} field
  * @param {string} label
- * @this {import('../../types/base/index').default} Vts
- * @returns {import('../../types/base/validation').ValidationResults}
+ * @this {import('../../types/core/index').default} Vts
+ * @returns {import('../../types/core/validation').ValidationResults}
  */
 export default function equalToRule(rules, field, label) {
   const equalTo = rules.equalTo || field.dataset['vts-rule-equalTo'];

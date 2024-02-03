@@ -35,7 +35,7 @@ const registeredRules = [
   validatorRule,
 ];
 
-/** @type {import('../types/base/rules').default} */
+/** @type {import('../types/core/rules').default} */
 const vtsRules = {
   _getFieldRules(field) {
     const rule = field.dataset.vtsRule || field.name;
@@ -71,7 +71,7 @@ const vtsRules = {
               rules[ruleKey] = extractedRule;
             } else if (typeof extractedRule === 'string') {
               if (extractedRule.startsWith('field:')) {
-                // let base rules get the value of the matching field
+                // let core rules get the value of the matching field
                 rules[ruleKey] = extractedRule;
               } else {
                 // parse rules based on rule

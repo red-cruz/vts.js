@@ -1,4 +1,4 @@
-import { ValidationResults } from './types/base/validation';
+import { ValidationResults } from './types/core/validation';
 import VtsConfig from './types/config';
 import AjaxSettings from './types/config/ajaxSettings';
 import VtsResponseMessage from './types/config/responseMessage';
