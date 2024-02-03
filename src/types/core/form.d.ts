@@ -1,6 +1,6 @@
 import type VtsCore from '.';
 
-export default interface VtsFormBase {
+export default interface VtsFormCore {
   /**
    * Checks the validity of the form.
    * @returns {Boolean} True if the form is valid, false otherwise.

@@ -1,10 +1,10 @@
 import type Vts from '../../Vts';
-import type VtsEventsBase from './events';
-import VtsRulesBase from './rules';
+import type VtsEventsCore from './events';
+import VtsRulesCore from './rules';
 import type VtsValidation from './validation';
 
 export default interface VtsCore
   extends Vts,
-    VtsEventsBase,
+    VtsEventsCore,
     VtsValidation,
-    VtsRulesBase {}
+    VtsRulesCore {}

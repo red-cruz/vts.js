@@ -1,7 +1,7 @@
 import type VtsCore from '.';
 import { RuleKeys } from '../config/rules';
 
-export default interface VtsValidationBase {
+export default interface VtsValidationCore {
   /**
    * Validates each field.
    * @param field The field to check.

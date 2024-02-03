@@ -1,7 +1,7 @@
 import type VtsCore from '.';
 import type { Rules } from '../config/rules';
 
-export default interface VtsRulesBase {
+export default interface VtsRulesCore {
   _getFieldRules(
     this: VtsCore,
     field: HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
