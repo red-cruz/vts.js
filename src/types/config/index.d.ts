@@ -57,11 +57,6 @@ export default interface VtsConfig {
 
   /**
    * The custom validation messages configuration.
-   * @default
-   * {
-   *  invalid: 'Invalid {:label}',
-   *  valid: '',
-   * }
    */
   messages: ValidationMessages;
 

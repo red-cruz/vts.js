@@ -4,7 +4,7 @@ import ajaxHandler from './ajax';
 import defaultMsg from './defaultMsg';
 
 /**
- * Global default configuration for Vts (Validate Then Submit).
+ * Global default configuration for Vts
  *
  * @type {import('../types/config').default}
  */

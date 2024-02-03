@@ -6,7 +6,7 @@ import showDialog from '../utils/response/showDialog';
 const ajaxHandler = {
   action: '',
   request: {},
-  beforeSend: (requestInit, abortController, form) => {
+  beforeSend: (requestInit, form, abortController) => {
     /*
      * This is the `beforeSend` event renderFeedback for the form.
      * It is called before the form is submitted, and it can be used to modify the request or prevent the form from being submitted.
@@ -18,7 +18,7 @@ const ajaxHandler = {
     if (!submitBtn) return;
 
     // If the submit button exists, then we do the following:
-    const vtsSessionId = `__Vts_${form.getAttribute('id')}_submitDisplay`;
+    const vtsSessionId = `__Vts_${form.id}_submitDisplay`;
 
     // Clone the submit button.
     const cancelBtn = submitBtn.cloneNode();

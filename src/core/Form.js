@@ -13,7 +13,7 @@ const vtsForm = {
     const form = this.form;
     try {
       // call beforesend callback function
-      vtsFormBeforeSend.call(this);
+      await vtsFormBeforeSend.call(this);
 
       // fetch
       response = await fetch(new Request(this.ajax.action, this.ajax.request));
@@ -23,7 +23,7 @@ const vtsForm = {
       data = await getResponseData(response);
 
       // call success callback function
-      ajax.success(data, response, form);
+      await ajax.success(data, response, form);
     } catch (error) {
       data = error;
       response = null;
@@ -41,8 +41,9 @@ const vtsForm = {
       }
 
       promiseResolved = false;
+
       // Call the error callback function with the appropriate data
-      ajax.error(data, response, form);
+      await ajax.error(data, response, form);
     }
 
     // complete
@@ -57,14 +58,18 @@ const vtsForm = {
 /**
  * @this {import('../Vts').default}
  */
-function vtsFormBeforeSend() {
+async function vtsFormBeforeSend() {
   // @ts-ignore
   this.ajax.abortController = new AbortController();
   this.ajax.request.signal = this.ajax.abortController.signal;
   this.ajax.request.body = new FormData(this.form);
 
   // call beforeSend config and assign the configured request
-  this.ajax.beforeSend(this.ajax.request, this.ajax.abortController, this.form);
+  await this.ajax.beforeSend(
+    this.ajax.request,
+    this.form,
+    this.ajax.abortController
+  );
 
   const vMethod = this.ajax.request.method || 'get';
 

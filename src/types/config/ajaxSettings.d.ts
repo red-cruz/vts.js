@@ -35,9 +35,9 @@ export default interface AjaxSettings {
    */
   beforeSend: (
     requestInit: RequestInit,
-    abortController: AbortController,
-    form: HTMLFormElement
-  ) => void;
+    form: HTMLFormElement,
+    abortController: AbortController
+  ) => void | Promise<void>;
 
   /**
    * Called when the Ajax request is complete.
@@ -63,7 +63,7 @@ export default interface AjaxSettings {
     errorData: any,
     response: Response | null,
     form: HTMLFormElement
-  ) => void;
+  ) => void | Promise<void>;
 
   /**
    * Called when the Ajax request is successful.
@@ -72,5 +72,9 @@ export default interface AjaxSettings {
    * @param response The Response object representing the successful response.
    * @param form The HTML form element that was submitted.
    */
-  success: (data: any, response: Response, form: HTMLFormElement) => void;
+  success: (
+    data: any,
+    response: Response,
+    form: HTMLFormElement
+  ) => void | Promise<void>;
 }
