@@ -16,16 +16,22 @@ const vtsValidation = {
 
     switch (field.type) {
       case 'checkbox':
-        validateCheckbox.call(this, field, rules, validMessage, renderClass);
+        await validateCheckbox.call(
+          this,
+          field,
+          rules,
+          validMessage,
+          renderClass
+        );
         break;
 
       case 'radio':
-        validateRadio.call(this, field, rules, validMessage, renderClass);
+        await validateRadio.call(this, field, rules, validMessage, renderClass);
         break;
 
       default:
         /** @type {import('../types/core/validation').ValidationResults} */
-        let invalidMessages = await getValidationMessages.call(
+        let invalidMessages = await validateFields.call(
           this,
           rules,
           field,
@@ -48,14 +54,16 @@ const vtsValidation = {
 };
 
 /**
- * @param {import('../types/config/rules').Rules[string]|undefined} rules
+ * @param {import('../types/config/rules').Rules[string]} rules
  * @param {HTMLInputElement|HTMLSelectElement|HTMLTextAreaElement} field
  * @param {string} label
  * @this {import('../types/core').default}
  * @returns {Promise<import('../types/core/validation').ValidationResults>}
  */
-async function getValidationMessages(rules, field, label) {
+async function validateFields(rules, field, label) {
   let invalidMessages = {};
+
+  this._isFieldRequired(rules, field, label);
 
   // TODO: if field is not required, no need to execute validation rules if there is no value
   for (const rule of registeredRules) {
@@ -104,7 +112,7 @@ async function getValidationMessages(rules, field, label) {
  * @param {{}} renderClass
  * @this {import('../types/core').default}
  */
-function validateCheckbox(field, rules, validMessage, renderClass) {
+async function validateCheckbox(field, rules, validMessage, renderClass) {
   const group = Vts.getGroupedFields(field);
   const label = getFieldLabel(rules.label, field, this.form);
   const lastField = group[group.length - 1];
@@ -117,37 +125,39 @@ function validateCheckbox(field, rules, validMessage, renderClass) {
 
   let isValid = true;
 
-  const min = rules.min || Number(field.dataset.vtsRuleMin);
-  if (min && checkedItems < min) {
-    isValid = false;
-    invalidMsgObj.min = (
-      rules.messages?.min ??
-      this.messages?.min ??
-      defaultMsg.min
-    )
-      .replace(/{:min}/g, String(min))
-      .replace(/{:label}/g, label);
-  } else {
-    const hasChecked = group.some(
-      (gField) => gField instanceof HTMLInputElement && gField.checked
-    );
+  const min = rules.min;
 
-    const hasRequiredRule =
-      rules.required ||
-      Boolean(
-        field.dataset.vtsRuleRequired !== undefined &&
-          field.dataset.vtsRuleRequired != 'false'
+  if (rules.required)
+    if (min && checkedItems < min) {
+      isValid = false;
+      invalidMsgObj.min = (
+        rules.messages?.min ??
+        this.messages?.min ??
+        defaultMsg.min
+      )
+        .replace(/{:min}/g, String(min))
+        .replace(/{:label}/g, label);
+    } else {
+      const hasChecked = group.some(
+        (gField) => gField instanceof HTMLInputElement && gField.checked
       );
 
-    if (hasRequiredRule && !hasChecked) {
-      isValid = false;
-      invalidMsgObj.required = (
-        rules.messages?.required ??
-        this.messages?.required ??
-        defaultMsg.required
-      ).replace(/{:label}/g, label);
+      const hasRequiredRule =
+        rules.required ||
+        Boolean(
+          field.dataset.vtsRuleRequired !== undefined &&
+            field.dataset.vtsRuleRequired != 'false'
+        );
+
+      if (hasRequiredRule && !hasChecked) {
+        isValid = false;
+        invalidMsgObj.required = (
+          rules.messages?.required ??
+          this.messages?.required ??
+          defaultMsg.required
+        ).replace(/{:label}/g, label);
+      }
     }
-  }
 
   const max = rules.max || Number(field.dataset.vtsRuleMax);
   if (max && checkedItems > max) {
@@ -178,7 +188,7 @@ function validateCheckbox(field, rules, validMessage, renderClass) {
 
 /**
  * @param {HTMLInputElement} field
- * @param {import('../types/config/rules').Rules[string]|undefined} rules
+ * @param {import('../types/config/rules').Rules[string]} rules
  * @param {{valid:string}} validMessage
  * @param {{}} renderClass
  * @this {import('../types/core').default}

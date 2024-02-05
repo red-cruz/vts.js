@@ -34,10 +34,47 @@ export async function beforeOrEqual(rules, field, label) {
  * @returns {Promise<import('../../types/core/validation').ValidationResults>}
  */
 async function dateRule(ruleName, rules, field, label) {
-  const rule = (rules ? rules[ruleName] : null) || field.dataset.vtsRuleDate;
-  if (!rule) return {};
+  /** @type {import('../../types/config/rules').Rule<string | Date> } */
+  const rule = rules[ruleName];
 
-  let targetDate, targetField, dateModifier;
+  let targetDate = new Date(),
+    targetField,
+    dateModifier;
+
+  if (typeof rule === 'function') {
+    const awaitedRule = await rule(field, label);
+    if (typeof awaitedRule === 'string') {
+      if (awaitedRule.startsWith('field:')) {
+        targetField = VtsFormValidator.validateField(
+          this.form,
+          awaitedRule.replace('field:', '')
+        );
+        if (targetField?.value) {
+          targetDate = new Date(targetField.value);
+        }
+      } else {
+        targetDate = new Date(awaitedRule);
+      }
+    } else {
+    }
+    targetDate = new Date(awaited.toDateString());
+  }
+
+  switch (typeof rule) {
+    case 'string':
+      if (rule.startsWith('field:')) {
+        targetField = VtsFormValidator.validateField(
+          this.form,
+          rule.replace('field:', '')
+        );
+      }
+      break;
+
+    case 'object':
+      if (rule instanceof Date) {
+        targetDate = rule;
+      }
+  }
 
   if (typeof rule === 'string') {
     const ruleDates = getDateFromRule(this.form, ruleName, rules, field);
@@ -48,8 +85,10 @@ async function dateRule(ruleName, rules, field, label) {
     dateModifier = ruleDates.dateModifier;
   } else {
     // rule is function
-    const awaited = await rule(field, label);
-    targetDate = new Date(awaited.toDateString());
+    if (typeof rule === 'function') {
+      const awaited = await rule(field, label);
+      targetDate = new Date(awaited.toDateString());
+    }
   }
 
   let valid = false;

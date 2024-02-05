@@ -71,7 +71,7 @@ type Rules = {
      *      required: '{:label} is a required field'
      *    }
      */
-    label?: Rule;
+    label?: string;
 
     /**
      * Field's value must be found within the specified array.
@@ -121,17 +121,17 @@ type Rules = {
     /**
      * The regular expression pattern that will be used for validation.
      */
-    pattern?: Rule<RegExp>;
+    pattern?: Rule<string | RegExp>;
 
     /**
      * Field is required.
      */
-    required?: Rule<boolean>;
+    required?: Rule<string | boolean>;
 
     /**
      * Field's value must be of the specified size.
      */
-    size?: Rule<number>;
+    size?: Rule<string | number>;
 
     /**
      * Field's value must start with the specified string or substring.
