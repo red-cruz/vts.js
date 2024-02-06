@@ -142,7 +142,6 @@ const vtsRules = {
         switch (field.type) {
           case 'date':
           case 'datetime-local':
-            Object.assign(rulesFromDataset);
             mergeToDatasetRules({
               afterOrEqual: field.min ? new Date(field.min) : undefined,
               beforeOrEqual: field.max ? new Date(field.max) : undefined,
