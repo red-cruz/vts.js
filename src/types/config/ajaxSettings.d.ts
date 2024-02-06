@@ -14,7 +14,7 @@ export default interface AjaxSettings {
    *
    * The default value is the value of the form's `action` attribute.
    */
-  action: string;
+  action?: string;
 
   /**
    * The request options for the Ajax call.

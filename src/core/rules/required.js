@@ -9,7 +9,7 @@ import attachEvent from '../../utils/attachEvent';
  * @param {HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement} field
  * @param {string} label
  */
-export async function _isFieldRequired(rules, field, label) {
+export async function isFieldRequired(rules, field, label) {
   /** @type {import('../../types/config/rules').Rule<string | boolean> } */ //@ts-ignore
   const requiredRule = rules.required;
 
@@ -39,6 +39,7 @@ export async function _isFieldRequired(rules, field, label) {
           this.form,
           requiredRule.replace('field:', '')
         );
+        attachEvent('required', targetField, field, rules);
         return !!targetField?.value;
       }
       return requiredRule === 'true';
@@ -48,38 +49,15 @@ export async function _isFieldRequired(rules, field, label) {
 /**
  * @param {import('../../types/config/rules').Rules[string]} rules
  * @param {HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement} field
- * @returns {boolean}
- */
-export default function isRequiredAndInvalid(rules, field) {
-  // if (
-  //   field instanceof HTMLInputElement &&
-  //   (field.type === 'checkbox' || field.type === 'radio')
-  // ) {
-  //   return (
-  //     (!!rules.required && !field.checked) ||
-  //     (field.required && !field.checked)
-  //   );
-  // }
-  const hasRequiredRule =
-    rules.required ||
-    Boolean(
-      field.dataset.vtsRuleRequired !== undefined &&
-        field.dataset.vtsRuleRequired != 'false'
-    );
-  return (hasRequiredRule && !field.value) || field.validity.valueMissing;
-}
-
-/**
- * @param {import('../../types/config/rules').Rules[string]} rules
- * @param {HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement} field
  * @param {string} label
  * @this {import('../../types/core/index').default} Vts
- * @returns {import('../../types/core/validation').ValidationResults}
+ * @returns {Promise<import('../../types/core/validation').ValidationResults>}
  */
-export function requiredRule(rules, field, label) {
+export async function requiredRule(rules, field, label) {
   const ruleMsg = rules.messages?.required || this.messages?.required;
+  const required = await isFieldRequired.call(this, rules, field, label);
 
-  if (isRequiredAndInvalid(rules, field)) {
+  if (required && !field.value) {
     return {
       required: ruleMsg || defaultMsg.required,
     };
