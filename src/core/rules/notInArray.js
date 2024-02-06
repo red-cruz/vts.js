@@ -1,6 +1,5 @@
 // @ts-check
 import defaultMsg from '../../defaults/defaultMsg';
-import isRequiredAndInvalid from './required';
 
 /**
  * @param {import('../../types/config/rules').Rules[string]} rules

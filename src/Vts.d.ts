@@ -83,7 +83,7 @@ declare class Vts {
    * Sets the default configuration for Vts (Validate Then Submit).
    * @param config The configuration options.
    */
-  static setDefaults(config: VtsConfig): void;
+  static setDefaults(config: DeepPartial<VtsConfig>): void;
 
   /**
    * Asynchronously gets the data from the response.
