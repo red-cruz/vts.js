@@ -63,8 +63,6 @@ const vtsValidation = {
 async function validateFields(rules, field, label) {
   let invalidMessages = {};
 
-  // this._isFieldRequired(rules, field, label);
-
   // TODO: if field is not required, no need to execute validation rules if there is no value
   for (const rule of registeredRules) {
     /** @type {import('../types/core/validation').ValidationResults} */

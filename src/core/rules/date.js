@@ -37,58 +37,45 @@ async function dateRule(ruleName, rules, field, label) {
   /** @type {import('../../types/config/rules').Rule<string | Date> } */
   const rule = rules[ruleName];
 
-  let targetDate = new Date(),
-    targetField,
-    dateModifier;
+  if (!rule) return {};
 
-  if (typeof rule === 'function') {
-    const awaitedRule = await rule(field, label);
-    if (typeof awaitedRule === 'string') {
-      if (awaitedRule.startsWith('field:')) {
-        targetField = VtsFormValidator.validateField(
-          this.form,
-          awaitedRule.replace('field:', '')
-        );
-        if (targetField?.value) {
-          targetDate = new Date(targetField.value);
-        }
-      } else {
-        targetDate = new Date(awaitedRule);
-      }
-    } else {
-    }
-    targetDate = new Date(awaited.toDateString());
-  }
+  let targetDate = new Date();
+  let targetField = null;
+  let dateModifier = null;
 
   switch (typeof rule) {
+    case 'function':
+      this._setCheckingRule(rules, field, label);
+      const dateRule = await rule(field, label);
+      if (typeof dateRule === 'string') {
+        if (dateRule.startsWith('field:')) {
+          targetField = VtsFormValidator.validateField(
+            this.form,
+            dateRule.replace('field:', '')
+          );
+          attachEvent(ruleName, targetField, field, rules);
+          targetDate = new Date(new Date(targetField.value).toDateString());
+        } else targetDate = new Date(dateRule);
+
+        applyDateModifier(dateRule, targetDate);
+      } else targetDate = dateRule;
+      break;
+
     case 'string':
       if (rule.startsWith('field:')) {
         targetField = VtsFormValidator.validateField(
           this.form,
           rule.replace('field:', '')
         );
-      }
+        attachEvent(ruleName, targetField, field, rules);
+        targetDate = new Date(targetField.value);
+      } else targetDate = new Date(rule);
+
+      applyDateModifier(rule, targetDate);
       break;
 
-    case 'object':
-      if (rule instanceof Date) {
-        targetDate = rule;
-      }
-  }
-
-  if (typeof rule === 'string') {
-    const ruleDates = getDateFromRule(this.form, ruleName, rules, field);
-    if (!ruleDates) return {};
-
-    targetDate = new Date(ruleDates.targetDate.toDateString());
-    targetField = ruleDates.targetField;
-    dateModifier = ruleDates.dateModifier;
-  } else {
-    // rule is function
-    if (typeof rule === 'function') {
-      const awaited = await rule(field, label);
-      targetDate = new Date(awaited.toDateString());
-    }
+    default:
+      targetDate = rule;
   }
 
   let valid = false;

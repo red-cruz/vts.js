@@ -16,7 +16,6 @@ export default function attachEvent(ruleName, targetField, field, rules) {
 
   targetField.addEventListener(eventType, function (event) {
     if (cstmAttr === 'vts_required_listener_exists') {
-      console.log('clickk');
     }
     field.dispatchEvent(new Event(eventType));
   });
