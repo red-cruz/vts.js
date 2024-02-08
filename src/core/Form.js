@@ -87,7 +87,8 @@ async function vtsFormBeforeSend() {
         break;
       case 'put':
       case 'patch':
-        // @ts-ignore
+        if (!this.ajax.request.headers) this.ajax.request.headers = {};
+
         this.ajax.request.headers['Content-Type'] = 'application/json';
         this.ajax.request.body = formDataToJSON(formData);
         break;

@@ -115,9 +115,7 @@ export default class Vts {
 
     for (const gField of fields) {
       //@ts-ignore
-      if (groupRegex.test(gField.name)) {
-        groupedFields.push(gField);
-      }
+      groupRegex.test(gField.name) && groupedFields.push(gField);
     }
 
     return groupedFields;
