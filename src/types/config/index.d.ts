@@ -14,8 +14,6 @@ export default interface VtsConfig {
   /**
    * Renders feedback to the user based on the validation result.
    *
-   * @param {ValidationResults} validationResults  - Feedback messages.
-   * @param {Object} renderClass - An object containing classes for the invalid and valid feedback.
    */
   renderFeedback: (
     this: HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement,

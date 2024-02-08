@@ -77,7 +77,7 @@ declare class Vts {
    * Validates each field in the form.
    * @async
    */
-  validate(this: Vts): void;
+  validate(this: Vts): Promise<void>;
 
   /**
    * Sets the default configuration for Vts (Validate Then Submit).

@@ -3,7 +3,7 @@ import getEventType from '../utils/getEventType';
 
 /** @type {import('../types/core/events').default} */
 const vtsEvents = {
-  _addEventListeners() {
+  async _addEventListeners() {
     // Form
     const form = this.form;
     form.addEventListener('submit', async (e) => {
@@ -20,7 +20,7 @@ const vtsEvents = {
       }
 
       this.form.classList.add(formClass);
-      this.validate();
+      await this.validate();
 
       if (this.isFormValid() && !this.halt) {
         this.submit().catch(() => {});
