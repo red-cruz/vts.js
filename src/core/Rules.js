@@ -56,9 +56,7 @@ const vtsRules = {
       let rulesFromDataset = Object.entries(field.dataset)
         .filter(([key]) => key.startsWith('vtsRule') && key !== 'vtsRule')
         .reduce(
-          /**
-           * @param {import('../types/config/rules').Rules[string]} rules
-           */
+          /** @param {import('../types/config/rules').Rules[string]} rules */
           (rules, [key, value]) => {
             const rKey = key.slice('vtsRule'.length);
             const ruleKey = parseRuleKey(rKey);
@@ -82,10 +80,10 @@ const vtsRules = {
                     break;
 
                   case 'max':
-                  case 'maxlength':
+                  case 'maxLength':
                   case 'maxWords':
                   case 'min':
-                  case 'minlength':
+                  case 'minLength':
                   case 'minWords':
                   case 'size':
                     rules[ruleKey] = Number(extractedRule);
@@ -204,6 +202,7 @@ function extractRule(rule) {
 
 /**
  * @param {string} key
+ * @returns {import('../types/config/rules').RuleKeys}
  */
 function parseRuleKey(key) {
   switch (key.toLocaleLowerCase()) {
@@ -244,6 +243,7 @@ function parseRuleKey(key) {
       return 'startsWith';
 
     default:
+      // @ts-ignore
       return key.toLocaleLowerCase();
   }
 }
