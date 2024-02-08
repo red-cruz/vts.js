@@ -29,8 +29,8 @@ export default interface AjaxSettings {
    * Called before the Ajax request is sent.
    *
    * @param requestInit The ajax.request object
-   * @param abortController The `AbortController` associated with the request.
    * @param form The HTML form element being submitted.
+   * @param abortController The `AbortController` associated with the request.
    *
    */
   beforeSend: (
