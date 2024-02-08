@@ -4,7 +4,6 @@ import showDialog from '../utils/response/showDialog';
 
 /** @type {import("../types/config/ajaxSettings").default} */
 const ajaxHandler = {
-  action: '',
   request: {},
   beforeSend: (requestInit, form, abortController) => {
     /*

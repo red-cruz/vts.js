@@ -5,7 +5,7 @@ export default interface VtsFormCore {
    * Checks the validity of the form.
    * @returns {Boolean} True if the form is valid, false otherwise.
    */
-  isFormValid(this: VtsCore): boolean;
+  isFormValid(this: VtsCore, validate: Boolean): Promise<boolean>;
 
   /**
    * @description Submits the form via fetch API.

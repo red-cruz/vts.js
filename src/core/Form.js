@@ -3,20 +3,23 @@ import getResponseData from '../utils/getResponseData';
 
 /** @type {import('../types/core/form').default} */
 const vtsForm = {
-  isFormValid() {
+  async isFormValid(validate = false) {
+    validate && (await this.validate());
     return this.form.checkValidity();
   },
+
   async submit() {
     let data, response;
     let promiseResolved = true;
     const ajax = this.ajax;
     const form = this.form;
+    const action = (this.ajax.action = this.ajax.action ?? form.action);
     try {
       // call beforesend callback function
       await vtsFormBeforeSend.call(this);
 
       // fetch
-      response = await fetch(new Request(this.ajax.action, this.ajax.request));
+      response = await fetch(new Request(action, this.ajax.request));
 
       if (!response.ok) throw response;
 

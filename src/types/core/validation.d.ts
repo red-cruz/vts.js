@@ -10,13 +10,6 @@ export default interface VtsValidationCore {
     this: VtsCore,
     field: HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
   ): Promise<void>;
-
-  _isFieldRequired(
-    this: VtsCore,
-    rules: Rules[string],
-    field: HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement,
-    label: string
-  ): Promise<boolean>;
 }
 
 export type ValidationResults = {

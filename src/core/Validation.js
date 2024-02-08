@@ -37,6 +37,7 @@ const vtsValidation = {
           field,
           label
         );
+        console.log(invalidMessages);
         const isInvalid = Object.keys(invalidMessages).length;
         // set custom validity
         if (isInvalid) {
@@ -122,6 +123,15 @@ async function validateCheckbox(field, rules, validMessage, renderClass) {
   const invalidMsgObj = {};
 
   let isValid = true;
+
+  const minRule = rules.min;
+  switch (typeof minRule) {
+    case 'function':
+      break;
+
+    default:
+      break;
+  }
 
   const min = rules.min;
 
