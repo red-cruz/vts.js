@@ -13,6 +13,7 @@ const defaultMsg = {
   max: '{:label} must be less than or equal to {:max}.',
   min: '{:label} must be greater than or equal to {:min}.',
   notInArray: '{:label} must not be one of the following: {:values}.',
+  pattern: '{:label} does not match the pattern "{:pattern}"',
   startsWith: '{:label} must start with {:startsWith}.',
   size: '{:label} must be exactly {:size} characters long. You are currently using {:length} characters.',
   uppercase: '{:label} must be uppercase.',

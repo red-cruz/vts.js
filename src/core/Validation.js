@@ -3,6 +3,7 @@ import Vts from '../Vts';
 import defaultMsg from '../defaults/defaultMsg';
 import getFieldLabel from '../utils/getFieldLabel';
 import { registeredRules } from './Rules';
+import { requiredRule } from './rules/required';
 
 /** @type {import('../types/core/validation').default} */
 const vtsValidation = {
@@ -37,7 +38,7 @@ const vtsValidation = {
           field,
           label
         );
-        console.log(invalidMessages);
+
         const isInvalid = Object.keys(invalidMessages).length;
         // set custom validity
         if (isInvalid) {
@@ -62,12 +63,21 @@ const vtsValidation = {
  * @returns {Promise<import('../types/core/validation').ValidationResults>}
  */
 async function validateFields(rules, field, label) {
+  const $this = this;
   let invalidMessages = {};
 
-  // TODO: if field is not required, no need to execute validation rules if there is no value
+  /** @type {import('../types/core/validation').ValidationResults} */
+  await getInvalidMessages(requiredRule);
+
+  if (!field.value) return invalidMessages;
+
   for (const rule of registeredRules) {
+    await getInvalidMessages(rule);
+  }
+
+  async function getInvalidMessages(ruleFn) {
     /** @type {import('../types/core/validation').ValidationResults} */
-    const validationMessage = await rule.call(this, rules, field, label);
+    const validationMessage = await ruleFn.call($this, rules, field, label);
     const key = Object.keys(validationMessage)[0];
 
     if (key) {
@@ -91,14 +101,6 @@ async function validateFields(rules, field, label) {
     }
 
     invalidMessages = Object.assign(invalidMessages, validationMessage);
-
-    // if the field is invalid and has required rule, break the loop to prevent other rules from executing
-    const isRequired =
-      (rule.name === 'required' || rule.name === 'requiredIf') &&
-      (invalidMessages.required || invalidMessages.requiredIf);
-    if (isRequired) {
-      break;
-    }
   }
 
   return invalidMessages;

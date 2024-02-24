@@ -9,13 +9,11 @@ import maxRule from './rules/max';
 import minRule from './rules/min';
 import notInArrayRule from './rules/notInArray';
 import patternRule from './rules/pattern';
-import { requiredRule } from './rules/required';
 import sizeRule from './rules/size';
 import startsWithRule from './rules/startsWith';
 import validatorRule from './rules/validator';
 
 const registeredRules = [
-  requiredRule,
   afterRule,
   afterOrEqual,
   before,

@@ -56,7 +56,7 @@ export async function isFieldRequired(rules, field, label) {
 export async function requiredRule(rules, field, label) {
   const ruleMsg = rules.messages?.required || this.messages?.required;
   const required = await isFieldRequired.call(this, rules, field, label);
-  console.log(required, field.name);
+
   if (required && !field.value) {
     return {
       required: ruleMsg || defaultMsg.required,

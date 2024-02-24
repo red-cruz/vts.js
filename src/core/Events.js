@@ -20,9 +20,10 @@ const vtsEvents = {
       }
 
       this.form.classList.add(formClass);
-      await this.validate();
 
-      if (this.isFormValid() && !this.halt) {
+      const valid = await this.isFormValid(true);
+
+      if (valid && !this.halt) {
         this.submit().catch(() => {});
       }
     });

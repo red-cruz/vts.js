@@ -36,7 +36,7 @@ declare class Vts {
    * Checks the validity of the form.
    * @returns {Boolean} True if the form is valid, false otherwise.
    */
-  isFormValid(this: Vts): boolean;
+  isFormValid(this: Vts, validate?: boolean): Promise<boolean>;
 
   listen: boolean;
   messages: ValidationMessages;
