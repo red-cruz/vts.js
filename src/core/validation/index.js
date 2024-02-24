@@ -1,7 +1,7 @@
 // @ts-check
 import defaultMsg from '../../defaults/defaultMsg';
 import getFieldLabel from '../../utils/getFieldLabel';
-import { inputRules } from '../Rules';
+import { inputRules } from '../rules';
 import { requiredRule } from '../rules/required';
 import validateCheckbox from './validateCheckbox';
 import validateRadio from './validateRadio';

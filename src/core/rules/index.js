@@ -1,17 +1,17 @@
 // @ts-check
-import defaultMsg from '../defaults/defaultMsg';
-import { afterOrEqual, afterRule, before, beforeOrEqual } from './rules/date';
-import differentFrom from './rules/differentFrom';
-import endsWithRule from './rules/endsWith';
-import equalToRule from './rules/equalTo';
-import inArrayRule from './rules/inArray';
-import maxRule from './rules/max';
-import minRule from './rules/min';
-import notInArrayRule from './rules/notInArray';
-import patternRule from './rules/pattern';
-import sizeRule from './rules/size';
-import startsWithRule from './rules/startsWith';
-import validatorRule from './rules/validator';
+import defaultMsg from '../../defaults/defaultMsg';
+import { afterOrEqual, afterRule, before, beforeOrEqual } from './date';
+import differentFrom from './differentFrom';
+import endsWithRule from './endsWith';
+import equalToRule from './equalTo';
+import inArrayRule from './inArray';
+import maxRule from './max';
+import minRule from './min';
+import notInArrayRule from './notInArray';
+import patternRule from './pattern';
+import sizeRule from './size';
+import startsWithRule from './startsWith';
+import validatorRule from './validator';
 
 const inputRules = [
   afterRule,
@@ -31,7 +31,7 @@ const inputRules = [
   validatorRule,
 ];
 
-/** @type {import('../types/core/rules').default} */
+/** @type {import('../../types/core/rules').default} */
 const vtsRules = {
   _getFieldRules(field) {
     const rule = field.dataset.vtsRule || field.name;
@@ -39,10 +39,10 @@ const vtsRules = {
   },
 
   _convertRulesToMap() {
-    /** @type {Map<string,import('../types/config/rules').Rules[string]>} */
+    /** @type {Map<string,import('../../types/config/rules').Rules[string]>} */
     const rulesMap = new Map();
 
-    /** @type {import('../types/config/rules').Rules[string]} */
+    /** @type {import('../../types/config/rules').Rules[string]} */
     const rules = this.rules;
 
     // map field constraints
@@ -54,7 +54,7 @@ const vtsRules = {
       let rulesFromDataset = Object.entries(field.dataset)
         .filter(([key]) => key.startsWith('vtsRule') && key !== 'vtsRule')
         .reduce(
-          /** @param {import('../types/config/rules').Rules[string]} rules */
+          /** @param {import('../../types/config/rules').Rules[string]} rules */
           (rules, [key, value]) => {
             const rKey = key.slice('vtsRule'.length);
             const ruleKey = parseRuleKey(rKey);
@@ -189,7 +189,7 @@ export { inputRules };
 
 /**
  * @param {string} [rule]
- * @returns {string|undefined|import('../types/config/rules').RuleFunction<any>}
+ * @returns {string|undefined|import('../../types/config/rules').RuleFunction<any>}
  */
 function extractRule(rule) {
   if (rule)
@@ -200,7 +200,7 @@ function extractRule(rule) {
 
 /**
  * @param {string} key
- * @returns {import('../types/config/rules').RuleKeys}
+ * @returns {import('../../types/config/rules').RuleKeys}
  */
 function parseRuleKey(key) {
   switch (key.toLocaleLowerCase()) {

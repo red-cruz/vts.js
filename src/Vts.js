@@ -4,7 +4,7 @@ import 'whatwg-fetch';
 import vtsForm from './core/Form.js';
 import VtsFormValidator from './utils/VtsFormValidator.js';
 import vtsEvents from './core/Events.js';
-import vtsRules from './core/Rules.js';
+import vtsRules from './core/rules';
 import vtsValidation from './core/validation';
 import setVtsConfig from './utils/setVtsConfig.js';
 import vtsDefaults from './defaults/index.js';
