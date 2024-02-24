@@ -5,7 +5,7 @@ import vtsForm from './core/Form.js';
 import VtsFormValidator from './utils/VtsFormValidator.js';
 import vtsEvents from './core/Events.js';
 import vtsRules from './core/Rules.js';
-import vtsValidation from './core/Validation.js';
+import vtsValidation from './core/validation';
 import setVtsConfig from './utils/setVtsConfig.js';
 import vtsDefaults from './defaults/index.js';
 import deepMerge from './utils/deepMerge.js';

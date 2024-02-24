@@ -109,31 +109,10 @@ async function dateRule(ruleName, rules, field, label) {
       };
 }
 
-function getDateFromRule(form, rule, rules, field) {
-  const targetField = VtsFormValidator.validateField(form, rules[rule]);
-
-  if (!targetField) {
-    console.warn(
-      `The element with name "${rule}" is not a valid field element. 
-          Please ensure you are passing the name of a valid field in the form.`
-    );
-    return targetField;
-  }
-
-  attachEvent(rule, targetField, field, rules);
-
-  const targetDate = new Date(targetField.value);
-  const dateModifier = applyDateModifier(rules[rule], targetDate);
-
-  return {
-    dateModifier,
-    targetField,
-    targetDate,
-  };
-}
-
 /**
  * @param {string} ruleName
+ * @param {import('../../types/config/rules').Rules} rules
+ * @param {HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement} targetField
  * @param {Date|Promise<Date>} targetDate
  * @param {string} dateModifier
  * @this {import('../../types/core/index').default} Vts

@@ -13,7 +13,7 @@ import sizeRule from './rules/size';
 import startsWithRule from './rules/startsWith';
 import validatorRule from './rules/validator';
 
-const registeredRules = [
+const inputRules = [
   afterRule,
   afterOrEqual,
   before,
@@ -185,7 +185,7 @@ const vtsRules = {
 };
 
 export default vtsRules;
-export { registeredRules };
+export { inputRules };
 
 /**
  * @param {string} [rule]
