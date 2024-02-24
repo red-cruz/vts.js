@@ -43,12 +43,10 @@ const vtsValidation = {
         const isInvalid = Object.keys(invalidMessages).length;
         // set custom validity
         if (isInvalid) {
-          // INVALID
           const errorValidationMsg = Object.values(invalidMessages).join(', ');
           field.setCustomValidity(errorValidationMsg);
           this.renderFeedback.call(field, invalidMessages, renderClass);
         } else {
-          // VALID
           field.setCustomValidity('');
           this.renderFeedback.call(field, validMessage, renderClass);
         }
