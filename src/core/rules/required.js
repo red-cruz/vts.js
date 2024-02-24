@@ -13,6 +13,8 @@ export async function isFieldRequired(rules, field, label) {
   /** @type {import('../../types/config/rules').Rule<string | boolean> } */ //@ts-ignore
   const requiredRule = rules.required;
 
+  let isRequired = true;
+
   switch (typeof requiredRule) {
     case 'function':
       this._setCheckingRule(rules, field, label);
@@ -26,12 +28,13 @@ export async function isFieldRequired(rules, field, label) {
           attachEvent('required', targetField, field, rules);
           return !!targetField?.value;
         }
-        return required === 'true';
-      }
-      return required;
+        isRequired = required === 'true';
+      } else isRequired = required;
+      break;
 
     case 'boolean':
-      return requiredRule;
+      isRequired = requiredRule;
+      break;
 
     default:
       if (requiredRule.startsWith('field:')) {
@@ -40,10 +43,15 @@ export async function isFieldRequired(rules, field, label) {
           requiredRule.replace('field:', '')
         );
         attachEvent('required', targetField, field, rules);
-        return !!targetField?.value;
+        isRequired = !!targetField?.value;
       }
-      return requiredRule === 'true';
+      isRequired = requiredRule === 'true';
+      break;
   }
+
+  field.required = isRequired;
+
+  return isRequired;
 }
 
 /**
