@@ -86,32 +86,32 @@ type Rules = {
     /**
      * Field's value must be at least the specified maximum number.
      */
-    max?: Rule<number>;
+    max?: Rule<string | number>;
 
     /**
      * Field's value must be at least the specified maximum length
      */
-    maxLength?: Rule<number>;
+    maxLength?: Rule<string | number>;
 
     /**
      * Field's value must be at least the specified maximum number of words
      */
-    maxWords?: Rule<number>;
+    maxWords?: Rule<string | number>;
 
     /**
      * Field's value must be at least the specified minimum number.
      */
-    min?: Rule<number>;
+    min?: Rule<string | number>;
 
     /**
      * Field's value must be at least the specified minimum length
      */
-    minLength?: Rule<number>;
+    minLength?: Rule<string | number>;
 
     /**
      * Field's value must be at least the specified minimum number of words
      */
-    minWords?: Rule<number>;
+    minWords?: Rule<string | number>;
 
     /**
      * Field's value must not be found within the specified array.

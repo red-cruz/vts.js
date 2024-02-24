@@ -11,8 +11,7 @@ import attachEvent from '../../utils/attachEvent';
  * @this {import('../../types/core/index').default} Vts
  * @returns {Promise<import('../../types/core/validation').ValidationResults>}
  */
-export default async function patternRule(rules, field, label) {
-  /** @type {import('../../types/config/rules').Rule<string | RegExp> } */ //@ts-ignore
+export default async function (rules, field, label) {
   const patternRule = rules.pattern;
 
   if (!patternRule) return {};
