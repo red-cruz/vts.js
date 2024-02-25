@@ -1,7 +1,7 @@
 // @ts-check
 import defaultMsg from '../../defaults/defaultMsg';
-import VtsFormValidator from '../../utils/VtsFormValidator';
-import attachEvent from '../../utils/attachEvent';
+import getFieldLabel from '../../utils/getFieldLabel';
+import getMinOrMax from '../../utils/rules/getMinOrMax';
 
 /**
  * @param {import('../../types/config/rules').Rules[string]} rules
@@ -11,79 +11,64 @@ import attachEvent from '../../utils/attachEvent';
  * @returns {Promise<import('../../types/core/validation').ValidationResults>}
  */
 export default async function (rules, field, label) {
-  const maxRule = rules.max;
+  const minRule = rules.max;
 
-  if (!maxRule) return {};
+  if (!minRule) return {};
 
-  let maxNumber = 0;
+  let max = 0;
   let valid = false;
 
-  const getErrMsg = (num = maxNumber) => {
+  /** @type {import('../../types/core/index').VtsField|undefined} */
+  let targetField;
+
+  const getErrMsg = (num = max) => {
     const errMsg = {
       max: rules.messages?.max || this.messages?.max || defaultMsg.max,
     };
 
-    errMsg.max = errMsg.max.replace(/{:max}/g, String(num));
+    errMsg.max = errMsg.max
+      .replace(/{:max}/g, String(num))
+      .replace(/{:label}/g, label);
+
+    if (targetField) {
+      const targetRules = this._getFieldRules(targetField);
+      errMsg.max = errMsg.max
+        .replace(/{:targetValue}/g, targetField.value)
+        .replace(
+          /{:targetLabel}/g,
+          getFieldLabel(targetRules.label, targetField, this.form)
+        );
+    }
 
     return errMsg;
   };
 
   try {
-    switch (typeof maxRule) {
-      case 'function':
-        this._setCheckingRule(rules, field, label);
-        const max = await maxRule(field, label);
-
-        if (typeof max === 'string') {
-          let maxSrc = max;
-          if (max.startsWith('field:')) {
-            const targetField = VtsFormValidator.validateField(
-              this.form,
-              max.replace('field:', '')
-            );
-            attachEvent('max', targetField, field, rules);
-            maxSrc = targetField.value;
-          } else maxSrc = max;
-
-          maxNumber = Number(maxSrc);
-        } else maxNumber = max;
-        break;
-
-      case 'number':
-        maxNumber = maxRule;
-        break;
-
-      default:
-        let maxSrc = maxRule;
-        if (maxRule.startsWith('field:')) {
-          const targetField = VtsFormValidator.validateField(
-            this.form,
-            maxRule.replace('field:', '')
-          );
-          attachEvent('max', targetField, field, rules);
-          maxSrc = targetField.value;
-        } else maxSrc = maxRule;
-
-        maxNumber = Number(maxSrc);
-    }
+    /** @type {{max: number, targetField?:import('../../types/core/index').VtsField}} */
+    const awaitedMin = await getMinOrMax.call(this, 'max', rules, field, label);
+    max = awaitedMin.max;
+    targetField = awaitedMin.targetField;
 
     if (field instanceof HTMLInputElement) {
       switch (field.type) {
         case 'file':
           const fileLen = field.files?.length;
-          valid = fileLen === undefined ? false : fileLen <= maxNumber;
+          valid = fileLen === undefined ? false : fileLen <= max;
           break;
 
+        case 'checkbox':
+          return getErrMsg();
+
         case 'number':
-          field.max = String(maxNumber);
+          field.max = String(max);
         default:
-          valid = Number(field.value) <= maxNumber;
+          valid = Number(field.value) <= max;
           break;
       }
     } else if (field instanceof HTMLSelectElement) {
-      valid = field.selectedOptions.length <= maxNumber;
+      valid = field.selectedOptions.length <= max;
     } else {
-      valid = field.value.length <= maxNumber;
+      valid = field.value.length <= max;
     }
   } catch (error) {
     console.error(error);
