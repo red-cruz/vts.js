@@ -62,12 +62,13 @@ export async function isFieldRequired(rules, field, label) {
  * @returns {Promise<import('../../types/core/validation').ValidationResults>}
  */
 export async function requiredRule(rules, field, label) {
-  const ruleMsg = rules.messages?.required || this.messages?.required;
+  const ruleMsg =
+    rules.messages?.required || this.messages?.required || defaultMsg.required;
   const required = await isFieldRequired.call(this, rules, field, label);
 
   if (required && !field.value) {
     return {
-      required: ruleMsg || defaultMsg.required,
+      required: ruleMsg,
     };
   }
 
