@@ -112,7 +112,7 @@ async function dateRule(ruleName, rules, field, label) {
 /**
  * @param {string} ruleName
  * @param {import('../../types/config/rules').Rules} rules
- * @param {VtsField} targetField
+ * @param {import('../../types/core/index').VtsField} targetField
  * @param {Date|Promise<Date>} targetDate
  * @param {string} dateModifier
  * @this {import('../../types/core/index').default} Vts
