@@ -1,10 +1,11 @@
 import type { KeysOfType } from '../../utils/types';
+import { VtsField } from '../core';
 
 /**
  * Represents a function used for validation rules that can return a value of type T or a Promise resolving to T.
  */
 type RuleFunction<T> = (
-  field: HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement,
+  field: VtsField,
   label: string
 ) => Promise<string | T> | string | T;
 

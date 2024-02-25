@@ -3,7 +3,7 @@ import defaultMsg from '../../defaults/defaultMsg';
 
 /**
  * @param {import('../../types/config/rules').Rules[string]} rules
- * @param {HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement} field
+ * @param {import('../../types/core/index').VtsField} field
  * @param {string} label
  * @this {import('../../types/core/index').default} Vts
  * @returns {Promise<import('../../types/core/validation').ValidationResults>}

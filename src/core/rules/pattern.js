@@ -6,7 +6,7 @@ import attachEvent from '../../utils/attachEvent';
 
 /**
  * @param {import('../../types/config/rules').Rules[string]} rules
- * @param {HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement} field
+ * @param {VtsField} field
  * @param {string} label
  * @this {import('../../types/core/index').default} Vts
  * @returns {Promise<import('../../types/core/validation').ValidationResults>}

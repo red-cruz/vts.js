@@ -28,7 +28,7 @@ export async function beforeOrEqual(rules, field, label) {
 /**
  * @param {string} ruleName
  * @param {import('../../types/config/rules').Rules[string]} rules
- * @param {HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement} field
+ * @param {import('../../types/core/index').VtsField} field
  * @param {string} label
  * @this {import('../../types/core/index').default} Vts
  * @returns {Promise<import('../../types/core/validation').ValidationResults>}
@@ -112,7 +112,7 @@ async function dateRule(ruleName, rules, field, label) {
 /**
  * @param {string} ruleName
  * @param {import('../../types/config/rules').Rules} rules
- * @param {HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement} targetField
+ * @param {VtsField} targetField
  * @param {Date|Promise<Date>} targetDate
  * @param {string} dateModifier
  * @this {import('../../types/core/index').default} Vts

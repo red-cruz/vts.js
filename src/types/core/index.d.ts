@@ -8,3 +8,8 @@ export default interface VtsCore
     VtsEventsCore,
     VtsValidation,
     VtsRulesCore {}
+
+export type VtsField =
+  | HTMLInputElement
+  | HTMLSelectElement
+  | HTMLTextAreaElement;

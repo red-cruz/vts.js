@@ -85,8 +85,8 @@ export default class Vts {
   }
 
   /**
-   * @param {HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement} field
-   * @returns {Array<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement|Element>}
+   * @param {import('./types/core').VtsField} field
+   * @returns {Array<VtsField|Element>}
    */
   static getGroupedFields(field) {
     const form = field.closest('form');

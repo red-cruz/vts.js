@@ -4,6 +4,7 @@ import AjaxSettings from './types/config/ajaxSettings';
 import VtsResponseMessage from './types/config/responseMessage';
 import { ValidationMessages, Rules } from './types/config/rules';
 import { DeepPartial } from './utils/types';
+import { VtsField } from './types/core';
 
 /**
  * A JavaScript library that provides a simple and flexible way to handle
@@ -27,9 +28,7 @@ declare class Vts {
     invalid: string;
     valid: string;
   };
-  fields: NodeListOf<
-    HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
-  >;
+  fields: NodeListOf<VtsField>;
   form: HTMLFormElement;
   halt: boolean;
   /**
@@ -45,7 +44,7 @@ declare class Vts {
    * Handle field feedback.
    */
   renderFeedback: (
-    this: HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement,
+    this: VtsField,
     messages: ValidationResults,
     renderClass: string
   ) => void;
@@ -123,9 +122,7 @@ declare class Vts {
    * @param field The field element for which to find the corresponding group.
    * @returns An array of HTML input elements belonging to the same group as the specified field.
    */
-  static getGroupedFields(
-    field: HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
-  ): Array<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>;
+  static getGroupedFields(field: VtsField): Array<VtsField>;
 }
 
 export default Vts;

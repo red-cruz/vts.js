@@ -1,4 +1,5 @@
 import type VtsCore from '.';
+import { VtsField } from '.';
 import { RuleKeys, Rules } from '../config/rules';
 
 export default interface VtsValidationCore {
@@ -6,10 +7,7 @@ export default interface VtsValidationCore {
    * Validates each field.
    * @param field The field to check.
    */
-  _validate(
-    this: VtsCore,
-    field: HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
-  ): Promise<void>;
+  _validate(this: VtsCore, field: VtsField): Promise<void>;
 }
 
 export type ValidationResults = {

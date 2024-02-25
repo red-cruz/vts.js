@@ -241,7 +241,7 @@ When the `halt` property is set to `true`, the form's submission will be halted,
   1. `invalidClass`: `String` - The value of the `invalid` property of [class](#class-object---the-css-classes-to-be-applied) configuration.
   2. `data`: An object containing validation data for all `invalid fields`. The `keys` for each validation data object are the value of the `name` attribute of the validated field. Each field's validation data contains the following properties:
 
-     - `field`: HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement - The invalid form field.
+     - `field`: VtsField - The invalid form field.
      - `label`: string - The corresponding label for the invalid field. It is derived from the following sources, in order of priority:
        - The value of the `vts-label` attribute, if defined on the field.
        - The text content of the `<label>` element associated with the field's `id`.
@@ -252,7 +252,7 @@ When the `halt` property is set to `true`, the form's submission will be halted,
      ```typescript
      {
        'field_name': {
-         field: HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement,
+         field: VtsField,
          label: string,
          message: string
        },
@@ -275,7 +275,7 @@ When the `halt` property is set to `true`, the form's submission will be halted,
   1. `validClass`: `String` - The value of the `valid` property of [class](#class-object---the-css-classes-to-be-applied) configuration.
   2. `data`: An object containing validation data for all `valid fields`. The `keys` for each validation data object are the value of the `name` attribute of the validated field. Each field's validation data contains the following properties:
 
-     - `field`: HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement - The valid form field.
+     - `field`: VtsField - The valid form field.
      - `label`: string - The corresponding label for the valid field. It is derived from the following sources, in order of priority:
        - The value of the `vts-label` attribute, if defined on the field.
        - The text content of the `<label>` element associated with the field's `id`.

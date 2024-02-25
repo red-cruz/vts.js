@@ -33,7 +33,7 @@ export default class VtsFormValidator {
    *
    * @param {HTMLFormElement} form - The HTML form element.
    * @param {string} fieldName - The name of the field element.
-   * @returns {HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement } - The validated field element.
+   * @returns {import("../types/core").VtsField } - The validated field element.
    */
   static validateField(form, fieldName) {
     const field = form.querySelector(`[name="${fieldName.split(' ')[0]}"]`);

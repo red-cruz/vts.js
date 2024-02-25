@@ -6,7 +6,7 @@ import getFieldLabel from '../../utils/getFieldLabel';
 
 /**
  * @param {import('../../types/config/rules').Rules[string]} rules
- * @param {HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement} field
+ * @param {import('../../types/core/index').VtsField} field
  * @param {string} label
  * @this {import('../../types/core/index').default} Vts
  * @returns {import('../../types/core/validation').ValidationResults}

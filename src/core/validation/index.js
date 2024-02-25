@@ -76,7 +76,7 @@ const vtsValidation = {
 
 /**
  * @param {import('../../types/config/rules').Rules[string]} rules
- * @param {HTMLInputElement|HTMLSelectElement|HTMLTextAreaElement} field
+ * @param {import('../../types/core').VtsField} field
  * @param {string} label
  * @this {import('../../types/core').default}
  * @returns {Promise<import('../../types/core/validation').ValidationResults>}

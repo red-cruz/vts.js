@@ -1,3 +1,4 @@
+import { VtsField } from '../core';
 import type { ValidationResults } from '../core/validation';
 import type AjaxSettings from './ajaxSettings';
 import type { ValidationMessages, Rules } from './rules';
@@ -16,7 +17,7 @@ export default interface VtsConfig {
    *
    */
   renderFeedback: (
-    this: HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement,
+    this: VtsField,
     validationResults: ValidationResults,
     renderClass: {
       form: string;

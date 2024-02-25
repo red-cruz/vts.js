@@ -3,8 +3,8 @@ import getEventType from './getEventType';
 
 /**
  * @param {string} ruleName
- * @param {HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement} targetField
- * @param {HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement} field
+ * @param {import('../types/core').VtsField} targetField
+ * @param {import('../types/core').VtsField} field
  * @param {import('../types/config/rules').Rules[string]} rules
  */
 export default function attachEvent(ruleName, targetField, field, rules) {
