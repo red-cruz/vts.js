@@ -1,4 +1,5 @@
 // @ts-check
+import Vts from '../../Vts';
 import defaultMsg from '../../defaults/defaultMsg';
 import VtsFormValidator from '../../utils/VtsFormValidator';
 import attachEvent from '../../utils/attachEvent';
@@ -74,6 +75,9 @@ export default async function (rules, field, label) {
           valid = fileLen === undefined ? false : fileLen >= minNumber;
           break;
 
+        case 'checkbox':
+          break;
+
         case 'number':
           field.min = String(minNumber);
         default:
@@ -91,4 +95,36 @@ export default async function (rules, field, label) {
   }
 
   return valid ? {} : getErrMsg();
+}
+
+/**
+ * @param {import('../../types/config/rules').Rules[string]} rules
+ * @param {HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement} field
+ * @param {string} label
+ * @this {import('../../types/core/index').default} Vts
+ * @returns {boolean}
+ */
+function validateCheckBox(rules, field, label) {
+  const group = Vts.getGroupedFields(field);
+  const lastField = group[group.length - 1];
+
+  const checkedItems = group
+    .map((gField) => gField instanceof HTMLInputElement && gField.checked)
+    .filter(Boolean).length;
+
+  let isValid = true;
+
+  if (isValid) {
+    group.forEach((gField) => {
+      gField.required = false;
+      gField.setCustomValidity('');
+    });
+    this.renderFeedback.call(lastField, validMessage, renderClass);
+  } else {
+    group.forEach((gField) => {
+      gField.required = true;
+      gField.setCustomValidity(Object.keys(invalidMsgObj).join(','));
+    });
+    this.renderFeedback.call(lastField, invalidMsgObj, renderClass);
+  }
 }

@@ -40,7 +40,27 @@ const vtsValidation = {
           label
         );
 
-        const isInvalid = Object.keys(invalidMessages).length;
+        let isInvalid = !!Object.keys(invalidMessages).length;
+
+        // if invalid messages is empty but field is still invalid
+        if (
+          !isInvalid &&
+          !field.validity.customError &&
+          !field.validity.valid
+        ) {
+          // fallback validation for errors that vts is unable to handle
+          return this.renderFeedback.call(
+            field,
+            {
+              invalid:
+                // rules.messages?.invalid ??
+                // this.messages?.invalid ??
+                field.validationMessage,
+            },
+            renderClass
+          );
+        }
+
         // set custom validity
         if (isInvalid) {
           const errorValidationMsg = Object.values(invalidMessages).join(', ');

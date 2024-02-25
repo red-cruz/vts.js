@@ -38,7 +38,7 @@ declare class Vts {
    */
   isFormValid(this: Vts, validate?: boolean): Promise<boolean>;
 
-  listen: boolean;
+  validateOnSumbit: boolean;
   messages: ValidationMessages;
 
   /**

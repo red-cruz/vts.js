@@ -56,7 +56,7 @@ const vtsDefaults = {
       fieldWrapper?.append(newContainer);
     }
   },
-  listen: false,
+  validateOnSumbit: true,
   messages: defaultMsg,
   rules: {},
   stopPropagation: true,

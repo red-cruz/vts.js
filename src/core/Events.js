@@ -14,8 +14,8 @@ const vtsEvents = {
 
       const formClass = this.class.form;
       const wasValidated = form.classList.contains(formClass);
-      const shouldListen = this.listen;
-      if (!shouldListen && !wasValidated) {
+
+      if (this.validateOnSumbit && !wasValidated) {
         this._addFieldListener();
       }
 
@@ -29,8 +29,7 @@ const vtsEvents = {
     });
 
     // Fields
-    const shouldListen = this.listen;
-    shouldListen && this._addFieldListener();
+    !this.validateOnSumbit && this._addFieldListener();
   },
 
   _addFieldListener() {

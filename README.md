@@ -308,13 +308,13 @@ When the `halt` property is set to `true`, the form's submission will be halted,
 
 > Note that the `showFeedback()` function mentioned is a default implementation and **cannot be accessed or modified**. However, you can create your own function or use your preferred approach for handling validation feedback within the `invalid` and `valid` handlers.
 
-### `listen`: Boolean - Determines whether to add event listeners to each fields immediately on Vts instantiation.
+### `validateOnSumbit`: Boolean - Determines whether to add event listeners to each fields immediately on Vts instantiation.
 
 - Default: `false`
 
-When the `listen` property is set to `true`, event listeners will be added to each field **immediately** upon Vts instantiation. This allows for immediate validation as the user interacts with the form fields.
+When the `validateOnSumbit` property is set to `true`, event listeners will be added to each field **immediately** upon Vts instantiation. This allows for immediate validation as the user interacts with the form fields.
 
-If the `listen` property is set to `false`, event listeners will be added to each field on the form's **submit event**. This means that the form will be validated and the respective handlers will be executed when the user submits the form. It provides a way to defer the validation until the form is submitted, rather than validating each field as the user interacts with them.
+If the `validateOnSumbit` property is set to `false`, event listeners will be added to each field on the form's **submit event**. This means that the form will be validated and the respective handlers will be executed when the user submits the form. It provides a way to defer the validation until the form is submitted, rather than validating each field as the user interacts with them.
 
 ### message
 
@@ -425,7 +425,7 @@ Vts.setDefaults({
       // Handle the error response
     },
   },
-  listen: false,
+  validateOnSumbit: false,
   rules: {
     // Define your validation rules here
   },

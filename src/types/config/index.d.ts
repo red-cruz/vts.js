@@ -34,9 +34,9 @@ export default interface VtsConfig {
 
   /**
    * Determines whether to add event listeners immediately on Vts instantiation.
-   * @default false
+   * @default true
    */
-  listen: boolean;
+  validateOnSumbit: boolean;
 
   /**
    * The validation rules for the form fields.
