@@ -1,8 +1,8 @@
 // @ts-check
-import Vts from '../../Vts';
 import defaultMsg from '../../defaults/defaultMsg';
 import VtsFormValidator from '../../utils/VtsFormValidator';
 import attachEvent from '../../utils/attachEvent';
+import getFieldLabel from '../../utils/getFieldLabel';
 
 /**
  * @param {import('../../types/config/rules').Rules[string]} rules
@@ -19,6 +19,9 @@ export default async function (rules, field, label) {
   let min = 0;
   let valid = false;
 
+  /** @type {import('../../types/core/index').VtsField|undefined} */
+  let targetField;
+
   const getErrMsg = (num = min) => {
     const errMsg = {
       min: rules.messages?.min || this.messages?.min || defaultMsg.min,
@@ -28,6 +31,16 @@ export default async function (rules, field, label) {
       .replace(/{:min}/g, String(num))
       .replace(/{:label}/g, label);
 
+    if (targetField) {
+      const targetRules = this._getFieldRules(targetField);
+      errMsg.min = errMsg.min
+        .replace(/{:targetValue}/g, targetField.value)
+        .replace(
+          /{:targetLabel}/g,
+          getFieldLabel(targetRules.label, targetField, this.form)
+        );
+    }
+
     return errMsg;
   };
 
@@ -35,6 +48,7 @@ export default async function (rules, field, label) {
     /** @type {{min: number, targetField?:import('../../types/core/index').VtsField}} */
     const awaitedMin = await getMin.call(this, rules, field, label);
     min = awaitedMin.min;
+    targetField = awaitedMin.targetField;
 
     if (field instanceof HTMLInputElement) {
       switch (field.type) {
@@ -67,7 +81,7 @@ export default async function (rules, field, label) {
 
 /**
  * @param {import('../../types/config/rules').Rules[string]} rules
- * @param {VtsField} field
+ * @param {import('../../types/core/index').VtsField} field
  * @param {string} label
  * @this {import('../../types/core/index').default} Vts
  * @returns {Promise<{min: number, targetField?:import('../../types/core/index').VtsField}>}
