@@ -55,10 +55,14 @@ async function dateRule(ruleName, rules, field, label) {
           );
           attachEvent(ruleName, targetField, field, rules);
           targetDate = new Date(new Date(targetField.value).toDateString());
-        } else targetDate = new Date(dateRule);
+        } else {
+          targetDate = new Date(dateRule);
+        }
 
         applyDateModifier(dateRule, targetDate);
-      } else targetDate = dateRule;
+      } else {
+        targetDate = dateRule;
+      }
       break;
 
     case 'string':
@@ -80,17 +84,46 @@ async function dateRule(ruleName, rules, field, label) {
 
   let valid = false;
   const fieldDate = new Date(new Date(field.value).toDateString());
+  fieldDate.setHours(23, 59, 59, 999);
+
+  const setDateMinMax = (setMax = true, offset = 0) => {
+    if (!(field instanceof HTMLInputElement) || field.type !== 'date') return;
+
+    const afterDate = new Date(targetDate.toDateString());
+    if (offset < 0) {
+      afterDate.setDate(afterDate.getDate() - Math.abs(offset));
+    } else {
+      afterDate.setDate(afterDate.getDate() + offset);
+    }
+
+    const dateStr = afterDate.toISOString().split('T')[0];
+
+    if (setMax) {
+      field.max =
+        offset != 0 ? dateStr : targetDate.toISOString().split('T')[0];
+    } else {
+      field.min =
+        offset != 0 ? dateStr : targetDate.toISOString().split('T')[0];
+    }
+  };
+
   switch (ruleName) {
     case 'after':
-      valid = fieldDate > targetDate;
+      setDateMinMax(false, 2);
+      const afterDate = new Date(targetDate.toDateString());
+      afterDate.setDate(afterDate.getDate() + 1);
+      valid = fieldDate > afterDate;
       break;
     case 'afterOrEqual':
+      setDateMinMax(false);
       valid = fieldDate >= targetDate;
       break;
     case 'before':
+      setDateMinMax();
       valid = fieldDate < targetDate;
       break;
     case 'beforeOrEqual':
+      setDateMinMax(true, -2);
       valid = fieldDate <= targetDate;
       break;
   }
