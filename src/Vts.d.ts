@@ -27,10 +27,11 @@ declare class Vts {
     form: string;
     invalid: string;
     valid: string;
+    fieldWrapper: string;
   };
   fields: NodeListOf<VtsField>;
   form: HTMLFormElement;
-  halt: boolean;
+  shouldSubmit: boolean;
   /**
    * Checks the validity of the form.
    * @returns {Boolean} True if the form is valid, false otherwise.

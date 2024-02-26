@@ -25,10 +25,16 @@ export default class Vts {
    * @param {import('./utils/types.js').DeepPartial<import('./types/config').default>} [config={}]
    */
   constructor(form, config = {}) {
-    const elem = (this.form = VtsFormValidator.validateForm(form));
-    this.fields = elem.querySelectorAll(fieldQuery); // @ts-ignore
-    this.#init(elem, config);
-    elem.vts = this;
+    const formElement = (this.form = VtsFormValidator.validateForm(form));
+
+    if (formElement.vts instanceof Vts) {
+      console.warn('Vts instance already exists', formElement);
+    } else {
+      this.fields = formElement.querySelectorAll(fieldQuery); // @ts-ignore
+      this.#init(formElement, config);
+      formElement.vts = this;
+      formElement.classList.add('vts');
+    }
   }
 
   /**
@@ -86,7 +92,7 @@ export default class Vts {
 
   /**
    * @param {import('./types/core').VtsField} field
-   * @returns {Array<VtsField|Element>}
+   * @returns {Array<import('./types/core').VtsField|Element>}
    */
   static getGroupedFields(field) {
     const form = field.closest('form');

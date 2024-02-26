@@ -206,16 +206,16 @@ Vts provides several configuration options to customize its behavior. Here are t
 - `valid`: String - The CSS class to be passed as the first parameter of the `valid renderFeedback` function.
   - Default: `'valid-feedback'`
 
-### `halt`: Boolean - Determines whether to halt the form's submission.
+### `shouldSubmit`: Boolean - Determines whether to shouldSubmit the form's submission.
 
 - Default: `false`
 
-When the `halt` property is set to `true`, the form's submission will be halted, and you need to add an event listener to the form's `submit` event. Inside the event renderFeedback, you can perform additional actions or validations before manually calling the `Vts.submit()` method to submit the form.
+When the `shouldSubmit` property is set to `true`, the form's submission will be shouldSubmited, and you need to add an event listener to the form's `submit` event. Inside the event renderFeedback, you can perform additional actions or validations before manually calling the `Vts.submit()` method to submit the form.
 
 - Example:
 
   ```javascript
-  const vtsForm = new Vts('myForm', { halt: true });
+  const vtsForm = new Vts('myForm', { shouldSubmit: true });
   vtsForm.form.addEventListener('submit', () => {
     // There is no need to call `Event.preventDefault()` since it has already been called during the instantiation of Vts.
     if (vtsForm.isFormValid()) {

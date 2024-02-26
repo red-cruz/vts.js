@@ -28,14 +28,14 @@ export default interface VtsConfig {
   ) => void;
 
   /**
-   * Determines whether to halt the form submission if there are invalid fields.
+   * Determines whether the form should submit an ajax request.
    * @default false
    */
-  halt: boolean;
+  shouldSubmit: boolean;
 
   /**
-   * Determines whether to add event listeners immediately on Vts instantiation.
-   * @default true
+   * Determines whether to validate fields on form submission
+   * @default false
    */
   validateOnSumbit: boolean;
 
@@ -70,8 +70,14 @@ export default interface VtsConfig {
    */
   class: {
     /**
+     * The CSS class to apply to the field wrapper after it was validated
+     * @default 'vts-field-was-validated'
+     */
+    fieldWrapper: string;
+
+    /**
      * The CSS class to apply to the form when it has been validated.
-     * @default 'was-validated'
+     * @default 'vts-form-was-validated'
      */
     form: string;
 

@@ -103,7 +103,7 @@ export default async function (field, rules, validMessage, renderClass) {
   const awaitedMax = await getMinOrMax.call(this, 'max', rules, field, label);
   max = awaitedMax.max;
   if (awaitedMax.targetField) targetField = awaitedMax.targetField;
-  console.log(max);
+
   if (max && checkedItems > max) {
     setErrMsg('max');
     return renderInvalidState();

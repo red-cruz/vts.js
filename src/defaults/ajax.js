@@ -82,7 +82,7 @@ const ajaxHandler = {
   success: (data, response, form) => {
     const { title, message } = getResponseMessage(data, response);
     form.reset();
-    form.classList.remove('was-validated');
+
     showDialog(title, message);
   },
 };

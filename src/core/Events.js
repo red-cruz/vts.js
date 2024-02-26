@@ -23,7 +23,7 @@ const vtsEvents = {
 
       const valid = await this.isFormValid(true);
 
-      if (valid && !this.halt) {
+      if (valid && this.shouldSubmit) {
         this.submit().catch(() => {});
       }
     });

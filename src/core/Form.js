@@ -27,6 +27,12 @@ const vtsForm = {
 
       // call success callback function
       await ajax.success(data, response, form);
+
+      form
+        .querySelectorAll('.' + this.class.fieldWrapper)
+        .forEach((el) => el.classList.remove(this.class.fieldWrapper));
+
+      form.classList.remove(this.class.form);
     } catch (error) {
       data = error;
       response = null;

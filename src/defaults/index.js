@@ -11,11 +11,13 @@ import defaultMsg from './defaultMsg';
 const vtsDefaults = {
   ajax: ajaxHandler,
   class: {
-    form: 'was-validated',
-    invalid: 'invalid-feedback',
-    valid: 'valid-feedback',
+    form: 'vts-form-was-validated',
+    invalid: 'vts-invalid-field-feedback',
+    valid: 'vts-valid-field-feedback',
+    wrapper: '',
+    fieldWrapper: 'vts-field-was-validated',
   },
-  halt: false,
+  shouldSubmit: true,
   renderFeedback: function (validationResults, renderClass) {
     // Extract the renderClass object
     const { wrapper, invalid, valid } = renderClass;
@@ -56,7 +58,7 @@ const vtsDefaults = {
       fieldWrapper?.append(newContainer);
     }
   },
-  validateOnSumbit: true,
+  validateOnSumbit: false,
   messages: defaultMsg,
   rules: {},
   stopPropagation: true,
