@@ -124,6 +124,9 @@ declare class Vts {
    * @returns An array of HTML input elements belonging to the same group as the specified field.
    */
   static getGroupedFields(field: VtsField): Array<VtsField>;
+
+  /** Retrieves the common parent of a field. */
+  static getCommonParent(field: HTMLElement): HTMLElement | null;
 }
 
 export default Vts;

@@ -1,5 +1,7 @@
 // @ts-check
 'use strict';
+import findClosestElement from '../utils/findClosestElement';
+import getCommonParent from '../utils/getCommonParent';
 import ajaxHandler from './ajax';
 import defaultMsg from './defaultMsg';
 
@@ -29,9 +31,9 @@ const vtsDefaults = {
     const feedbackClass = isValid ? valid : invalid;
 
     // Find the field wrapper
-    const fieldWrapper = wrapper
-      ? this.closest(`.${wrapper}`)
-      : this.parentNode;
+    const fieldWrapper = !wrapper
+      ? getCommonParent(this)
+      : findClosestElement(this, wrapper);
 
     // Find the feedback container
     const vtsFeedbackClass = 'vts-feedback-container';
