@@ -2,13 +2,13 @@ $vts-dark-invalid-color: #ea868f;
 $vts-dark-valid-color: #75b798;
 
 $vts-light-invalid-color: #dc3545;
-$vts-light-valid-color: #75b798;
+$vts-light-valid-color: #198754;
 
 body {
   form.vts {
     .vts-feedback-container {
       width: 100%;
-      margin-top: 0.25rem;
+      padding-top: 0.15rem;
       font-size: 0.875em;
       display: block;
       &.vts-invalid-field-feedback {
@@ -61,7 +61,8 @@ body {
     }
   }
 
-  &[data-bs-theme='dark'] {
+  &[data-bs-theme='dark'],
+  &[data-theme='dark'] {
     form.vts {
       .vts-feedback-container {
         &.vts-invalid-field-feedback {
