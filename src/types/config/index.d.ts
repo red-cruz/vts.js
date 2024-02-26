@@ -24,6 +24,7 @@ export default interface VtsConfig {
       invalid: string;
       valid: string;
       wrapper?: string;
+      fieldWrapper: string;
     }
   ) => void;
 
