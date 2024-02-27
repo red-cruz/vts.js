@@ -41,7 +41,7 @@ async function dateRule(ruleName, rules, field, label) {
 
   let targetDate = new Date();
   let targetField = null;
-  let dateModifier = null;
+  let dateModifier = 'x';
 
   switch (typeof rule) {
     case 'function':
@@ -59,7 +59,7 @@ async function dateRule(ruleName, rules, field, label) {
           targetDate = new Date(dateRule);
         }
 
-        applyDateModifier(dateRule, targetDate);
+        dateModifier = applyDateModifier(dateRule, targetDate) ?? '';
       } else {
         targetDate = dateRule;
       }
@@ -73,9 +73,12 @@ async function dateRule(ruleName, rules, field, label) {
         );
         attachEvent(ruleName, targetField, field, rules);
         targetDate = new Date(targetField.value);
-      } else targetDate = new Date(rule);
+        targetDate.setHours(23, 59, 59, 999);
+      } else {
+        targetDate = new Date(rule);
+      }
 
-      applyDateModifier(rule, targetDate);
+      dateModifier = applyDateModifier(rule, targetDate) ?? '';
       break;
 
     default:
@@ -89,14 +92,12 @@ async function dateRule(ruleName, rules, field, label) {
   const setDateMinMax = (setMax = true, offset = 0) => {
     if (!(field instanceof HTMLInputElement) || field.type !== 'date') return;
 
-    const afterDate = new Date(targetDate.toDateString());
-    if (offset < 0) {
-      afterDate.setDate(afterDate.getDate() - Math.abs(offset));
-    } else {
-      afterDate.setDate(afterDate.getDate() + offset);
+    const _date = new Date(targetDate.toDateString());
+    if (offset > 0) {
+      _date.setDate(_date.getDate() + offset);
     }
 
-    const dateStr = afterDate.toISOString().split('T')[0];
+    const dateStr = _date.toISOString().split('T')[0];
 
     if (setMax) {
       field.max =
@@ -123,7 +124,7 @@ async function dateRule(ruleName, rules, field, label) {
       valid = fieldDate < targetDate;
       break;
     case 'beforeOrEqual':
-      setDateMinMax(true, -2);
+      setDateMinMax();
       valid = fieldDate <= targetDate;
       break;
   }
@@ -164,7 +165,7 @@ export function replaceDateMsg(
     ? getFieldLabel(rules[ruleName].label, targetField, this.form)
     : '';
   const specified = targetLabel || 'the specified date';
-  const dateStr = isDate ? targetDate.toLocaleString() : specified;
+  const dateStr = isDate ? targetDate.toISOString().split('T')[0] : specified;
 
   const ruleMsg = rules.messages
     ? rules.messages[ruleName]
