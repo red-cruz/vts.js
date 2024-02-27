@@ -2,7 +2,7 @@
 import Vts from '../../Vts';
 import defaultMsg from '../../defaults/defaultMsg';
 import getFieldLabel from '../../utils/getFieldLabel';
-import getMinOrMax from '../../utils/rules/getMinOrMax';
+import getRuleValue from '../../utils/rules/getRuleValue';
 import { isFieldRequired } from '../rules/required';
 
 /**
@@ -87,9 +87,10 @@ export default async function (field, rules, validMessage, renderClass) {
   }
 
   // VALIDATE MIN RULE
-  /** @type {{min: number, targetField?:import('../../types/core/index').VtsField}} */
-  const awaitedMin = await getMinOrMax.call(this, 'min', rules, field, label);
-  min = awaitedMin.min;
+  /** @type {{ruleValue: number, targetField?:import('../../types/core/index').VtsField}} */ //@ts-ignore
+  const awaitedMin = await getRuleValue(this, rules, field, label, 'min');
+  min = awaitedMin.ruleValue;
+
   if (awaitedMin.targetField) targetField = awaitedMin.targetField;
 
   if (min && checkedItems < min) {
@@ -99,9 +100,10 @@ export default async function (field, rules, validMessage, renderClass) {
     isValid = true;
   }
 
-  /** @type {{max: number, targetField?:import('../../types/core/index').VtsField}} */
-  const awaitedMax = await getMinOrMax.call(this, 'max', rules, field, label);
-  max = awaitedMax.max;
+  /** @type {{ruleValue: number, targetField?:import('../../types/core/index').VtsField}} */ //@ts-ignore
+  const awaitedMax = await getRuleValue(this, rules, field, label, 'max');
+  max = awaitedMax.ruleValue;
+
   if (awaitedMax.targetField) targetField = awaitedMax.targetField;
 
   if (max && checkedItems > max) {

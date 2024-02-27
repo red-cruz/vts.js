@@ -72,12 +72,13 @@ export default async function (vtsInstance, rules, field, label, ruleKey) {
 
   /** @type {import('../../types/config/rules').Rule<string|number|Date>} */
   const rule = rules[ruleKey];
+
   switch (typeof rule) {
     case 'function':
       vtsInstance._setCheckingRule(rules, field, label);
       const _rule = await rule(field, label);
       ruleValue = extractRule(_rule);
-      if (ruleKey === 'startsWith') console.log(ruleValue);
+
       break;
 
     default:
