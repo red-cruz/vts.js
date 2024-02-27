@@ -9,27 +9,40 @@ import getFieldLabel from '../../utils/getFieldLabel';
  * @param {import('../../types/core/index').VtsField} field
  * @param {string} label
  * @this {import('../../types/core/index').default} Vts
- * @returns {import('../../types/core/validation').ValidationResults}
  */
-export default function differentFrom(rules, field, label) {
-  const differentFrom =
-    rules.differentFrom || field.dataset['vts-rule-differentFrom'];
+export default async function (rules, field, label) {
+  const differentFrom = rules.differentFrom;
   if (!differentFrom) return {};
 
-  let targetField = VtsFormValidator.validateField(this.form, differentFrom);
+  let matchValue = '';
 
-  if (!targetField) {
-    console.warn(
-      `The element with name "${differentFrom}" is not a valid field element. 
-          Please ensure you are passing the name of a valid field in the form.`
-    );
-    return {};
+  /** @type {import('../../types/core/index').VtsField|undefined} */
+  let targetField;
+
+  /** @param {string} rule */
+  const extractRuleFromStr = (rule) => {
+    if (rule.startsWith('field:')) {
+      targetField = VtsFormValidator.validateField(
+        this.form,
+        rule.replace('field:', '')
+      );
+      attachEvent('required', targetField, field, rules);
+      return targetField?.value;
+    }
+    return rule;
+  };
+
+  switch (typeof differentFrom) {
+    case 'function':
+      this._setCheckingRule(rules, field, label);
+      const required = await differentFrom(field, label);
+      matchValue = extractRuleFromStr(required);
+      break;
+
+    default:
+      matchValue = extractRuleFromStr(differentFrom);
+      break;
   }
-
-  attachEvent('differentFrom', targetField, field, rules);
-
-  // get value of target field
-  const matchValue = targetField.value;
 
   const messages =
     field.value !== matchValue
@@ -38,10 +51,14 @@ export default function differentFrom(rules, field, label) {
         this.messages?.differentFrom ||
         defaultMsg.differentFrom;
 
-  const targetLabel = getFieldLabel(rules.label, targetField, this.form);
+  const targetLabel = targetField
+    ? getFieldLabel(rules.label, targetField, this.form)
+    : '';
+
   return {
     differentFrom: messages
-      ?.replace(/{:targetValue}/g, matchValue || targetLabel)
+      .replace(/{:differentFrom}/g, matchValue)
+      .replace(/{:targetValue}/g, targetField?.value ?? '')
       .replace(/{:targetLabel}/g, targetLabel),
   };
 }

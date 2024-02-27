@@ -4,7 +4,7 @@ const defaultMsg = {
   before: 'Must be before {:targetValue}.',
   beforeOrEqual: 'Must be before or equal to {:targetValue}.',
   checking: 'Checking... {:label}',
-  differentFrom: 'Must be different from {:targetValue}.',
+  differentFrom: 'Must be different from {:differentFrom}.',
   endsWith: 'Must end with {:endsWith}.',
   equalTo: 'Must be equal to {:targetLabel}.',
   inArray: 'Must be one of the following: {:values}.',
