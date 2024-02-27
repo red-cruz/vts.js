@@ -48,7 +48,6 @@ export default async function (vtsInstance, rules, field, label, ruleKey) {
         case 'minLength':
         case 'size':
           ruleValue = Number(ruleValue);
-          console.log(ruleValue);
           break;
 
         case 'pattern':

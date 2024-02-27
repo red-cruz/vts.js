@@ -36,7 +36,6 @@ export default async function (field, rules, validMessage, renderClass) {
   const setErrMsg = (key) => {
     const rMessages = rules.messages ? rules.messages[key] : '';
     const tMessages = this.messages ? this.messages[key] : '';
-    /** @type {string} */
     const errMsg = rMessages || tMessages || defaultMsg[key];
 
     invalidMsgObj[key] = errMsg
@@ -47,13 +46,14 @@ export default async function (field, rules, validMessage, renderClass) {
 
     if (targetField) {
       const targetRules = this._getFieldRules(targetField);
-      invalidMsgObj[key] = errMsg
+      invalidMsgObj[key] = invalidMsgObj[key]
         .replace(/{:targetValue}/g, targetField.value)
         .replace(
           /{:targetLabel}/g,
           getFieldLabel(targetRules.label, targetField, this.form)
         );
     }
+
     isValid = false;
 
     return true;
@@ -72,6 +72,7 @@ export default async function (field, rules, validMessage, renderClass) {
       gField.required = true;
       gField.setCustomValidity(Object.keys(invalidMsgObj).join(','));
     });
+
     this.renderFeedback.call(lastField, invalidMsgObj, renderClass);
   };
 
@@ -113,5 +114,5 @@ export default async function (field, rules, validMessage, renderClass) {
     isValid = true;
   }
 
-  return isValid ? renderValidState() : renderInvalidState();
+  renderValidState();
 }
