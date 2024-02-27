@@ -1,4 +1,4 @@
-import type { KeysOfType } from '../../utils/types';
+import type { KeysOfType } from '../helpers';
 import { VtsField } from '../core';
 
 /**

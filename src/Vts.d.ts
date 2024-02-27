@@ -3,8 +3,10 @@ import VtsConfig from './types/config';
 import AjaxSettings from './types/config/ajaxSettings';
 import VtsResponseMessage from './types/config/responseMessage';
 import { ValidationMessages, Rules } from './types/config/rules';
-import { DeepPartial } from './utils/types';
+import { DeepPartial } from './types/helpers';
 import { VtsField } from './types/core';
+
+declare function ggTest(msg: string): string;
 
 /**
  * A JavaScript library that provides a simple and flexible way to handle

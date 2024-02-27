@@ -18,11 +18,13 @@ const ignoredTypes = ['submit', 'reset', 'button', 'hidden']
 
 const fieldQuery = '[name]:not([data-vts-ignored])' + ignoredTypes;
 
+function ggTest() {}
+
 /// <reference path="./Vts.d.ts" />
 export default class Vts {
   /**
    * @param {string | HTMLFormElement} form
-   * @param {import('./utils/types.js').DeepPartial<import('./types/config').default>} [config={}]
+   * @param {import('./types/helpers').DeepPartial<import('./types/config').default>} [config={}]
    */
   constructor(form, config = {}) {
     const formElement = (this.form = VtsFormValidator.validateForm(form));
@@ -69,7 +71,7 @@ export default class Vts {
     }
   }
 
-  /** @param {import('./utils/types.js').DeepPartial<import('./types/config').default>} config */
+  /** @param {import('./types/helpers').DeepPartial<import('./types/config').default>} config */
   static setDefaults(config) {
     deepMerge(vtsDefaults, config);
   }
