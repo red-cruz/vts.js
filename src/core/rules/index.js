@@ -1,7 +1,7 @@
 // @ts-check
 import defaultMsg from '../../defaults/defaultMsg';
 import { afterOrEqual, afterRule, before, beforeOrEqual } from './date';
-import differentFrom from './differentFrom';
+import notEqualTo from './notEqualTo';
 import endsWithRule from './endsWith';
 import equalToRule from './equalTo';
 import inArrayRule from './inArray';
@@ -19,7 +19,7 @@ const inputRules = [
   before,
   beforeOrEqual,
   endsWithRule,
-  differentFrom,
+  notEqualTo,
   equalToRule,
   inArrayRule,
   maxRule,
@@ -210,8 +210,8 @@ function parseRuleKey(key) {
     case 'beforeOrEqual'.toLocaleLowerCase():
       return 'beforeOrEqual';
 
-    case 'differentFrom'.toLocaleLowerCase():
-      return 'differentFrom';
+    case 'notEqualTo'.toLocaleLowerCase():
+      return 'notEqualTo';
 
     case 'endsWith'.toLocaleLowerCase():
       return 'endsWith';

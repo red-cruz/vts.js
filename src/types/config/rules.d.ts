@@ -47,7 +47,7 @@ type Rules = {
     /**
      * Field must be different from the specified value.
      */
-    differentFrom?: Rule;
+    notEqualTo?: Rule;
 
     /**
      * Field's value must end with the specified string or substring.

@@ -57,7 +57,7 @@ export default async function (rules, field, label) {
     : '';
 
   return {
-    differentFrom: messages
+    notEqualTo: messages
       .replace(/{:endsWith}/g, endsWith)
       .replace(/{:targetValue}/g, targetField?.value ?? '')
       .replace(/{:targetLabel}/g, targetLabel),
