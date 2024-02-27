@@ -7,6 +7,7 @@
  * @param {HTMLFormElement} form - The form element containing the field.
  */
 export default function (label, field, form) {
+  /** @type {HTMLLabelElement|null} */
   const labelElement = form.querySelector(`label[for="${field.id}"]`);
   const labelText = labelElement?.textContent;
   const placeholder = field.getAttribute('placeholder');
@@ -15,5 +16,5 @@ export default function (label, field, form) {
     labelText ||
     placeholder ||
     name.replace(/[`~!@#$%^&*()_|+\-=?;:'",.<>\{\}\[\]\\\/]/gi, ' ');
-  return label || defaultLabel;
+  return (label || defaultLabel).trim();
 }
