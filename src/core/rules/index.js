@@ -84,10 +84,8 @@ const vtsRules = {
 
                   case 'max':
                   case 'maxLength':
-                  case 'maxWords':
                   case 'min':
                   case 'minLength':
-                  case 'minWords':
                   case 'size':
                     rules[ruleKey] = Number(extractedRule);
                     break;
@@ -230,14 +228,8 @@ function parseRuleKey(key) {
     case 'maxLength'.toLocaleLowerCase():
       return 'maxLength';
 
-    case 'maxWords'.toLocaleLowerCase():
-      return 'maxWords';
-
     case 'minLength'.toLocaleLowerCase():
       return 'minLength';
-
-    case 'minWords'.toLocaleLowerCase():
-      return 'minWords';
 
     case 'notInArray'.toLocaleLowerCase():
       return 'notInArray';
