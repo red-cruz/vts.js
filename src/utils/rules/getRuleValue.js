@@ -11,13 +11,13 @@ import attachEvent from '../attachEvent';
  * @param {import('../../types/config/rules').RuleKeys} ruleKey
  */
 export default async function (vtsInstance, rules, field, label, ruleKey) {
-  /** @type {string|number|Date} */
+  /** @type {string|number|Date|RegExp} */
   let ruleValue;
 
   /** @type {import('../../types/core/index').VtsField|undefined} */
   let targetField;
 
-  /** @param {string|number|Date} rule */
+  /** @param {string|number|Date|RegExp} rule */
   const extractRule = (rule) => {
     ruleValue = rule;
     const isBound = typeof rule === 'string' && rule.startsWith('field:');
@@ -37,6 +37,8 @@ export default async function (vtsInstance, rules, field, label, ruleKey) {
         case 'afterOrEqual':
         case 'before':
         case 'beforeOrEqual':
+          if (ruleValue instanceof RegExp) break;
+
           const date = new Date(ruleValue);
           date.setHours(23, 59, 59, 999);
           ruleValue = date;
@@ -51,7 +53,12 @@ export default async function (vtsInstance, rules, field, label, ruleKey) {
           break;
 
         case 'pattern':
-          // ruleValue = new RegExp(rule);
+          try {
+            //@ts-ignore
+            ruleValue = new RegExp(ruleValue);
+          } catch (error) {
+            ruleValue = /.*/;
+          }
           break;
 
         case 'required':
@@ -87,52 +94,3 @@ export default async function (vtsInstance, rules, field, label, ruleKey) {
 
   return { ruleValue, targetField };
 }
-
-// /**
-//  * @param {import('../../types/core/index').default} vtsInstance
-//  * @param {import('../../types/config/rules').Rules[string]} rules
-//  * @param {import('../../types/core/index').VtsField} field
-//  * @param {string} label
-//  * @param {import('../../types/config/rules').RuleKeys} ruleKey
-//  */
-// export async function getStrRuleValue(
-//   vtsInstance,
-//   rules,
-//   field,
-//   label,
-//   ruleKey
-// ) {
-//   let ruleValue = '';
-
-//   /** @type {import('../../types/config/rules').Rule<string>} */
-//   let stringRule = ruleValue;
-
-//   /** @type {import('../../types/core/index').VtsField|undefined} */
-//   let targetField;
-
-//   const extractRule = (rule = '') => {
-//     if (rule.startsWith('field:')) {
-//       targetField = VtsFormValidator.validateField(
-//         vtsInstance.form,
-//         rule.replace('field:', '')
-//       );
-//       attachEvent(ruleKey, targetField, field, rules);
-//       return targetField?.value;
-//     }
-//     return rule;
-//   };
-
-//   switch (typeof stringRule) {
-//     case 'function':
-//       vtsInstance._setCheckingRule(rules, field, label);
-//       const required = await stringRule(field, label);
-//       ruleValue = extractRule(required);
-//       break;
-
-//     default:
-//       ruleValue = extractRule(stringRule);
-//       break;
-//   }
-
-//   return { ruleValue, targetField };
-// }

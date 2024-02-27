@@ -1,82 +1,41 @@
 // @ts-check
-
 import defaultMsg from '../../defaults/defaultMsg';
-import VtsFormValidator from '../../utils/VtsFormValidator';
-import attachEvent from '../../utils/attachEvent';
+import getFieldLabel from '../../utils/getFieldLabel';
+import getRuleValue from '../../utils/rules/getRuleValue';
 
 /**
  * @param {import('../../types/config/rules').Rules[string]} rules
  * @param {import('../../types/core/index').VtsField} field
  * @param {string} label
  * @this {import('../../types/core/index').default} Vts
- * @returns {Promise<import('../../types/core/validation').ValidationResults>}
  */
 export default async function (rules, field, label) {
-  const patternRule = rules.pattern;
+  if (!rules.pattern) return {};
 
-  if (!patternRule) return {};
+  /** @type {{ruleValue: RegExp, targetField: import('../../types/core/index').VtsField|undefined}} */ // @ts-ignore
+  const { ruleValue, targetField } = await getRuleValue(
+    this,
+    rules,
+    field,
+    label,
+    'pattern'
+  );
 
-  /** @type {RegExp} */
-  let patternRegExp;
+  const isValid = ruleValue.test(field.value);
 
-  const getErrMsg = (str = patternRegExp?.source) => {
-    const errMsg = {
-      pattern:
-        rules.messages?.pattern || this.messages?.pattern || defaultMsg.pattern,
-    };
+  if (isValid) return {};
 
-    errMsg.pattern = errMsg.pattern.replace(/{:pattern}/g, str);
+  const messages =
+    rules.messages?.pattern || this.messages?.pattern || defaultMsg.pattern;
 
-    return errMsg;
+  const targetLabel = targetField
+    ? getFieldLabel(rules.label, targetField, this.form)
+    : '';
+
+  return {
+    pattern: messages
+      .replace(/{:pattern}/g, ruleValue.source)
+      .replace(/{:targetValue}/g, targetField?.value ?? '')
+      .replace(/{:targetLabel}/g, targetLabel),
   };
-
-  switch (typeof patternRule) {
-    case 'function':
-      this._setCheckingRule(rules, field, label);
-      const pattern = await patternRule(field, label);
-
-      if (typeof pattern === 'string') {
-        let strSrc = pattern;
-        if (pattern.startsWith('field:')) {
-          const targetField = VtsFormValidator.validateField(
-            this.form,
-            pattern.replace('field:', '')
-          );
-          attachEvent('pattern', targetField, field, rules);
-          strSrc = targetField.value;
-        }
-        try {
-          patternRegExp = new RegExp(pattern);
-        } catch (error) {
-          return getErrMsg();
-        }
-      } else patternRegExp = pattern;
-      break;
-
-    case 'object':
-      if (patternRule instanceof RegExp) patternRegExp = patternRule;
-      else {
-        console.error('Pattern rule must be an instance of RegExp', field);
-        return getErrMsg();
-      }
-      break;
-
-    default:
-      let strSrc = patternRule;
-      if (patternRule.startsWith('field:')) {
-        const targetField = VtsFormValidator.validateField(
-          this.form,
-          patternRule.replace('field:', '')
-        );
-        attachEvent('pattern', targetField, field, rules);
-        strSrc = targetField.value;
-      }
-      try {
-        patternRegExp = new RegExp(patternRule);
-      } catch (error) {
-        return getErrMsg();
-      }
-  }
-
-  return patternRegExp.test(field.value) ? {} : getErrMsg();
 }
