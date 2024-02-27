@@ -19,6 +19,7 @@ export default async function (vtsInstance, rules, field, label, ruleKey) {
 
   /** @param {string|number|Date} rule */
   const extractRule = (rule) => {
+    ruleValue = rule;
     const isBound = typeof rule === 'string' && rule.startsWith('field:');
     // get value of bound field
     if (isBound) {
@@ -47,6 +48,7 @@ export default async function (vtsInstance, rules, field, label, ruleKey) {
         case 'minLength':
         case 'size':
           ruleValue = Number(ruleValue);
+          console.log(ruleValue);
           break;
 
         case 'pattern':
@@ -60,8 +62,6 @@ export default async function (vtsInstance, rules, field, label, ruleKey) {
         case 'inArray':
         case 'notInArray':
           break;
-        default:
-          ruleValue = isBound ? ruleValue : rule;
       }
     } catch (error) {
       console.error(error);

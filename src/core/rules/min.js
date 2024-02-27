@@ -1,79 +1,59 @@
 // @ts-check
 import defaultMsg from '../../defaults/defaultMsg';
 import getFieldLabel from '../../utils/getFieldLabel';
-import getMinOrMax from '../../utils/rules/getMinOrMax';
+import getRuleValue from '../../utils/rules/getRuleValue';
 
 /**
  * @param {import('../../types/config/rules').Rules[string]} rules
  * @param {import('../../types/core/index').VtsField} field
  * @param {string} label
  * @this {import('../../types/core/index').default} Vts
- * @returns {Promise<import('../../types/core/validation').ValidationResults>}
  */
 export default async function (rules, field, label) {
-  const minRule = rules.min;
+  if (!rules.min) return {};
 
-  if (!minRule) return {};
+  /** @type {{ruleValue: number, targetField: import('../../types/core/index').VtsField|undefined}} */ // @ts-ignore
+  const { ruleValue, targetField } = await getRuleValue(
+    this,
+    rules,
+    field,
+    label,
+    'min'
+  );
 
-  let min = 0;
-  let valid = false;
+  let isValid = false;
 
-  /** @type {import('../../types/core/index').VtsField|undefined} */
-  let targetField;
+  if (field instanceof HTMLInputElement) {
+    switch (field.type) {
+      case 'file':
+        const fileLen = field.files?.length;
+        isValid = fileLen === undefined ? false : fileLen >= ruleValue;
+        break;
 
-  const getErrMsg = (num = min) => {
-    const errMsg = {
-      min: rules.messages?.min || this.messages?.min || defaultMsg.min,
-    };
-
-    errMsg.min = errMsg.min
-      .replace(/{:min}/g, String(num))
-      .replace(/{:label}/g, label);
-
-    if (targetField) {
-      const targetRules = this._getFieldRules(targetField);
-      errMsg.min = errMsg.min
-        .replace(/{:targetValue}/g, targetField.value)
-        .replace(
-          /{:targetLabel}/g,
-          getFieldLabel(targetRules.label, targetField, this.form)
-        );
+      case 'number':
+        field.min = String(ruleValue);
+      default:
+        isValid = Number(field.value) >= ruleValue;
+        break;
     }
-
-    return errMsg;
-  };
-
-  try {
-    /** @type {{min: number, targetField?:import('../../types/core/index').VtsField}} */
-    const awaitedMin = await getMinOrMax.call(this, 'min', rules, field, label);
-    min = awaitedMin.min;
-    targetField = awaitedMin.targetField;
-
-    if (field instanceof HTMLInputElement) {
-      switch (field.type) {
-        case 'file':
-          const fileLen = field.files?.length;
-          valid = fileLen === undefined ? false : fileLen >= min;
-          break;
-
-        case 'checkbox':
-          return getErrMsg();
-
-        case 'number':
-          field.min = String(min);
-        default:
-          valid = Number(field.value) >= min;
-          break;
-      }
-    } else if (field instanceof HTMLSelectElement) {
-      valid = field.selectedOptions.length >= min;
-    } else {
-      valid = field.value.length >= min;
-    }
-  } catch (error) {
-    console.error(error);
-    return getErrMsg(0);
+  } else if (field instanceof HTMLSelectElement) {
+    isValid = field.selectedOptions.length >= ruleValue;
+  } else {
+    isValid = field.value.length >= ruleValue;
   }
 
-  return valid ? {} : getErrMsg();
+  if (isValid) return {};
+
+  const messages = rules.messages?.min || this.messages?.min || defaultMsg.min;
+
+  const targetLabel = targetField
+    ? getFieldLabel(rules.label, targetField, this.form)
+    : '';
+
+  return {
+    min: messages
+      .replace(/{:min}/g, String(ruleValue))
+      .replace(/{:targetValue}/g, targetField?.value ?? '')
+      .replace(/{:targetLabel}/g, targetLabel),
+  };
 }
