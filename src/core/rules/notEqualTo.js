@@ -1,7 +1,7 @@
 // @ts-check
 import defaultMsg from '../../defaults/defaultMsg';
 import getFieldLabel from '../../utils/getFieldLabel';
-import getStrRuleValue from '../../utils/rules/getStrRuleValue';
+import { getStrRuleValue } from '../../utils/rules/getRuleValue';
 
 /**
  * @param {import('../../types/config/rules').Rules[string]} rules
