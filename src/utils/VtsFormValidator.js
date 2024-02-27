@@ -46,7 +46,7 @@ export default class VtsFormValidator {
         field instanceof HTMLTextAreaElement
       )
     ) {
-      throw `${fieldName} is not a valid field.`;
+      throw `${fieldName} is not a valid vts field.`;
     }
 
     return field;

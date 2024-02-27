@@ -122,7 +122,7 @@ async function validateFields(rules, field, label) {
 
     invalidMessages = Object.assign(invalidMessages, validationMessage);
   }
-  console.log(invalidMessages);
+
   return invalidMessages;
 }
 

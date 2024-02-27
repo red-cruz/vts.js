@@ -1,4 +1,5 @@
 // @ts-check
+import startsWith from '../../core/rules/startsWith';
 import VtsFormValidator from '../VtsFormValidator';
 import attachEvent from '../attachEvent';
 
@@ -7,91 +8,131 @@ import attachEvent from '../attachEvent';
  * @param {import('../../types/config/rules').Rules[string]} rules
  * @param {import('../../types/core/index').VtsField} field
  * @param {string} label
- * @param {string} ruleKey
+ * @param {import('../../types/config/rules').RuleKeys} ruleKey
  */
-export async function getStrRuleValue(
-  vtsInstance,
-  rules,
-  field,
-  label,
-  ruleKey
-) {
-  let ruleValue = '';
-  /** @type {import('../../types/config/rules').Rule<string>} */
-  let stringRule = rules[ruleKey];
+export default async function (vtsInstance, rules, field, label, ruleKey) {
+  /** @type {string|number|Date} */
+  let ruleValue;
 
   /** @type {import('../../types/core/index').VtsField|undefined} */
   let targetField;
 
-  const extractRule = (rule = '') => {
-    if (rule.startsWith('field:')) {
+  /** @param {string|number|Date} rule */
+  const extractRule = (rule) => {
+    const isBound = typeof rule === 'string' && rule.startsWith('field:');
+    // get value of bound field
+    if (isBound) {
       targetField = VtsFormValidator.validateField(
         vtsInstance.form,
         rule.replace('field:', '')
       );
       attachEvent(ruleKey, targetField, field, rules);
-      return targetField?.value;
+      ruleValue = targetField.value;
     }
-    return rule;
+
+    try {
+      switch (ruleKey) {
+        case 'after':
+        case 'afterOrEqual':
+        case 'before':
+        case 'beforeOrEqual':
+          const date = new Date(ruleValue);
+          date.setHours(23, 59, 59, 999);
+          ruleValue = date;
+          break;
+
+        case 'max':
+        case 'maxLength':
+        case 'min':
+        case 'minLength':
+        case 'size':
+          ruleValue = Number(ruleValue);
+          break;
+
+        case 'pattern':
+          // ruleValue = new RegExp(rule);
+          break;
+
+        case 'required':
+          // ruleValue = value !== 'false' ?? field.required;
+          break;
+
+        case 'inArray':
+        case 'notInArray':
+          break;
+        default:
+          ruleValue = isBound ? ruleValue : rule;
+      }
+    } catch (error) {
+      console.error(error);
+    }
+
+    return ruleValue;
   };
 
-  switch (typeof stringRule) {
+  /** @type {import('../../types/config/rules').Rule<string|number|Date>} */
+  const rule = rules[ruleKey];
+  switch (typeof rule) {
     case 'function':
       vtsInstance._setCheckingRule(rules, field, label);
-      const required = await stringRule(field, label);
-      ruleValue = extractRule(required);
+      const _rule = await rule(field, label);
+      ruleValue = extractRule(_rule);
+      if (ruleKey === 'startsWith') console.log(ruleValue);
       break;
 
     default:
-      ruleValue = extractRule(stringRule);
+      ruleValue = extractRule(rule);
       break;
   }
 
   return { ruleValue, targetField };
 }
 
-/**
- * @param {import('../../types/core/index').default} vtsInstance
- * @param {import('../../types/config/rules').Rules[string]} rules
- * @param {import('../../types/core/index').VtsField} field
- * @param {string} label
- * @param {import('../../types/config/rules').Rule<string|number>} numberRule
- */
-export async function getNumberRuleValue(
-  vtsInstance,
-  rules,
-  field,
-  label,
-  numberRule
-) {
-  let ruleValue = 1;
+// /**
+//  * @param {import('../../types/core/index').default} vtsInstance
+//  * @param {import('../../types/config/rules').Rules[string]} rules
+//  * @param {import('../../types/core/index').VtsField} field
+//  * @param {string} label
+//  * @param {import('../../types/config/rules').RuleKeys} ruleKey
+//  */
+// export async function getStrRuleValue(
+//   vtsInstance,
+//   rules,
+//   field,
+//   label,
+//   ruleKey
+// ) {
+//   let ruleValue = '';
 
-  /** @type {import('../../types/core/index').VtsField|undefined} */
-  let targetField;
+//   /** @type {import('../../types/config/rules').Rule<string>} */
+//   let stringRule = ruleValue;
 
-  // const extractRule = (rule = '') => {
-  //   if (rule.startsWith('field:')) {
-  //     targetField = VtsFormValidator.validateField(
-  //       vtsInstance.form,
-  //       rule.replace('field:', '')
-  //     );
-  //     attachEvent('required', targetField, field, rules);
-  //     return targetField?.value;
-  //   }
-  //   return rule;
-  // };
+//   /** @type {import('../../types/core/index').VtsField|undefined} */
+//   let targetField;
 
-  switch (typeof numberRule) {
-    case 'function':
-      vtsInstance._setCheckingRule(rules, field, label);
-      const required = await stringRule(field, label);
-      ruleValue = extractRule(required);
-      break;
+//   const extractRule = (rule = '') => {
+//     if (rule.startsWith('field:')) {
+//       targetField = VtsFormValidator.validateField(
+//         vtsInstance.form,
+//         rule.replace('field:', '')
+//       );
+//       attachEvent(ruleKey, targetField, field, rules);
+//       return targetField?.value;
+//     }
+//     return rule;
+//   };
 
-    default:
-      ruleValue = extractRule(stringRule);
-      break;
-  }
+//   switch (typeof stringRule) {
+//     case 'function':
+//       vtsInstance._setCheckingRule(rules, field, label);
+//       const required = await stringRule(field, label);
+//       ruleValue = extractRule(required);
+//       break;
 
-  return { ruleValue, targetField };
-}
+//     default:
+//       ruleValue = extractRule(stringRule);
+//       break;
+//   }
+
+//   return { ruleValue, targetField };
+// }

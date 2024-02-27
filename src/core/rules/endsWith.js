@@ -1,7 +1,7 @@
 // @ts-check
 import defaultMsg from '../../defaults/defaultMsg';
 import getFieldLabel from '../../utils/getFieldLabel';
-import { getStrRuleValue } from '../../utils/rules/getRuleValue';
+import getRuleValue from '../../utils/rules/getRuleValue';
 
 /**
  * @param {import('../../types/config/rules').Rules[string]} rules
@@ -12,7 +12,8 @@ import { getStrRuleValue } from '../../utils/rules/getRuleValue';
 export default async function (rules, field, label) {
   if (!rules.endsWith) return {};
 
-  const { ruleValue, targetField } = await getStrRuleValue(
+  /** @type {{ruleValue: string, targetField: import('../../types/core/index').VtsField|undefined}} */ // @ts-ignore
+  const { ruleValue, targetField } = await getRuleValue(
     this,
     rules,
     field,
