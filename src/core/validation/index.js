@@ -102,17 +102,18 @@ async function validateFields(rules, field, label) {
     if (key) {
       const messages = validationMessage[key];
       const value = field.value;
+      const val = value || label;
+
       if (typeof messages === 'string') {
-        const val = value || label;
         validationMessage[key] = messages
-          .replace(/{:value}/g, value || label)
+          .replace(/{:value}/g, val)
           .replace(/{:label}/g, label)
           .replace(/{:length}/g, String(value.length));
       } else {
         // array
         for (const subKey in messages) {
           validationMessage[key][subKey] = messages[subKey]
-            .replace(/{:value}/g, value || label)
+            .replace(/{:value}/g, val)
             .replace(/{:label}/g, label)
             .replace(/{:length}/g, String(value.length));
         }
@@ -121,7 +122,7 @@ async function validateFields(rules, field, label) {
 
     invalidMessages = Object.assign(invalidMessages, validationMessage);
   }
-
+  console.log(invalidMessages);
   return invalidMessages;
 }
 

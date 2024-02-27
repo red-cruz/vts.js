@@ -1,8 +1,7 @@
 // @ts-check
 import defaultMsg from '../../defaults/defaultMsg';
-import VtsFormValidator from '../../utils/VtsFormValidator';
-import attachEvent from '../../utils/attachEvent';
 import getFieldLabel from '../../utils/getFieldLabel';
+import getStrRuleValue from '../../utils/rules/getStrRuleValue';
 
 /**
  * @param {import('../../types/config/rules').Rules[string]} rules
@@ -15,37 +14,15 @@ export default async function (rules, field, label) {
 
   if (!endsWithRule) return {};
 
-  let endsWith = '';
+  const { ruleValue, targetField } = await getStrRuleValue(
+    this,
+    rules,
+    field,
+    label,
+    endsWithRule
+  );
 
-  /** @type {import('../../types/core/index').VtsField|undefined} */
-  let targetField;
-
-  /** @param {string} rule */
-  const extractRuleFromStr = (rule) => {
-    if (rule.startsWith('field:')) {
-      targetField = VtsFormValidator.validateField(
-        this.form,
-        rule.replace('field:', '')
-      );
-      attachEvent('required', targetField, field, rules);
-      return targetField?.value;
-    }
-    return rule;
-  };
-
-  switch (typeof endsWithRule) {
-    case 'function':
-      this._setCheckingRule(rules, field, label);
-      const required = await endsWithRule(field, label);
-      endsWith = extractRuleFromStr(required);
-      break;
-
-    default:
-      endsWith = extractRuleFromStr(endsWithRule);
-      break;
-  }
-
-  const isValid = field.value.endsWith(endsWith);
+  const isValid = field.value.endsWith(ruleValue);
 
   if (isValid) return {};
 
@@ -57,8 +34,8 @@ export default async function (rules, field, label) {
     : '';
 
   return {
-    notEqualTo: messages
-      .replace(/{:endsWith}/g, endsWith)
+    endsWith: messages
+      .replace(/{:endsWith}/g, ruleValue)
       .replace(/{:targetValue}/g, targetField?.value ?? '')
       .replace(/{:targetLabel}/g, targetLabel),
   };
