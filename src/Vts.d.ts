@@ -6,8 +6,6 @@ import { ValidationMessages, Rules } from './types/config/rules';
 import { DeepPartial } from './types/helpers';
 import { VtsField } from './types/core';
 
-declare function ggTest(msg: string): string;
-
 /**
  * A JavaScript library that provides a simple and flexible way to handle
  * form validation before submitting. It allows you to customize the validation rules,

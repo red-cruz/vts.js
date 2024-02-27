@@ -18,8 +18,6 @@ const ignoredTypes = ['submit', 'reset', 'button', 'hidden']
 
 const fieldQuery = '[name]:not([data-vts-ignored])' + ignoredTypes;
 
-function ggTest() {}
-
 /// <reference path="./Vts.d.ts" />
 export default class Vts {
   /**
