@@ -10,16 +10,14 @@ import { getStrRuleValue } from '../../utils/rules/getRuleValue';
  * @this {import('../../types/core/index').default} Vts
  */
 export default async function (rules, field, label) {
-  const endsWithRule = rules.endsWith;
-
-  if (!endsWithRule) return {};
+  if (!rules.endsWith) return {};
 
   const { ruleValue, targetField } = await getStrRuleValue(
     this,
     rules,
     field,
     label,
-    endsWithRule
+    'endsWith'
   );
 
   const isValid = field.value.endsWith(ruleValue);

@@ -10,15 +10,14 @@ import { getStrRuleValue } from '../../utils/rules/getRuleValue';
  * @this {import('../../types/core/index').default} Vts
  */
 export default async function (rules, field, label) {
-  const equalTo = rules.equalTo;
-  if (!equalTo) return {};
+  if (!rules.equalTo) return {};
 
   const { ruleValue, targetField } = await getStrRuleValue(
     this,
     rules,
     field,
     label,
-    equalTo
+    'equalTo'
   );
 
   const isValid = field.value === ruleValue;
