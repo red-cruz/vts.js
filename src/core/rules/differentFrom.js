@@ -44,12 +44,14 @@ export default async function (rules, field, label) {
       break;
   }
 
+  const isValid = field.value !== matchValue;
+
+  if (isValid) return {};
+
   const messages =
-    field.value !== matchValue
-      ? ''
-      : rules.messages?.differentFrom ||
-        this.messages?.differentFrom ||
-        defaultMsg.differentFrom;
+    rules.messages?.differentFrom ||
+    this.messages?.differentFrom ||
+    defaultMsg.differentFrom;
 
   const targetLabel = targetField
     ? getFieldLabel(rules.label, targetField, this.form)
