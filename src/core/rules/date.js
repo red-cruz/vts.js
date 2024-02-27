@@ -10,17 +10,17 @@ export async function afterRule(rules, field, label) {
   return msg;
 }
 
-export async function afterOrEqual(rules, field, label) {
+export async function afterOrEqualRule(rules, field, label) {
   const msg = await dateRule.call(this, 'afterOrEqual', rules, field, label);
   return msg;
 }
 
-export async function before(rules, field, label) {
+export async function beforeRule(rules, field, label) {
   const msg = await dateRule.call(this, 'before', rules, field, label);
   return msg;
 }
 
-export async function beforeOrEqual(rules, field, label) {
+export async function beforeOrEqualRule(rules, field, label) {
   const msg = await dateRule.call(this, 'beforeOrEqual', rules, field, label);
   return msg;
 }

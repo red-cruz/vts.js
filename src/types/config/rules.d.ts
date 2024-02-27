@@ -45,11 +45,6 @@ type Rules = {
     beforeOrEqual?: Rule<string | Date>;
 
     /**
-     * Field must be different from the specified value.
-     */
-    notEqualTo?: Rule;
-
-    /**
      * Field's value must end with the specified string or substring.
      */
     endsWith?: Rule;
@@ -95,11 +90,6 @@ type Rules = {
     maxLength?: Rule<string | number>;
 
     /**
-     * Field's value must be at least the specified maximum number of words
-     */
-    maxWords?: Rule<string | number>;
-
-    /**
      * Field's value must be at least the specified minimum number.
      */
     min?: Rule<string | number>;
@@ -110,9 +100,9 @@ type Rules = {
     minLength?: Rule<string | number>;
 
     /**
-     * Field's value must be at least the specified minimum number of words
+     * Field must be different from the specified value.
      */
-    minWords?: Rule<string | number>;
+    notEqualTo?: Rule;
 
     /**
      * Field's value must not be found within the specified array.

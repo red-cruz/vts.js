@@ -1,6 +1,11 @@
 // @ts-check
 import defaultMsg from '../../defaults/defaultMsg';
-import { afterOrEqual, afterRule, before, beforeOrEqual } from './date';
+import {
+  afterOrEqualRule,
+  afterRule,
+  beforeRule,
+  beforeOrEqualRule,
+} from './date';
 import notEqualTo from './notEqualTo';
 import endsWithRule from './endsWith';
 import equalToRule from './equalTo';
@@ -15,9 +20,9 @@ import validatorRule from './validator';
 
 const inputRules = [
   afterRule,
-  afterOrEqual,
-  before,
-  beforeOrEqual,
+  afterOrEqualRule,
+  beforeRule,
+  beforeOrEqualRule,
   endsWithRule,
   notEqualTo,
   equalToRule,
