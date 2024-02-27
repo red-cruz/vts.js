@@ -15,21 +15,28 @@ export async function isFieldRequired(rules, field, label) {
 
   let isRequired = true;
 
+  /** @param {string|boolean} rule */
+  const extractRuleFromStr = (rule) => {
+    if (typeof rule === 'string') {
+      if (rule.startsWith('field:')) {
+        const targetField = VtsFormValidator.validateField(
+          this.form,
+          rule.replace('field:', '')
+        );
+        attachEvent('required', targetField, field, rules);
+        return !!targetField?.value;
+      }
+      return rule === 'true';
+    } else {
+      return rule;
+    }
+  };
+
   switch (typeof requiredRule) {
     case 'function':
       this._setCheckingRule(rules, field, label);
       const required = await requiredRule(field, label);
-      if (typeof required === 'string') {
-        if (required.startsWith('field:')) {
-          const targetField = VtsFormValidator.validateField(
-            this.form,
-            required.replace('field:', '')
-          );
-          attachEvent('required', targetField, field, rules);
-          return !!targetField?.value;
-        }
-        isRequired = required === 'true';
-      } else isRequired = required;
+      isRequired = extractRuleFromStr(required);
       break;
 
     case 'boolean':
@@ -37,16 +44,7 @@ export async function isFieldRequired(rules, field, label) {
       break;
 
     default:
-      if (requiredRule.startsWith('field:')) {
-        const targetField = VtsFormValidator.validateField(
-          this.form,
-          requiredRule.replace('field:', '')
-        );
-        attachEvent('required', targetField, field, rules);
-        isRequired = !!targetField?.value;
-      } else {
-        isRequired = requiredRule === 'true';
-      }
+      isRequired = extractRuleFromStr(requiredRule);
       break;
   }
 
