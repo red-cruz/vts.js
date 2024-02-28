@@ -66,9 +66,7 @@ export default async function (vtsInstance, rules, field, label, ruleKey) {
 
         case 'required':
           if (typeof ruleValue === 'string')
-            ruleValue = isBound
-              ? !!ruleValue
-              : ruleValue !== 'false' ?? field.required;
+            ruleValue = isBound ? !!ruleValue : ruleValue !== 'false';
           break;
 
         case 'inArray':

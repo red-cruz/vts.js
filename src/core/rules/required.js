@@ -1,5 +1,7 @@
 // @ts-check
 import defaultMsg from '../../defaults/defaultMsg';
+import VtsFormValidator from '../../utils/VtsFormValidator';
+import attachEvent from '../../utils/attachEvent';
 import getFieldLabel from '../../utils/getFieldLabel';
 import getRuleValue from '../../utils/rules/getRuleValue';
 
@@ -7,11 +9,10 @@ import getRuleValue from '../../utils/rules/getRuleValue';
  * @param {import('../../types/config/rules').Rules[string]} rules
  * @param {import('../../types/core/index').VtsField} field
  * @param {string} label
- * @param {null|boolean} [isValid=null]
  * @this {import('../../types/core/index').default} Vts
  * @returns {Promise<import('../../types/core/validation').ValidationResults>}
  */
-export async function requiredRule(rules, field, label, isValid = null) {
+export async function requiredRule(rules, field, label) {
   /** @type {{ruleValue: boolean, targetField?:import('../../types/core/index').VtsField}} */ //@ts-ignore
   const { ruleValue, targetField } = await getRuleValue(
     this,
@@ -21,7 +22,7 @@ export async function requiredRule(rules, field, label, isValid = null) {
     'required'
   );
 
-  const valid = isValid ?? (ruleValue && !!field.value);
+  const valid = ruleValue && !!field.value;
 
   field.required = ruleValue;
 

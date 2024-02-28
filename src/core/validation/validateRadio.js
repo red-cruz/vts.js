@@ -3,7 +3,7 @@
 import Vts from '../../Vts';
 import defaultMsg from '../../defaults/defaultMsg';
 import getFieldLabel from '../../utils/getFieldLabel';
-import { requiredRule } from '../rules/required';
+import getRuleValue from '../../utils/rules/getRuleValue';
 
 /**
  * @param {HTMLInputElement} field
@@ -18,38 +18,44 @@ export default async function (field, rules, validMessage, renderClass) {
   const lastField = group[group.length - 1];
   const isValid = group.some((field) => field.checkValidity());
 
-  /** @type {Promise<import('../../types/core/validation').ValidationResults>} */
-  const msg = await requiredRule.call(this, field, rules, label, isValid);
+  /** @type {{ruleValue: boolean, targetField?:import('../../types/core/index').VtsField}} */ //@ts-ignore
+  const { ruleValue, targetField } = await getRuleValue(
+    this,
+    rules,
+    lastField,
+    label,
+    'required'
+  );
 
-  console.log(msg);
+  const required = ruleValue;
 
-  this.renderFeedback.call(lastField, msg, renderClass);
-  // return
-  // /** @type {{ruleValue: boolean, targetField?:import('../../types/core/index').VtsField}} */ //@ts-ignore
-  // const { ruleValue, targetField } = await getRuleValue(
-  //   this,
-  //   rules,
-  //   field,
-  //   label,
-  //   'required'
-  // );
+  group.forEach((gField) => (gField.required = required));
 
-  // const required = ruleValue;
+  if (required && !isValid) {
+    const invalidMsg = {
+      required:
+        rules.messages?.required ||
+        this.messages?.required ||
+        defaultMsg.required,
+    };
 
-  // if (required && !isValid) {
-  //   const invalidMsg = {
-  //     required:
-  //       rules.messages?.required ||
-  //       this.messages?.required ||
-  //       defaultMsg.required,
-  //   };
+    invalidMsg.required = invalidMsg.required
+      .replace(/{:required}/g, String(required))
+      .replace(/{:value}/g, field.value)
+      .replace(/{:label}/g, label);
 
-  //   invalidMsg.required = invalidMsg.required
-  //     .replace(/{:required}/g, String(required))
-  //     .replace(/{:label}/g, label);
+    if (targetField) {
+      const targetLabel = getFieldLabel(rules.label, targetField, this.form);
+      invalidMsg.required = invalidMsg.required
+        .replace(/{:targetLabel}/g, targetLabel)
+        .replace(/{:targetValue}/g, targetField.value);
+    }
 
-  //   this.renderFeedback.call(lastField, invalidMsg, renderClass);
-  // } else {
-  //   this.renderFeedback.call(lastField, validMessage, renderClass);
-  // }
+    this.renderFeedback.call(field, invalidMsg, renderClass);
+  } else {
+    // remove checking state
+    group.forEach((gField) => gField.setCustomValidity(''));
+
+    this.renderFeedback.call(field, validMessage, renderClass);
+  }
 }
