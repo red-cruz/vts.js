@@ -31,14 +31,17 @@ export default async function (field, rules, validMessage, renderClass) {
   let isValid = true;
   let min = 0;
   let max = 0;
+  let size = 0;
 
-  /** @param {"required"|"max"|"min"} key */
+  /** @param {"required"|"max"|"min"|"size"} key */
   const setErrMsg = (key) => {
     const rMessages = rules.messages ? rules.messages[key] : '';
     const tMessages = this.messages ? this.messages[key] : '';
     const errMsg = rMessages || tMessages || defaultMsg[key];
 
     invalidMsgObj[key] = errMsg
+      .replace(/{:size}/g, String(size))
+      .replace(/{:length}/g, String(checkedItems))
       .replace(/{:min}/g, String(min))
       .replace(/{:max}/g, String(max))
       .replace(/{:required}/g, String(required))
@@ -87,31 +90,54 @@ export default async function (field, rules, validMessage, renderClass) {
     }
   }
 
-  // VALIDATE MIN RULE
-  /** @type {{ruleValue: number, targetField?:import('../../types/core/index').VtsField}} */ //@ts-ignore
-  const awaitedMin = await getRuleValue(this, rules, field, label, 'min');
-  min = awaitedMin.ruleValue;
+  if (rules.size) {
+    // VALIDATE SIZE RULE
+    /** @type {{ruleValue: number, targetField?:import('../../types/core/index').VtsField}} */ //@ts-ignore
+    const awaitedSize = await getRuleValue(this, rules, field, label, 'size');
+    size = awaitedSize.ruleValue;
+    console.log(size);
+    if (awaitedSize.targetField) targetField = awaitedSize.targetField;
 
-  if (awaitedMin.targetField) targetField = awaitedMin.targetField;
+    if (size && checkedItems !== size) {
+      setErrMsg('size');
+      return renderInvalidState();
+    } else {
+      isValid = true;
+    }
 
-  if (min && checkedItems < min) {
-    setErrMsg('min');
-    return renderInvalidState();
-  } else {
-    isValid = true;
+    // ignore min and max if size rule exists
+    return renderValidState();
   }
 
-  /** @type {{ruleValue: number, targetField?:import('../../types/core/index').VtsField}} */ //@ts-ignore
-  const awaitedMax = await getRuleValue(this, rules, field, label, 'max');
-  max = awaitedMax.ruleValue;
+  if (rules.min) {
+    // VALIDATE MIN RULE
+    /** @type {{ruleValue: number, targetField?:import('../../types/core/index').VtsField}} */ //@ts-ignore
+    const awaitedMin = await getRuleValue(this, rules, field, label, 'min');
+    min = awaitedMin.ruleValue;
 
-  if (awaitedMax.targetField) targetField = awaitedMax.targetField;
+    if (awaitedMin.targetField) targetField = awaitedMin.targetField;
 
-  if (max && checkedItems > max) {
-    setErrMsg('max');
-    return renderInvalidState();
-  } else {
-    isValid = true;
+    if (min && checkedItems < min) {
+      setErrMsg('min');
+      return renderInvalidState();
+    } else {
+      isValid = true;
+    }
+  }
+
+  if (rules.max) {
+    /** @type {{ruleValue: number, targetField?:import('../../types/core/index').VtsField}} */ //@ts-ignore
+    const awaitedMax = await getRuleValue(this, rules, field, label, 'max');
+    max = awaitedMax.ruleValue;
+
+    if (awaitedMax.targetField) targetField = awaitedMax.targetField;
+
+    if (max && checkedItems > max) {
+      setErrMsg('max');
+      return renderInvalidState();
+    } else {
+      isValid = true;
+    }
   }
 
   renderValidState();
