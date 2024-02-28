@@ -32,6 +32,8 @@ export default async function (rules, field, label) {
 
       case 'number':
         field.max = String(ruleValue);
+        break;
+
       default:
         isValid = Number(field.value) <= ruleValue;
         break;

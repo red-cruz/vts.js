@@ -17,6 +17,7 @@ import patternRule from './pattern';
 import sizeRule from './size';
 import startsWithRule from './startsWith';
 import validatorRule from './validator';
+import { extractRule } from '../../utils/rules/getRuleValue';
 
 const inputRules = [
   afterRule,
@@ -67,63 +68,17 @@ const vtsRules = {
             const ruleKey = parseRuleKey(rKey);
 
             // parse
-            const extractedRule = extractRule(value);
+            let extractedRule = extractRuleFromDataset(value);
+
+            if (typeof extractedRule === 'string' && ruleKey === 'required') {
+              // set default value for required rule
+              extractedRule = String(value !== 'false' ?? field.required);
+            }
+
             if (extractedRule instanceof Function) {
               rules[ruleKey] = extractedRule;
-            } else if (typeof extractedRule === 'string') {
-              if (extractedRule.startsWith('field:')) {
-                // let core rules get the value of the matching field
-                rules[ruleKey] = extractedRule;
-              } else {
-                // parse rules based on rule
-                switch (ruleKey) {
-                  case 'after':
-                  case 'afterOrEqual':
-                  case 'before':
-                  case 'beforeOrEqual':
-                    const date = new Date(extractedRule);
-                    date.setHours(23, 59, 59, 999);
-                    rules[ruleKey] = date;
-                    break;
-
-                  case 'max':
-                  case 'maxLength':
-                  case 'min':
-                  case 'minLength':
-                  case 'size':
-                    rules[ruleKey] = Number(extractedRule);
-                    break;
-
-                  case 'pattern':
-                    rules[ruleKey] = new RegExp(extractedRule);
-                    break;
-
-                  case 'required':
-                    rules[ruleKey] = value !== 'false' ?? field.required;
-                    break;
-
-                  case 'inArray':
-                  case 'notInArray':
-                    try {
-                      const obj = JSON.parse(extractedRule);
-                      rules[ruleKey] = Object.values(obj);
-                    } catch (error) {
-                      rules[ruleKey] = extractedRule
-                        .split(',')
-                        .map((val) => val.trim());
-                    }
-                    break;
-
-                  default:
-                    rules[ruleKey] = extractedRule;
-                    break;
-                }
-              }
             } else {
-              // allow data attribute usage without value
-              if (ruleKey === 'required') {
-                rules[ruleKey] = value !== 'false' ?? field.required;
-              }
+              rules[ruleKey] = extractRule(extractedRule, ruleKey);
             }
 
             return rules;
@@ -179,36 +134,57 @@ const vtsRules = {
 
   _setFieldAttributes() {
     this.fields.forEach((field) => {
-      const origRules = this._getFieldRules(field);
-      const rules = JSON.parse(JSON.stringify(origRules));
+      const rules = this._getFieldRules(field);
 
-      Object.keys(rules).forEach((key) => {
-        const rule = rules[key];
-        if (typeof rule === 'function') delete rules[key];
-        if (typeof rule === 'string' && rule.startsWith('field:'))
-          delete rules[key];
-      });
+      for (const ruleKey in rules) {
+        /** @type {import('../../types/config/rules').Rule<string|number|RegExp|Date|Boolean>} */
+        const rule = rules[ruleKey];
 
-      field.name === 'title' && console.log('off', rules);
-      return;
+        if (typeof rule === 'function') continue;
+        if (typeof rule === 'string' && rule.startsWith('field:')) continue;
+        field.name === 'inspection_date' && console.log(rules);
 
-      for (const rule in rules) {
-        const _rule = rules[rule];
-        switch (rule) {
+        switch (ruleKey) {
           case 'after':
           case 'afterOrEqual':
+            if (!(field instanceof HTMLInputElement)) break;
+            if (field.type !== 'date') break;
+            if (rule instanceof Date) {
+              field.min = rule.toISOString().split('T')[0];
+            }
+            break;
           case 'before':
           case 'beforeOrEqual':
+            if (!(field instanceof HTMLInputElement)) break;
+            if (field.type !== 'date') break;
+            if (rule instanceof Date) {
+              field.max = rule.toISOString().split('T')[0];
+            }
             break;
           case 'max':
-          case 'min':
+            if (!(field instanceof HTMLInputElement)) break;
+            if (field.type !== 'number') break;
+            if (typeof rule === 'number') {
+              field.max = String(rule);
+            }
             break;
-          case 'maxLength':
-          case 'minLength':
+          case 'min':
+            if (!(field instanceof HTMLInputElement)) break;
+            if (field.type !== 'number') break;
+            if (typeof rule === 'number') {
+              field.min = String(rule);
+            }
             break;
           case 'size':
+            if (!(field instanceof HTMLInputElement)) break;
+            if (field.type !== 'number') break;
+            if (typeof rule === 'number') {
+              field.min = String(rule);
+              field.max = String(rule);
+            }
             break;
           case 'required':
+            if (typeof rule === 'boolean') field.required = rule;
             break;
         }
       }
@@ -233,14 +209,13 @@ export default vtsRules;
 export { inputRules };
 
 /**
- * @param {string} [rule]
- * @returns {string|undefined|import('../../types/config/rules').RuleFunction<any>}
+ * @param {string} rule
+ * @returns {string|import('../../types/config/rules').RuleFunction<any>}
  */
-function extractRule(rule) {
-  if (rule)
-    return rule.startsWith('window.')
-      ? window[rule.replace('window.', '')]
-      : rule;
+function extractRuleFromDataset(rule = '') {
+  return rule.startsWith('window.')
+    ? window[rule.replace('window.', '')]
+    : rule;
 }
 
 /**

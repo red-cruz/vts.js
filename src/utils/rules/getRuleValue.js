@@ -10,13 +10,13 @@ import attachEvent from '../attachEvent';
  * @param {import('../../types/config/rules').RuleKey} ruleKey
  */
 export default async function (vtsInstance, rules, field, label, ruleKey) {
-  /** @type {string|number|Date|RegExp|boolean} */
+  /** @type {string|number|Date|RegExp|boolean|string[]} */
   let ruleValue;
 
   /** @type {import('../../types/core/index').VtsField|undefined} */
   let targetField;
 
-  /** @param {string|number|Date|RegExp|boolean} rule */
+  /** @param {string|number|Date|RegExp|boolean|string[]} rule */
   const extractWithBoundFn = (rule) => {
     ruleValue = rule;
     const isBound = typeof rule === 'string' && rule.startsWith('field:');
@@ -33,7 +33,7 @@ export default async function (vtsInstance, rules, field, label, ruleKey) {
     return extractRule(ruleValue, ruleKey);
   };
 
-  /** @type {import('../../types/config/rules').Rule<string|number|Date>} */
+  /** @type {import('../../types/config/rules').Rule<string|number|Date|string[]>} */
   const rule = rules[ruleKey];
 
   switch (typeof rule) {
@@ -55,7 +55,7 @@ export default async function (vtsInstance, rules, field, label, ruleKey) {
 /**
  * extract rules except for functions and bound fields
  *
- * @param {string|number|Date|RegExp|boolean} rule
+ * @param {string|number|Date|RegExp|boolean|string[]} rule
  * @param {import('../../types/config/rules').RuleKey} ruleKey
  */
 export function extractRule(rule, ruleKey) {
@@ -68,7 +68,11 @@ export function extractRule(rule, ruleKey) {
       case 'afterOrEqual':
       case 'before':
       case 'beforeOrEqual':
-        if (ruleValue instanceof RegExp || typeof ruleValue === 'boolean')
+        if (
+          ruleValue instanceof RegExp ||
+          ruleValue instanceof Array ||
+          typeof ruleValue === 'boolean'
+        )
           break;
 
         const date =
@@ -104,6 +108,16 @@ export function extractRule(rule, ruleKey) {
 
       case 'inArray':
       case 'notInArray':
+        if (typeof ruleValue !== 'string') break;
+
+        try {
+          const obj = JSON.parse(ruleValue);
+          ruleValue = Object.values(obj);
+        } catch (error) {
+          if (typeof ruleValue === 'string')
+            ruleValue = ruleValue.split(',').map((val) => val.trim());
+        }
+
         break;
     }
   } catch (error) {

@@ -32,6 +32,7 @@ export default async function (rules, field, label) {
 
       case 'number':
         field.min = String(ruleValue);
+        break;
       default:
         isValid = Number(field.value) >= ruleValue;
         break;

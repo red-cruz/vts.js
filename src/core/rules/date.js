@@ -1,7 +1,5 @@
 // @ts-check
 import defaultMsg from '../../defaults/defaultMsg';
-import VtsFormValidator from '../../utils/VtsFormValidator';
-import attachEvent from '../../utils/attachEvent';
 import getFieldLabel from '../../utils/getFieldLabel';
 import getRuleValue from '../../utils/rules/getRuleValue';
 import applyDateModifier from '../../utils/validation/applyDateModifier';
@@ -142,6 +140,10 @@ export function replaceDateMsg(
     : this.messages[ruleName];
 
   const messages = (ruleMsg || defaultMsg[ruleName])
+    .replace(/{:after}/g, dateStr)
+    .replace(/{:afterOrEqual}/g, dateStr)
+    .replace(/{:before}/g, dateStr)
+    .replace(/{:beforeOrEqual}/g, dateStr)
     .replace(/{:targetValue}/g, dateStr)
     .replace(/{:targetLabel}/g, targetLabel)
     .replace(/{:offset}/g, dateModifier);

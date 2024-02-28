@@ -1,8 +1,8 @@
 const defaultMsg = {
-  after: 'Must be after the {:targetLabel}.',
-  afterOrEqual: 'Must be after or equal to {:targetLabel}.',
-  before: 'Must be before {:targetValue}.',
-  beforeOrEqual: 'Must be before or equal to {:targetValue}.',
+  after: 'Must be after {:after}.',
+  afterOrEqual: 'Must be after or equal to {:afterOrEqual}.',
+  before: 'Must be before {:before}.',
+  beforeOrEqual: 'Must be before or equal to {:beforeOrEqual}.',
   checking: 'Checking... {:label}',
   endsWith: 'Must end with {:endsWith}.',
   equalTo: 'Must be equal to {:equalTo}.',
