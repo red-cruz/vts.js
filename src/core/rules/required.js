@@ -1,75 +1,43 @@
 // @ts-check
 import defaultMsg from '../../defaults/defaultMsg';
-import VtsFormValidator from '../../utils/VtsFormValidator';
-import attachEvent from '../../utils/attachEvent';
-
-/**
- * @this {import('../../types/core/index').default}
- * @param {import('../../types/config/rules').Rules[string]} rules
- * @param {import('../../types/core/index').VtsField} field
- * @param {string} label
- */
-export async function isFieldRequired(rules, field, label) {
-  /** @type {import('../../types/config/rules').Rule<string | boolean> } */ //@ts-ignore
-  const requiredRule = rules.required;
-
-  let isRequired = true;
-
-  /** @param {string|boolean} rule */
-  const extractRuleFromStr = (rule) => {
-    if (typeof rule === 'string') {
-      if (rule.startsWith('field:')) {
-        const targetField = VtsFormValidator.validateField(
-          this.form,
-          rule.replace('field:', '')
-        );
-        attachEvent('required', targetField, field, rules);
-        return !!targetField?.value;
-      }
-      return rule === 'true';
-    } else {
-      return rule;
-    }
-  };
-
-  switch (typeof requiredRule) {
-    case 'function':
-      this._setCheckingRule(rules, field, label);
-      const required = await requiredRule(field, label);
-      isRequired = extractRuleFromStr(required);
-      break;
-
-    case 'boolean':
-      isRequired = requiredRule;
-      break;
-
-    default:
-      isRequired = extractRuleFromStr(requiredRule);
-      break;
-  }
-
-  field.required = isRequired;
-
-  return isRequired;
-}
+import getFieldLabel from '../../utils/getFieldLabel';
+import getRuleValue from '../../utils/rules/getRuleValue';
 
 /**
  * @param {import('../../types/config/rules').Rules[string]} rules
  * @param {import('../../types/core/index').VtsField} field
  * @param {string} label
+ * @param {null|boolean} [isValid=null]
  * @this {import('../../types/core/index').default} Vts
  * @returns {Promise<import('../../types/core/validation').ValidationResults>}
  */
-export async function requiredRule(rules, field, label) {
-  const ruleMsg =
+export async function requiredRule(rules, field, label, isValid = null) {
+  /** @type {{ruleValue: boolean, targetField?:import('../../types/core/index').VtsField}} */ //@ts-ignore
+  const { ruleValue, targetField } = await getRuleValue(
+    this,
+    rules,
+    field,
+    label,
+    'required'
+  );
+
+  const valid = isValid ?? (ruleValue && !!field.value);
+
+  field.required = ruleValue;
+
+  if (!ruleValue || valid) return {};
+
+  const messages =
     rules.messages?.required || this.messages?.required || defaultMsg.required;
-  const required = await isFieldRequired.call(this, rules, field, label);
 
-  if (required && !field.value) {
-    return {
-      required: ruleMsg,
-    };
-  }
+  const targetLabel = targetField
+    ? getFieldLabel(rules.label, targetField, this.form)
+    : '';
 
-  return {};
+  return {
+    required: messages
+      .replace(/{:required}/g, String(ruleValue))
+      .replace(/{:targetValue}/g, targetField?.value ?? '')
+      .replace(/{:targetLabel}/g, targetLabel),
+  };
 }

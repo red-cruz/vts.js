@@ -3,7 +3,6 @@ import Vts from '../../Vts';
 import defaultMsg from '../../defaults/defaultMsg';
 import getFieldLabel from '../../utils/getFieldLabel';
 import getRuleValue from '../../utils/rules/getRuleValue';
-import { isFieldRequired } from '../rules/required';
 
 /**
  * @param {HTMLInputElement} field
@@ -61,7 +60,7 @@ export default async function (field, rules, validMessage, renderClass) {
 
     return false;
   };
-  console.log(awaitedReq);
+
   const renderValidState = () => {
     group.forEach((gField) => {
       gField.required = false;
@@ -118,6 +117,7 @@ export default async function (field, rules, validMessage, renderClass) {
       }
     }
 
+    // VALIDATE MAX RULE
     if (rules.max) {
       /** @type {{ruleValue: number, targetField?:import('../../types/core/index').VtsField}} */ //@ts-ignore
       const awaitedMax = await getRuleValue(this, rules, field, label, 'max');
@@ -132,5 +132,5 @@ export default async function (field, rules, validMessage, renderClass) {
     }
   }
 
-  return isValid ? renderValidState() : renderInvalidState();
+  isValid ? renderValidState() : renderInvalidState();
 }
