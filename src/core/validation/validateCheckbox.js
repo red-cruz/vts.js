@@ -23,15 +23,17 @@ export default async function (field, rules, validMessage, renderClass) {
 
   const invalidMsgObj = {};
 
-  /** @type {boolean} */
-  const required = await isFieldRequired.call(this, rules, field, label);
-
-  /** @type {import('../../types/core').VtsField} */
+  /** @type {import('../../types/core').VtsField|undefined} */
   let targetField;
   let isValid = true;
   let min = 0;
   let max = 0;
   let size = 0;
+
+  /** @type {{ruleValue: boolean, targetField?:import('../../types/core/index').VtsField}} */ //@ts-ignore
+  const awaitedReq = await getRuleValue(this, rules, field, label, 'required');
+  const required = awaitedReq.ruleValue;
+  targetField = awaitedReq.targetField;
 
   /** @param {"required"|"max"|"min"|"size"} key */
   const setErrMsg = (key) => {
@@ -59,7 +61,7 @@ export default async function (field, rules, validMessage, renderClass) {
 
     return false;
   };
-
+  console.log(awaitedReq);
   const renderValidState = () => {
     group.forEach((gField) => {
       gField.required = false;
@@ -94,8 +96,7 @@ export default async function (field, rules, validMessage, renderClass) {
     /** @type {{ruleValue: number, targetField?:import('../../types/core/index').VtsField}} */ //@ts-ignore
     const awaitedSize = await getRuleValue(this, rules, field, label, 'size');
     size = awaitedSize.ruleValue;
-
-    if (awaitedSize.targetField) targetField = awaitedSize.targetField;
+    targetField = awaitedSize.targetField;
 
     if (size && checkedItems !== size) {
       isValid = setErrMsg('size');
@@ -108,8 +109,7 @@ export default async function (field, rules, validMessage, renderClass) {
       /** @type {{ruleValue: number, targetField?:import('../../types/core/index').VtsField}} */ //@ts-ignore
       const awaitedMin = await getRuleValue(this, rules, field, label, 'min');
       min = awaitedMin.ruleValue;
-
-      if (awaitedMin.targetField) targetField = awaitedMin.targetField;
+      targetField = awaitedMin.targetField;
 
       if (min && checkedItems < min) {
         isValid = setErrMsg('min');
@@ -122,8 +122,7 @@ export default async function (field, rules, validMessage, renderClass) {
       /** @type {{ruleValue: number, targetField?:import('../../types/core/index').VtsField}} */ //@ts-ignore
       const awaitedMax = await getRuleValue(this, rules, field, label, 'max');
       max = awaitedMax.ruleValue;
-
-      if (awaitedMax.targetField) targetField = awaitedMax.targetField;
+      targetField = awaitedMax.targetField;
 
       if (max && checkedItems > max) {
         isValid = setErrMsg('max');

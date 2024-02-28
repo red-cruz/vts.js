@@ -1,5 +1,4 @@
 // @ts-check
-import startsWith from '../../core/rules/startsWith';
 import VtsFormValidator from '../VtsFormValidator';
 import attachEvent from '../attachEvent';
 
@@ -11,13 +10,13 @@ import attachEvent from '../attachEvent';
  * @param {import('../../types/config/rules').RuleKeys} ruleKey
  */
 export default async function (vtsInstance, rules, field, label, ruleKey) {
-  /** @type {string|number|Date|RegExp} */
+  /** @type {string|number|Date|RegExp|boolean} */
   let ruleValue;
 
   /** @type {import('../../types/core/index').VtsField|undefined} */
   let targetField;
 
-  /** @param {string|number|Date|RegExp} rule */
+  /** @param {string|number|Date|RegExp|boolean} rule */
   const extractRule = (rule) => {
     ruleValue = rule;
     const isBound = typeof rule === 'string' && rule.startsWith('field:');
@@ -37,9 +36,11 @@ export default async function (vtsInstance, rules, field, label, ruleKey) {
         case 'afterOrEqual':
         case 'before':
         case 'beforeOrEqual':
-          if (ruleValue instanceof RegExp) break;
+          if (ruleValue instanceof RegExp || typeof ruleValue === 'boolean')
+            break;
 
-          const date = new Date(ruleValue);
+          const date =
+            ruleValue instanceof Date ? ruleValue : new Date(ruleValue);
           date.setHours(23, 59, 59, 999);
           ruleValue = date;
           break;
@@ -53,8 +54,10 @@ export default async function (vtsInstance, rules, field, label, ruleKey) {
           break;
 
         case 'pattern':
+          if (!(ruleValue instanceof RegExp) || typeof ruleValue !== 'string')
+            break;
+
           try {
-            //@ts-ignore
             ruleValue = new RegExp(ruleValue);
           } catch (error) {
             ruleValue = /.*/;
@@ -62,7 +65,10 @@ export default async function (vtsInstance, rules, field, label, ruleKey) {
           break;
 
         case 'required':
-          // ruleValue = value !== 'false' ?? field.required;
+          if (typeof ruleValue === 'string')
+            ruleValue = isBound
+              ? !!ruleValue
+              : ruleValue !== 'false' ?? field.required;
           break;
 
         case 'inArray':
