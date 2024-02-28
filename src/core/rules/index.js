@@ -50,13 +50,15 @@ const vtsRules = {
     /** @type {import('../../types/config/rules').Rules[string]} */
     const rules = this.rules;
 
+    let rulesFromDataset;
+
     // map field constraints
     this.fields.forEach((field) => {
       const ruleName = field.dataset.vtsRule || field.name;
       const definedRules = rules[ruleName] || {};
 
       // get default rules from field dataset
-      let rulesFromDataset = Object.entries(field.dataset)
+      rulesFromDataset = Object.entries(field.dataset)
         .filter(([key]) => key.startsWith('vtsRule') && key !== 'vtsRule')
         .reduce(
           /** @param {import('../../types/config/rules').Rules[string]} rules */
@@ -166,13 +168,51 @@ const vtsRules = {
 
       // set the rule
       rulesMap.set(ruleName, mergedRuleObj);
-
-      function mergeToDatasetRules(obj) {
-        rulesFromDataset = Object.assign(obj, rulesFromDataset);
-      }
     });
 
     this.rules = rulesMap;
+
+    function mergeToDatasetRules(obj) {
+      rulesFromDataset = Object.assign(obj, rulesFromDataset);
+    }
+  },
+
+  _setFieldAttributes() {
+    this.fields.forEach((field) => {
+      const origRules = this._getFieldRules(field);
+      const rules = JSON.parse(JSON.stringify(origRules));
+
+      Object.keys(rules).forEach((key) => {
+        const rule = rules[key];
+        if (typeof rule === 'function') delete rules[key];
+        if (typeof rule === 'string' && rule.startsWith('field:'))
+          delete rules[key];
+      });
+
+      field.name === 'title' && console.log('off', rules);
+      return;
+
+      for (const rule in rules) {
+        const _rule = rules[rule];
+        switch (rule) {
+          case 'after':
+          case 'afterOrEqual':
+          case 'before':
+          case 'beforeOrEqual':
+            break;
+          case 'max':
+          case 'min':
+            break;
+          case 'maxLength':
+          case 'minLength':
+            break;
+          case 'size':
+            break;
+          case 'required':
+            break;
+        }
+      }
+    });
   },
 
   _setCheckingRule(rules, field, label) {
@@ -205,7 +245,7 @@ function extractRule(rule) {
 
 /**
  * @param {string} key
- * @returns {import('../../types/config/rules').RuleKeys}
+ * @returns {import('../../types/config/rules').RuleKey}
  */
 function parseRuleKey(key) {
   switch (key.toLocaleLowerCase()) {

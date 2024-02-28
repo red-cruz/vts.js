@@ -7,7 +7,7 @@ import attachEvent from '../attachEvent';
  * @param {import('../../types/config/rules').Rules[string]} rules
  * @param {import('../../types/core/index').VtsField} field
  * @param {string} label
- * @param {import('../../types/config/rules').RuleKeys} ruleKey
+ * @param {import('../../types/config/rules').RuleKey} ruleKey
  */
 export default async function (vtsInstance, rules, field, label, ruleKey) {
   /** @type {string|number|Date|RegExp|boolean} */
@@ -17,7 +17,7 @@ export default async function (vtsInstance, rules, field, label, ruleKey) {
   let targetField;
 
   /** @param {string|number|Date|RegExp|boolean} rule */
-  const extractRule = (rule) => {
+  const _extractRule = (rule) => {
     ruleValue = rule;
     const isBound = typeof rule === 'string' && rule.startsWith('field:');
     // get value of bound field
@@ -30,56 +30,7 @@ export default async function (vtsInstance, rules, field, label, ruleKey) {
       ruleValue = targetField.value;
     }
 
-    try {
-      switch (ruleKey) {
-        case 'after':
-        case 'afterOrEqual':
-        case 'before':
-        case 'beforeOrEqual':
-          if (ruleValue instanceof RegExp || typeof ruleValue === 'boolean')
-            break;
-
-          const date =
-            ruleValue instanceof Date ? ruleValue : new Date(ruleValue);
-          date.setHours(23, 59, 59, 999);
-
-          console.log(date);
-          console.log(ruleValue);
-          console.log(ruleValue instanceof Date);
-          ruleValue = date;
-          break;
-
-        case 'max':
-        case 'maxLength':
-        case 'min':
-        case 'minLength':
-        case 'size':
-          ruleValue = Number(ruleValue);
-          break;
-
-        case 'pattern':
-          if (!(ruleValue instanceof RegExp) || typeof ruleValue !== 'string')
-            break;
-
-          try {
-            ruleValue = new RegExp(ruleValue);
-          } catch (error) {
-            ruleValue = /.*/;
-          }
-          break;
-
-        case 'required':
-          if (typeof ruleValue === 'string')
-            ruleValue = isBound ? !!ruleValue : ruleValue !== 'false';
-          break;
-
-        case 'inArray':
-        case 'notInArray':
-          break;
-      }
-    } catch (error) {
-      console.error(error);
-    }
+    ruleValue = extractRule(ruleValue, ruleKey);
 
     return ruleValue;
   };
@@ -91,14 +42,75 @@ export default async function (vtsInstance, rules, field, label, ruleKey) {
     case 'function':
       vtsInstance._setCheckingRule(rules, field, label);
       const _rule = await rule(field, label);
-      ruleValue = extractRule(_rule);
+      ruleValue = _extractRule(_rule);
 
       break;
 
     default:
-      ruleValue = extractRule(rule);
+      ruleValue = _extractRule(rule);
       break;
   }
 
   return { ruleValue, targetField };
+}
+
+/**
+ * extract rules except for functions and bound fields
+ *
+ * @param {string|number|Date|RegExp|boolean} rule
+ * @param {import('../../types/config/rules').RuleKey} ruleKey
+ */
+export function extractRule(rule, ruleKey) {
+  let ruleValue = rule;
+  const isBound = typeof rule === 'string' && rule.startsWith('field:');
+
+  try {
+    switch (ruleKey) {
+      case 'after':
+      case 'afterOrEqual':
+      case 'before':
+      case 'beforeOrEqual':
+        if (ruleValue instanceof RegExp || typeof ruleValue === 'boolean')
+          break;
+
+        const date =
+          ruleValue instanceof Date ? ruleValue : new Date(ruleValue);
+        date.setHours(23, 59, 59, 999);
+
+        ruleValue = date;
+        break;
+
+      case 'max':
+      case 'maxLength':
+      case 'min':
+      case 'minLength':
+      case 'size':
+        ruleValue = Number(ruleValue);
+        break;
+
+      case 'pattern':
+        if (!(ruleValue instanceof RegExp) || typeof ruleValue !== 'string')
+          break;
+
+        try {
+          ruleValue = new RegExp(ruleValue);
+        } catch (error) {
+          ruleValue = /.*/;
+        }
+        break;
+
+      case 'required':
+        if (typeof ruleValue === 'string')
+          ruleValue = isBound ? !!ruleValue : ruleValue !== 'false';
+        break;
+
+      case 'inArray':
+      case 'notInArray':
+        break;
+    }
+  } catch (error) {
+    console.error(error);
+  }
+
+  return ruleValue;
 }

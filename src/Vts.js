@@ -47,6 +47,7 @@ export default class Vts {
     Object.assign(this, vtsForm, setVtsConfig(form, config));
     Object.assign(Vts.prototype, vtsEvents, vtsRules, vtsValidation);
     this._convertRulesToMap();
+    this._setFieldAttributes();
     this._addEventListeners();
   }
 

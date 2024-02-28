@@ -7,6 +7,8 @@ export default interface VtsRulesCore {
 
   _convertRulesToMap(this: VtsCore): void;
 
+  _setFieldAttributes(this: VtsCore): void;
+
   _setCheckingRule(
     this: VtsCore,
     rules: Rules[string],

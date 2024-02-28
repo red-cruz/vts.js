@@ -159,13 +159,13 @@ type EventTypes =
 /**
  * The values in this type are the possible validity states for a form field.
  */
-type RuleKeys = KeysOfType<Rules[string]> | 'checking' | 'valid';
+type RuleKey = KeysOfType<Rules[string]> | 'checking' | 'valid';
 
 /**
  * Represents the configuration for the validation rule messages.
  */
 type ValidationMessages = {
-  [Key in RuleKeys]?: string;
+  [Key in RuleKey]?: string;
 };
 
-export { ValidationMessages, Rule, Rules, RuleFunction, EventTypes, RuleKeys };
+export { ValidationMessages, Rule, Rules, RuleFunction, EventTypes, RuleKey };

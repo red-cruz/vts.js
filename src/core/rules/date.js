@@ -27,7 +27,7 @@ export async function beforeOrEqualRule(rules, field, label) {
 }
 
 /**
- * @param {import('../../types/config/rules').RuleKeys} ruleName
+ * @param {import('../../types/config/rules').RuleKey} ruleName
  * @param {import('../../types/config/rules').Rules[string]} rules
  * @param {import('../../types/core/index').VtsField} field
  * @param {string} label
@@ -45,7 +45,6 @@ async function dateRule(ruleName, rules, field, label) {
   let targetDate = awaitedRule.ruleValue;
   let targetField = awaitedRule.targetField;
 
-  console.log(awaitedRule);
   /** @type {string?} */
   let dateModifier = '';
 
@@ -72,10 +71,10 @@ async function dateRule(ruleName, rules, field, label) {
 
     if (setMax) {
       field.max =
-        offset != 0 ? dateStr : targetDate.toISOString().split('T')[0];
+        offset !== 0 ? dateStr : targetDate.toISOString().split('T')[0];
     } else {
       field.min =
-        offset != 0 ? dateStr : targetDate.toISOString().split('T')[0];
+        offset !== 0 ? dateStr : targetDate.toISOString().split('T')[0];
     }
   };
 

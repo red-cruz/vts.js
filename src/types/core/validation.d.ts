@@ -1,6 +1,6 @@
 import type VtsCore from '.';
 import { VtsField } from '.';
-import { RuleKeys, Rules } from '../config/rules';
+import { RuleKey, Rules } from '../config/rules';
 
 export default interface VtsValidationCore {
   /**
@@ -11,7 +11,7 @@ export default interface VtsValidationCore {
 }
 
 export type ValidationResults = {
-  [Key in RuleKeys | 'valid']?: Key extends 'validator'
+  [Key in RuleKey | 'valid']?: Key extends 'validator'
     ? string | string[]
     : string;
 };

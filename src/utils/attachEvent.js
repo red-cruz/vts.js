@@ -2,7 +2,7 @@
 import getEventType from './getEventType';
 
 /**
- * @param {import('../types/config/rules').RuleKeys} ruleName
+ * @param {import('../types/config/rules').RuleKey} ruleName
  * @param {import('../types/core').VtsField} targetField
  * @param {import('../types/core').VtsField} field
  * @param {import('../types/config/rules').Rules[string]} rules
