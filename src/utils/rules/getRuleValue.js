@@ -17,7 +17,7 @@ export default async function (vtsInstance, rules, field, label, ruleKey) {
   let targetField;
 
   /** @param {string|number|Date|RegExp|boolean} rule */
-  const _extractRule = (rule) => {
+  const extractWithBoundFn = (rule) => {
     ruleValue = rule;
     const isBound = typeof rule === 'string' && rule.startsWith('field:');
     // get value of bound field
@@ -30,9 +30,7 @@ export default async function (vtsInstance, rules, field, label, ruleKey) {
       ruleValue = targetField.value;
     }
 
-    ruleValue = extractRule(ruleValue, ruleKey);
-
-    return ruleValue;
+    return extractRule(ruleValue, ruleKey);
   };
 
   /** @type {import('../../types/config/rules').Rule<string|number|Date>} */
@@ -42,12 +40,12 @@ export default async function (vtsInstance, rules, field, label, ruleKey) {
     case 'function':
       vtsInstance._setCheckingRule(rules, field, label);
       const _rule = await rule(field, label);
-      ruleValue = _extractRule(_rule);
+      ruleValue = extractWithBoundFn(_rule);
 
       break;
 
     default:
-      ruleValue = _extractRule(rule);
+      ruleValue = extractWithBoundFn(rule);
       break;
   }
 
