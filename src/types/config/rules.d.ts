@@ -24,25 +24,25 @@ type Rules = {
      * Field must be after the specified date.
      * A date object or date parseable string.
      */
-    after?: Rule<string | Date>;
+    after?: Rule<string | number | Date>;
 
     /**
      * Field must be after or equal to the specified date.
      * A date object or date parseable string.
      */
-    afterOrEqual?: Rule<string | Date>;
+    afterOrEqual?: Rule<string | number | Date>;
 
     /**
      * Field must be before the specified date.
      * A date object or date parseable string.
      */
-    before?: Rule<string | Date>;
+    before?: Rule<string | number | Date>;
 
     /**
      * Field must be before or equal to the specified date.
      * A date object or date parseable string.
      */
-    beforeOrEqual?: Rule<string | Date>;
+    beforeOrEqual?: Rule<string | number | Date>;
 
     /**
      * Field's value must end with the specified string or substring.

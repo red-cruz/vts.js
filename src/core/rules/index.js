@@ -79,7 +79,9 @@ const vtsRules = {
                   case 'afterOrEqual':
                   case 'before':
                   case 'beforeOrEqual':
-                    rules[ruleKey] = new Date(extractedRule);
+                    const date = new Date(extractedRule);
+                    date.setHours(23, 59, 59, 999);
+                    rules[ruleKey] = date;
                     break;
 
                   case 'max':
@@ -134,8 +136,8 @@ const vtsRules = {
 
       if (field instanceof HTMLInputElement) {
         mergeToDatasetRules({
-          maxLength: field.maxLength < 1 && undefined,
-          minLength: field.minLength < 1 && undefined,
+          maxLength: field.maxLength < 1 ? undefined : field.maxLength,
+          minLength: field.minLength < 1 ? undefined : field.minLength,
         });
 
         switch (field.type) {

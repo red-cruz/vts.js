@@ -3,6 +3,7 @@ import defaultMsg from '../../defaults/defaultMsg';
 import VtsFormValidator from '../../utils/VtsFormValidator';
 import attachEvent from '../../utils/attachEvent';
 import getFieldLabel from '../../utils/getFieldLabel';
+import getRuleValue from '../../utils/rules/getRuleValue';
 import applyDateModifier from '../../utils/validation/applyDateModifier';
 
 export async function afterRule(rules, field, label) {
@@ -26,7 +27,7 @@ export async function beforeOrEqualRule(rules, field, label) {
 }
 
 /**
- * @param {string} ruleName
+ * @param {import('../../types/config/rules').RuleKeys} ruleName
  * @param {import('../../types/config/rules').Rules[string]} rules
  * @param {import('../../types/core/index').VtsField} field
  * @param {string} label
@@ -39,50 +40,20 @@ async function dateRule(ruleName, rules, field, label) {
 
   if (!rule) return {};
 
-  let targetDate = new Date();
-  let targetField = null;
-  let dateModifier = 'x';
+  /** @type {{ruleValue: Date, targetField?:import('../../types/core/index').VtsField}} */ //@ts-ignore
+  const awaitedRule = await getRuleValue(this, rules, field, label, ruleName);
+  let targetDate = awaitedRule.ruleValue;
+  let targetField = awaitedRule.targetField;
 
-  switch (typeof rule) {
-    case 'function':
-      this._setCheckingRule(rules, field, label);
-      const dateRule = await rule(field, label);
-      if (typeof dateRule === 'string') {
-        if (dateRule.startsWith('field:')) {
-          targetField = VtsFormValidator.validateField(
-            this.form,
-            dateRule.replace('field:', '')
-          );
-          attachEvent(ruleName, targetField, field, rules);
-          targetDate = new Date(new Date(targetField.value).toDateString());
-        } else {
-          targetDate = new Date(dateRule);
-        }
+  console.log(awaitedRule);
+  /** @type {string?} */
+  let dateModifier = '';
 
-        dateModifier = applyDateModifier(dateRule, targetDate) ?? '';
-      } else {
-        targetDate = dateRule;
-      }
-      break;
+  /** @type {import('../../types/config/rules').Rule<string|Date|number>} */
+  const dateRule = rules[ruleName];
 
-    case 'string':
-      if (rule.startsWith('field:')) {
-        targetField = VtsFormValidator.validateField(
-          this.form,
-          rule.replace('field:', '')
-        );
-        attachEvent(ruleName, targetField, field, rules);
-        targetDate = new Date(targetField.value);
-        targetDate.setHours(23, 59, 59, 999);
-      } else {
-        targetDate = new Date(rule);
-      }
-
-      dateModifier = applyDateModifier(rule, targetDate) ?? '';
-      break;
-
-    default:
-      targetDate = rule;
+  if (typeof dateRule === 'string') {
+    dateModifier = applyDateModifier(dateRule, targetDate);
   }
 
   let valid = false;

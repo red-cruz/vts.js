@@ -9,7 +9,7 @@ export default function applyDateModifier(dateRule, targetDate) {
   const modifierRegex = /(\+|-)?([\d]+)\s*(week|day|hour|minute|second)/g;
   const modifierMatch = modifierRegex.exec(dateRule);
 
-  if (!modifierMatch) return;
+  if (!modifierMatch) return null;
 
   const modifierSign = modifierMatch[1] || '+'; // Default to '+' if not specified
   const modifierValue = parseInt(modifierMatch[2]);

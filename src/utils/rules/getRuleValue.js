@@ -42,6 +42,10 @@ export default async function (vtsInstance, rules, field, label, ruleKey) {
           const date =
             ruleValue instanceof Date ? ruleValue : new Date(ruleValue);
           date.setHours(23, 59, 59, 999);
+
+          console.log(date);
+          console.log(ruleValue);
+          console.log(ruleValue instanceof Date);
           ruleValue = date;
           break;
 

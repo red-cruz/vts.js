@@ -18,7 +18,7 @@ export default function deepMerge(target, ...sources) {
       source[key] !== null &&
       !Array.isArray(source[key])
     ) {
-      if (source[key] instanceof RegExp) {
+      if (source[key] instanceof RegExp || source[key] instanceof Date) {
         target[key] = source[key];
         continue;
       }
