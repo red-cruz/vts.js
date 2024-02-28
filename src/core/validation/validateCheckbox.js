@@ -29,7 +29,7 @@ export default async function (field, rules, validMessage, renderClass) {
   let max = 0;
   let size = 0;
 
-  /** @type {{ruleValue: boolean, targetField?:import('../../types/core/index').VtsField}} */ //@ts-ignore
+  /** @type {{ruleValue: boolean, targetField?:import('../../types/core').VtsField}} */ //@ts-ignore
   const awaitedReq = await getRuleValue(this, rules, field, label, 'required');
   const required = awaitedReq.ruleValue;
   targetField = awaitedReq.targetField;
@@ -92,7 +92,7 @@ export default async function (field, rules, validMessage, renderClass) {
 
   if (rules.size) {
     // VALIDATE SIZE RULE
-    /** @type {{ruleValue: number, targetField?:import('../../types/core/index').VtsField}} */ //@ts-ignore
+    /** @type {{ruleValue: number, targetField?:import('../../types/core').VtsField}} */ //@ts-ignore
     const awaitedSize = await getRuleValue(this, rules, field, label, 'size');
     size = awaitedSize.ruleValue;
     targetField = awaitedSize.targetField;
@@ -105,7 +105,7 @@ export default async function (field, rules, validMessage, renderClass) {
   } else {
     if (rules.min) {
       // VALIDATE MIN RULE
-      /** @type {{ruleValue: number, targetField?:import('../../types/core/index').VtsField}} */ //@ts-ignore
+      /** @type {{ruleValue: number, targetField?:import('../../types/core').VtsField}} */ //@ts-ignore
       const awaitedMin = await getRuleValue(this, rules, field, label, 'min');
       min = awaitedMin.ruleValue;
       targetField = awaitedMin.targetField;
@@ -119,7 +119,7 @@ export default async function (field, rules, validMessage, renderClass) {
 
     // VALIDATE MAX RULE
     if (rules.max) {
-      /** @type {{ruleValue: number, targetField?:import('../../types/core/index').VtsField}} */ //@ts-ignore
+      /** @type {{ruleValue: number, targetField?:import('../../types/core').VtsField}} */ //@ts-ignore
       const awaitedMax = await getRuleValue(this, rules, field, label, 'max');
       max = awaitedMax.ruleValue;
       targetField = awaitedMax.targetField;

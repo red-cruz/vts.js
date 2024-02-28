@@ -27,9 +27,9 @@ export async function beforeOrEqualRule(rules, field, label) {
 /**
  * @param {import('../../types/config/rules').RuleKey} ruleName
  * @param {import('../../types/config/rules').Rules[string]} rules
- * @param {import('../../types/core/index').VtsField} field
+ * @param {import('../../types/core').VtsField} field
  * @param {string} label
- * @this {import('../../types/core/index').default} Vts
+ * @this {import('../../types/core').default} Vts
  * @returns {Promise<import('../../types/core/validation').ValidationResults>}
  */
 async function dateRule(ruleName, rules, field, label) {
@@ -38,7 +38,7 @@ async function dateRule(ruleName, rules, field, label) {
 
   if (!rule) return {};
 
-  /** @type {{ruleValue: Date, targetField?:import('../../types/core/index').VtsField}} */ //@ts-ignore
+  /** @type {{ruleValue: Date, targetField?:import('../../types/core').VtsField}} */ //@ts-ignore
   const awaitedRule = await getRuleValue(this, rules, field, label, ruleName);
   let targetDate = awaitedRule.ruleValue;
   let targetField = awaitedRule.targetField;
@@ -114,10 +114,10 @@ async function dateRule(ruleName, rules, field, label) {
 /**
  * @param {string} ruleName
  * @param {import('../../types/config/rules').Rules} rules
- * @param {import('../../types/core/index').VtsField} targetField
+ * @param {import('../../types/core').VtsField} targetField
  * @param {Date|Promise<Date>} targetDate
  * @param {string} dateModifier
- * @this {import('../../types/core/index').default} Vts
+ * @this {import('../../types/core').default} Vts
  * @return {string}
  */
 export function replaceDateMsg(

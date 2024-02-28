@@ -18,7 +18,7 @@ export default async function (field, rules, validMessage, renderClass) {
   const lastField = group[group.length - 1];
   const isValid = group.some((field) => field.checkValidity());
 
-  /** @type {{ruleValue: boolean, targetField?:import('../../types/core/index').VtsField}} */ //@ts-ignore
+  /** @type {{ruleValue: boolean, targetField?:import('../../types/core').VtsField}} */ //@ts-ignore
   const { ruleValue, targetField } = await getRuleValue(
     this,
     rules,

@@ -3,9 +3,9 @@ import VtsFormValidator from '../VtsFormValidator';
 import attachEvent from '../attachEvent';
 
 /**
- * @param {import('../../types/core/index').default} vtsInstance
+ * @param {import('../../types/core').default} vtsInstance
  * @param {import('../../types/config/rules').Rules[string]} rules
- * @param {import('../../types/core/index').VtsField} field
+ * @param {import('../../types/core').VtsField} field
  * @param {string} label
  * @param {import('../../types/config/rules').RuleKey} ruleKey
  */
@@ -13,7 +13,7 @@ export default async function (vtsInstance, rules, field, label, ruleKey) {
   /** @type {string|number|Date|RegExp|boolean|string[]} */
   let ruleValue;
 
-  /** @type {import('../../types/core/index').VtsField|undefined} */
+  /** @type {import('../../types/core').VtsField|undefined} */
   let targetField;
 
   /** @param {string|number|Date|RegExp|boolean|string[]} rule */
