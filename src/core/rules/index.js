@@ -242,12 +242,6 @@ function parseRuleKey(key) {
     case 'inArray'.toLocaleLowerCase():
       return 'inArray';
 
-    case 'maxLength'.toLocaleLowerCase():
-      return 'maxLength';
-
-    case 'minLength'.toLocaleLowerCase():
-      return 'minLength';
-
     case 'notInArray'.toLocaleLowerCase():
       return 'notInArray';
 
