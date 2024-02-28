@@ -592,14 +592,14 @@ function getRuleValue_asyncToGenerator(fn) { return function () { var self = thi
  */
 function _ref() {
   _ref = getRuleValue_asyncToGenerator( /*#__PURE__*/getRuleValue_regeneratorRuntime().mark(function _callee(vtsInstance, rules, field, label, ruleKey) {
-    var ruleValue, targetField, extractWithBoundFn, rule, _rule;
+    var ruleValue, targetField, extractBoundOrFnRule, rule, _rule;
     return getRuleValue_regeneratorRuntime().wrap(function _callee$(_context) {
       while (1) switch (_context.prev = _context.next) {
         case 0:
           /** @type {string|number|Date|RegExp|boolean|string[]} */
           /** @type {import('../../types/core').VtsField|undefined} */
           /** @param {string|number|Date|RegExp|boolean|string[]} rule */
-          extractWithBoundFn = function extractWithBoundFn(rule) {
+          extractBoundOrFnRule = function extractBoundOrFnRule(rule) {
             ruleValue = rule;
             var isBound = typeof rule === 'string' && rule.startsWith('field:');
             // get value of bound field
@@ -610,10 +610,10 @@ function _ref() {
             }
             return extractRule(ruleValue, ruleKey);
           };
-          /** @type {import('../../types/config/rules').Rule<string|number|Date|string[]>} */
+          /** @type {import('../../types/config/rules').Rule<string | number | boolean | RegExp | Date | string[]>} */
           rule = rules[ruleKey];
           _context.t0 = getRuleValue_typeof(rule);
-          _context.next = _context.t0 === 'function' ? 5 : 11;
+          _context.next = _context.t0 === 'function' ? 5 : _context.t0 === 'string' ? 11 : 14;
           break;
         case 5:
           vtsInstance._setCheckingRule(rules, field, label);
@@ -621,17 +621,23 @@ function _ref() {
           return rule(field, label);
         case 8:
           _rule = _context.sent;
-          ruleValue = extractWithBoundFn(_rule);
-          return _context.abrupt("break", 13);
+          ruleValue = extractBoundOrFnRule(_rule);
+          return _context.abrupt("break", 15);
         case 11:
-          ruleValue = extractWithBoundFn(rule);
-          return _context.abrupt("break", 13);
-        case 13:
+          if (!rule.startsWith('field:')) {
+            _context.next = 14;
+            break;
+          }
+          ruleValue = extractBoundOrFnRule(rule);
+          return _context.abrupt("break", 15);
+        case 14:
+          ruleValue = rule;
+        case 15:
           return _context.abrupt("return", {
             ruleValue: ruleValue,
             targetField: targetField
           });
-        case 14:
+        case 16:
         case "end":
           return _context.stop();
       }
