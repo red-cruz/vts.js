@@ -46,7 +46,6 @@ const vtsDefaults = {
     if (feedbackContainer instanceof HTMLElement) {
       // Update the feedback content and display
       feedbackContainer.innerHTML = textContent;
-      feedbackContainer.style.display = 'block'; // forces the feedback to show when using bootstrap
 
       // toggle the feedback class
       feedbackContainer.classList.add(feedbackClass);
@@ -56,7 +55,6 @@ const vtsDefaults = {
       const newContainer = document.createElement('div');
       newContainer.classList.add(vtsFeedbackClass, feedbackClass);
       newContainer.innerHTML = textContent;
-      newContainer.style.display = 'block';
       fieldWrapper?.append(newContainer);
     }
   },
