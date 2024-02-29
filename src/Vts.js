@@ -103,7 +103,16 @@ export default class Vts {
 
     const fieldName = field.name;
 
-    if (!/\[.*\]/.test(field.name)) return [];
+    if (!/\[.*\]/.test(field.name)) {
+      // Find all matching inputs
+      const groupedFields = [];
+
+      for (const gField of fields) {
+        //@ts-ignore
+        fieldName === gField.name && groupedFields.push(gField);
+      }
+      return groupedFields;
+    }
 
     // Build regular expression
     const baseName = fieldName.split('[')[0];

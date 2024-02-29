@@ -6,20 +6,24 @@ $vts-light-valid-color: #198754;
 
 body {
   form.vts {
-    .vts-feedback-container {
-      width: 100%;
-      padding-top: 0.15rem;
-      font-size: 0.875em;
-      display: block;
-      &.vts-invalid-field-feedback {
-        color: $vts-light-invalid-color;
-      }
-      &.vts-valid-field-feedback {
-        color: $vts-light-valid-color;
-      }
-    }
-
     .vts-field-was-validated {
+      .vts-feedback-container {
+        width: 100%;
+        padding-top: 0.15rem;
+        font-size: 0.875em;
+        display: block;
+      }
+      &.vts-invalid-field {
+        .vts-feedback-container {
+          color: $vts-light-invalid-color;
+        }
+      }
+      &.vts-valid-field {
+        .vts-feedback-container {
+          color: $vts-light-valid-color;
+        }
+      }
+
       input {
         &:invalid {
           border-color: $vts-light-invalid-color;
@@ -35,7 +39,9 @@ body {
         }
       }
 
-      .form-control {
+      select,
+      textarea,
+      input:not([type='checkbox']):not([type='radio']) {
         padding-right: calc(1.5em + 0.75rem);
         background-repeat: no-repeat;
         background-position: right calc(0.375em + 0.1875rem) center;
@@ -50,11 +56,15 @@ body {
         }
       }
 
-      .form-check-input {
-        &:invalid ~ .form-check-label {
-          color: $vts-light-invalid-color;
+      input[type='checkbox'],
+      input[type='radio'] {
+        &:invalid {
+          border-color: $vts-light-invalid-color;
+          & ~ label {
+            color: $vts-light-invalid-color;
+          }
         }
-        &:valid ~ .form-check-label {
+        &:valid ~ label {
           color: $vts-light-valid-color;
         }
       }
@@ -64,16 +74,29 @@ body {
   &[data-bs-theme='dark'],
   &[data-theme='dark'] {
     form.vts {
-      .vts-feedback-container {
-        &.vts-invalid-field-feedback {
-          color: $vts-dark-invalid-color;
-        }
-        &.vts-valid-field-feedback {
-          color: $vts-dark-valid-color;
-        }
-      }
-
       .vts-field-was-validated {
+        &.vts-invalid-field {
+          .vts-feedback-container {
+            color: $vts-dark-invalid-color;
+          }
+        }
+        &.vts-valid-field {
+          .vts-feedback-container {
+            color: $vts-dark-valid-color;
+          }
+        }
+
+        select,
+        textarea,
+        input:not([type='checkbox']):not([type='radio']) {
+          &:invalid {
+            border-color: $vts-dark-invalid-color;
+          }
+          &:valid {
+            border-color: $vts-dark-valid-color;
+          }
+        }
+
         input {
           &:invalid {
             border-color: $vts-dark-invalid-color;
@@ -89,20 +112,12 @@ body {
           }
         }
 
-        .form-control {
-          &:invalid {
-            border-color: $vts-dark-invalid-color;
-          }
-          &:valid {
-            border-color: $vts-dark-valid-color;
-          }
-        }
-
-        .form-check-input {
-          &:invalid ~ .form-check-label {
+        input[type='checkbox'],
+        input[type='radio'] {
+          &:invalid ~ label {
             color: $vts-dark-invalid-color;
           }
-          &:valid ~ .form-check-label {
+          &:valid ~ label {
             color: $vts-dark-valid-color;
           }
         }

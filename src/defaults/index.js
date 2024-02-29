@@ -14,8 +14,8 @@ const vtsDefaults = {
   ajax: ajaxHandler,
   class: {
     form: 'vts-form-was-validated',
-    invalid: 'vts-invalid-field-feedback',
-    valid: 'vts-valid-field-feedback',
+    invalid: 'vts-invalid-field',
+    valid: 'vts-valid-field',
     wrapper: '',
     fieldWrapper: 'vts-field-was-validated',
   },
@@ -25,7 +25,7 @@ const vtsDefaults = {
     const { wrapper, invalid, valid } = renderClass;
 
     // Check if field is valid
-    const isValid = !!validationResults.valid;
+    const isValid = 'valid' in validationResults;
 
     // Determine the feedback class based on the validation result
     const feedbackClass = isValid ? valid : invalid;
@@ -42,6 +42,9 @@ const vtsDefaults = {
 
     fieldWrapper.classList.add(renderClass.fieldWrapper);
 
+    fieldWrapper.classList.add(isValid ? valid : invalid);
+    fieldWrapper.classList.remove(!isValid ? valid : invalid);
+
     // Find the feedback container
     const vtsFeedbackClass = 'vts-feedback-container';
     const feedbackContainer = fieldWrapper?.querySelector(
@@ -53,10 +56,6 @@ const vtsDefaults = {
     if (feedbackContainer instanceof HTMLElement) {
       // Update the feedback content and display
       feedbackContainer.innerHTML = textContent;
-
-      // toggle the feedback class
-      feedbackContainer.classList.add(feedbackClass);
-      feedbackContainer.classList.remove(!isValid ? valid : invalid);
     } else {
       // Create a new feedback container and append it to the field wrapper
       const newContainer = document.createElement('div');
