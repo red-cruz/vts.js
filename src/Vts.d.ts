@@ -12,7 +12,7 @@ import { VtsField } from './types/core';
  * error messages, and actions to be performed when a form field is valid or invalid.
  *
  * @author RED
- * @version 1.9.1-beta
+ * @version 1.9.2-beta
  */
 declare class Vts {
   /**

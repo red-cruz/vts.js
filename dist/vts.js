@@ -1213,44 +1213,46 @@ function max_ref() {
           targetField = _yield$getRuleValue.targetField;
           isValid = false;
           if (!(field instanceof HTMLInputElement)) {
-            _context.next = 21;
+            _context.next = 23;
             break;
           }
           _context.t0 = field.type;
-          _context.next = _context.t0 === 'file' ? 12 : _context.t0 === 'number' ? 15 : 17;
+          _context.next = _context.t0 === 'file' ? 12 : _context.t0 === 'number' ? 15 : 18;
           break;
         case 12:
           fileLen = (_field$files = field.files) === null || _field$files === void 0 ? void 0 : _field$files.length;
           isValid = fileLen === undefined ? false : fileLen <= ruleValue;
-          return _context.abrupt("break", 19);
+          return _context.abrupt("break", 21);
         case 15:
           field.max = String(ruleValue);
-          return _context.abrupt("break", 19);
-        case 17:
           isValid = Number(field.value) <= ruleValue;
-          return _context.abrupt("break", 19);
-        case 19:
-          _context.next = 22;
-          break;
+          return _context.abrupt("break", 21);
+        case 18:
+          field.maxLength = ruleValue;
+          isValid = field.value.length <= ruleValue;
+          return _context.abrupt("break", 21);
         case 21:
+          _context.next = 24;
+          break;
+        case 23:
           if (field instanceof HTMLSelectElement) {
             isValid = field.selectedOptions.length <= ruleValue;
           } else {
             isValid = field.value.length <= ruleValue;
           }
-        case 22:
+        case 24:
           if (!isValid) {
-            _context.next = 24;
+            _context.next = 26;
             break;
           }
           return _context.abrupt("return", {});
-        case 24:
+        case 26:
           messages = ((_rules$messages = rules.messages) === null || _rules$messages === void 0 ? void 0 : _rules$messages.max) || ((_this$messages = this.messages) === null || _this$messages === void 0 ? void 0 : _this$messages.max) || defaults_defaultMsg.max;
           targetLabel = targetField ? getFieldLabel(rules.label, targetField, this.form) : '';
           return _context.abrupt("return", {
             max: messages.replace(/{:max}/g, String(ruleValue)).replace(/{:targetValue}/g, (_targetField$value = targetField === null || targetField === void 0 ? void 0 : targetField.value) !== null && _targetField$value !== void 0 ? _targetField$value : '').replace(/{:targetLabel}/g, targetLabel)
           });
-        case 27:
+        case 29:
         case "end":
           return _context.stop();
       }
@@ -1298,44 +1300,46 @@ function min_ref() {
           targetField = _yield$getRuleValue.targetField;
           isValid = false;
           if (!(field instanceof HTMLInputElement)) {
-            _context.next = 21;
+            _context.next = 23;
             break;
           }
           _context.t0 = field.type;
-          _context.next = _context.t0 === 'file' ? 12 : _context.t0 === 'number' ? 15 : 17;
+          _context.next = _context.t0 === 'file' ? 12 : _context.t0 === 'number' ? 15 : 18;
           break;
         case 12:
           fileLen = (_field$files = field.files) === null || _field$files === void 0 ? void 0 : _field$files.length;
           isValid = fileLen === undefined ? false : fileLen >= ruleValue;
-          return _context.abrupt("break", 19);
+          return _context.abrupt("break", 21);
         case 15:
           field.min = String(ruleValue);
-          return _context.abrupt("break", 19);
-        case 17:
           isValid = Number(field.value) >= ruleValue;
-          return _context.abrupt("break", 19);
-        case 19:
-          _context.next = 22;
-          break;
+          return _context.abrupt("break", 21);
+        case 18:
+          field.minLength = ruleValue;
+          isValid = field.value.length >= ruleValue;
+          return _context.abrupt("break", 21);
         case 21:
+          _context.next = 24;
+          break;
+        case 23:
           if (field instanceof HTMLSelectElement) {
             isValid = field.selectedOptions.length >= ruleValue;
           } else {
             isValid = field.value.length >= ruleValue;
           }
-        case 22:
+        case 24:
           if (!isValid) {
-            _context.next = 24;
+            _context.next = 26;
             break;
           }
           return _context.abrupt("return", {});
-        case 24:
+        case 26:
           messages = ((_rules$messages = rules.messages) === null || _rules$messages === void 0 ? void 0 : _rules$messages.min) || ((_this$messages = this.messages) === null || _this$messages === void 0 ? void 0 : _this$messages.min) || defaults_defaultMsg.min;
           targetLabel = targetField ? getFieldLabel(rules.label, targetField, this.form) : '';
           return _context.abrupt("return", {
             min: messages.replace(/{:min}/g, String(ruleValue)).replace(/{:targetValue}/g, (_targetField$value = targetField === null || targetField === void 0 ? void 0 : targetField.value) !== null && _targetField$value !== void 0 ? _targetField$value : '').replace(/{:targetLabel}/g, targetLabel)
           });
-        case 27:
+        case 29:
         case "end":
           return _context.stop();
       }
@@ -1629,59 +1633,59 @@ function validatorRule(_x, _x2, _x3) {
 }
 function _validatorRule() {
   _validatorRule = validator_asyncToGenerator( /*#__PURE__*/validator_regeneratorRuntime().mark(function _callee(rules, field, label) {
-    var dataset, customValidator, invalidMsg, invalidMsgs, _iterator, _step, validator, _invalidMsg;
+    var customValidator, invalidMsg, invalidMsgs, _iterator, _step, validator, _invalidMsg;
     return validator_regeneratorRuntime().wrap(function _callee$(_context) {
       while (1) switch (_context.prev = _context.next) {
         case 0:
-          dataset = field.dataset.vtsRuleValidator || '';
-          customValidator = rules.validator || window[dataset];
+          customValidator = rules.validator;
           if (customValidator) {
-            _context.next = 4;
+            _context.next = 3;
             break;
           }
           return _context.abrupt("return", {});
-        case 4:
+        case 3:
           if (!(typeof customValidator === 'function')) {
-            _context.next = 12;
+            _context.next = 11;
             break;
           }
           this._setCheckingRule(rules, field, label);
-          _context.next = 8;
-          return customValidator(field, label, this.form);
-        case 8:
+          _context.next = 7;
+          return customValidator(field, label);
+        case 7:
           invalidMsg = _context.sent;
           return _context.abrupt("return", invalidMsg ? {
             validator: invalidMsg
           } : {});
-        case 12:
+        case 11:
           // customValidator is array
           invalidMsgs = {
             validator: []
           };
           _iterator = validator_createForOfIteratorHelper(customValidator);
-          _context.prev = 14;
+          _context.prev = 13;
           _iterator.s();
-        case 16:
+        case 15:
           if ((_step = _iterator.n()).done) {
             _context.next = 24;
             break;
           }
           validator = _step.value;
+          this._setCheckingRule(rules, field, label);
           _context.next = 20;
-          return validator(field, label, this.form);
+          return validator(field, label);
         case 20:
           _invalidMsg = _context.sent;
           // @ts-ignore
           if (_invalidMsg) invalidMsgs.validator.push(_invalidMsg);
         case 22:
-          _context.next = 16;
+          _context.next = 15;
           break;
         case 24:
           _context.next = 29;
           break;
         case 26:
           _context.prev = 26;
-          _context.t0 = _context["catch"](14);
+          _context.t0 = _context["catch"](13);
           _iterator.e(_context.t0);
         case 29:
           _context.prev = 29;
@@ -1693,7 +1697,7 @@ function _validatorRule() {
         case "end":
           return _context.stop();
       }
-    }, _callee, this, [[14, 26, 29, 32]]);
+    }, _callee, this, [[13, 26, 29, 32]]);
   }));
   return _validatorRule.apply(this, arguments);
 }
@@ -1836,25 +1840,51 @@ var vtsRules = {
             }
             break;
           case 'max':
-            if (!(field instanceof HTMLInputElement)) break;
-            if (field.type !== 'number') break;
-            if (typeof rule === 'number') {
-              field.max = String(rule);
+            if (typeof rule !== 'number') break;
+            if (field instanceof HTMLInputElement) {
+              switch (field.type) {
+                case 'number':
+                  field.max = String(rule);
+                  break;
+                default:
+                  field.maxLength = rule;
+                  break;
+              }
+            } else if (field instanceof HTMLTextAreaElement) {
+              field.maxLength = rule;
             }
             break;
           case 'min':
-            if (!(field instanceof HTMLInputElement)) break;
-            if (field.type !== 'number') break;
-            if (typeof rule === 'number') {
-              field.min = String(rule);
+            if (typeof rule !== 'number') break;
+            if (field instanceof HTMLInputElement) {
+              switch (field.type) {
+                case 'number':
+                  field.min = String(rule);
+                  break;
+                default:
+                  field.minLength = rule;
+                  break;
+              }
+            } else if (field instanceof HTMLTextAreaElement) {
+              field.minLength = rule;
             }
             break;
           case 'size':
-            if (!(field instanceof HTMLInputElement)) break;
-            if (field.type !== 'number') break;
-            if (typeof rule === 'number') {
-              field.min = String(rule);
-              field.max = String(rule);
+            if (typeof rule !== 'number') break;
+            if (field instanceof HTMLInputElement) {
+              switch (field.type) {
+                case 'number':
+                  field.min = String(rule);
+                  field.max = String(rule);
+                  break;
+                default:
+                  field.minLength = rule;
+                  field.maxLength = rule;
+                  break;
+              }
+            } else if (field instanceof HTMLTextAreaElement) {
+              field.minLength = rule;
+              field.maxLength = rule;
             }
             break;
           case 'required':
@@ -1867,10 +1897,13 @@ var vtsRules = {
   _setCheckingRule: function _setCheckingRule(rules, field, label) {
     var _rules$messages, _this$messages;
     var checking = (((_rules$messages = rules.messages) === null || _rules$messages === void 0 ? void 0 : _rules$messages.checking) || ((_this$messages = this.messages) === null || _this$messages === void 0 ? void 0 : _this$messages.checking) || defaults_defaultMsg.checking).replace(/{:value}/g, field.value).replace(/{:label}/g, label);
+    var renderClass = Object.assign(this["class"], {
+      wrapper: rules.wrapper
+    });
     field.setCustomValidity(checking);
     this.renderFeedback.call(field, {
       checking: checking
-    }, this["class"].invalid);
+    }, renderClass);
   }
 };
 /* harmony default export */ const rules = (vtsRules);
@@ -2888,23 +2921,31 @@ var vtsDefaults = {
   },
   shouldSubmit: true,
   renderFeedback: function renderFeedback(validationResults, renderClass) {
+    var _fieldWrapper;
     // Extract the renderClass object
     var wrapper = renderClass.wrapper,
       invalid = renderClass.invalid,
       valid = renderClass.valid;
 
     // Check if field is valid
-    var isValid = this.checkValidity();
+    var isValid = !!validationResults.valid;
 
     // Determine the feedback class based on the validation result
     var feedbackClass = isValid ? valid : invalid;
 
     // Find the field wrapper
-    var fieldWrapper = !wrapper ? getCommonParent(this) : findClosestElement(this, wrapper);
+    var fieldWrapper;
+    if (!wrapper) {
+      fieldWrapper = getCommonParent(this);
+    }
+    if (!fieldWrapper) {
+      fieldWrapper = findClosestElement(this, wrapper);
+    }
+    fieldWrapper.classList.add(renderClass.fieldWrapper);
 
     // Find the feedback container
     var vtsFeedbackClass = 'vts-feedback-container';
-    var feedbackContainer = fieldWrapper === null || fieldWrapper === void 0 ? void 0 : fieldWrapper.querySelector(".".concat(vtsFeedbackClass));
+    var feedbackContainer = (_fieldWrapper = fieldWrapper) === null || _fieldWrapper === void 0 ? void 0 : _fieldWrapper.querySelector(".".concat(vtsFeedbackClass));
 
     // Create the feedback container if it doesn't exist
     var textContent = Object.values(validationResults).flat().join('<br />');
@@ -2916,11 +2957,12 @@ var vtsDefaults = {
       feedbackContainer.classList.add(feedbackClass);
       feedbackContainer.classList.remove(!isValid ? valid : invalid);
     } else {
+      var _fieldWrapper2;
       // Create a new feedback container and append it to the field wrapper
       var newContainer = document.createElement('div');
       newContainer.classList.add(vtsFeedbackClass, feedbackClass);
       newContainer.innerHTML = textContent;
-      fieldWrapper === null || fieldWrapper === void 0 ? void 0 : fieldWrapper.append(newContainer);
+      (_fieldWrapper2 = fieldWrapper) === null || _fieldWrapper2 === void 0 ? void 0 : _fieldWrapper2.append(newContainer);
     }
   },
   validateOnSumbit: false,
