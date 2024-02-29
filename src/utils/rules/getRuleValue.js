@@ -19,6 +19,7 @@ export default async function (vtsInstance, rules, field, label, ruleKey) {
   /** @param {string|number|Date|RegExp|boolean|string[]} rule */
   const extractBoundOrFnRule = (rule) => {
     ruleValue = rule;
+
     const isBound = typeof rule === 'string' && rule.startsWith('field:');
     // get value of bound field
     if (isBound) {
@@ -46,6 +47,7 @@ export default async function (vtsInstance, rules, field, label, ruleKey) {
     case 'string':
       if (rule.startsWith('field:')) {
         ruleValue = extractBoundOrFnRule(rule);
+        // console.log({ ruleValue });
         break;
       }
     default:
@@ -63,7 +65,6 @@ export default async function (vtsInstance, rules, field, label, ruleKey) {
  */
 export function extractRule(rule, ruleKey) {
   let ruleValue = rule;
-  const isBound = typeof rule === 'string' && rule.startsWith('field:');
 
   try {
     switch (ruleKey) {
@@ -103,8 +104,10 @@ export function extractRule(rule, ruleKey) {
         break;
 
       case 'required':
-        if (typeof ruleValue === 'string')
-          ruleValue = isBound ? !!ruleValue : ruleValue !== 'false';
+        if (typeof ruleValue === 'string') {
+          const isFalse = ruleValue === 'false';
+          ruleValue = isFalse ? !isFalse : !!ruleValue;
+        }
         break;
 
       case 'inArray':
