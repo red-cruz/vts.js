@@ -149,7 +149,6 @@ const vtsRules = {
 
         if (typeof rule === 'function') continue;
         if (typeof rule === 'string' && rule.startsWith('field:')) continue;
-        field.name === 'inspection_date' && console.log(rules);
 
         switch (ruleKey) {
           case 'after':

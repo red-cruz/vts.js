@@ -47,7 +47,6 @@ export default async function (vtsInstance, rules, field, label, ruleKey) {
     case 'string':
       if (rule.startsWith('field:')) {
         ruleValue = extractBoundOrFnRule(rule);
-        // console.log({ ruleValue });
         break;
       }
     default:

@@ -629,7 +629,6 @@ function _ref() {
             break;
           }
           ruleValue = extractBoundOrFnRule(rule);
-          // console.log({ ruleValue });
           return _context.abrupt("break", 15);
         case 14:
           ruleValue = rule;
@@ -1498,49 +1497,48 @@ function size_ref() {
           _yield$getRuleValue = _context.sent;
           ruleValue = _yield$getRuleValue.ruleValue;
           targetField = _yield$getRuleValue.targetField;
-          console.log('size', ruleValue);
           isValid = false;
           if (!(field instanceof HTMLInputElement)) {
-            _context.next = 24;
+            _context.next = 23;
             break;
           }
           _context.t0 = field.type;
-          _context.next = _context.t0 === 'file' ? 13 : _context.t0 === 'number' ? 16 : 20;
+          _context.next = _context.t0 === 'file' ? 12 : _context.t0 === 'number' ? 15 : 19;
           break;
-        case 13:
+        case 12:
           fileLen = (_field$files = field.files) === null || _field$files === void 0 ? void 0 : _field$files.length;
           isValid = fileLen === undefined ? false : fileLen === ruleValue;
-          return _context.abrupt("break", 22);
-        case 16:
+          return _context.abrupt("break", 21);
+        case 15:
           field.min = String(ruleValue);
           field.max = String(ruleValue);
           isValid = Number(field.value) === ruleValue;
-          return _context.abrupt("break", 22);
-        case 20:
+          return _context.abrupt("break", 21);
+        case 19:
           isValid = Number(field.value.length) === ruleValue;
-          return _context.abrupt("break", 22);
-        case 22:
-          _context.next = 25;
+          return _context.abrupt("break", 21);
+        case 21:
+          _context.next = 24;
           break;
-        case 24:
+        case 23:
           if (field instanceof HTMLSelectElement) {
             isValid = field.selectedOptions.length === ruleValue;
           } else {
             isValid = field.value.length === ruleValue;
           }
-        case 25:
+        case 24:
           if (!isValid) {
-            _context.next = 27;
+            _context.next = 26;
             break;
           }
           return _context.abrupt("return", {});
-        case 27:
+        case 26:
           messages = ((_rules$messages = rules.messages) === null || _rules$messages === void 0 ? void 0 : _rules$messages.size) || ((_this$messages = this.messages) === null || _this$messages === void 0 ? void 0 : _this$messages.size) || defaults_defaultMsg.size;
           targetLabel = targetField ? getFieldLabel(rules.label, targetField, this.form) : '';
           return _context.abrupt("return", {
             size: messages.replace(/{:size}/g, String(ruleValue)).replace(/{:targetValue}/g, (_targetField$value = targetField === null || targetField === void 0 ? void 0 : targetField.value) !== null && _targetField$value !== void 0 ? _targetField$value : '').replace(/{:targetLabel}/g, targetLabel)
           });
-        case 30:
+        case 29:
         case "end":
           return _context.stop();
       }
@@ -1734,23 +1732,22 @@ function minLength_ref() {
           _yield$getRuleValue = _context.sent;
           ruleValue = _yield$getRuleValue.ruleValue;
           targetField = _yield$getRuleValue.targetField;
-          console.log(ruleValue);
           isValid = field.value.length >= ruleValue;
           if (!(field instanceof HTMLSelectElement)) {
             field.minLength = ruleValue;
           }
           if (!isValid) {
-            _context.next = 12;
+            _context.next = 11;
             break;
           }
           return _context.abrupt("return", {});
-        case 12:
+        case 11:
           messages = ((_rules$messages = rules.messages) === null || _rules$messages === void 0 ? void 0 : _rules$messages.minLength) || ((_this$messages = this.messages) === null || _this$messages === void 0 ? void 0 : _this$messages.minLength) || defaults_defaultMsg.minLength;
           targetLabel = targetField ? getFieldLabel(rules.label, targetField, this.form) : '';
           return _context.abrupt("return", {
             minLength: messages.replace(/{:minLength}/g, String(ruleValue)).replace(/{:targetValue}/g, (_targetField$value = targetField === null || targetField === void 0 ? void 0 : targetField.value) !== null && _targetField$value !== void 0 ? _targetField$value : '').replace(/{:targetLabel}/g, targetLabel)
           });
-        case 15:
+        case 14:
         case "end":
           return _context.stop();
       }
@@ -1945,7 +1942,6 @@ var vtsRules = {
         var rule = rules[ruleKey];
         if (typeof rule === 'function') continue;
         if (typeof rule === 'string' && rule.startsWith('field:')) continue;
-        field.name === 'inspection_date' && console.log(rules);
         switch (ruleKey) {
           case 'after':
           case 'afterOrEqual':

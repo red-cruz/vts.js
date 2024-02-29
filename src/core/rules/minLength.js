@@ -20,7 +20,6 @@ export default async function (rules, field, label) {
     label,
     'minLength'
   );
-  console.log(ruleValue);
 
   let isValid = field.value.length >= ruleValue;
 

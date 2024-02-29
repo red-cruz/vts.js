@@ -20,7 +20,6 @@ export default async function (rules, field, label) {
     label,
     'size'
   );
-  console.log('size', ruleValue);
   let isValid = false;
 
   if (field instanceof HTMLInputElement) {
