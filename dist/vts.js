@@ -3013,8 +3013,8 @@ var vtsDefaults = {
   ajax: ajax,
   "class": {
     form: 'vts-form-was-validated',
-    invalid: 'vts-invalid-field-feedback',
-    valid: 'vts-valid-field-feedback',
+    invalid: 'vts-invalid-field',
+    valid: 'vts-valid-field',
     wrapper: '',
     fieldWrapper: 'vts-field-was-validated'
   },
@@ -3027,7 +3027,7 @@ var vtsDefaults = {
       valid = renderClass.valid;
 
     // Check if field is valid
-    var isValid = !!validationResults.valid;
+    var isValid = ('valid' in validationResults);
 
     // Determine the feedback class based on the validation result
     var feedbackClass = isValid ? valid : invalid;
@@ -3041,6 +3041,8 @@ var vtsDefaults = {
       fieldWrapper = findClosestElement(this, wrapper);
     }
     fieldWrapper.classList.add(renderClass.fieldWrapper);
+    fieldWrapper.classList.add(isValid ? valid : invalid);
+    fieldWrapper.classList.remove(!isValid ? valid : invalid);
 
     // Find the feedback container
     var vtsFeedbackClass = 'vts-feedback-container';
@@ -3051,10 +3053,6 @@ var vtsDefaults = {
     if (feedbackContainer instanceof HTMLElement) {
       // Update the feedback content and display
       feedbackContainer.innerHTML = textContent;
-
-      // toggle the feedback class
-      feedbackContainer.classList.add(feedbackClass);
-      feedbackContainer.classList.remove(!isValid ? valid : invalid);
     } else {
       var _fieldWrapper2;
       // Create a new feedback container and append it to the field wrapper
@@ -3312,7 +3310,24 @@ var Vts = /*#__PURE__*/function () {
       var fields = form === null || form === void 0 ? void 0 : form.querySelectorAll(fieldQuery);
       if (!form || !fields) return [];
       var fieldName = field.name;
-      if (!/\[.*\]/.test(field.name)) return [];
+      if (!/\[.*\]/.test(field.name)) {
+        // Find all matching inputs
+        var _groupedFields = [];
+        var _iterator2 = Vts_createForOfIteratorHelper(fields),
+          _step2;
+        try {
+          for (_iterator2.s(); !(_step2 = _iterator2.n()).done;) {
+            var gField = _step2.value;
+            //@ts-ignore
+            fieldName === gField.name && _groupedFields.push(gField);
+          }
+        } catch (err) {
+          _iterator2.e(err);
+        } finally {
+          _iterator2.f();
+        }
+        return _groupedFields;
+      }
 
       // Build regular expression
       var baseName = fieldName.split('[')[0];
@@ -3327,18 +3342,18 @@ var Vts = /*#__PURE__*/function () {
 
       // Find all matching inputs
       var groupedFields = [];
-      var _iterator2 = Vts_createForOfIteratorHelper(fields),
-        _step2;
+      var _iterator3 = Vts_createForOfIteratorHelper(fields),
+        _step3;
       try {
-        for (_iterator2.s(); !(_step2 = _iterator2.n()).done;) {
-          var gField = _step2.value;
+        for (_iterator3.s(); !(_step3 = _iterator3.n()).done;) {
+          var _gField = _step3.value;
           //@ts-ignore
-          groupRegex.test(gField.name) && groupedFields.push(gField);
+          groupRegex.test(_gField.name) && groupedFields.push(_gField);
         }
       } catch (err) {
-        _iterator2.e(err);
+        _iterator3.e(err);
       } finally {
-        _iterator2.f();
+        _iterator3.f();
       }
       return groupedFields;
     }
