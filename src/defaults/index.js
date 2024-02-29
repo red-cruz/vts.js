@@ -25,15 +25,21 @@ const vtsDefaults = {
     const { wrapper, invalid, valid } = renderClass;
 
     // Check if field is valid
-    const isValid = this.checkValidity();
+    const isValid = !!validationResults.valid;
 
     // Determine the feedback class based on the validation result
     const feedbackClass = isValid ? valid : invalid;
 
     // Find the field wrapper
-    const fieldWrapper = !wrapper
-      ? getCommonParent(this)
-      : findClosestElement(this, wrapper);
+    let fieldWrapper;
+    if (!wrapper) {
+      fieldWrapper = getCommonParent(this);
+    }
+    if (!fieldWrapper) {
+      fieldWrapper = findClosestElement(this, wrapper);
+    }
+
+    fieldWrapper.classList.add(renderClass.fieldWrapper);
 
     // Find the feedback container
     const vtsFeedbackClass = 'vts-feedback-container';
