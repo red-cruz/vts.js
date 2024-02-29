@@ -103,6 +103,8 @@ export default class Vts {
 
     const fieldName = field.name;
 
+    if (!/\[.*\]/.test(field.name)) return [];
+
     // Build regular expression
     const baseName = fieldName.split('[')[0];
     const dynamicParts = fieldName

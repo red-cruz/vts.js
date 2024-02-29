@@ -35,6 +35,7 @@ const vtsDefaults = {
     if (!wrapper) {
       fieldWrapper = getCommonParent(this);
     }
+
     if (!fieldWrapper) {
       fieldWrapper = findClosestElement(this, wrapper);
     }

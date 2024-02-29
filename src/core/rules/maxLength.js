@@ -10,7 +10,7 @@ import getRuleValue from '../../utils/rules/getRuleValue';
  * @this {import('../../types/core').default} Vts
  */
 export default async function (rules, field, label) {
-  if (!rules.max) return {};
+  if (!rules.maxLength) return {};
 
   /** @type {{ruleValue: number, targetField: import('../../types/core').VtsField|undefined}} */ // @ts-ignore
   const { ruleValue, targetField } = await getRuleValue(
@@ -18,40 +18,29 @@ export default async function (rules, field, label) {
     rules,
     field,
     label,
-    'max'
+    'maxLength'
   );
 
-  let isValid = false;
+  let isValid = field.value.length <= ruleValue;
 
-  if (field instanceof HTMLInputElement) {
-    switch (field.type) {
-      case 'file':
-        const fileLen = field.files?.length;
-        isValid = fileLen === undefined ? false : fileLen <= ruleValue;
-        break;
-
-      default:
-        isValid = Number(field.value) <= ruleValue;
-        break;
-    }
-    if (field.type === 'number') field.max = String(ruleValue);
-  } else if (field instanceof HTMLSelectElement) {
-    isValid = field.selectedOptions.length <= ruleValue;
-  } else {
-    isValid = Number(field.value) <= ruleValue;
+  if (!(field instanceof HTMLSelectElement)) {
+    field.maxLength = ruleValue;
   }
 
   if (isValid) return {};
 
-  const messages = rules.messages?.max || this.messages?.max || defaultMsg.max;
+  const messages =
+    rules.messages?.maxLength ||
+    this.messages?.maxLength ||
+    defaultMsg.maxLength;
 
   const targetLabel = targetField
     ? getFieldLabel(rules.label, targetField, this.form)
     : '';
 
   return {
-    max: messages
-      .replace(/{:max}/g, String(ruleValue))
+    maxLength: messages
+      .replace(/{:maxLength}/g, String(ruleValue))
       .replace(/{:targetValue}/g, targetField?.value ?? '')
       .replace(/{:targetLabel}/g, targetLabel),
   };

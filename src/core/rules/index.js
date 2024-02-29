@@ -18,6 +18,8 @@ import sizeRule from './size';
 import startsWithRule from './startsWith';
 import validatorRule from './validator';
 import { extractRule } from '../../utils/rules/getRuleValue';
+import minLengthRule from './minLength';
+import maxLengthRule from './maxLength';
 
 const inputRules = [
   afterRule,
@@ -29,7 +31,9 @@ const inputRules = [
   equalToRule,
   inArrayRule,
   maxRule,
+  maxLengthRule,
   minRule,
+  minLengthRule,
   notInArrayRule,
   patternRule,
   sizeRule,
@@ -127,6 +131,9 @@ const vtsRules = {
 
     this.rules = rulesMap;
 
+    /**
+     * @param {import('../../types/config/rules').Rules[string]} obj
+     */
     function mergeToDatasetRules(obj) {
       rulesFromDataset = Object.assign(obj, rulesFromDataset);
     }
@@ -162,59 +169,36 @@ const vtsRules = {
             }
             break;
           case 'max':
-            if (typeof rule !== 'number') break;
-
-            if (field instanceof HTMLInputElement) {
-              switch (field.type) {
-                case 'number':
-                  field.max = String(rule);
-                  break;
-
-                default:
-                  field.maxLength = rule;
-                  break;
-              }
-            } else if (field instanceof HTMLTextAreaElement) {
-              field.maxLength = rule;
-            }
-            break;
           case 'min':
-            if (typeof rule !== 'number') break;
-
-            if (field instanceof HTMLInputElement) {
-              switch (field.type) {
-                case 'number':
-                  field.min = String(rule);
-                  break;
-
-                default:
-                  field.minLength = rule;
-                  break;
-              }
-            } else if (field instanceof HTMLTextAreaElement) {
-              field.minLength = rule;
-            }
-            break;
           case 'size':
             if (typeof rule !== 'number') break;
 
-            if (field instanceof HTMLInputElement) {
-              switch (field.type) {
-                case 'number':
-                  field.min = String(rule);
-                  field.max = String(rule);
-                  break;
-
-                default:
-                  field.minLength = rule;
-                  field.maxLength = rule;
-                  break;
+            if (field instanceof HTMLInputElement && field.type === 'number') {
+              const strRule = String(rule);
+              if (ruleKey === 'min') {
+                field.min = strRule;
+              } else if (ruleKey === 'max') {
+                field.max = strRule;
+              } else {
+                field.min = strRule;
+                field.max = strRule;
               }
-            } else if (field instanceof HTMLTextAreaElement) {
-              field.minLength = rule;
-              field.maxLength = rule;
             }
             break;
+
+          case 'maxLength':
+          case 'minLength':
+            if (typeof rule !== 'number') break;
+
+            if (!(field instanceof HTMLSelectElement)) {
+              if (ruleKey === 'maxLength') {
+                field.maxLength = rule;
+              } else {
+                field.minLength = rule;
+              }
+            }
+            break;
+
           case 'required':
             if (typeof rule === 'boolean') field.required = rule;
             break;

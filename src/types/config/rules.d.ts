@@ -85,9 +85,19 @@ type Rules = {
     max?: Rule<string | number>;
 
     /**
+     * Field's value must be at least the specified maximum length
+     */
+    maxLength?: Rule<string | number>;
+
+    /**
      * Field's value must be at least the specified minimum number.
      */
     min?: Rule<string | number>;
+
+    /**
+     * Field's value must be at least the specified minimum length
+     */
+    minLength?: Rule<string | number>;
 
     /**
      * Field must be different from the specified value.

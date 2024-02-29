@@ -1,4 +1,4 @@
-import Vts from '../Vts';
+import Vts from '../Vts.js';
 
 /**
  * Retrieves the common parent of a field.

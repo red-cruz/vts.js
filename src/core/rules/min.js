@@ -30,20 +30,15 @@ export default async function (rules, field, label) {
         isValid = fileLen === undefined ? false : fileLen >= ruleValue;
         break;
 
-      case 'number':
-        field.min = String(ruleValue);
+      default:
         isValid = Number(field.value) >= ruleValue;
         break;
-
-      default:
-        field.minLength = ruleValue;
-        isValid = field.value.length >= ruleValue;
-        break;
     }
+    if (field.type === 'number') field.min = String(ruleValue);
   } else if (field instanceof HTMLSelectElement) {
     isValid = field.selectedOptions.length >= ruleValue;
   } else {
-    isValid = field.value.length >= ruleValue;
+    isValid = Number(field.value) >= ruleValue;
   }
 
   if (isValid) return {};
