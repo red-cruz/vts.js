@@ -32,10 +32,12 @@ export default async function (rules, field, label) {
 
       case 'number':
         field.max = String(ruleValue);
+        isValid = Number(field.value) <= ruleValue;
         break;
 
       default:
-        isValid = Number(field.value) <= ruleValue;
+        field.maxLength = ruleValue;
+        isValid = field.value.length <= ruleValue;
         break;
     }
   } else if (field instanceof HTMLSelectElement) {

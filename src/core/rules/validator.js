@@ -8,13 +8,12 @@
  * @returns {Promise<import('../../types/core/validation').ValidationResults>}
  */
 export default async function validatorRule(rules, field, label) {
-  const dataset = field.dataset.vtsRuleValidator || '';
-  const customValidator = rules.validator || window[dataset];
+  const customValidator = rules.validator;
   if (!customValidator) return {};
 
   if (typeof customValidator === 'function') {
     this._setCheckingRule(rules, field, label);
-    const invalidMsg = await customValidator(field, label, this.form);
+    const invalidMsg = await customValidator(field, label);
 
     return invalidMsg ? { validator: invalidMsg } : {};
   } else {
@@ -25,7 +24,8 @@ export default async function validatorRule(rules, field, label) {
     };
 
     for (const validator of customValidator) {
-      const invalidMsg = await validator(field, label, this.form);
+      this._setCheckingRule(rules, field, label);
+      const invalidMsg = await validator(field, label);
       // @ts-ignore
       if (invalidMsg) invalidMsgs.validator.push(invalidMsg);
     }

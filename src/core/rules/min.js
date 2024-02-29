@@ -32,9 +32,12 @@ export default async function (rules, field, label) {
 
       case 'number':
         field.min = String(ruleValue);
-        break;
-      default:
         isValid = Number(field.value) >= ruleValue;
+        break;
+
+      default:
+        field.minLength = ruleValue;
+        isValid = field.value.length >= ruleValue;
         break;
     }
   } else if (field instanceof HTMLSelectElement) {

@@ -162,25 +162,57 @@ const vtsRules = {
             }
             break;
           case 'max':
-            if (!(field instanceof HTMLInputElement)) break;
-            if (field.type !== 'number') break;
-            if (typeof rule === 'number') {
-              field.max = String(rule);
+            if (typeof rule !== 'number') break;
+
+            if (field instanceof HTMLInputElement) {
+              switch (field.type) {
+                case 'number':
+                  field.max = String(rule);
+                  break;
+
+                default:
+                  field.maxLength = rule;
+                  break;
+              }
+            } else if (field instanceof HTMLTextAreaElement) {
+              field.maxLength = rule;
             }
             break;
           case 'min':
-            if (!(field instanceof HTMLInputElement)) break;
-            if (field.type !== 'number') break;
-            if (typeof rule === 'number') {
-              field.min = String(rule);
+            if (typeof rule !== 'number') break;
+
+            if (field instanceof HTMLInputElement) {
+              switch (field.type) {
+                case 'number':
+                  field.min = String(rule);
+                  break;
+
+                default:
+                  field.minLength = rule;
+                  break;
+              }
+            } else if (field instanceof HTMLTextAreaElement) {
+              field.minLength = rule;
             }
             break;
           case 'size':
-            if (!(field instanceof HTMLInputElement)) break;
-            if (field.type !== 'number') break;
-            if (typeof rule === 'number') {
-              field.min = String(rule);
-              field.max = String(rule);
+            if (typeof rule !== 'number') break;
+
+            if (field instanceof HTMLInputElement) {
+              switch (field.type) {
+                case 'number':
+                  field.min = String(rule);
+                  field.max = String(rule);
+                  break;
+
+                default:
+                  field.minLength = rule;
+                  field.maxLength = rule;
+                  break;
+              }
+            } else if (field instanceof HTMLTextAreaElement) {
+              field.minLength = rule;
+              field.maxLength = rule;
             }
             break;
           case 'required':
@@ -200,8 +232,10 @@ const vtsRules = {
       .replace(/{:value}/g, field.value)
       .replace(/{:label}/g, label);
 
+    const renderClass = Object.assign(this.class, { wrapper: rules.wrapper });
+
     field.setCustomValidity(checking);
-    this.renderFeedback.call(field, { checking }, this.class.invalid);
+    this.renderFeedback.call(field, { checking }, renderClass);
   },
 };
 
