@@ -661,6 +661,8 @@ function extractRule(rule, ruleKey) {
         break;
       case 'max':
       case 'min':
+      case 'maxLength':
+      case 'minLength':
       case 'size':
         ruleValue = Number(ruleValue);
         break;
