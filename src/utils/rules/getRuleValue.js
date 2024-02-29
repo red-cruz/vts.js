@@ -88,6 +88,8 @@ export function extractRule(rule, ruleKey) {
 
       case 'max':
       case 'min':
+      case 'maxLength':
+      case 'minLength':
       case 'size':
         ruleValue = Number(ruleValue);
         break;
