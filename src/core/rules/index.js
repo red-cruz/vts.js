@@ -59,6 +59,7 @@ const vtsRules = {
 
     // map field constraints
     this.fields.forEach((field) => {
+      field.classList.add('vts-field');
       const ruleName = field.dataset.vtsRule || field.name;
       const definedRules = rules[ruleName] || {};
 

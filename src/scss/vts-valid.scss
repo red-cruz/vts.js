@@ -1,0 +1,99 @@
+$vts-dark-valid-color: #75b798;
+$vts-light-valid-color: #198754;
+
+body {
+  form.vts {
+    .vts-validation-messages-container {
+      display: none;
+      padding-top: 0.15rem;
+    }
+    .vts-field-was-validated {
+      // VALID FIELD
+      &.vts-valid-field {
+        // VTS FIELD
+        .vts-field {
+          &:valid {
+            border-color: $vts-light-valid-color;
+            &:checked {
+              background-color: $vts-light-valid-color;
+            }
+          }
+
+          // NOT CHECKBOX OR RADIO
+          &:not([type='checkbox']):not([type='radio']) {
+            padding-right: calc(1.5em + 0.75rem);
+            background-repeat: no-repeat;
+            background-position: right calc(0.375em + 0.1875rem) center;
+            background-size: calc(0.75em + 0.375rem) calc(0.75em + 0.375rem);
+            &:valid {
+              border-color: $vts-light-valid-color;
+              background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 8'%3e%3cpath fill='%23198754' d='M2.3 6.73.6 4.53c-.4-1.04.46-1.4 1.1-.8l1.1 1.4 3.4-3.8c.6-.63 1.6-.27 1.2.7l-4 4.6c-.43.5-.8.4-1.1.1z'/%3e%3c/svg%3e");
+            }
+          }
+
+          // FOR CHECKBOX OR RADIO
+          &[type='checkbox'],
+          &[type='radio'] {
+            &:valid {
+              border-color: $vts-light-valid-color;
+              & ~ label {
+                color: $vts-light-valid-color;
+              }
+            }
+          }
+        }
+
+        // VALIDATION MESSAGES CONTAINER
+        .vts-validation-messages-container {
+          color: $vts-light-valid-color;
+          display: block;
+        }
+      }
+    }
+  }
+
+  // FOR DARK THEME
+  &[data-bs-theme='dark'],
+  &[data-theme='dark'] {
+    form.vts {
+      .vts-field-was-validated {
+        // VALID FIELD
+        &.vts-valid-field {
+          // VTS FIELD
+          .vts-field {
+            &:valid {
+              border-color: $vts-dark-valid-color;
+              &:checked {
+                background-color: $vts-dark-valid-color;
+              }
+            }
+
+            // NOT CHECKBOX OR RADIO
+            &:not([type='checkbox']):not([type='radio']) {
+              &:valid {
+                border-color: $vts-dark-valid-color;
+              }
+            }
+
+            // FOR CHECKBOX OR RADIO
+            &[type='checkbox'],
+            &[type='radio'] {
+              &:valid {
+                border-color: $vts-dark-valid-color;
+                & ~ label {
+                  color: $vts-dark-valid-color;
+                }
+              }
+            }
+          }
+
+          // VALIDATION MESSAGES CONTAINER
+          .vts-validation-messages-container {
+            color: $vts-dark-valid-color;
+            display: block;
+          }
+        }
+      }
+    }
+  }
+}

@@ -32,6 +32,7 @@ const vtsDefaults = {
 
     // Find the field wrapper
     let fieldWrapper;
+
     if (!wrapper) {
       fieldWrapper = getCommonParent(this);
     }
@@ -41,18 +42,19 @@ const vtsDefaults = {
     }
 
     fieldWrapper.classList.add(renderClass.fieldWrapper);
-
     fieldWrapper.classList.add(isValid ? valid : invalid);
     fieldWrapper.classList.remove(!isValid ? valid : invalid);
 
     // Find the feedback container
-    const vtsFeedbackClass = 'vts-feedback-container';
+    const vtsFeedbackClass = 'vts-validation-messages-container';
     const feedbackContainer = fieldWrapper?.querySelector(
       `.${vtsFeedbackClass}`
     );
 
-    // Create the feedback container if it doesn't exist
+    // Extract validation messages
     const textContent = Object.values(validationResults).flat().join('<br />');
+
+    // Create the feedback container if it doesn't exist
     if (feedbackContainer instanceof HTMLElement) {
       // Update the feedback content and display
       feedbackContainer.innerHTML = textContent;
