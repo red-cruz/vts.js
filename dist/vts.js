@@ -1858,6 +1858,7 @@ var vtsRules = {
 
     // map field constraints
     this.fields.forEach(function (field) {
+      field.classList.add('vts-field');
       var ruleName = field.dataset.vtsRule || field.name;
       var definedRules = rules[ruleName] || {};
 
@@ -3045,11 +3046,13 @@ var vtsDefaults = {
     fieldWrapper.classList.remove(!isValid ? valid : invalid);
 
     // Find the feedback container
-    var vtsFeedbackClass = 'vts-feedback-container';
+    var vtsFeedbackClass = 'vts-validation-messages-container';
     var feedbackContainer = (_fieldWrapper = fieldWrapper) === null || _fieldWrapper === void 0 ? void 0 : _fieldWrapper.querySelector(".".concat(vtsFeedbackClass));
 
-    // Create the feedback container if it doesn't exist
+    // Extract validation messages
     var textContent = Object.values(validationResults).flat().join('<br />');
+
+    // Create the feedback container if it doesn't exist
     if (feedbackContainer instanceof HTMLElement) {
       // Update the feedback content and display
       feedbackContainer.innerHTML = textContent;
