@@ -1877,10 +1877,11 @@ function maxLength_ref() {
 ;// CONCATENATED MODULE: ./src/core/rules/index.js
 function rules_slicedToArray(arr, i) { return rules_arrayWithHoles(arr) || rules_iterableToArrayLimit(arr, i) || rules_unsupportedIterableToArray(arr, i) || rules_nonIterableRest(); }
 function rules_nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
-function rules_unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return rules_arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return rules_arrayLikeToArray(o, minLen); }
-function rules_arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) arr2[i] = arr[i]; return arr2; }
 function rules_iterableToArrayLimit(arr, i) { var _i = null == arr ? null : "undefined" != typeof Symbol && arr[Symbol.iterator] || arr["@@iterator"]; if (null != _i) { var _s, _e, _x, _r, _arr = [], _n = !0, _d = !1; try { if (_x = (_i = _i.call(arr)).next, 0 === i) { if (Object(_i) !== _i) return; _n = !1; } else for (; !(_n = (_s = _x.call(_i)).done) && (_arr.push(_s.value), _arr.length !== i); _n = !0); } catch (err) { _d = !0, _e = err; } finally { try { if (!_n && null != _i["return"] && (_r = _i["return"](), Object(_r) !== _r)) return; } finally { if (_d) throw _e; } } return _arr; } }
 function rules_arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
+function rules_createForOfIteratorHelper(o, allowArrayLike) { var it = typeof Symbol !== "undefined" && o[Symbol.iterator] || o["@@iterator"]; if (!it) { if (Array.isArray(o) || (it = rules_unsupportedIterableToArray(o)) || allowArrayLike && o && typeof o.length === "number") { if (it) o = it; var i = 0; var F = function F() {}; return { s: F, n: function n() { if (i >= o.length) return { done: true }; return { done: false, value: o[i++] }; }, e: function e(_e2) { throw _e2; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var normalCompletion = true, didErr = false, err; return { s: function s() { it = it.call(o); }, n: function n() { var step = it.next(); normalCompletion = step.done; return step; }, e: function e(_e3) { didErr = true; err = _e3; }, f: function f() { try { if (!normalCompletion && it["return"] != null) it["return"](); } finally { if (didErr) throw err; } } }; }
+function rules_unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return rules_arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return rules_arrayLikeToArray(o, minLen); }
+function rules_arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) arr2[i] = arr[i]; return arr2; }
 // @ts-check
 
 
@@ -1915,74 +1916,92 @@ var vtsRules = {
     var rulesFromDataset;
 
     // map field constraints
-    this.fields.forEach(function (field) {
-      field.classList.add('vts-field');
-      var ruleName = field.dataset.vtsRule || field.name;
-      var definedRules = rules[ruleName] || {};
-
-      // get default rules from field dataset
-      rulesFromDataset = Object.entries(field.dataset).filter(function (_ref) {
-        var _ref2 = rules_slicedToArray(_ref, 1),
-          key = _ref2[0];
-        return key.startsWith('vtsRule') && key !== 'vtsRule';
-      }).reduce( /** @param {import('../../types/config/rules').Rules[string]} rules */
-      function (rules, _ref3) {
-        var _ref4 = rules_slicedToArray(_ref3, 2),
-          key = _ref4[0],
-          value = _ref4[1];
-        var rKey = key.slice('vtsRule'.length);
-        var ruleKey = parseRuleKey(rKey);
-
-        // parse
-        var extractedRule = extractRuleFromDataset(value);
-        if (typeof extractedRule === 'string' && ruleKey === 'required') {
-          var _ref5;
-          // set default value for required rule
-          extractedRule = String((_ref5 = value !== 'false') !== null && _ref5 !== void 0 ? _ref5 : field.required);
+    var _iterator = rules_createForOfIteratorHelper(this.fields),
+      _step;
+    try {
+      var _loop = function _loop() {
+        var field = _step.value;
+        var ruleName = field.dataset.vtsRule || field.name;
+        var listenerExists = field.dataset['vts_listener_exists'];
+        if (listenerExists) {
+          if (rules instanceof Map) rulesMap.set(ruleName, rules.get(ruleName) || {});
+          return "continue";
         }
-        if (extractedRule instanceof Function) {
-          rules[ruleKey] = extractedRule;
-        } else {
-          rules[ruleKey] = extractRule(extractedRule, ruleKey);
-        }
-        return rules;
-      }, {});
+        field.classList.add('vts-field');
+        var definedRules = rules[ruleName] || {};
 
-      // get default rules from field attributes
-      mergeToDatasetRules({
-        required: field.required
-      });
-      if (field instanceof HTMLInputElement) {
+        // get default rules from field dataset
+        rulesFromDataset = Object.entries(field.dataset).filter(function (_ref) {
+          var _ref2 = rules_slicedToArray(_ref, 1),
+            key = _ref2[0];
+          return key.startsWith('vtsRule') && key !== 'vtsRule';
+        }).reduce( /** @param {import('../../types/config/rules').Rules[string]} rules */
+        function (rules, _ref3) {
+          var _ref4 = rules_slicedToArray(_ref3, 2),
+            key = _ref4[0],
+            value = _ref4[1];
+          var rKey = key.slice('vtsRule'.length);
+          var ruleKey = parseRuleKey(rKey);
+
+          // parse
+          var extractedRule = extractRuleFromDataset(value);
+          if (typeof extractedRule === 'string' && ruleKey === 'required') {
+            var _ref5;
+            // set default value for required rule
+            extractedRule = String((_ref5 = value !== 'false') !== null && _ref5 !== void 0 ? _ref5 : field.required);
+          }
+          if (extractedRule instanceof Function) {
+            rules[ruleKey] = extractedRule;
+          } else {
+            rules[ruleKey] = extractRule(extractedRule, ruleKey);
+          }
+          return rules;
+        }, {});
+
+        // get default rules from field attributes
         mergeToDatasetRules({
-          maxLength: field.maxLength < 1 ? undefined : field.maxLength,
-          minLength: field.minLength < 1 ? undefined : field.minLength
+          required: field.required
         });
-        switch (field.type) {
-          case 'date':
-          case 'datetime-local':
-            mergeToDatasetRules({
-              afterOrEqual: field.min ? new Date(field.min) : undefined,
-              beforeOrEqual: field.max ? new Date(field.max) : undefined
-            });
-            break;
-          case 'number':
-            mergeToDatasetRules({
-              min: field.min ? Number(field.min) : undefined,
-              max: field.max ? Number(field.max) : undefined
-            });
-            break;
+        if (field instanceof HTMLInputElement) {
+          mergeToDatasetRules({
+            maxLength: field.maxLength < 1 ? undefined : field.maxLength,
+            minLength: field.minLength < 1 ? undefined : field.minLength
+          });
+          switch (field.type) {
+            case 'date':
+            case 'datetime-local':
+              mergeToDatasetRules({
+                afterOrEqual: field.min ? new Date(field.min) : undefined,
+                beforeOrEqual: field.max ? new Date(field.max) : undefined
+              });
+              break;
+            case 'number':
+              mergeToDatasetRules({
+                min: field.min ? Number(field.min) : undefined,
+                max: field.max ? Number(field.max) : undefined
+              });
+              break;
+          }
         }
+        var mergedRuleObj = Object.assign(rulesFromDataset, definedRules);
+
+        // filter undefined
+        Object.keys(mergedRuleObj).forEach(function (key) {
+          return mergedRuleObj[key] === undefined && delete mergedRuleObj[key];
+        });
+
+        // set the rule
+        rulesMap.set(ruleName, mergedRuleObj);
+      };
+      for (_iterator.s(); !(_step = _iterator.n()).done;) {
+        var _ret = _loop();
+        if (_ret === "continue") continue;
       }
-      var mergedRuleObj = Object.assign(rulesFromDataset, definedRules);
-
-      // filter undefined
-      Object.keys(mergedRuleObj).forEach(function (key) {
-        return mergedRuleObj[key] === undefined && delete mergedRuleObj[key];
-      });
-
-      // set the rule
-      rulesMap.set(ruleName, mergedRuleObj);
-    });
+    } catch (err) {
+      _iterator.e(err);
+    } finally {
+      _iterator.f();
+    }
     this.rules = rulesMap;
 
     /**
@@ -1993,64 +2012,74 @@ var vtsRules = {
     }
   },
   _setFieldAttributes: function _setFieldAttributes() {
-    var _this = this;
-    this.fields.forEach(function (field) {
-      var rules = _this._getFieldRules(field);
-      for (var ruleKey in rules) {
-        /** @type {import('../../types/config/rules').Rule<string|number|RegExp|Date|Boolean>} */
-        var rule = rules[ruleKey];
-        if (typeof rule === 'function') continue;
-        if (typeof rule === 'string' && rule.startsWith('field:')) continue;
-        switch (ruleKey) {
-          case 'after':
-          case 'afterOrEqual':
-            if (!(field instanceof HTMLInputElement)) break;
-            if (field.type !== 'date') break;
-            if (rule instanceof Date) {
-              field.min = rule.toISOString().split('T')[0];
-            }
-            break;
-          case 'before':
-          case 'beforeOrEqual':
-            if (!(field instanceof HTMLInputElement)) break;
-            if (field.type !== 'date') break;
-            if (rule instanceof Date) {
-              field.max = rule.toISOString().split('T')[0];
-            }
-            break;
-          case 'max':
-          case 'min':
-          case 'size':
-            if (typeof rule !== 'number') break;
-            if (field instanceof HTMLInputElement && field.type === 'number') {
-              var strRule = String(rule);
-              if (ruleKey === 'min') {
-                field.min = strRule;
-              } else if (ruleKey === 'max') {
-                field.max = strRule;
-              } else {
-                field.min = strRule;
-                field.max = strRule;
+    var _iterator2 = rules_createForOfIteratorHelper(this.fields),
+      _step2;
+    try {
+      for (_iterator2.s(); !(_step2 = _iterator2.n()).done;) {
+        var field = _step2.value;
+        var listenerExists = field.dataset['vts_listener_exists'];
+        if (listenerExists) continue;
+        var rules = this._getFieldRules(field);
+        for (var ruleKey in rules) {
+          /** @type {import('../../types/config/rules').Rule<string|number|RegExp|Date|Boolean>} */
+          var rule = rules[ruleKey];
+          if (typeof rule === 'function') continue;
+          if (typeof rule === 'string' && rule.startsWith('field:')) continue;
+          switch (ruleKey) {
+            case 'after':
+            case 'afterOrEqual':
+              if (!(field instanceof HTMLInputElement)) break;
+              if (field.type !== 'date') break;
+              if (rule instanceof Date) {
+                field.min = rule.toISOString().split('T')[0];
               }
-            }
-            break;
-          case 'maxLength':
-          case 'minLength':
-            if (typeof rule !== 'number') break;
-            if (!(field instanceof HTMLSelectElement)) {
-              if (ruleKey === 'maxLength') {
-                field.maxLength = rule;
-              } else {
-                field.minLength = rule;
+              break;
+            case 'before':
+            case 'beforeOrEqual':
+              if (!(field instanceof HTMLInputElement)) break;
+              if (field.type !== 'date') break;
+              if (rule instanceof Date) {
+                field.max = rule.toISOString().split('T')[0];
               }
-            }
-            break;
-          case 'required':
-            if (typeof rule === 'boolean') field.required = rule;
-            break;
+              break;
+            case 'max':
+            case 'min':
+            case 'size':
+              if (typeof rule !== 'number') break;
+              if (field instanceof HTMLInputElement && field.type === 'number') {
+                var strRule = String(rule);
+                if (ruleKey === 'min') {
+                  field.min = strRule;
+                } else if (ruleKey === 'max') {
+                  field.max = strRule;
+                } else {
+                  field.min = strRule;
+                  field.max = strRule;
+                }
+              }
+              break;
+            case 'maxLength':
+            case 'minLength':
+              if (typeof rule !== 'number') break;
+              if (!(field instanceof HTMLSelectElement)) {
+                if (ruleKey === 'maxLength') {
+                  field.maxLength = rule;
+                } else {
+                  field.minLength = rule;
+                }
+              }
+              break;
+            case 'required':
+              if (typeof rule === 'boolean') field.required = rule;
+              break;
+          }
         }
       }
-    });
+    } catch (err) {
+      _iterator2.e(err);
+    } finally {
+      _iterator2.f();
+    }
   },
   _setCheckingRule: function _setCheckingRule(rules, field, label) {
     var _rules$messages, _this$messages;
@@ -3262,7 +3291,9 @@ var Vts = /*#__PURE__*/function () {
     value: /** @this {import('./types/core').default} Vts */
     function updateFields() {
       this.fields = this.form.querySelectorAll(fieldQuery);
-      this._addFieldListener();
+      this._convertRulesToMap();
+      this._setFieldAttributes();
+      this._addEventListeners();
     }
 
     /** @this {import('./types/core').default} Vts */
