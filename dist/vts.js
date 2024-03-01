@@ -112,71 +112,86 @@ var vtsForm = {
   isFormValid: function isFormValid() {
     var _arguments = arguments,
       _this = this;
-    return Form_asyncToGenerator( /*#__PURE__*/Form_regeneratorRuntime().mark(function _callee() {
+    return Form_asyncToGenerator( /*#__PURE__*/Form_regeneratorRuntime().mark(function _callee2() {
       var validate;
-      return Form_regeneratorRuntime().wrap(function _callee$(_context) {
-        while (1) switch (_context.prev = _context.next) {
+      return Form_regeneratorRuntime().wrap(function _callee2$(_context2) {
+        while (1) switch (_context2.prev = _context2.next) {
           case 0:
             validate = _arguments.length > 0 && _arguments[0] !== undefined ? _arguments[0] : false;
-            _context.t0 = validate;
-            if (!_context.t0) {
-              _context.next = 5;
-              break;
-            }
-            _context.next = 5;
-            return _this.validate();
-          case 5:
-            return _context.abrupt("return", _this.form.checkValidity());
-          case 6:
+            return _context2.abrupt("return", new Promise( /*#__PURE__*/function () {
+              var _ref = Form_asyncToGenerator( /*#__PURE__*/Form_regeneratorRuntime().mark(function _callee(resolve) {
+                return Form_regeneratorRuntime().wrap(function _callee$(_context) {
+                  while (1) switch (_context.prev = _context.next) {
+                    case 0:
+                      _context.t0 = validate;
+                      if (!_context.t0) {
+                        _context.next = 4;
+                        break;
+                      }
+                      _context.next = 4;
+                      return _this.validate();
+                    case 4:
+                      resolve(_this.form.checkValidity());
+                    case 5:
+                    case "end":
+                      return _context.stop();
+                  }
+                }, _callee);
+              }));
+              return function (_x) {
+                return _ref.apply(this, arguments);
+              };
+            }()));
+          case 2:
           case "end":
-            return _context.stop();
+            return _context2.stop();
         }
-      }, _callee);
+      }, _callee2);
     }))();
   },
   submit: function submit() {
     var _this2 = this;
-    return Form_asyncToGenerator( /*#__PURE__*/Form_regeneratorRuntime().mark(function _callee2() {
+    return Form_asyncToGenerator( /*#__PURE__*/Form_regeneratorRuntime().mark(function _callee3() {
       var _this2$ajax$action;
       var data, response, promiseResolved, ajax, form, action, _this2$ajax$request$s;
-      return Form_regeneratorRuntime().wrap(function _callee2$(_context2) {
-        while (1) switch (_context2.prev = _context2.next) {
+      return Form_regeneratorRuntime().wrap(function _callee3$(_context3) {
+        while (1) switch (_context3.prev = _context3.next) {
           case 0:
             promiseResolved = true;
             ajax = _this2.ajax;
             form = _this2.form;
             action = _this2.ajax.action = (_this2$ajax$action = _this2.ajax.action) !== null && _this2$ajax$action !== void 0 ? _this2$ajax$action : form.action;
-            _context2.prev = 4;
-            _context2.next = 7;
+            _context3.prev = 4;
+            _context3.next = 7;
             return vtsFormBeforeSend.call(_this2);
           case 7:
-            _context2.next = 9;
+            _context3.next = 9;
             return fetch(new Request(action, _this2.ajax.request));
           case 9:
-            response = _context2.sent;
+            response = _context3.sent;
             if (response.ok) {
-              _context2.next = 12;
+              _context3.next = 12;
               break;
             }
             throw response;
           case 12:
-            _context2.next = 14;
+            _context3.next = 14;
             return getResponseData_getResponseData(response);
           case 14:
-            data = _context2.sent;
-            _context2.next = 17;
+            data = _context3.sent;
+            _context3.next = 17;
             return ajax.success(data, response, form);
           case 17:
             form.querySelectorAll('.' + _this2["class"].fieldWrapper).forEach(function (el) {
               return el.classList.remove(_this2["class"].fieldWrapper);
             });
             form.classList.remove(_this2["class"].form);
-            _context2.next = 34;
+            _context3.next = 34;
             break;
           case 21:
-            _context2.prev = 21;
-            _context2.t0 = _context2["catch"](4);
-            data = _context2.t0;
+            _context3.prev = 21;
+            _context3.t0 = _context3["catch"](4);
+            data = _context3.t0;
             response = null;
 
             // Reinitialize abort controller if aborted
@@ -186,25 +201,25 @@ var vtsForm = {
             }
 
             // Check if the error is an instance of Response
-            if (!(_context2.t0 instanceof Response)) {
-              _context2.next = 31;
+            if (!(_context3.t0 instanceof Response)) {
+              _context3.next = 31;
               break;
             }
-            _context2.next = 29;
-            return getResponseData_getResponseData(_context2.t0);
+            _context3.next = 29;
+            return getResponseData_getResponseData(_context3.t0);
           case 29:
-            data = _context2.sent;
-            response = _context2.t0;
+            data = _context3.sent;
+            response = _context3.t0;
           case 31:
             promiseResolved = false;
 
             // Call the error callback function with the appropriate data
-            _context2.next = 34;
+            _context3.next = 34;
             return ajax.error(data, response, form);
           case 34:
             // complete
             ajax.complete(data, response, form);
-            return _context2.abrupt("return", promiseResolved ? Promise.resolve({
+            return _context3.abrupt("return", promiseResolved ? Promise.resolve({
               data: data,
               response: response,
               form: form
@@ -215,9 +230,9 @@ var vtsForm = {
             }));
           case 36:
           case "end":
-            return _context2.stop();
+            return _context3.stop();
         }
-      }, _callee2, null, [[4, 21]]);
+      }, _callee3, null, [[4, 21]]);
     }))();
   }
 };
@@ -235,10 +250,10 @@ function vtsFormBeforeSend() {
  * @returns {{}}
  */
 function _vtsFormBeforeSend() {
-  _vtsFormBeforeSend = Form_asyncToGenerator( /*#__PURE__*/Form_regeneratorRuntime().mark(function _callee3() {
+  _vtsFormBeforeSend = Form_asyncToGenerator( /*#__PURE__*/Form_regeneratorRuntime().mark(function _callee4() {
     var vMethod, formData, query;
-    return Form_regeneratorRuntime().wrap(function _callee3$(_context3) {
-      while (1) switch (_context3.prev = _context3.next) {
+    return Form_regeneratorRuntime().wrap(function _callee4$(_context4) {
+      while (1) switch (_context4.prev = _context4.next) {
         case 0:
           // @ts-ignore
           this.ajax.abortController = new AbortController();
@@ -246,35 +261,35 @@ function _vtsFormBeforeSend() {
           this.ajax.request.body = new FormData(this.form);
 
           // call beforeSend config and assign the configured request
-          _context3.next = 5;
+          _context4.next = 5;
           return this.ajax.beforeSend(this.ajax.request, this.form, this.ajax.abortController);
         case 5:
           vMethod = this.ajax.request.method || 'get';
           formData = this.ajax.request.body;
           if (!(Form_typeof(formData) === 'object' && formData)) {
-            _context3.next = 20;
+            _context4.next = 20;
             break;
           }
-          _context3.t0 = vMethod.toLocaleLowerCase();
-          _context3.next = _context3.t0 === 'get' ? 11 : _context3.t0 === 'delete' ? 11 : _context3.t0 === 'put' ? 14 : _context3.t0 === 'patch' ? 14 : 18;
+          _context4.t0 = vMethod.toLocaleLowerCase();
+          _context4.next = _context4.t0 === 'get' ? 11 : _context4.t0 === 'delete' ? 11 : _context4.t0 === 'put' ? 14 : _context4.t0 === 'patch' ? 14 : 18;
           break;
         case 11:
           query = new URLSearchParams(formData.toString());
           this.ajax.action = "".concat(this.ajax.action, "/?").concat(query);
-          return _context3.abrupt("break", 20);
+          return _context4.abrupt("break", 20);
         case 14:
           if (!this.ajax.request.headers) this.ajax.request.headers = {};
           this.ajax.request.headers['Content-Type'] = 'application/json';
           this.ajax.request.body = formDataToJSON(formData);
-          return _context3.abrupt("break", 20);
+          return _context4.abrupt("break", 20);
         case 18:
           this.ajax.request.body = formData;
-          return _context3.abrupt("break", 20);
+          return _context4.abrupt("break", 20);
         case 20:
         case "end":
-          return _context3.stop();
+          return _context4.stop();
       }
-    }, _callee3, this);
+    }, _callee4, this);
   }));
   return _vtsFormBeforeSend.apply(this, arguments);
 }
@@ -437,7 +452,7 @@ var vtsEvents = {
             form = _this.form;
             form.addEventListener('submit', /*#__PURE__*/function () {
               var _ref = Events_asyncToGenerator( /*#__PURE__*/Events_regeneratorRuntime().mark(function _callee(e) {
-                var formClass, wasValidated, valid;
+                var formClass, wasValidated;
                 return Events_regeneratorRuntime().wrap(function _callee$(_context) {
                   while (1) switch (_context.prev = _context.next) {
                     case 0:
@@ -451,14 +466,11 @@ var vtsEvents = {
                         _this._addFieldListener();
                       }
                       _this.form.classList.add(formClass);
-                      _context.next = 8;
-                      return _this.isFormValid(true);
-                    case 8:
-                      valid = _context.sent;
-                      if (valid && _this.shouldSubmit) {
-                        _this.submit()["catch"](function () {});
-                      }
-                    case 10:
+                      _this.isFormValid(true).then(function (isValid) {
+                        isValid && _this.shouldSubmit && _this.submit()["catch"](function () {});
+                        _this.onSubmit.call(_this, isValid, e);
+                      });
+                    case 7:
                     case "end":
                       return _context.stop();
                   }
@@ -3067,6 +3079,7 @@ var vtsDefaults = {
   },
   validateOnSumbit: false,
   messages: defaults_defaultMsg,
+  onSubmit: function onSubmit() {},
   rules: {},
   stopPropagation: true
 };
@@ -3218,41 +3231,59 @@ var Vts = /*#__PURE__*/function () {
   }, {
     key: "validate",
     value: function () {
-      var _validate = Vts_asyncToGenerator( /*#__PURE__*/Vts_regeneratorRuntime().mark(function _callee() {
-        var _iterator, _step, field;
-        return Vts_regeneratorRuntime().wrap(function _callee$(_context) {
-          while (1) switch (_context.prev = _context.next) {
+      var _validate = Vts_asyncToGenerator( /*#__PURE__*/Vts_regeneratorRuntime().mark(function _callee2() {
+        var _this = this;
+        return Vts_regeneratorRuntime().wrap(function _callee2$(_context2) {
+          while (1) switch (_context2.prev = _context2.next) {
             case 0:
-              _iterator = Vts_createForOfIteratorHelper(this.fields);
-              _context.prev = 1;
-              _iterator.s();
-            case 3:
-              if ((_step = _iterator.n()).done) {
-                _context.next = 9;
-                break;
-              }
-              field = _step.value;
-              _context.next = 7;
-              return this._validate(field);
-            case 7:
-              _context.next = 3;
-              break;
-            case 9:
-              _context.next = 14;
-              break;
-            case 11:
-              _context.prev = 11;
-              _context.t0 = _context["catch"](1);
-              _iterator.e(_context.t0);
-            case 14:
-              _context.prev = 14;
-              _iterator.f();
-              return _context.finish(14);
-            case 17:
+              return _context2.abrupt("return", new Promise( /*#__PURE__*/function () {
+                var _ref = Vts_asyncToGenerator( /*#__PURE__*/Vts_regeneratorRuntime().mark(function _callee(resolve) {
+                  var _iterator, _step, field;
+                  return Vts_regeneratorRuntime().wrap(function _callee$(_context) {
+                    while (1) switch (_context.prev = _context.next) {
+                      case 0:
+                        _iterator = Vts_createForOfIteratorHelper(_this.fields);
+                        _context.prev = 1;
+                        _iterator.s();
+                      case 3:
+                        if ((_step = _iterator.n()).done) {
+                          _context.next = 9;
+                          break;
+                        }
+                        field = _step.value;
+                        _context.next = 7;
+                        return _this._validate(field);
+                      case 7:
+                        _context.next = 3;
+                        break;
+                      case 9:
+                        _context.next = 14;
+                        break;
+                      case 11:
+                        _context.prev = 11;
+                        _context.t0 = _context["catch"](1);
+                        _iterator.e(_context.t0);
+                      case 14:
+                        _context.prev = 14;
+                        _iterator.f();
+                        return _context.finish(14);
+                      case 17:
+                        resolve(_this.form.checkValidity());
+                      case 18:
+                      case "end":
+                        return _context.stop();
+                    }
+                  }, _callee, null, [[1, 11, 14, 17]]);
+                }));
+                return function (_x) {
+                  return _ref.apply(this, arguments);
+                };
+              }()));
+            case 1:
             case "end":
-              return _context.stop();
+              return _context2.stop();
           }
-        }, _callee, this, [[1, 11, 14, 17]]);
+        }, _callee2);
       }));
       function validate() {
         return _validate.apply(this, arguments);
@@ -3269,23 +3300,23 @@ var Vts = /*#__PURE__*/function () {
   }, {
     key: "getResponseData",
     value: function () {
-      var _getResponseData = Vts_asyncToGenerator( /*#__PURE__*/Vts_regeneratorRuntime().mark(function _callee2(response) {
+      var _getResponseData = Vts_asyncToGenerator( /*#__PURE__*/Vts_regeneratorRuntime().mark(function _callee3(response) {
         var data;
-        return Vts_regeneratorRuntime().wrap(function _callee2$(_context2) {
-          while (1) switch (_context2.prev = _context2.next) {
+        return Vts_regeneratorRuntime().wrap(function _callee3$(_context3) {
+          while (1) switch (_context3.prev = _context3.next) {
             case 0:
-              _context2.next = 2;
+              _context3.next = 2;
               return getResponseData_getResponseData(response);
             case 2:
-              data = _context2.sent;
-              return _context2.abrupt("return", data);
+              data = _context3.sent;
+              return _context3.abrupt("return", data);
             case 4:
             case "end":
-              return _context2.stop();
+              return _context3.stop();
           }
-        }, _callee2);
+        }, _callee3);
       }));
-      function getResponseData(_x) {
+      function getResponseData(_x2) {
         return _getResponseData.apply(this, arguments);
       }
       return getResponseData;
