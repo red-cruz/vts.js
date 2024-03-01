@@ -58,9 +58,17 @@ const vtsRules = {
     let rulesFromDataset;
 
     // map field constraints
-    this.fields.forEach((field) => {
-      field.classList.add('vts-field');
+    for (const field of this.fields) {
       const ruleName = field.dataset.vtsRule || field.name;
+
+      const listenerExists = field.dataset['vts_listener_exists'];
+      if (listenerExists) {
+        if (rules instanceof Map)
+          rulesMap.set(ruleName, rules.get(ruleName) || {});
+        continue;
+      }
+
+      field.classList.add('vts-field');
       const definedRules = rules[ruleName] || {};
 
       // get default rules from field dataset
@@ -128,7 +136,7 @@ const vtsRules = {
 
       // set the rule
       rulesMap.set(ruleName, mergedRuleObj);
-    });
+    }
 
     this.rules = rulesMap;
 
@@ -141,7 +149,10 @@ const vtsRules = {
   },
 
   _setFieldAttributes() {
-    this.fields.forEach((field) => {
+    for (const field of this.fields) {
+      const listenerExists = field.dataset['vts_listener_exists'];
+      if (listenerExists) continue;
+
       const rules = this._getFieldRules(field);
 
       for (const ruleKey in rules) {
@@ -204,7 +215,7 @@ const vtsRules = {
             break;
         }
       }
-    });
+    }
   },
 
   _setCheckingRule(rules, field, label) {

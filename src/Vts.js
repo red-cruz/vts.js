@@ -54,7 +54,9 @@ export default class Vts {
   /** @this {import('./types/core').default} Vts */
   updateFields() {
     this.fields = this.form.querySelectorAll(fieldQuery);
-    this._addFieldListener();
+    this._convertRulesToMap();
+    this._setFieldAttributes();
+    this._addEventListeners();
   }
 
   /** @this {import('./types/core').default} Vts */
