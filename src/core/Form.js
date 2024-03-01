@@ -4,8 +4,11 @@ import getResponseData from '../utils/getResponseData';
 /** @type {import('../types/core/form').default} */
 const vtsForm = {
   async isFormValid(validate = false) {
-    validate && (await this.validate());
-    return this.form.checkValidity();
+    return new Promise(async (resolve) => {
+      validate && (await this.validate());
+
+      resolve(this.form.checkValidity());
+    });
   },
 
   async submit() {

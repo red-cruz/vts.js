@@ -1,3 +1,4 @@
+import Vts from '../../Vts';
 import { VtsField } from '../core';
 import type { ValidationResults } from '../core/validation';
 import type AjaxSettings from './ajaxSettings';
@@ -54,6 +55,11 @@ export default interface VtsConfig {
    * }
    */
   rules: Rules;
+
+  /**
+   * Callback for when the form is submitted
+   */
+  onSubmit: (this: Vts, isValid: boolean, event: SubmitEvent) => void;
 
   /**
    * The custom validation messages configuration.

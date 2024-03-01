@@ -68,6 +68,7 @@ const vtsDefaults = {
   },
   validateOnSumbit: false,
   messages: defaultMsg,
+  onSubmit() {},
   rules: {},
   stopPropagation: true,
 };

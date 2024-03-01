@@ -65,9 +65,13 @@ export default class Vts {
 
   /** @this {import('./types/core').default} Vts */
   async validate() {
-    for (const field of this.fields) {
-      await this._validate(field);
-    }
+    return new Promise(async (resolve) => {
+      for (const field of this.fields) {
+        await this._validate(field);
+      }
+
+      resolve(this.form.checkValidity());
+    });
   }
 
   /** @param {import('./types/helpers').DeepPartial<import('./types/config').default>} config */

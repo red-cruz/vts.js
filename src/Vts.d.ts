@@ -42,6 +42,11 @@ declare class Vts {
   messages: ValidationMessages;
 
   /**
+   * Callback for when the form is submitted
+   */
+  onSubmit: (this: Vts, isValid: boolean, event: SubmitEvent) => void;
+
+  /**
    * Handle field feedback.
    */
   renderFeedback: (
@@ -74,10 +79,10 @@ declare class Vts {
   updateFields(): void;
 
   /**
-   * Validates each field in the form.
+   * Validates each field in the form. Resolves with the form's validity
    * @async
    */
-  validate(this: Vts): Promise<void>;
+  validate(this: Vts): Promise<boolean>;
 
   /**
    * Sets the default configuration for Vts (Validate Then Submit).

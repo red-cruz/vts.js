@@ -21,11 +21,10 @@ const vtsEvents = {
 
       this.form.classList.add(formClass);
 
-      const valid = await this.isFormValid(true);
-
-      if (valid && this.shouldSubmit) {
-        this.submit().catch(() => {});
-      }
+      this.isFormValid(true).then((isValid) => {
+        isValid && this.shouldSubmit && this.submit().catch(() => {});
+        this.onSubmit.call(this, isValid, e);
+      });
     });
 
     // Fields
