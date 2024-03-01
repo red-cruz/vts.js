@@ -24,9 +24,22 @@ export default async function inArrayRule(rules, field, label) {
     arr = inArray;
   }
 
-  return arr.includes(field.value)
+  let isValid = arr.includes(field.value);
+
+  if (field instanceof HTMLSelectElement && field.type === 'select-multiple') {
+    const selectedOptions = [];
+
+    for (const option of field.options) {
+      if (option.selected) {
+        selectedOptions.push(option.value);
+      }
+    }
+    isValid = selectedOptions.every((item) => arr.includes(item));
+  }
+
+  return isValid
     ? {}
     : {
-        inArray: messages.replace(/{:values}/g, arr.join(', ')),
+        inArray: messages.replace(/{:inArray}/g, arr.join(', ')),
       };
 }
