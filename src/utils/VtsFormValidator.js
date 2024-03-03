@@ -64,7 +64,7 @@ function checkHTMLFormInstance(element) {
   if (!(element instanceof HTMLFormElement)) {
     const formId = element?.getAttribute('id');
     const msg =
-      (formId ? `with ID "${formId}"` : `"${element?.tagName}"`) || '';
+      (formId ? `with ID "${formId}"` : `"${element?.tagName}"`) || element;
 
     throw new TypeError(`The element ${msg} is not a valid HTML form element.`);
   }
