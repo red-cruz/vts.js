@@ -3300,7 +3300,11 @@ var Vts = /*#__PURE__*/function () {
   }, {
     key: "resetForm",
     value: function resetForm() {
+      var _this = this;
       this.form.reset();
+      this.form.querySelectorAll('.' + this["class"].fieldWrapper).forEach(function (el) {
+        return el.classList.remove(_this["class"].fieldWrapper);
+      });
       this.form.classList.remove(this["class"].form);
     }
 
@@ -3309,7 +3313,7 @@ var Vts = /*#__PURE__*/function () {
     key: "validate",
     value: function () {
       var _validate = Vts_asyncToGenerator( /*#__PURE__*/Vts_regeneratorRuntime().mark(function _callee2() {
-        var _this = this;
+        var _this2 = this;
         return Vts_regeneratorRuntime().wrap(function _callee2$(_context2) {
           while (1) switch (_context2.prev = _context2.next) {
             case 0:
@@ -3319,7 +3323,7 @@ var Vts = /*#__PURE__*/function () {
                   return Vts_regeneratorRuntime().wrap(function _callee$(_context) {
                     while (1) switch (_context.prev = _context.next) {
                       case 0:
-                        _iterator = Vts_createForOfIteratorHelper(_this.fields);
+                        _iterator = Vts_createForOfIteratorHelper(_this2.fields);
                         _context.prev = 1;
                         _iterator.s();
                       case 3:
@@ -3329,7 +3333,7 @@ var Vts = /*#__PURE__*/function () {
                         }
                         field = _step.value;
                         _context.next = 7;
-                        return _this._validate(field);
+                        return _this2._validate(field);
                       case 7:
                         _context.next = 3;
                         break;
@@ -3345,7 +3349,7 @@ var Vts = /*#__PURE__*/function () {
                         _iterator.f();
                         return _context.finish(14);
                       case 17:
-                        resolve(_this.form.checkValidity());
+                        resolve(_this2.form.checkValidity());
                       case 18:
                       case "end":
                         return _context.stop();

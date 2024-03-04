@@ -62,6 +62,10 @@ export default class Vts {
   /** @this {import('./types/core').default} Vts */
   resetForm() {
     this.form.reset();
+    this.form
+      .querySelectorAll('.' + this.class.fieldWrapper)
+      .forEach((el) => el.classList.remove(this.class.fieldWrapper));
+
     this.form.classList.remove(this.class.form);
   }
 
