@@ -905,33 +905,37 @@ function _dateRule() {
             if (offset > 0) {
               _date.setDate(_date.getDate() + offset);
             }
-            var dateStr = _date.toISOString().split('T')[0];
-            if (setMax) {
-              field.max = offset !== 0 ? dateStr : targetDate.toISOString().split('T')[0];
-            } else {
-              field.min = offset !== 0 ? dateStr : targetDate.toISOString().split('T')[0];
+            try {
+              var dateStr = _date.toISOString().split('T')[0];
+              if (setMax) {
+                field.max = offset !== 0 ? dateStr : targetDate.toISOString().split('T')[0];
+              } else {
+                field.min = offset !== 0 ? dateStr : targetDate.toISOString().split('T')[0];
+              }
+            } catch (error) {
+              valid = false;
             }
           };
           _context5.t0 = ruleName;
           _context5.next = _context5.t0 === 'after' ? 18 : _context5.t0 === 'afterOrEqual' ? 23 : _context5.t0 === 'before' ? 26 : _context5.t0 === 'beforeOrEqual' ? 29 : 32;
           break;
         case 18:
-          setDateMinMax(false, 2);
           afterDate = new Date(targetDate.toDateString());
           afterDate.setDate(afterDate.getDate() + 1);
           valid = fieldDate > afterDate;
+          setDateMinMax(false, 2);
           return _context5.abrupt("break", 32);
         case 23:
-          setDateMinMax(false);
           valid = fieldDate >= targetDate;
+          setDateMinMax(false);
           return _context5.abrupt("break", 32);
         case 26:
-          setDateMinMax();
           valid = fieldDate < targetDate;
+          setDateMinMax();
           return _context5.abrupt("break", 32);
         case 29:
-          setDateMinMax();
           valid = fieldDate <= targetDate;
+          setDateMinMax();
           return _context5.abrupt("break", 32);
         case 32:
           return _context5.abrupt("return", valid ? {} : _defineProperty({}, ruleName, replaceDateMsg.call(this, ruleName, rules, targetField, targetDate, dateModifier)));
@@ -3257,7 +3261,10 @@ function _classPrivateMethodGet(receiver, privateSet, fn) { if (!privateSet.has(
 var ignoredTypes = ['submit', 'reset', 'button', 'hidden'].map(function (type) {
   return ":not([type=\"".concat(type, "\"])");
 }).join('');
-var fieldQuery = '[name]:not([data-vts-ignored])' + ignoredTypes;
+var ignoredAttributes = ['readonly', 'data-vts-ignored'].map(function (type) {
+  return ":not([".concat(type, "])");
+}).join('');
+var fieldQuery = '[name]' + ignoredAttributes + ignoredTypes;
 
 /// <reference path="./Vts.d.ts" />
 var _init = /*#__PURE__*/new WeakSet();
