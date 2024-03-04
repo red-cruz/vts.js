@@ -65,35 +65,39 @@ async function dateRule(ruleName, rules, field, label) {
       _date.setDate(_date.getDate() + offset);
     }
 
-    const dateStr = _date.toISOString().split('T')[0];
+    try {
+      const dateStr = _date.toISOString().split('T')[0];
 
-    if (setMax) {
-      field.max =
-        offset !== 0 ? dateStr : targetDate.toISOString().split('T')[0];
-    } else {
-      field.min =
-        offset !== 0 ? dateStr : targetDate.toISOString().split('T')[0];
+      if (setMax) {
+        field.max =
+          offset !== 0 ? dateStr : targetDate.toISOString().split('T')[0];
+      } else {
+        field.min =
+          offset !== 0 ? dateStr : targetDate.toISOString().split('T')[0];
+      }
+    } catch (error) {
+      valid = false;
     }
   };
 
   switch (ruleName) {
     case 'after':
-      setDateMinMax(false, 2);
       const afterDate = new Date(targetDate.toDateString());
       afterDate.setDate(afterDate.getDate() + 1);
       valid = fieldDate > afterDate;
+      setDateMinMax(false, 2);
       break;
     case 'afterOrEqual':
-      setDateMinMax(false);
       valid = fieldDate >= targetDate;
+      setDateMinMax(false);
       break;
     case 'before':
-      setDateMinMax();
       valid = fieldDate < targetDate;
+      setDateMinMax();
       break;
     case 'beforeOrEqual':
-      setDateMinMax();
       valid = fieldDate <= targetDate;
+      setDateMinMax();
       break;
   }
 

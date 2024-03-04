@@ -16,7 +16,11 @@ const ignoredTypes = ['submit', 'reset', 'button', 'hidden']
   .map((type) => `:not([type="${type}"])`)
   .join('');
 
-const fieldQuery = '[name]:not([data-vts-ignored])' + ignoredTypes;
+const ignoredAttributes = ['readonly', 'data-vts-ignored']
+  .map((type) => `:not([${type}])`)
+  .join('');
+
+const fieldQuery = '[name]' + ignoredAttributes + ignoredTypes;
 
 /// <reference path="./Vts.d.ts" />
 export default class Vts {
