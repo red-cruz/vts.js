@@ -3293,7 +3293,7 @@ var Vts = /*#__PURE__*/function () {
       this.fields = this.form.querySelectorAll(fieldQuery);
       this._convertRulesToMap();
       this._setFieldAttributes();
-      this._addEventListeners();
+      this._addFieldListener();
     }
 
     /** @this {import('./types/core').default} Vts */
