@@ -1878,6 +1878,576 @@ function maxLength_ref() {
   }));
   return maxLength_ref.apply(this, arguments);
 }
+;// CONCATENATED MODULE: ./src/utils/findClosestElement.js
+/**
+ * @param {HTMLElement|null} element
+ * @param {String} [className='']
+ * @param {null|HTMLElement } [initialParent=null]
+ */
+function findClosestElement(element) {
+  var className = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : '';
+  var initialParent = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : null;
+  if (!element) return initialParent;
+  var wrapper;
+  if (element instanceof HTMLInputElement || element instanceof HTMLTextAreaElement || element instanceof HTMLSelectElement) {
+    wrapper = className ? element.closest(".".concat(className)) : null;
+  } else {
+    wrapper = className ? element.querySelector(".".concat(className)) : null;
+  }
+  if (wrapper) {
+    return wrapper;
+  } else {
+    var parent = element.parentElement;
+    if (!initialParent) initialParent = parent;
+    return parent ? findClosestElement(element.parentElement, className, initialParent) : initialParent;
+  }
+}
+;// CONCATENATED MODULE: ./src/utils/getCommonParent.js
+
+
+/**
+ * Retrieves the common parent of a field.
+ * @param {HTMLElement} field
+ * */
+/* harmony default export */ function getCommonParent(field) {
+  var fields = Vts.getGroupedFields(field);
+  if (!fields || !fields.length) {
+    return null; // Handle empty input or invalid type
+  }
+
+  // Find the deepest common ancestor element that contains all fields
+  var commonParent = fields[0].parentElement;
+  for (var i = 1; i < fields.length; i++) {
+    while (!((_commonParent = commonParent) !== null && _commonParent !== void 0 && _commonParent.contains(fields[i]))) {
+      var _commonParent, _commonParent$parentE, _commonParent2;
+      commonParent = (_commonParent$parentE = (_commonParent2 = commonParent) === null || _commonParent2 === void 0 ? void 0 : _commonParent2.parentElement) !== null && _commonParent$parentE !== void 0 ? _commonParent$parentE : null;
+      if (!commonParent) {
+        return null; // No common parent found
+      }
+    }
+  }
+
+  return commonParent;
+}
+;// CONCATENATED MODULE: ./src/utils/constants.js
+// @ts-check
+var dialogId = 'Vts_dialog';
+var dialogTitleId = "".concat(dialogId, "_title");
+var dialogMsgId = "".concat(dialogId, "_message");
+var dialogBtnContainerId = "".concat(dialogId, "_button");
+
+/** @type {import("../types/config/responseMessage").default} */
+var vtsResponseMessages = {
+  400: {
+    title: 'Something went wrong',
+    message: "The request was invalid. Please try again later."
+  },
+  401: {
+    title: 'Unauthorized',
+    message: "You need to be logged in to access this resource."
+  },
+  403: {
+    title: 'Forbidden',
+    message: "You don't have permission to access this resource."
+  },
+  404: {
+    title: 'Not Found',
+    message: "The requested resource could not be found."
+  },
+  405: {
+    title: 'Method Not Allowed',
+    message: "The requested method is not allowed for this resource."
+  },
+  409: {
+    title: 'Conflict',
+    message: "The request could not be completed because of a conflict."
+  },
+  415: {
+    title: 'Unsupported Media Type',
+    message: "The request is not in a supported format."
+  },
+  422: {
+    title: 'Invalid Data',
+    message: 'The data provided was invalid. Please correct the errors and try again.'
+  },
+  429: {
+    title: 'Too Many Requests',
+    message: "You have made too many requests in a short period of time. Please try again later."
+  },
+  500: {
+    title: 'Internal Server Error',
+    message: "An unexpected error occurred on the server. We're working on it and will fix it as soon as possible."
+  },
+  503: {
+    title: 'Service Unavailable',
+    message: "The service is unavailable at this time. Please try again later."
+  }
+};
+
+;// CONCATENATED MODULE: ./src/utils/response/getDefaultMsgFromResponse.js
+// @ts-check
+
+/**
+ * Gets the default title and message for a response
+ *
+ * @param {Response} response
+ * @param {import('../../types/config/responseMessage').default} defaultMessages
+ * @returns {[title:string, message:string]}
+ */
+function getDefaultMsgFromResponse(response, defaultMessages) {
+  var title = '';
+  var message = '';
+
+  // Get the default message for the status code
+  var statusMsg = defaultMessages[response.status];
+
+  // If a default message exists, use it
+  if (statusMsg) {
+    title = statusMsg.title;
+    message = statusMsg.message;
+  } else {
+    // Otherwise, create default messages based on the response status
+    if (response.ok) {
+      title = 'Success!';
+      message = 'The request was successful.';
+    } else {
+      title = response.statusText + ': ' + response.status;
+      message = 'Please try again later.';
+    }
+  }
+  return [title, message];
+}
+;// CONCATENATED MODULE: ./src/utils/response/isMsgHTMLorScript.js
+// @ts-check
+
+/**
+ * Checks if the message contains HTML or script
+ *
+ * @param {*} message The message to check.
+ * @returns {boolean} True if the message contains HTML or script, false otherwise.
+ */
+function isMsgHTMLorScript(message) {
+  if (typeof message !== 'string') return false;
+  return message.startsWith('<!DOCTYPE html>') || message.startsWith('<script>');
+}
+;// CONCATENATED MODULE: ./src/utils/getResponseMessage.js
+function getResponseMessage_typeof(obj) { "@babel/helpers - typeof"; return getResponseMessage_typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, getResponseMessage_typeof(obj); }
+function getResponseMessage_slicedToArray(arr, i) { return getResponseMessage_arrayWithHoles(arr) || getResponseMessage_iterableToArrayLimit(arr, i) || getResponseMessage_unsupportedIterableToArray(arr, i) || getResponseMessage_nonIterableRest(); }
+function getResponseMessage_nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+function getResponseMessage_unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return getResponseMessage_arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return getResponseMessage_arrayLikeToArray(o, minLen); }
+function getResponseMessage_arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) arr2[i] = arr[i]; return arr2; }
+function getResponseMessage_iterableToArrayLimit(arr, i) { var _i = null == arr ? null : "undefined" != typeof Symbol && arr[Symbol.iterator] || arr["@@iterator"]; if (null != _i) { var _s, _e, _x, _r, _arr = [], _n = !0, _d = !1; try { if (_x = (_i = _i.call(arr)).next, 0 === i) { if (Object(_i) !== _i) return; _n = !1; } else for (; !(_n = (_s = _x.call(_i)).done) && (_arr.push(_s.value), _arr.length !== i); _n = !0); } catch (err) { _d = !0, _e = err; } finally { try { if (!_n && null != _i["return"] && (_r = _i["return"](), Object(_r) !== _r)) return; } finally { if (_d) throw _e; } } return _arr; } }
+function getResponseMessage_arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
+// @ts-check
+
+
+
+
+/**
+ * Extracts title and message from response and formats it
+ *
+ * Note: This function can also get title and message from errors that occurred on the client side,
+ * such as when the fetch request is aborted or an error was thrown in the `before` and `success` ajax callbacks.
+ *
+ * @param {*} data The parsed data from the server.
+ * @param {Response|null} response The response from the server.
+ * @param {import('../types/config/responseMessage').default} [defaultResponseMessages=vtsResponseMessages]
+ * @returns {{title:string, message: string}} An object with the title and message of the error.
+ */
+function getResponseMessage_getResponseMessage(data, response) {
+  var defaultResponseMessages = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : vtsResponseMessages;
+  var title = '';
+  var message = '';
+
+  // Check if data is from server - response is null if an error occured from client i.e 'AbortError'
+  if (response) {
+    // Set default messages based on response
+    // If data is HTML or script, set message to data
+    var _getDefaultMsgFromRes = getDefaultMsgFromResponse(response, defaultResponseMessages);
+    var _getDefaultMsgFromRes2 = getResponseMessage_slicedToArray(_getDefaultMsgFromRes, 2);
+    title = _getDefaultMsgFromRes2[0];
+    message = _getDefaultMsgFromRes2[1];
+    if (isMsgHTMLorScript(data)) {
+      message = data;
+    } else {
+      var _data$title, _data$message;
+      // get message based on the title and message properties returned from the data
+      title = (_data$title = data.title) !== null && _data$title !== void 0 ? _data$title : title;
+      message = extractMessage((_data$message = data.message) !== null && _data$message !== void 0 ? _data$message : message);
+    }
+  } else {
+    // error occured from client
+    if (getResponseMessage_typeof(data) === 'object') {
+      title = data.name;
+      message = data.message;
+    } else {
+      title = 'An unknown error has occurred';
+      message = data;
+    }
+  }
+  return {
+    title: title,
+    message: message
+  };
+}
+
+/**
+ * If message is an object, update the message and iterate and extract each values
+ *
+ * @param {*} data
+ * @returns {string}
+ */
+function extractMessage(data) {
+  var msg = '';
+  if (getResponseMessage_typeof(data) === 'object') {
+    for (var index in data) {
+      msg += extractMessage(data[index]);
+    }
+  } else {
+    msg = data + '<br />';
+  }
+  return msg;
+}
+;// CONCATENATED MODULE: ./src/utils/response/openNewWindow.js
+// @ts-check
+
+/**
+ * Opens a new window with the given message.
+ *
+ * @param {string} title The title to be displayed in the new window.
+ * @param {string} message The message to be displayed in the new window.
+ */
+function openNewWindow(title, message) {
+  var newWindow = window.open();
+  if (newWindow) {
+    newWindow.document.title = title + ' - ' + window.document.title;
+    if (message.startsWith('<!DOCTYPE html>') || message.startsWith('<html>')) {
+      newWindow.document.write(message);
+      newWindow.stop();
+    } else {
+      newWindow.document.body.outerHTML = message;
+    }
+  }
+}
+;// CONCATENATED MODULE: ./src/utils/response/createAnchor.js
+// @ts-check
+
+
+
+/**
+ * Creates an anchor element with the given message.
+ * When the anchor element is clicked, it opens a new window with the given message.
+ *
+ * @param {HTMLDialogElement} dialog The dialog element that the anchor will be added to.
+ * @param {HTMLDivElement} messageSection The message section of the dialog element.
+ * @param {string} title The title of the alert dialog.
+ * @param {*} message The message that will be opened in the new window.
+ */
+function createAnchor(dialog, messageSection, title, message) {
+  // Create an anchor element
+  var anchor = document.createElement('a');
+  anchor.href = '#';
+  anchor.role = 'button';
+  anchor.onclick = function () {
+    dialog.close();
+    openNewWindow(title, message);
+  };
+  anchor.textContent = 'Click here to view more details';
+
+  // Add the anchor element to the message section
+  messageSection.innerHTML = '';
+  messageSection.appendChild(anchor);
+}
+;// CONCATENATED MODULE: ./src/utils/response/createDialog.js
+// @ts-check
+
+
+
+
+
+/**
+ * Creates a dialog with the given title and message.
+ *
+ * @param {string} title The title of the dialog.
+ * @param {string} message The message of the dialog.
+ * @returns {HTMLDialogElement} The created dialog element.
+ */
+function createDialog(title, message) {
+  // Create a dialog element.
+  var dialog = document.createElement('dialog');
+  dialog.style.minWidth = '250px';
+  dialog.id = dialogId;
+
+  // Create the title container.
+  var titleBar = document.createElement('div');
+  titleBar.id = dialogTitleId;
+  titleBar.textContent = title;
+  titleBar.style.fontWeight = 'bold';
+
+  // Create the OK button.
+  var okButton = document.createElement('button');
+  okButton.id = dialogBtnContainerId;
+  okButton.style.padding = '3px 16px';
+  okButton.style["float"] = 'right';
+  okButton.textContent = 'Ok';
+  okButton.onclick = function () {
+    dialog.close();
+  };
+
+  // Create the message container.
+  var messageSection = document.createElement('div');
+  messageSection.id = dialogMsgId;
+  messageSection.style.margin = '5px 0';
+
+  // Format the message content.
+  if (isMsgHTMLorScript(message)) {
+    createAnchor(dialog, messageSection, title, message);
+  } else {
+    messageSection.innerHTML = message;
+  }
+
+  // Append the children to the dialog element.
+  dialog.appendChild(titleBar);
+  dialog.appendChild(messageSection);
+  dialog.appendChild(okButton);
+  document.body.appendChild(dialog);
+  return dialog;
+}
+;// CONCATENATED MODULE: ./src/utils/response/fallbackAlert.js
+// @ts-check
+
+
+
+
+/**
+ * shows a fallback alert dialog with the given title and message.
+ *
+ * @param {string} title The title of the alert dialog.
+ * @param {string} message The message of the alert dialog.
+ */
+function fallBackAlert(title, message) {
+  if (isMsgHTMLorScript(message)) {
+    confirm("".concat(title, ".\n\nClick 'OK' to view more details.")) && openNewWindow(title, message);
+  } else {
+    alert("".concat(title, ".\n\n").concat(message));
+  }
+}
+;// CONCATENATED MODULE: ./src/utils/response/showDialog.js
+// @ts-check
+
+
+
+
+
+
+/**
+ * Shows a dialog with the given title and message.
+ * If a dialog with the given ID already exists, the title and message will be updated.
+ * Otherwise, a new dialog will be created.
+ *
+ * @param {string} title The title of the dialog.
+ * @param {string} message message The message of the dialog. If a string is passed, it will be displayed as plain text. If an HTMLElement is passed, it will be displayed as HTML.
+ */
+function showDialog(title, message) {
+  var existingDialog = document.getElementById(dialogId);
+
+  // Check if the dialog already exists
+  if (existingDialog instanceof HTMLDialogElement) {
+    // Update the title and message of the existing dialog
+    var messageSection = existingDialog.querySelector("#".concat(dialogMsgId));
+    if (messageSection instanceof HTMLDivElement) {
+      var titleBar = existingDialog.querySelector("#".concat(dialogTitleId));
+      if (titleBar) titleBar.textContent = title;
+      if (isMsgHTMLorScript(message)) {
+        createAnchor(existingDialog, messageSection, title, message);
+      } else {
+        messageSection.innerHTML = message;
+      }
+    }
+
+    // Show the existing dialog
+    existingDialog.showModal();
+  } else {
+    if (existingDialog) {
+      // the dialogId is probably used by another element
+      fallBackAlert(title, message);
+    } else {
+      // create new dialog
+      var dialog = createDialog(title, message);
+      dialog.showModal();
+    }
+  }
+}
+;// CONCATENATED MODULE: ./src/defaults/ajax.js
+// @ts-check
+
+
+
+/** @type {import("../types/config/ajaxSettings").default} */
+var ajaxHandler = {
+  request: {},
+  beforeSend: function beforeSend(requestInit, form, abortController) {
+    /*
+     * This is the `beforeSend` event renderFeedback for the form.
+     * It is called before the form is submitted, and it can be used to modify the request or prevent the form from being submitted.
+     */
+
+    // Get the submit button element from the form.
+    var submitBtn = getSubmitButtonFrom(form);
+    if (!submitBtn) return;
+
+    // If the submit button exists, then we do the following:
+    var vtsSessionId = "__Vts_".concat(form.id, "_submitDisplay");
+
+    // Clone the submit button.
+    var cancelBtn = submitBtn.cloneNode();
+    if (cancelBtn instanceof HTMLButtonElement || cancelBtn instanceof HTMLInputElement) {
+      var _submitBtn$parentElem;
+      cancelBtn.type = 'button';
+      cancelBtn.textContent = 'Cancel';
+      cancelBtn.classList.add(vtsSessionId);
+      // Add an event listener to the cloned button that aborts the request.
+      cancelBtn.addEventListener('click', function () {
+        abortController.abort();
+      }, {
+        signal: abortController.signal
+      });
+      // Add the cloned button to the form.
+      (_submitBtn$parentElem = submitBtn.parentElement) === null || _submitBtn$parentElem === void 0 ? void 0 : _submitBtn$parentElem.append(cancelBtn);
+    }
+    // Store the original display style of the submit button in session storage.
+    var submitBtnDisplay = window.getComputedStyle(submitBtn).display;
+    window.sessionStorage.setItem(vtsSessionId, submitBtnDisplay);
+    // Set the display of the submit button to "none".
+    submitBtn.style.display = 'none';
+  },
+  complete: function complete(data, response, form) {
+    /*
+     * This is the `complete` event renderFeedback for the form.
+     * It is called after the form is submitted, and it can be used to handle the response or perform cleanup tasks.
+     */
+
+    // Get the submit button element from the form.
+    var submitBtn = getSubmitButtonFrom(form);
+    if (!submitBtn) return;
+
+    // Get the session ID for this form.
+    var vtsSessionId = "__Vts_".concat(form.getAttribute('id'), "_submitDisplay");
+
+    // Get the cancel button element from the form.
+    /** @type {HTMLButtonElement|HTMLInputElement|null} */
+    var cancelBtn = form.querySelector(".".concat(vtsSessionId));
+    if (cancelBtn) {
+      // Remove the cancel button from the form.
+      cancelBtn.remove();
+
+      // Get the stored display style of the submit button from session storage.
+      var submitBtnDisplay = window.sessionStorage.getItem(vtsSessionId);
+      if (submitBtnDisplay) {
+        // Set the display style of the submit button to the stored value.
+        submitBtn.style.display = submitBtnDisplay;
+      }
+    }
+  },
+  error: function error(errorData, errorResponse, form) {
+    var _getResponseMessage = getResponseMessage_getResponseMessage(errorData, errorResponse),
+      title = _getResponseMessage.title,
+      message = _getResponseMessage.message;
+    if (title !== 'AbortError') showDialog(title, message);
+  },
+  success: function success(data, response, form) {
+    var _getResponseMessage2 = getResponseMessage_getResponseMessage(data, response),
+      title = _getResponseMessage2.title,
+      message = _getResponseMessage2.message;
+    form.reset();
+    showDialog(title, message);
+  }
+};
+
+/**
+ * @param {Element} parent
+ * @returns {HTMLButtonElement|HTMLInputElement|null}
+ */
+function getSubmitButtonFrom(parent) {
+  return parent.querySelector('[type="submit"]');
+}
+/* harmony default export */ const ajax = (ajaxHandler);
+;// CONCATENATED MODULE: ./src/defaults/index.js
+// @ts-check
+
+
+
+
+
+
+
+/**
+ * Global default configuration for Vts
+ *
+ * @type {import('../types/config').default}
+ */
+var vtsDefaults = {
+  ajax: ajax,
+  "class": {
+    form: 'vts-form-was-validated',
+    invalid: 'vts-invalid-field',
+    valid: 'vts-valid-field',
+    wrapper: '',
+    fieldWrapper: 'vts-field-was-validated'
+  },
+  shouldSubmit: true,
+  renderFeedback: function renderFeedback(validationResults, renderClass) {
+    var _fieldWrapper;
+    // Extract the renderClass object
+    var wrapper = renderClass.wrapper,
+      invalid = renderClass.invalid,
+      valid = renderClass.valid;
+
+    // Check if field is valid
+    var isValid = ('valid' in validationResults);
+
+    // Determine the feedback class based on the validation result
+    var feedbackClass = isValid ? valid : invalid;
+
+    // Find the field wrapper
+    var fieldWrapper;
+    if (!wrapper) {
+      fieldWrapper = getCommonParent(this);
+    }
+    if (!fieldWrapper) {
+      fieldWrapper = findClosestElement(this, wrapper);
+    }
+    fieldWrapper.classList.add(renderClass.fieldWrapper);
+    fieldWrapper.classList.add(isValid ? valid : invalid);
+    fieldWrapper.classList.remove(!isValid ? valid : invalid);
+
+    // Find the feedback container
+    var vtsFeedbackClass = 'vts-validation-messages-container';
+    var feedbackContainer = (_fieldWrapper = fieldWrapper) === null || _fieldWrapper === void 0 ? void 0 : _fieldWrapper.querySelector(".".concat(vtsFeedbackClass));
+
+    // Extract validation messages
+    var textContent = Object.values(validationResults).flat().join('<br />');
+
+    // Create the feedback container if it doesn't exist
+    if (feedbackContainer instanceof HTMLElement) {
+      // Update the feedback content and display
+      feedbackContainer.innerHTML = textContent;
+    } else {
+      var _fieldWrapper2;
+      // Create a new feedback container and append it to the field wrapper
+      var newContainer = document.createElement('div');
+      newContainer.classList.add(vtsFeedbackClass, feedbackClass);
+      newContainer.innerHTML = textContent;
+      (_fieldWrapper2 = fieldWrapper) === null || _fieldWrapper2 === void 0 ? void 0 : _fieldWrapper2.append(newContainer);
+    }
+  },
+  validateOnSumbit: false,
+  messages: defaults_defaultMsg,
+  onSubmit: function onSubmit() {},
+  rules: {},
+  stopPropagation: true
+};
+/* harmony default export */ const defaults = (vtsDefaults);
 ;// CONCATENATED MODULE: ./src/core/rules/index.js
 function rules_slicedToArray(arr, i) { return rules_arrayWithHoles(arr) || rules_iterableToArrayLimit(arr, i) || rules_unsupportedIterableToArray(arr, i) || rules_nonIterableRest(); }
 function rules_nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
@@ -1903,6 +2473,8 @@ function rules_arrayLikeToArray(arr, len) { if (len == null || len > arr.length)
 
 
 
+
+
 var inputRules = [afterRule, afterOrEqualRule, beforeRule, beforeOrEqualRule, endsWith, notEqualTo, equalTo, inArrayRule, max, maxLength, min, minLength, notInArrayRule, pattern, size, startsWith, validatorRule];
 
 /** @type {import('../../types/core/rules').default} */
@@ -1912,11 +2484,12 @@ var vtsRules = {
     return this.rules.get(rule) || {};
   },
   _convertRulesToMap: function _convertRulesToMap() {
-    /** @type {Map<string,import('../../types/config/rules').Rules[string]>} */
-    var rulesMap = new Map();
-
-    /** @type {import('../../types/config/rules').Rules[string]} */
+    /** @type {import('../../types/config/rules').Rules[string]|Map<string,import('../../types/config/rules').Rules[string]>} */
     var rules = this.rules;
+    var isRulesMap = rules instanceof Map;
+
+    /** @type {Map<string,import('../../types/config/rules').Rules[string]>} */
+    var rulesMap = isRulesMap ? rules : new Map();
     var rulesFromDataset;
 
     // map field constraints
@@ -1926,13 +2499,15 @@ var vtsRules = {
       var _loop = function _loop() {
         var field = _step.value;
         var ruleName = field.dataset.vtsRule || field.name;
+        if (!ruleName) return "continue";
+        var existingRule = rulesMap.get(ruleName) || defaults.rules[ruleName];
+        var definedRules = isRulesMap ? existingRule : rules[ruleName];
         var listenerExists = field.dataset['vts_listener_exists'];
         if (listenerExists) {
-          if (rules instanceof Map) rulesMap.set(ruleName, rules.get(ruleName) || {});
+          isRulesMap && rulesMap.set(ruleName, existingRule);
           return "continue";
         }
         field.classList.add('vts-field');
-        var definedRules = rules[ruleName] || {};
 
         // get default rules from field dataset
         rulesFromDataset = Object.entries(field.dataset).filter(function (_ref) {
@@ -2008,9 +2583,7 @@ var vtsRules = {
     }
     this.rules = rulesMap;
 
-    /**
-     * @param {import('../../types/config/rules').Rules[string]} obj
-     */
+    /** @param {import('../../types/config/rules').Rules[string]} obj */
     function mergeToDatasetRules(obj) {
       rulesFromDataset = Object.assign(obj, rulesFromDataset);
     }
@@ -2593,576 +3166,6 @@ function _validateFields() {
   return _validateFields.apply(this, arguments);
 }
 /* harmony default export */ const validation = (vtsValidation);
-;// CONCATENATED MODULE: ./src/utils/findClosestElement.js
-/**
- * @param {HTMLElement|null} element
- * @param {String} [className='']
- * @param {null|HTMLElement } [initialParent=null]
- */
-function findClosestElement(element) {
-  var className = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : '';
-  var initialParent = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : null;
-  if (!element) return initialParent;
-  var wrapper;
-  if (element instanceof HTMLInputElement || element instanceof HTMLTextAreaElement || element instanceof HTMLSelectElement) {
-    wrapper = className ? element.closest(".".concat(className)) : null;
-  } else {
-    wrapper = className ? element.querySelector(".".concat(className)) : null;
-  }
-  if (wrapper) {
-    return wrapper;
-  } else {
-    var parent = element.parentElement;
-    if (!initialParent) initialParent = parent;
-    return parent ? findClosestElement(element.parentElement, className, initialParent) : initialParent;
-  }
-}
-;// CONCATENATED MODULE: ./src/utils/getCommonParent.js
-
-
-/**
- * Retrieves the common parent of a field.
- * @param {HTMLElement} field
- * */
-/* harmony default export */ function getCommonParent(field) {
-  var fields = Vts.getGroupedFields(field);
-  if (!fields || !fields.length) {
-    return null; // Handle empty input or invalid type
-  }
-
-  // Find the deepest common ancestor element that contains all fields
-  var commonParent = fields[0].parentElement;
-  for (var i = 1; i < fields.length; i++) {
-    while (!((_commonParent = commonParent) !== null && _commonParent !== void 0 && _commonParent.contains(fields[i]))) {
-      var _commonParent, _commonParent$parentE, _commonParent2;
-      commonParent = (_commonParent$parentE = (_commonParent2 = commonParent) === null || _commonParent2 === void 0 ? void 0 : _commonParent2.parentElement) !== null && _commonParent$parentE !== void 0 ? _commonParent$parentE : null;
-      if (!commonParent) {
-        return null; // No common parent found
-      }
-    }
-  }
-
-  return commonParent;
-}
-;// CONCATENATED MODULE: ./src/utils/constants.js
-// @ts-check
-var dialogId = 'Vts_dialog';
-var dialogTitleId = "".concat(dialogId, "_title");
-var dialogMsgId = "".concat(dialogId, "_message");
-var dialogBtnContainerId = "".concat(dialogId, "_button");
-
-/** @type {import("../types/config/responseMessage").default} */
-var vtsResponseMessages = {
-  400: {
-    title: 'Something went wrong',
-    message: "The request was invalid. Please try again later."
-  },
-  401: {
-    title: 'Unauthorized',
-    message: "You need to be logged in to access this resource."
-  },
-  403: {
-    title: 'Forbidden',
-    message: "You don't have permission to access this resource."
-  },
-  404: {
-    title: 'Not Found',
-    message: "The requested resource could not be found."
-  },
-  405: {
-    title: 'Method Not Allowed',
-    message: "The requested method is not allowed for this resource."
-  },
-  409: {
-    title: 'Conflict',
-    message: "The request could not be completed because of a conflict."
-  },
-  415: {
-    title: 'Unsupported Media Type',
-    message: "The request is not in a supported format."
-  },
-  422: {
-    title: 'Invalid Data',
-    message: 'The data provided was invalid. Please correct the errors and try again.'
-  },
-  429: {
-    title: 'Too Many Requests',
-    message: "You have made too many requests in a short period of time. Please try again later."
-  },
-  500: {
-    title: 'Internal Server Error',
-    message: "An unexpected error occurred on the server. We're working on it and will fix it as soon as possible."
-  },
-  503: {
-    title: 'Service Unavailable',
-    message: "The service is unavailable at this time. Please try again later."
-  }
-};
-
-;// CONCATENATED MODULE: ./src/utils/response/getDefaultMsgFromResponse.js
-// @ts-check
-
-/**
- * Gets the default title and message for a response
- *
- * @param {Response} response
- * @param {import('../../types/config/responseMessage').default} defaultMessages
- * @returns {[title:string, message:string]}
- */
-function getDefaultMsgFromResponse(response, defaultMessages) {
-  var title = '';
-  var message = '';
-
-  // Get the default message for the status code
-  var statusMsg = defaultMessages[response.status];
-
-  // If a default message exists, use it
-  if (statusMsg) {
-    title = statusMsg.title;
-    message = statusMsg.message;
-  } else {
-    // Otherwise, create default messages based on the response status
-    if (response.ok) {
-      title = 'Success!';
-      message = 'The request was successful.';
-    } else {
-      title = response.statusText + ': ' + response.status;
-      message = 'Please try again later.';
-    }
-  }
-  return [title, message];
-}
-;// CONCATENATED MODULE: ./src/utils/response/isMsgHTMLorScript.js
-// @ts-check
-
-/**
- * Checks if the message contains HTML or script
- *
- * @param {*} message The message to check.
- * @returns {boolean} True if the message contains HTML or script, false otherwise.
- */
-function isMsgHTMLorScript(message) {
-  if (typeof message !== 'string') return false;
-  return message.startsWith('<!DOCTYPE html>') || message.startsWith('<script>');
-}
-;// CONCATENATED MODULE: ./src/utils/getResponseMessage.js
-function getResponseMessage_typeof(obj) { "@babel/helpers - typeof"; return getResponseMessage_typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, getResponseMessage_typeof(obj); }
-function getResponseMessage_slicedToArray(arr, i) { return getResponseMessage_arrayWithHoles(arr) || getResponseMessage_iterableToArrayLimit(arr, i) || getResponseMessage_unsupportedIterableToArray(arr, i) || getResponseMessage_nonIterableRest(); }
-function getResponseMessage_nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
-function getResponseMessage_unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return getResponseMessage_arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return getResponseMessage_arrayLikeToArray(o, minLen); }
-function getResponseMessage_arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) arr2[i] = arr[i]; return arr2; }
-function getResponseMessage_iterableToArrayLimit(arr, i) { var _i = null == arr ? null : "undefined" != typeof Symbol && arr[Symbol.iterator] || arr["@@iterator"]; if (null != _i) { var _s, _e, _x, _r, _arr = [], _n = !0, _d = !1; try { if (_x = (_i = _i.call(arr)).next, 0 === i) { if (Object(_i) !== _i) return; _n = !1; } else for (; !(_n = (_s = _x.call(_i)).done) && (_arr.push(_s.value), _arr.length !== i); _n = !0); } catch (err) { _d = !0, _e = err; } finally { try { if (!_n && null != _i["return"] && (_r = _i["return"](), Object(_r) !== _r)) return; } finally { if (_d) throw _e; } } return _arr; } }
-function getResponseMessage_arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
-// @ts-check
-
-
-
-
-/**
- * Extracts title and message from response and formats it
- *
- * Note: This function can also get title and message from errors that occurred on the client side,
- * such as when the fetch request is aborted or an error was thrown in the `before` and `success` ajax callbacks.
- *
- * @param {*} data The parsed data from the server.
- * @param {Response|null} response The response from the server.
- * @param {import('../types/config/responseMessage').default} [defaultResponseMessages=vtsResponseMessages]
- * @returns {{title:string, message: string}} An object with the title and message of the error.
- */
-function getResponseMessage_getResponseMessage(data, response) {
-  var defaultResponseMessages = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : vtsResponseMessages;
-  var title = '';
-  var message = '';
-
-  // Check if data is from server - response is null if an error occured from client i.e 'AbortError'
-  if (response) {
-    // Set default messages based on response
-    // If data is HTML or script, set message to data
-    var _getDefaultMsgFromRes = getDefaultMsgFromResponse(response, defaultResponseMessages);
-    var _getDefaultMsgFromRes2 = getResponseMessage_slicedToArray(_getDefaultMsgFromRes, 2);
-    title = _getDefaultMsgFromRes2[0];
-    message = _getDefaultMsgFromRes2[1];
-    if (isMsgHTMLorScript(data)) {
-      message = data;
-    } else {
-      var _data$title, _data$message;
-      // get message based on the title and message properties returned from the data
-      title = (_data$title = data.title) !== null && _data$title !== void 0 ? _data$title : title;
-      message = extractMessage((_data$message = data.message) !== null && _data$message !== void 0 ? _data$message : message);
-    }
-  } else {
-    // error occured from client
-    if (getResponseMessage_typeof(data) === 'object') {
-      title = data.name;
-      message = data.message;
-    } else {
-      title = 'An unknown error has occurred';
-      message = data;
-    }
-  }
-  return {
-    title: title,
-    message: message
-  };
-}
-
-/**
- * If message is an object, update the message and iterate and extract each values
- *
- * @param {*} data
- * @returns {string}
- */
-function extractMessage(data) {
-  var msg = '';
-  if (getResponseMessage_typeof(data) === 'object') {
-    for (var index in data) {
-      msg += extractMessage(data[index]);
-    }
-  } else {
-    msg = data + '<br />';
-  }
-  return msg;
-}
-;// CONCATENATED MODULE: ./src/utils/response/openNewWindow.js
-// @ts-check
-
-/**
- * Opens a new window with the given message.
- *
- * @param {string} title The title to be displayed in the new window.
- * @param {string} message The message to be displayed in the new window.
- */
-function openNewWindow(title, message) {
-  var newWindow = window.open();
-  if (newWindow) {
-    newWindow.document.title = title + ' - ' + window.document.title;
-    if (message.startsWith('<!DOCTYPE html>') || message.startsWith('<html>')) {
-      newWindow.document.write(message);
-      newWindow.stop();
-    } else {
-      newWindow.document.body.outerHTML = message;
-    }
-  }
-}
-;// CONCATENATED MODULE: ./src/utils/response/createAnchor.js
-// @ts-check
-
-
-
-/**
- * Creates an anchor element with the given message.
- * When the anchor element is clicked, it opens a new window with the given message.
- *
- * @param {HTMLDialogElement} dialog The dialog element that the anchor will be added to.
- * @param {HTMLDivElement} messageSection The message section of the dialog element.
- * @param {string} title The title of the alert dialog.
- * @param {*} message The message that will be opened in the new window.
- */
-function createAnchor(dialog, messageSection, title, message) {
-  // Create an anchor element
-  var anchor = document.createElement('a');
-  anchor.href = '#';
-  anchor.role = 'button';
-  anchor.onclick = function () {
-    dialog.close();
-    openNewWindow(title, message);
-  };
-  anchor.textContent = 'Click here to view more details';
-
-  // Add the anchor element to the message section
-  messageSection.innerHTML = '';
-  messageSection.appendChild(anchor);
-}
-;// CONCATENATED MODULE: ./src/utils/response/createDialog.js
-// @ts-check
-
-
-
-
-
-/**
- * Creates a dialog with the given title and message.
- *
- * @param {string} title The title of the dialog.
- * @param {string} message The message of the dialog.
- * @returns {HTMLDialogElement} The created dialog element.
- */
-function createDialog(title, message) {
-  // Create a dialog element.
-  var dialog = document.createElement('dialog');
-  dialog.style.minWidth = '250px';
-  dialog.id = dialogId;
-
-  // Create the title container.
-  var titleBar = document.createElement('div');
-  titleBar.id = dialogTitleId;
-  titleBar.textContent = title;
-  titleBar.style.fontWeight = 'bold';
-
-  // Create the OK button.
-  var okButton = document.createElement('button');
-  okButton.id = dialogBtnContainerId;
-  okButton.style.padding = '3px 16px';
-  okButton.style["float"] = 'right';
-  okButton.textContent = 'Ok';
-  okButton.onclick = function () {
-    dialog.close();
-  };
-
-  // Create the message container.
-  var messageSection = document.createElement('div');
-  messageSection.id = dialogMsgId;
-  messageSection.style.margin = '5px 0';
-
-  // Format the message content.
-  if (isMsgHTMLorScript(message)) {
-    createAnchor(dialog, messageSection, title, message);
-  } else {
-    messageSection.innerHTML = message;
-  }
-
-  // Append the children to the dialog element.
-  dialog.appendChild(titleBar);
-  dialog.appendChild(messageSection);
-  dialog.appendChild(okButton);
-  document.body.appendChild(dialog);
-  return dialog;
-}
-;// CONCATENATED MODULE: ./src/utils/response/fallbackAlert.js
-// @ts-check
-
-
-
-
-/**
- * shows a fallback alert dialog with the given title and message.
- *
- * @param {string} title The title of the alert dialog.
- * @param {string} message The message of the alert dialog.
- */
-function fallBackAlert(title, message) {
-  if (isMsgHTMLorScript(message)) {
-    confirm("".concat(title, ".\n\nClick 'OK' to view more details.")) && openNewWindow(title, message);
-  } else {
-    alert("".concat(title, ".\n\n").concat(message));
-  }
-}
-;// CONCATENATED MODULE: ./src/utils/response/showDialog.js
-// @ts-check
-
-
-
-
-
-
-/**
- * Shows a dialog with the given title and message.
- * If a dialog with the given ID already exists, the title and message will be updated.
- * Otherwise, a new dialog will be created.
- *
- * @param {string} title The title of the dialog.
- * @param {string} message message The message of the dialog. If a string is passed, it will be displayed as plain text. If an HTMLElement is passed, it will be displayed as HTML.
- */
-function showDialog(title, message) {
-  var existingDialog = document.getElementById(dialogId);
-
-  // Check if the dialog already exists
-  if (existingDialog instanceof HTMLDialogElement) {
-    // Update the title and message of the existing dialog
-    var messageSection = existingDialog.querySelector("#".concat(dialogMsgId));
-    if (messageSection instanceof HTMLDivElement) {
-      var titleBar = existingDialog.querySelector("#".concat(dialogTitleId));
-      if (titleBar) titleBar.textContent = title;
-      if (isMsgHTMLorScript(message)) {
-        createAnchor(existingDialog, messageSection, title, message);
-      } else {
-        messageSection.innerHTML = message;
-      }
-    }
-
-    // Show the existing dialog
-    existingDialog.showModal();
-  } else {
-    if (existingDialog) {
-      // the dialogId is probably used by another element
-      fallBackAlert(title, message);
-    } else {
-      // create new dialog
-      var dialog = createDialog(title, message);
-      dialog.showModal();
-    }
-  }
-}
-;// CONCATENATED MODULE: ./src/defaults/ajax.js
-// @ts-check
-
-
-
-/** @type {import("../types/config/ajaxSettings").default} */
-var ajaxHandler = {
-  request: {},
-  beforeSend: function beforeSend(requestInit, form, abortController) {
-    /*
-     * This is the `beforeSend` event renderFeedback for the form.
-     * It is called before the form is submitted, and it can be used to modify the request or prevent the form from being submitted.
-     */
-
-    // Get the submit button element from the form.
-    var submitBtn = getSubmitButtonFrom(form);
-    if (!submitBtn) return;
-
-    // If the submit button exists, then we do the following:
-    var vtsSessionId = "__Vts_".concat(form.id, "_submitDisplay");
-
-    // Clone the submit button.
-    var cancelBtn = submitBtn.cloneNode();
-    if (cancelBtn instanceof HTMLButtonElement || cancelBtn instanceof HTMLInputElement) {
-      var _submitBtn$parentElem;
-      cancelBtn.type = 'button';
-      cancelBtn.textContent = 'Cancel';
-      cancelBtn.classList.add(vtsSessionId);
-      // Add an event listener to the cloned button that aborts the request.
-      cancelBtn.addEventListener('click', function () {
-        abortController.abort();
-      }, {
-        signal: abortController.signal
-      });
-      // Add the cloned button to the form.
-      (_submitBtn$parentElem = submitBtn.parentElement) === null || _submitBtn$parentElem === void 0 ? void 0 : _submitBtn$parentElem.append(cancelBtn);
-    }
-    // Store the original display style of the submit button in session storage.
-    var submitBtnDisplay = window.getComputedStyle(submitBtn).display;
-    window.sessionStorage.setItem(vtsSessionId, submitBtnDisplay);
-    // Set the display of the submit button to "none".
-    submitBtn.style.display = 'none';
-  },
-  complete: function complete(data, response, form) {
-    /*
-     * This is the `complete` event renderFeedback for the form.
-     * It is called after the form is submitted, and it can be used to handle the response or perform cleanup tasks.
-     */
-
-    // Get the submit button element from the form.
-    var submitBtn = getSubmitButtonFrom(form);
-    if (!submitBtn) return;
-
-    // Get the session ID for this form.
-    var vtsSessionId = "__Vts_".concat(form.getAttribute('id'), "_submitDisplay");
-
-    // Get the cancel button element from the form.
-    /** @type {HTMLButtonElement|HTMLInputElement|null} */
-    var cancelBtn = form.querySelector(".".concat(vtsSessionId));
-    if (cancelBtn) {
-      // Remove the cancel button from the form.
-      cancelBtn.remove();
-
-      // Get the stored display style of the submit button from session storage.
-      var submitBtnDisplay = window.sessionStorage.getItem(vtsSessionId);
-      if (submitBtnDisplay) {
-        // Set the display style of the submit button to the stored value.
-        submitBtn.style.display = submitBtnDisplay;
-      }
-    }
-  },
-  error: function error(errorData, errorResponse, form) {
-    var _getResponseMessage = getResponseMessage_getResponseMessage(errorData, errorResponse),
-      title = _getResponseMessage.title,
-      message = _getResponseMessage.message;
-    if (title !== 'AbortError') showDialog(title, message);
-  },
-  success: function success(data, response, form) {
-    var _getResponseMessage2 = getResponseMessage_getResponseMessage(data, response),
-      title = _getResponseMessage2.title,
-      message = _getResponseMessage2.message;
-    form.reset();
-    showDialog(title, message);
-  }
-};
-
-/**
- * @param {Element} parent
- * @returns {HTMLButtonElement|HTMLInputElement|null}
- */
-function getSubmitButtonFrom(parent) {
-  return parent.querySelector('[type="submit"]');
-}
-/* harmony default export */ const ajax = (ajaxHandler);
-;// CONCATENATED MODULE: ./src/defaults/index.js
-// @ts-check
-
-
-
-
-
-
-
-/**
- * Global default configuration for Vts
- *
- * @type {import('../types/config').default}
- */
-var vtsDefaults = {
-  ajax: ajax,
-  "class": {
-    form: 'vts-form-was-validated',
-    invalid: 'vts-invalid-field',
-    valid: 'vts-valid-field',
-    wrapper: '',
-    fieldWrapper: 'vts-field-was-validated'
-  },
-  shouldSubmit: true,
-  renderFeedback: function renderFeedback(validationResults, renderClass) {
-    var _fieldWrapper;
-    // Extract the renderClass object
-    var wrapper = renderClass.wrapper,
-      invalid = renderClass.invalid,
-      valid = renderClass.valid;
-
-    // Check if field is valid
-    var isValid = ('valid' in validationResults);
-
-    // Determine the feedback class based on the validation result
-    var feedbackClass = isValid ? valid : invalid;
-
-    // Find the field wrapper
-    var fieldWrapper;
-    if (!wrapper) {
-      fieldWrapper = getCommonParent(this);
-    }
-    if (!fieldWrapper) {
-      fieldWrapper = findClosestElement(this, wrapper);
-    }
-    fieldWrapper.classList.add(renderClass.fieldWrapper);
-    fieldWrapper.classList.add(isValid ? valid : invalid);
-    fieldWrapper.classList.remove(!isValid ? valid : invalid);
-
-    // Find the feedback container
-    var vtsFeedbackClass = 'vts-validation-messages-container';
-    var feedbackContainer = (_fieldWrapper = fieldWrapper) === null || _fieldWrapper === void 0 ? void 0 : _fieldWrapper.querySelector(".".concat(vtsFeedbackClass));
-
-    // Extract validation messages
-    var textContent = Object.values(validationResults).flat().join('<br />');
-
-    // Create the feedback container if it doesn't exist
-    if (feedbackContainer instanceof HTMLElement) {
-      // Update the feedback content and display
-      feedbackContainer.innerHTML = textContent;
-    } else {
-      var _fieldWrapper2;
-      // Create a new feedback container and append it to the field wrapper
-      var newContainer = document.createElement('div');
-      newContainer.classList.add(vtsFeedbackClass, feedbackClass);
-      newContainer.innerHTML = textContent;
-      (_fieldWrapper2 = fieldWrapper) === null || _fieldWrapper2 === void 0 ? void 0 : _fieldWrapper2.append(newContainer);
-    }
-  },
-  validateOnSumbit: false,
-  messages: defaults_defaultMsg,
-  onSubmit: function onSubmit() {},
-  rules: {},
-  stopPropagation: true
-};
-/* harmony default export */ const defaults = (vtsDefaults);
 ;// CONCATENATED MODULE: ./src/utils/deepMerge.js
 function deepMerge_typeof(obj) { "@babel/helpers - typeof"; return deepMerge_typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, deepMerge_typeof(obj); }
 /**

@@ -20,6 +20,8 @@ import validatorRule from './validator';
 import { extractRule } from '../../utils/rules/getRuleValue';
 import minLengthRule from './minLength';
 import maxLengthRule from './maxLength';
+import deepMerge from '../../utils/deepMerge';
+import vtsDefaults from '../../defaults';
 
 const inputRules = [
   afterRule,
@@ -49,11 +51,13 @@ const vtsRules = {
   },
 
   _convertRulesToMap() {
-    /** @type {Map<string,import('../../types/config/rules').Rules[string]>} */
-    const rulesMap = new Map();
-
-    /** @type {import('../../types/config/rules').Rules[string]} */
+    /** @type {import('../../types/config/rules').Rules[string]|Map<string,import('../../types/config/rules').Rules[string]>} */
     const rules = this.rules;
+
+    const isRulesMap = rules instanceof Map;
+
+    /** @type {Map<string,import('../../types/config/rules').Rules[string]>} */
+    let rulesMap = isRulesMap ? rules : new Map();
 
     let rulesFromDataset;
 
@@ -61,15 +65,21 @@ const vtsRules = {
     for (const field of this.fields) {
       const ruleName = field.dataset.vtsRule || field.name;
 
+      if (!ruleName) continue;
+
+      const existingRule =
+        rulesMap.get(ruleName) || vtsDefaults.rules[ruleName];
+
+      const definedRules = isRulesMap ? existingRule : rules[ruleName];
+
       const listenerExists = field.dataset['vts_listener_exists'];
+
       if (listenerExists) {
-        if (rules instanceof Map)
-          rulesMap.set(ruleName, rules.get(ruleName) || {});
+        isRulesMap && rulesMap.set(ruleName, existingRule);
         continue;
       }
 
       field.classList.add('vts-field');
-      const definedRules = rules[ruleName] || {};
 
       // get default rules from field dataset
       rulesFromDataset = Object.entries(field.dataset)
@@ -140,9 +150,7 @@ const vtsRules = {
 
     this.rules = rulesMap;
 
-    /**
-     * @param {import('../../types/config/rules').Rules[string]} obj
-     */
+    /** @param {import('../../types/config/rules').Rules[string]} obj */
     function mergeToDatasetRules(obj) {
       rulesFromDataset = Object.assign(obj, rulesFromDataset);
     }
