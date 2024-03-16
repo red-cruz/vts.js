@@ -1,7 +1,7 @@
 const path = require('path');
 const webpack = require('webpack');
 module.exports = {
-  entry: ['whatwg-fetch', './src/Vts.js'],
+  entry: ['./src/vts.ts'],
   output: {
     library: 'Vts',
     libraryExport: 'default',
@@ -18,7 +18,7 @@ module.exports = {
   module: {
     rules: [
       {
-        test: /\.js$/,
+        test: /\.ts$/,
         exclude: /node_modules/,
         use: 'babel-loader',
       },

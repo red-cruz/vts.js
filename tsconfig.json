@@ -1,13 +1,27 @@
 {
   "compilerOptions": {
-    "lib": ["es2015", "dom"],
-    "allowJs": true,
+    "allowJs": false,
+    "alwaysStrict": true,
+    "baseUrl": ".",
     "declaration": true,
-    "emitDeclarationOnly": true,
+    "declarationDir": "./types",
     "declarationMap": true,
+    "emitDeclarationOnly": true,
     "esModuleInterop": true,
-    "outFile": "dist/webpack.config.prod.d.ts"
+    "forceConsistentCasingInFileNames": true,
+    "lib": ["dom", "dom.iterable", "esnext"],
+    "module": "ESNext",
+    "moduleResolution": "node",
+    "paths": {
+      "core/*": ["src/core/*"],
+      "defaults/*": ["src/defaults/*"],
+      "instance/*": ["src/instance/*"],
+      "static/*": ["src/static/*"],
+      "tests/*": ["tests/*"],
+      "types/*": ["types/*"]
+    },
+    "target": "ES2017",
+    "verbatimModuleSyntax": true
   },
-  "include": ["src/**/*.ts"],
-  "exclude": ["node_modules"]
+  "include": ["src/**/*.ts"]
 }
