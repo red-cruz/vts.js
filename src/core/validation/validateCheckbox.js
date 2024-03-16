@@ -16,9 +16,10 @@ export default async function (field, rules, validMessage, renderClass) {
   const label = getFieldLabel(rules.label, field, this.form);
   const lastField = group[group.length - 1];
 
-  const checkedItems = group
-    .map((gField) => gField instanceof HTMLInputElement && gField.checked)
-    .filter(Boolean).length;
+  let checkedItems = 0;
+  for (const gField of group) {
+    gField instanceof HTMLInputElement && gField.checked && checkedItems++;
+  }
 
   const invalidMsgObj = {};
 
@@ -83,8 +84,10 @@ export default async function (field, rules, validMessage, renderClass) {
     if (required) {
       setErrMsg('required');
       // return if field is required and there is no checked items
+      console.timeEnd('test');
       return renderInvalidState();
     } else {
+      console.timeEnd('test');
       // return if field is not required and there is no checked items
       return renderValidState();
     }

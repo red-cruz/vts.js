@@ -21,7 +21,7 @@ const vtsEvents = {
 
       this.form.classList.add(formClass);
 
-      this.isFormValid(true).then((isValid) => {
+      this.isFormValid().then((isValid) => {
         isValid && this.shouldSubmit && this.submit().catch(() => {});
         this.onSubmit.call(this, isValid, e);
       });
