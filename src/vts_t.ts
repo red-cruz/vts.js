@@ -1,5 +1,12 @@
-const testa_f = '';
+console.log('er');
 
-function t_s() {
+export default function test() {
+  const t = 1;
+  const f = Math.random() > 0.5 ? 1 : 4;
+
+  if (t === f) {
+    f;
+    //
+  }
   //
 }
