@@ -36,15 +36,15 @@
     "check-file/filename-naming-convention": [
       "error",
       {
-        "**/*.{jsx,tsx}": "camelCase",
-        "**/*.{js,ts}": "camelCase"
+        "**/*/!(index).{jsx,tsx}": "CAMEL_CASE",
+        "**/*/!(index).{js,ts}": "CAMEL_CASE"
       }
     ],
     "check-file/folder-naming-convention": [
       "error",
       {
-        "src/**/": "camelCase",
-        "mocks/*/": "camelCase"
+        "src/**/": "FLAT_CASE",
+        "mocks/*/": "FLAT_CASE"
       }
     ],
     "quotes": ["error", "single", { "allowTemplateLiterals": true, "avoidEscape": true }],
