@@ -1,32 +1,14 @@
 // Type definitions for Vts.js 1.11
+export = Vts;
 
-/*~ This declaration specifies that the class constructor function
- *~ is the exported object from the file
+/**
+ * A JavaScript library that provides a simple and flexible way to handle
+ * form validation before submitting. It allows you to customize the validation rules,
+ * error messages, and actions to be performed when a form field is valid or invalid.
+ *
+ * @author RED
+ * @version 1.10.3-beta
  */
-export = Greeter;
-/*~ Write your module's methods and properties in this class */
-declare class Greeter {
-  constructor(customGreeting?: string);
-  greet: void;
-  myMethod(opts: MyClass.MyClassMethodOptions): number;
-}
-/*~ If you want to expose types from your module as well, you can
- *~ place them in this block.
- *~
- *~ Note that if you decide to include this namespace, the module can be
- *~ incorrectly imported as a namespace object, unless
- *~ --esModuleInterop is turned on:
- *~   import * as x from '[~THE MODULE~]'; // WRONG! DO NOT DO THIS!
- */
-declare namespace MyClass {
-  export interface MyClassMethodOptions {
-    width?: number;
-    height?: number;
-  }
-}
-
-declare global {
-  interface ImportMeta {
-    dirname: string;
-  }
+declare class Vts {
+  constructor(form: string | HTMLFormElement, config?: any);
 }

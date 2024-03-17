@@ -13,15 +13,18 @@
     "module": "ESNext",
     "moduleResolution": "node",
     "paths": {
+      "constants/*": ["src/constants/*"],
       "core/*": ["src/core/*"],
       "defaults/*": ["src/defaults/*"],
       "instance/*": ["src/instance/*"],
+      "rules/*": ["src/rules/*"],
       "static/*": ["src/static/*"],
       "tests/*": ["tests/*"],
-      "types/*": ["types/*"]
+      "types/*": ["types/*"],
+      "utils/*": ["src/utils/*"]
     },
     "target": "ES2017",
     "verbatimModuleSyntax": true
   },
-  "include": ["src/**/*.ts"]
+  "include": ["src/**/*.ts", "types/vts.d.ts"]
 }

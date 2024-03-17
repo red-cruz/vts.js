@@ -1,7 +1,7 @@
 jest.mock('../../src/utils/deepMerge'); // Mock deepMerge for testing purposes
 
 import vtsDefaults from '../../src/defaults';
-import setVtsConfig from '../../src/utils/setVtsConfig';
+import setVtsConfig from '../../src/static/setVtsConfig';
 
 describe('setVtsConfig', () => {
   let form;

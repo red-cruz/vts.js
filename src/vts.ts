@@ -1,12 +1,12 @@
-console.log('er');
+import VtsStatic from './static';
 
-export default function test() {
-  const t = 1;
-  const f = Math.random() > 0.5 ? 1 : 4;
-
-  if (t === f) {
-    f;
-    //
+export default class Vts extends VtsStatic {
+  name: string;
+  constructor(config: string) {
+    super();
+    console.log(config);
   }
-  //
 }
+
+const v = new Vts('');
+Vts.getResponseMessage;
