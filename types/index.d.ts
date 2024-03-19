@@ -1,3 +1,5 @@
+import type VtsConfig from './config';
+
 // Type definitions for Vts.js 1.11
 export = Vts;
 
@@ -10,5 +12,5 @@ export = Vts;
  * @version 1.10.3-beta
  */
 declare class Vts {
-  constructor(form: string | HTMLFormElement, config?: any);
+  constructor(form: string | HTMLFormElement, config?: VtsConfig);
 }

@@ -3,18 +3,18 @@ import { VtsField } from '../helpers';
 /**
  * Represents a function used for validation rules that can return a value of type T or a Promise resolving to T.
  */
-type RuleFunction<T> = (field: VtsField, label: string) => Promise<string | T> | string | T;
+export type RuleFunction<T> = (field: VtsField, label: string) => Promise<string | T> | string | T;
 
 /**
  * Represents a rule that can be either T or a RuleFunction.
  * @param {string} T Specifies the expected return type of the RuleFunction (defaults to string if not provided).
  */
-type Rule<T = string> = T | RuleFunction<T>;
+export type Rule<T = string> = T | RuleFunction<T>;
 
 /**
  * Represents the validation rules for a set of fields.
  */
-type Rules = {
+export type Rules = {
   [key: string]: {
     /**
      * Field must be after the specified date.
@@ -143,18 +143,16 @@ type Rules = {
   };
 };
 
-type EventTypes = 'input' | 'change' | 'keydown' | 'keyup' | 'submit' | 'mouseover' | 'mouseout';
+export type EventTypes = keyof HTMLElementEventMap;
 
 /**
  * The values in this type are the possible validity states for a form field.
  */
-type RuleKey = keyof Rules[string] | 'checking' | 'valid';
+export type RuleKey = keyof Rules[string] | 'checking' | 'valid';
 
 /**
  * Represents the configuration for the validation rule messages.
  */
-type ValidationMessages = {
+export type ValidationMessages = {
   [Key in RuleKey]?: string;
 };
-
-export { ValidationMessages, Rule, Rules, RuleFunction, EventTypes, RuleKey };

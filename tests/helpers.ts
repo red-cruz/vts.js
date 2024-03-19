@@ -1,10 +1,9 @@
-import Vts from '../src/Vts';
-import type VtsConfig from '../src/types/config';
-import type { DeepPartial } from '../src/types/helpers';
+import Vts from '../src/vts';
+import VtsConfig from '../types/config';
 
 export default function createMockVts(
   form: HTMLFormElement | string = createMockForm(),
-  config: DeepPartial<VtsConfig> = {}
+  config: VtsConfig = {},
 ) {
   return new Vts(form, config);
 }
@@ -23,7 +22,7 @@ export default function createMockVts(
  */
 export function createMockForm(
   inputs: Record<string, InputAttributes> = {},
-  formConfig: FormConfig = {}
+  formConfig: FormConfig = {},
 ) {
   const form = document.createElement('form');
 

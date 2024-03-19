@@ -1,6 +1,4 @@
 import type AjaxSettings from 'types/config/AjaxSettings';
-import getResponseMessage from '../static/getResponseMessage';
-import showDialog from '../utils/response/showDialog';
 
 const ajaxHandler: AjaxSettings = {
   request: {},
@@ -72,14 +70,16 @@ const ajaxHandler: AjaxSettings = {
     }
   },
   error: (errorData, errorResponse) => {
-    const { title, message } = getResponseMessage(errorData, errorResponse);
-    if (title !== 'AbortError') showDialog(title, message);
+    console.error(errorData, errorResponse);
+    // const { title, message } = getResponseMessage(errorData, errorResponse);
+    // if (title !== 'AbortError') showDialog(title, message);
   },
   success: (data, response, form) => {
-    const { title, message } = getResponseMessage(data, response);
-    form.reset();
+    console.error(data, response, form);
+    // const { title, message } = getResponseMessage(data, response);
+    // form.reset();
 
-    showDialog(title, message);
+    // showDialog(title, message);
   },
 };
 

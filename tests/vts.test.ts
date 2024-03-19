@@ -1,5 +1,6 @@
-import Vts from '../../src/Vts';
-import createMockVts from '../helpers';
+import Vts from '../src/vts';
+import createMockVts from './helpers';
+
 expect.extend({
   toBeFunction(received) {
     return {
@@ -10,8 +11,7 @@ expect.extend({
 });
 
 describe('Vts initialization and rule gathering', () => {
-  /** @type {Vts} */
-  let vts;
+  let vts: Vts;
 
   beforeEach(() => (vts = createMockVts()));
 

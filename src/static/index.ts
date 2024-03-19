@@ -1,24 +1,18 @@
 import { FIELD_QUERY, VERSION } from 'constants/index';
-import AjaxStatic from './ajax';
-import type VtsConfig from 'types/config';
+import ValidatorStatic from './validator';
 import type { VtsField } from 'types/helpers';
-import deepMerge from 'src/utils/deepMerge';
-import getResponseData from './getResponseData';
+import deepMerge from 'utils/deepMerge';
 import vtsDefaults from 'defaults/index';
+import type VtsConfig from 'types/config';
 
-export default abstract class VtsStatic extends AjaxStatic {
-  static version: string = VERSION;
-
-  static async getResponseData(response: Response): Promise<any> {
-    const data = await getResponseData(response);
-    return data;
-  }
+export default abstract class VtsStatic extends ValidatorStatic {
+  static readonly version: string = VERSION;
 
   static setDefaults(config: VtsConfig): void {
     deepMerge(vtsDefaults, config);
   }
 
-  static getGroupedFields(field: VtsField): Array<VtsField | Element> {
+  static getFieldGroup(field: VtsField): Array<VtsField | Element> {
     const form = field.closest('form');
     const fields = form?.querySelectorAll(FIELD_QUERY);
 
@@ -65,3 +59,22 @@ export default abstract class VtsStatic extends AjaxStatic {
     return groupedFields;
   }
 }
+
+function base<T>() {
+  class Base {
+    static prop: T;
+  }
+  return Base;
+}
+
+function derived<T>() {
+  class Derived extends base<T>() {
+    static anotherProp: T;
+  }
+  return Derived;
+}
+
+class Spec extends derived<string>() {}
+
+Spec.prop; // string
+Spec.anotherProp; // string

@@ -1,13 +1,16 @@
+import { type RecursivePartial, type VtsField } from '../helpers';
 import { type Rules, type ValidationMessages } from './rules';
 import type AjaxSettings from './AjaxSettings';
 import { type ValidationResults } from '../instance';
 import type Vts from '..';
-import { type VtsField } from '../helpers';
 
+type VtsConfig = RecursivePartial<CoreConfig>;
+
+export default VtsConfig;
 /**
  * Represents the configuration options for Vts (Validate Then Submit).
  */
-export default interface VtsConfig {
+export interface CoreConfig {
   /**
    * The Ajax settings for form submission.
    */

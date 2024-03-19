@@ -1,6 +1,6 @@
 import type VtsConfig from 'types/config';
-import deepMerge from '../utils/deepMerge';
-import vtsDefaults from '../defaults';
+import deepMerge from 'utils/deepMerge';
+import vtsDefaults from 'defaults/index';
 
 /**
  * Sets the configuration options for Vts (Validate Then Submit).
@@ -14,10 +14,9 @@ import vtsDefaults from '../defaults';
 export default function setVtsConfig(form: HTMLFormElement, config: VtsConfig) {
   const options = deepMerge({}, vtsDefaults, config) as VtsConfig;
   const { ajax } = options;
-  options.ajax.action = ajax.action || form.getAttribute('action') || '';
+  options.ajax.action = ajax.action || form.action;
 
   const { request } = ajax;
-
   options.ajax.request = Object.assign(request, {
     method: request.method || form.getAttribute('method') || 'get',
   });
