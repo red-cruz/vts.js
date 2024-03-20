@@ -3,7 +3,7 @@
 import type { Config } from '@jest/types';
 
 const config: Config.InitialOptions = {
-  testEnvironment: 'node',
+  testEnvironment: 'jsdom',
   moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx', 'json', 'node'],
   moduleNameMapper: {
     '^constants/(.*)$': '<rootDir>/src/constants/$1',

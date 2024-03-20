@@ -24,7 +24,8 @@
       "utils/*": ["src/utils/*"]
     },
     "target": "ES2017",
+    "typeRoots": ["./types"],
     "verbatimModuleSyntax": true
   },
-  "include": ["src/**/*.ts", "types/vts.d.ts"]
+  "include": ["src/**/*.ts", "src/Vts.d.ts"]
 }

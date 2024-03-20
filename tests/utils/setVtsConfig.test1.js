@@ -1,4 +1,4 @@
-jest.mock('../../src/utils/deepMerge'); // Mock deepMerge for testing purposes
+jest.mock('../../src/static/setVtsConfig'); // Mock deepMerge for testing purposes
 
 import vtsDefaults from '../../src/defaults';
 import setVtsConfig from '../../src/static/setVtsConfig';

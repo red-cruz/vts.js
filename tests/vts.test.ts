@@ -1,4 +1,4 @@
-import Vts from '../src/vts';
+import Vts from '../src/Vts';
 import createMockVts from './helpers';
 
 expect.extend({

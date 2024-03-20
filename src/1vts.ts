@@ -4,10 +4,11 @@ import { FIELD_QUERY } from './constants';
 import VtsStatic from './static';
 import setVtsConfig from 'instance/setVtsConfig';
 import type VtsConfig from 'types/config';
+import type { Rules } from 'types/config/rules';
+import type AjaxSettings from 'types/config/AjaxSettings';
 
+/// <reference path="../types/vts.d.ts" />
 export default class Vts extends VtsStatic {
-  form: HTMLFormElement;
-  fields: NodeListOf<VtsField>;
   constructor(form: string | HTMLFormElement, config?: VtsConfig) {
     super();
     const formElement = (this.form = Vts.getForm(form));
