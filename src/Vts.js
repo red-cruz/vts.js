@@ -2,9 +2,9 @@
 'use strict';
 import VtsStatic from './static/index';
 import setVtsConfig from './instance/setVtsConfig';
-import { FIELD_QUERY } from './constants/index';
+import { FIELD_QUERY, FORM_FIELD_QUERY } from './constants/index';
 
-/// <reference path="./Vts.d.ts" />
+/// <reference path="./vts.d.ts" />
 export default class Vts extends VtsStatic {
   /**
    * @param {string|HTMLFormElement} form - The form element or its selector
@@ -16,7 +16,7 @@ export default class Vts extends VtsStatic {
     if (formElement.vts instanceof Vts) {
       console.warn('Vts instance already exists: ', formElement.vts);
     } else {
-      this.fields = formElement.querySelectorAll(FIELD_QUERY);
+      this.fields = getVtsFields(formElement);
 
       formElement.classList.add('vts');
       Object.assign(this, setVtsConfig(formElement, config));
@@ -30,4 +30,16 @@ export default class Vts extends VtsStatic {
       formElement.vts = this;
     }
   }
+}
+
+function getVtsFields(formElement) {
+  if (formElement.id) {
+    const el = document.querySelector(`#${formElement.id} ${FORM_FIELD_QUERY}`);
+    console.log(el);
+    const selectors = `form#${formElement.id} ${FIELD_QUERY.replace(/{:formId}/g, formElement.id)}`;
+    // console.log();
+    return document.querySelectorAll(selectors);
+  }
+
+  return formElement.querySelectorAll(FORM_FIELD_QUERY);
 }

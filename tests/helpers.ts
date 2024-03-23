@@ -1,5 +1,6 @@
 import Vts from '../src/vts';
 import VtsConfig from '../types/config';
+import { VtsField } from '../types/helpers';
 
 export default function createMockVts(
   form: HTMLFormElement | string = createMockForm(),
@@ -27,20 +28,13 @@ export function createMockForm(
   const form = document.createElement('form');
 
   // Create input elements
-  Object.entries(inputs).forEach(([name, attributes]) => {
-    const input = document.createElement('input');
-    Object.entries(attributes).forEach(([attrName, attrValue]) => {
-      input.setAttribute(attrName, attrValue);
-    });
-    input.setAttribute('name', name);
-    form.append(input);
-  });
+  createVtsFields(inputs).forEach((input) => form.append(input));
 
   // Set form attributes from config
   Object.entries(formConfig).forEach(([attrName, attrValue]) => {
     form.setAttribute(attrName, attrValue);
   });
-
+  document.body.append(form);
   return form;
 }
 
@@ -48,9 +42,31 @@ export function createMockForm(
 interface InputAttributes {
   type?: string;
   value?: string;
+  name?: string;
+  id?: string;
+  'data-vts-ignored'?: string;
+  form?: string;
 }
 
 interface FormConfig {
-  method?: string; // e.g., 'post', 'get'
+  id?: string;
+  method?: 'POST' | 'GET' | 'PUT' | 'PATCH' | 'DELETE';
   action?: string; // URL of the form action
+}
+
+export function createVtsFields(inputs: Record<string, InputAttributes>): VtsField[] {
+  const inputElements: VtsField[] = [];
+
+  Object.entries(inputs).forEach(([name, attributes]) => {
+    const input = document.createElement('input');
+
+    Object.entries(attributes).forEach(([attrName, attrValue]) => {
+      input.setAttribute(attrName, attrValue);
+    });
+
+    input.setAttribute('name', name);
+    inputElements.push(input);
+  });
+
+  return inputElements;
 }

@@ -27,5 +27,5 @@
     "typeRoots": ["./types"],
     "verbatimModuleSyntax": true
   },
-  "include": ["src/**/*.ts", "src/Vts.d.ts"]
+  "include": ["src/**/*.ts", "src/vts.d.ts"]
 }

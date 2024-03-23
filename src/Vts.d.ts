@@ -4,6 +4,7 @@ import { VtsField } from 'types/helpers';
 import { ValidationMessages } from 'types/config/rules';
 import { Rules } from 'types/config/rules';
 import { ValidationResults } from 'types/instance';
+import type VtsStatic from './static';
 
 /**
  * A JavaScript library that provides a simple and flexible way to handle
@@ -13,7 +14,7 @@ import { ValidationResults } from 'types/instance';
  * @author RED
  * @version 1.9.9-beta
  */
-declare class Vts {
+declare class Vts extends VtsStatic {
   /**
    * Creates an instance of Vts.
    * @param form form
