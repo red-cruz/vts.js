@@ -1,3 +1,4 @@
+import { faker } from '@faker-js/faker';
 import Vts from '../src/vts';
 import type VtsConfig from '../types/config';
 import { type VtsField } from '../types/helpers';
@@ -38,18 +39,74 @@ export function createMockForm(
   return form;
 }
 
+export function getRandomFieldType() {
+  return faker.helpers.arrayElement([
+    'text',
+    'email',
+    'password',
+    'number',
+    'date',
+    'time',
+    'datetime-local',
+    'month',
+    'week',
+    'color',
+    'range',
+    'tel',
+    'url',
+    'search',
+    'select-one',
+    'select-multiple',
+    'textarea',
+  ]);
+}
+export function generateMockFields(
+  numberOfFields: number,
+  numberOfIgnored: number = 0,
+): Record<string, InputAttributes> {
+  const mockInputs: Record<string, InputAttributes> = {};
+
+  for (let i = 0; i < numberOfFields; i++) {
+    const fieldName = `field${i + 1}`;
+
+    mockInputs[fieldName] = { type: getRandomFieldType() };
+
+    if (i < numberOfIgnored) {
+      mockInputs[fieldName] = {
+        type: getRandomFieldType(),
+        'data-vts-ignored': String(numberOfIgnored),
+      };
+    }
+  }
+
+  return mockInputs;
+}
 export function createVtsFields(inputs: Record<string, InputAttributes>): VtsField[] {
   const inputElements: VtsField[] = [];
 
   Object.entries(inputs).forEach(([name, attributes]) => {
-    const input = document.createElement('input');
+    let element: VtsField;
+    const { type } = attributes;
+
+    if (type === 'select-one') {
+      element = document.createElement('select');
+    } else if (type === 'select-multiple') {
+      element = document.createElement('select');
+      element.setAttribute('multiple', 'true');
+    } else if (type === 'textarea') {
+      element = document.createElement('textarea');
+    } else {
+      element = document.createElement('input');
+    }
 
     Object.entries(attributes).forEach(([attrName, attrValue]) => {
-      input.setAttribute(attrName, attrValue);
+      if (attrName !== 'type') {
+        element.setAttribute(attrName, attrValue);
+      }
     });
 
-    input.setAttribute('name', name);
-    inputElements.push(input);
+    element.setAttribute('name', name);
+    inputElements.push(element);
   });
 
   return inputElements;
