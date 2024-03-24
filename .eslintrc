@@ -20,7 +20,7 @@
     "prefer-const": "error",
     "prefer-destructuring": "error",
     "require-await": "error",
-    "max-lines-per-function": ["error", { "max": 50 }],
+    "max-lines-per-function": ["error", { "max": 100 }],
     "@typescript-eslint/naming-convention": [
       "error",
       {

@@ -1,4 +1,4 @@
-import { FIELD_QUERY, VERSION } from 'constants/index';
+import { FIELD_QUERY, FORM_FIELD_QUERY, VERSION } from 'constants/index';
 import ValidatorStatic from './validator';
 import type { VtsField } from 'types/helpers';
 import deepMerge from 'utils/deepMerge';
@@ -10,6 +10,15 @@ export default abstract class VtsStatic extends ValidatorStatic {
 
   static setDefaults(config: VtsConfig): void {
     deepMerge(vtsDefaults, config);
+  }
+
+  static getFields(form: HTMLFormElement): NodeListOf<VtsField> {
+    if (form.id) {
+      const selectors = `form#${form.id} ${FIELD_QUERY.replace(/{:formId}/g, form.id)}`;
+      return document.querySelectorAll(selectors);
+    }
+
+    return form.querySelectorAll(FORM_FIELD_QUERY);
   }
 
   static getFieldGroup(field: VtsField): Array<VtsField | Element> {

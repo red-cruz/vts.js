@@ -1,6 +1,6 @@
 import Vts from '../src/vts';
-import VtsConfig from '../types/config';
-import { VtsField } from '../types/helpers';
+import type VtsConfig from '../types/config';
+import { type VtsField } from '../types/helpers';
 
 export default function createMockVts(
   form: HTMLFormElement | string = createMockForm(),
@@ -38,22 +38,6 @@ export function createMockForm(
   return form;
 }
 
-// Interface for input attributes
-interface InputAttributes {
-  type?: string;
-  value?: string;
-  name?: string;
-  id?: string;
-  'data-vts-ignored'?: string;
-  form?: string;
-}
-
-interface FormConfig {
-  id?: string;
-  method?: 'POST' | 'GET' | 'PUT' | 'PATCH' | 'DELETE';
-  action?: string; // URL of the form action
-}
-
 export function createVtsFields(inputs: Record<string, InputAttributes>): VtsField[] {
   const inputElements: VtsField[] = [];
 
@@ -70,3 +54,27 @@ export function createVtsFields(inputs: Record<string, InputAttributes>): VtsFie
 
   return inputElements;
 }
+
+// Interface for input attributes
+interface InputAttributes {
+  type?: string;
+  value?: string;
+  id?: string;
+  'data-vts-ignored'?: string;
+  form?: string;
+}
+
+interface FormConfig {
+  id?: string;
+  method?: 'POST' | 'GET' | 'PUT' | 'PATCH' | 'DELETE';
+  action?: string; // URL of the form action
+}
+
+// expect.extend({
+//   toBeFunction(received) {
+//     return {
+//       pass: typeof received === 'function',
+//       message: () => `Expected value to be a function`,
+//     };
+//   },
+// });
