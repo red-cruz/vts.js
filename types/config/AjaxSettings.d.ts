@@ -16,6 +16,8 @@ export default interface AjaxSettings {
    */
   action?: string;
 
+  method?: 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE';
+
   /**
    * The request options for the Ajax call.
    * @default {

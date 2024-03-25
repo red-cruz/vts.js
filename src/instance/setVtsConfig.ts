@@ -12,13 +12,13 @@ import vtsDefaults from 'defaults/index';
  * @returns - The merged configuration options.
  */
 export default function setVtsConfig(form: HTMLFormElement, config: VtsConfig) {
-  const options = deepMerge({}, vtsDefaults, config) as VtsConfig;
+  const options: VtsConfig = deepMerge({}, vtsDefaults, config) as VtsConfig;
   const { ajax } = options;
-  options.ajax.action = ajax.action || form.action;
-
   const { request } = ajax;
+
+  options.ajax.action = ajax.action || form.action;
   options.ajax.request = Object.assign(request, {
-    method: request.method || form.getAttribute('method') || 'get',
+    method: request.method || ajax?.method || form.getAttribute('method') || 'POST',
   });
 
   return options;

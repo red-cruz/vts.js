@@ -24,6 +24,7 @@
     "start": "webpack --mode development",
     "build": "webpack --mode production",
     "test": "jest",
+    "logged-test": "jest --silent=false",
     "lint": "eslint . --ext .ts",
     "lint-and-fix": "eslint . --ext .ts --fix"
   },

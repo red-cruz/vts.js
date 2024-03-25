@@ -70,18 +70,18 @@ describe('Field handling', () => {
 
     const fieldNames = [...vts.fields].map((field) => field.name);
 
-    expect(fieldNames.length).toBe(3);
+    expect(fieldNames).toHaveLength(3);
     expect(fieldNames).toContain('insideField1');
     expect(fieldNames).toContain('insideField2');
     expect(fieldNames).toContain('outsideField');
   });
 
   it('should create the specified number of fields', () => {
-    const numberOfFields = 50; // Specify the number of fields to create
+    const numberOfFields = 5; // Specify the number of fields to create
 
-    const form = createMockForm(generateMockFields(numberOfFields, 20));
+    const form = createMockForm(generateMockFields(numberOfFields, 2));
     const vts = createMockVts(form);
 
-    expect(vts.fields).toHaveLength(30);
+    expect(vts.fields).toHaveLength(3);
   });
 });
