@@ -18,7 +18,7 @@ export default function setVtsConfig(form: HTMLFormElement, config: VtsConfig) {
 
   options.ajax.action = ajax.action || form.action;
   options.ajax.request = Object.assign(request, {
-    method: request.method || ajax?.method || form.getAttribute('method') || 'POST',
+    method: request.method || ajax?.method || form.method,
   });
 
   return options;

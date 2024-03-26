@@ -16,7 +16,15 @@ export default interface AjaxSettings {
    */
   action?: string;
 
-  method?: 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE';
+  /**
+   * The request method to be used for the Ajax call.
+   * This property provides a shortcut for specifying the HTTP method.
+   *
+   * **Note**: If `request.method` is defined, it takes precedence over this property.
+   *
+   * @default 'get'
+   */
+  method?: 'get' | 'post' | 'put' | 'patch' | 'delete';
 
   /**
    * The request options for the Ajax call.

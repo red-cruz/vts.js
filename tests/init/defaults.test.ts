@@ -15,7 +15,7 @@ describe('Defaults', () => {
       ...{
         action: form.action,
         request: {
-          method: 'POST',
+          method: 'get',
         },
       },
     };

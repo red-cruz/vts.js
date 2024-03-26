@@ -23,10 +23,7 @@ export default async function (vtsInstance, rules, field, label, ruleKey) {
     const isBound = typeof rule === 'string' && rule.startsWith('field:');
     // get value of bound field
     if (isBound) {
-      targetField = VtsFormValidator.validateField(
-        vtsInstance.form,
-        rule.replace('field:', '')
-      );
+      targetField = VtsFormValidator.validateField(vtsInstance.form, rule.replace('field:', ''));
       attachEvent(ruleKey, targetField, field, rules);
       ruleValue = targetField.value;
     }
@@ -38,17 +35,19 @@ export default async function (vtsInstance, rules, field, label, ruleKey) {
   const rule = rules[ruleKey];
 
   switch (typeof rule) {
-    case 'function':
+    case 'function': {
       vtsInstance._setCheckingRule(rules, field, label);
       const _rule = await rule(field, label);
       ruleValue = extractBoundOrFnRule(_rule);
       break;
+    }
 
     case 'string':
       if (rule.startsWith('field:')) {
         ruleValue = extractBoundOrFnRule(rule);
         break;
       }
+    // falls through
     default:
       ruleValue = rule;
   }
@@ -78,8 +77,7 @@ export function extractRule(rule, ruleKey) {
         )
           break;
 
-        const date =
-          ruleValue instanceof Date ? ruleValue : new Date(ruleValue);
+        const date = ruleValue instanceof Date ? ruleValue : new Date(ruleValue);
         date.setHours(23, 59, 59, 999);
 
         ruleValue = date;
@@ -94,8 +92,7 @@ export function extractRule(rule, ruleKey) {
         break;
 
       case 'pattern':
-        if (!(ruleValue instanceof RegExp) || typeof ruleValue !== 'string')
-          break;
+        if (!(ruleValue instanceof RegExp) || typeof ruleValue !== 'string') break;
 
         try {
           ruleValue = new RegExp(ruleValue);
