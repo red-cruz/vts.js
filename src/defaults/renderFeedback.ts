@@ -1,6 +1,6 @@
 import type { ValidationResults } from 'types/instance';
-import findClosestElement from 'utils/findClosestElement';
-import getCommonParent from 'utils/getCommonParent';
+import findClosestElement from '@utils/findClosestElement';
+import getCommonParent from '@utils/getCommonParent';
 
 type RenderClass = {
   form: string;

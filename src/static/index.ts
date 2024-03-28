@@ -1,10 +1,9 @@
-import { FIELD_QUERY, FORM_FIELD_QUERY, VERSION } from 'constants/index';
+import { FIELD_QUERY, FORM_FIELD_QUERY, VERSION } from '@constants/index';
 import ValidatorStatic from './validator';
-import type { VtsField } from 'types/helpers';
-import deepMerge from 'utils/deepMerge';
-import vtsDefaults from 'defaults/index';
+import deepMerge from '@utils/deepMerge';
+import vtsDefaults from '@defaults/index';
 import type VtsConfig from 'types/config';
-
+import type { VtsField } from 'types/config';
 export default abstract class VtsStatic extends ValidatorStatic {
   static readonly version: string = VERSION;
 

@@ -1,4 +1,4 @@
-import type { VtsField } from 'types/helpers';
+import type { VtsField } from 'types/config';
 
 export default abstract class ValidatorStatic {
   static getForm(form: string | HTMLFormElement): HTMLFormElement {

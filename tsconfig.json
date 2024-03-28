@@ -13,15 +13,14 @@
     "module": "ESNext",
     "moduleResolution": "node",
     "paths": {
-      "constants/*": ["src/constants/*"],
-      "core/*": ["src/core/*"],
-      "defaults/*": ["src/defaults/*"],
-      "instance/*": ["src/instance/*"],
-      "rules/*": ["src/rules/*"],
-      "static/*": ["src/static/*"],
-      "tests/*": ["tests/*"],
-      "types/*": ["types/*"],
-      "utils/*": ["src/utils/*"]
+      "@constants/*": ["src/constants/*"],
+      "@core/*": ["src/core/*"],
+      "@defaults/*": ["src/defaults/*"],
+      "@instance/*": ["src/instance/*"],
+      "@rules/*": ["src/rules/*"],
+      "@static/*": ["src/static/*"],
+      "@tests/*": ["tests/*"],
+      "@utils/*": ["src/utils/*"]
     },
     "target": "ES2017",
     "typeRoots": ["./types"],

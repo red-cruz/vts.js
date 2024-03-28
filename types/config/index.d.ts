@@ -1,12 +1,14 @@
-import { type RecursivePartial, type VtsField } from '../helpers';
+import { type RecursivePartial } from '../helpers';
 import { type Rules, type ValidationMessages } from './rules';
 import type AjaxSettings from './AjaxSettings';
 import { type ValidationResults } from '../instance';
 import type Vts from '..';
 
 type VtsConfig = RecursivePartial<CoreConfig>;
-
 export default VtsConfig;
+
+export type VtsField = HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement;
+
 /**
  * Represents the configuration options for Vts (Validate Then Submit).
  */
@@ -42,7 +44,7 @@ export interface CoreConfig {
    * Determines whether to validate fields on form submission
    * @default false
    */
-  validateOnSumbit: boolean;
+  validateOnSubmit: boolean;
 
   /**
    * The validation rules for the form fields.

@@ -1,9 +1,10 @@
-import type VtsConfig from 'types/config';
 import ajaxHandler from './ajax';
 import defaultMsg from './defaultMsg';
 import renderFeedback from './renderFeedback';
+import type { RecursivePartial } from 'types/helpers';
+import type { CoreConfig } from 'types/config';
 
-export const restoreableConfig: VtsConfig = {
+export const restorableConfig: RecursivePartial<CoreConfig> = {
   ajax: ajaxHandler,
   class: {
     form: 'vts-form-was-validated',
@@ -14,7 +15,7 @@ export const restoreableConfig: VtsConfig = {
   },
   shouldSubmit: true,
   renderFeedback,
-  validateOnSumbit: false,
+  validateOnSubmit: false,
   messages: defaultMsg,
   onSubmit() {},
   rules: {},
@@ -24,6 +25,6 @@ export const restoreableConfig: VtsConfig = {
 /**
  * Global default configuration for Vts
  */
-const vtsDefaults: VtsConfig = { ...restoreableConfig };
+const vtsDefaults: RecursivePartial<CoreConfig> = { ...restorableConfig };
 
 export default vtsDefaults;

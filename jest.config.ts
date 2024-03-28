@@ -13,7 +13,6 @@ const config: Config.InitialOptions = {
     '^rules/(.*)$': '<rootDir>/src/rules/$1',
     '^static/(.*)$': '<rootDir>/src/static/$1',
     '^tests/(.*)$': '<rootDir>/tests/$1',
-    '^types/(.*)$': '<rootDir>/types/$1',
     '^utils/(.*)$': '<rootDir>/src/utils/$1',
   },
   testMatch: ['<rootDir>/tests/**/*.test.(ts|tsx)'],

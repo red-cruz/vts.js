@@ -159,12 +159,8 @@ Vts provides several configuration options to customize its behavior. Here are t
     ```javascript
     error: (errorData, errorResponse, form) => {
       const data = errorData ? errorData : {};
-      const title =
-        'message' in errorResponse ? errorResponse.message : 'Error!';
-      const html =
-        'stack' in errorResponse
-          ? errorResponse.stack
-          : 'Unknown error occurred';
+      const title = 'message' in errorResponse ? errorResponse.message : 'Error!';
+      const html = 'stack' in errorResponse ? errorResponse.stack : 'Unknown error occurred';
       const text = data.title || title;
       if (confirm(text + ':\n' + 'Click "ok" to view more details.')) {
         const newWindow = window.open();
@@ -308,13 +304,13 @@ When the `shouldSubmit` property is set to `true`, the form's submission will be
 
 > Note that the `showFeedback()` function mentioned is a default implementation and **cannot be accessed or modified**. However, you can create your own function or use your preferred approach for handling validation feedback within the `invalid` and `valid` handlers.
 
-### `validateOnSumbit`: Boolean - Determines whether to add event listeners to each fields immediately on Vts instantiation.
+### `validateOnSubmit`: Boolean - Determines whether to add event listeners to each fields immediately on Vts instantiation.
 
 - Default: `false`
 
-When the `validateOnSumbit` property is set to `true`, event listeners will be added to each field **immediately** upon Vts instantiation. This allows for immediate validation as the user interacts with the form fields.
+When the `validateOnSubmit` property is set to `true`, event listeners will be added to each field **immediately** upon Vts instantiation. This allows for immediate validation as the user interacts with the form fields.
 
-If the `validateOnSumbit` property is set to `false`, event listeners will be added to each field on the form's **submit event**. This means that the form will be validated and the respective handlers will be executed when the user submits the form. It provides a way to defer the validation until the form is submitted, rather than validating each field as the user interacts with them.
+If the `validateOnSubmit` property is set to `false`, event listeners will be added to each field on the form's **submit event**. This means that the form will be validated and the respective handlers will be executed when the user submits the form. It provides a way to defer the validation until the form is submitted, rather than validating each field as the user interacts with them.
 
 ### message
 
@@ -407,9 +403,7 @@ Vts.setDefaults({
     request: {
       method: 'POST',
       headers: {
-        'X-CSRF-TOKEN': document
-          .querySelector('meta[name="csrf-token"]')
-          .getAttribute('content'),
+        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
       },
     },
     beforeSend: (requestInit, abortController, form) => {
@@ -425,7 +419,7 @@ Vts.setDefaults({
       // Handle the error response
     },
   },
-  validateOnSumbit: false,
+  validateOnSubmit: false,
   rules: {
     // Define your validation rules here
   },

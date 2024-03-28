@@ -1,4 +1,4 @@
-import { VtsField } from '../helpers';
+import type { VtsField } from '.';
 
 /**
  * Represents a function used for validation rules that can return a value of type T or a Promise resolving to T.

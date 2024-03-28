@@ -23,7 +23,7 @@ describe('Defaults', () => {
     expect(vts.class).toEqual(vtsDefaults.class);
     expect(vts.shouldSubmit).toBe(vtsDefaults.shouldSubmit);
     expect(vts.renderFeedback).toBe(renderFeedback);
-    expect(vts.validateOnSumbit).toBe(vtsDefaults.validateOnSumbit);
+    expect(vts.validateOnSubmit).toBe(vtsDefaults.validateOnSubmit);
     expect(vts.messages).toEqual(defaultMsg);
     expect(vts.onSubmit).toEqual(vtsDefaults.onSubmit);
     expect(vts.rules).toEqual(vtsDefaults.rules);
